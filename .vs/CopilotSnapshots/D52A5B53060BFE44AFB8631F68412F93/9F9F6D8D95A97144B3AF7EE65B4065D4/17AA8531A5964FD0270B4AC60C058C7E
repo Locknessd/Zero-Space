@@ -1,0 +1,303 @@
+﻿using UnityEngine;
+
+/// <summary>
+/// 2.5D Fighting Game Camera (Mortal Kombat / Street Fighter / Tekken style)
+/// Tracks two fighters, calculates dynamic midpoint, zooms based on fighter distance,
+/// applies smooth damping, stage clamping, and supports hit/impact camera shake.
+/// </summary>
+[RequireComponent(typeof(Camera))]
+public class MortalKombatCamera : MonoBehaviour
+{
+    public static MortalKombatCamera Instance { get; private set; }
+
+    [Header("Targets")]
+    [Tooltip("Left / Player 1 fighter transform")]
+    public Transform targetLeft;
+    [Tooltip("Right / Player 2 fighter transform")]
+    public Transform targetRight;
+    [Tooltip("Auto-detect targets from AnimationController / GameManager if null")]
+    public bool autoFindTargets = true;
+
+    [Header("Position & Framing")]
+    [Tooltip("Offset applied to the midpoint between fighters (Y = vertical centering)")]
+    public Vector3 midpointOffset = new Vector3(0f, 1.1f, 0f);
+
+    [Tooltip("Camera pitch angle in degrees (looking slightly downwards)")]
+    [Range(-20f, 30f)]
+    public float pitchAngle = 4f;
+
+    [Tooltip("Base distance (Z-axis offset) in front of the fighters plane")]
+    public float baseDistance = 3.8f;
+
+    [Header("Dynamic Zoom")]
+    [Tooltip("Enable dynamic zooming based on distance between fighters")]
+    public bool enableDynamicZoom = true;
+
+    [Tooltip("Minimum camera distance when fighters are closest (close-up combat)")]
+    public float minDistance = 2.8f;
+
+    [Tooltip("Maximum camera distance when fighters are far apart")]
+    public float maxDistance = 5.8f;
+
+    [Tooltip("Reference fighter distance at which base zoom is applied")]
+    public float referenceFighterDistance = 1.5f;
+
+    [Tooltip("Zoom sensitivity multiplier based on fighter distance")]
+    public float zoomFactor = 0.85f;
+
+    [Header("Smooth Damping")]
+    [Tooltip("Smooth time for camera movement (lower = snappier, higher = smoother)")]
+    [Range(0.01f, 0.5f)]
+    public float smoothTime = 0.08f;
+
+    [Tooltip("Smooth time for zoom transitions")]
+    [Range(0.01f, 0.5f)]
+    public float zoomSmoothTime = 0.12f;
+
+    [Header("Stage Boundaries (Clamping)")]
+    [Tooltip("Clamp camera X to remain inside the battle stage")]
+    public bool clampHorizontal = true;
+    public float minStageX = -12f;
+    public float maxStageX = 12f;
+
+    [Tooltip("Clamp camera Y position")]
+    public bool clampVertical = true;
+    public float minStageY = 0.5f;
+    public float maxStageY = 4f;
+
+    [Header("Screen Shake")]
+    [Tooltip("Enable hit / impact camera shake")]
+    public bool enableScreenShake = true;
+    public float defaultShakeIntensity = 0.15f;
+    public float defaultShakeDuration = 0.2f;
+
+    // Runtime state
+    private Camera _cam;
+    private Vector3 _currentVelocity;
+    private float _currentZoomVelocity;
+    private float _currentDistance;
+    private Vector3 _shakeOffset;
+    private float _shakeTimeRemaining;
+    private float _currentShakeIntensity;
+    // Focus bias state: temporarily bias camera midpoint toward one fighter (attacker)
+    private PlayerUI.Side? _focusSide = null;
+    private float _focusBias = 0f; // 0..1 how far toward fighter
+    private float _focusTimeRemaining = 0f;
+    private float _focusDuration = 0.4f;
+
+    void Awake()
+    {
+        Instance = this;
+        _cam = GetComponent<Camera>();
+        _currentDistance = baseDistance;
+    }
+
+    void Start()
+    {
+        if (autoFindTargets && (targetLeft == null || targetRight == null))
+        {
+            FindFighterTargets();
+        }
+
+        // Snap immediately to position on start
+        SnapToTarget();
+    }
+
+    /// <summary>
+    /// Searches for active fighter targets in the scene.
+    /// </summary>
+    public void FindFighterTargets()
+    {
+#if UNITY_2023_1_OR_NEWER
+        var anim = Object.FindFirstObjectByType<AnimationController>();
+#else
+        var anim = Object.FindObjectOfType<AnimationController>();
+#endif
+        if (anim != null)
+        {
+            if (anim.leftAnimator != null && targetLeft == null)
+                targetLeft = anim.leftAnimator.transform;
+            if (anim.rightAnimator != null && targetRight == null)
+                targetRight = anim.rightAnimator.transform;
+        }
+
+        // Fallback: look for named objects
+        if (targetLeft == null)
+        {
+            var p1 = GameObject.Find("Trump_Atk") ?? GameObject.Find("Player_Left") ?? GameObject.FindWithTag("Player");
+            if (p1 != null) targetLeft = p1.transform;
+        }
+
+        if (targetRight == null)
+        {
+            var p2 = GameObject.Find("Trump_Victim") ?? GameObject.Find("Player_Right") ?? GameObject.FindWithTag("Enemy");
+            if (p2 != null) targetRight = p2.transform;
+        }
+    }
+
+    void LateUpdate()
+    {
+        // Re-check targets if missing
+        if (targetLeft == null || targetRight == null)
+        {
+            if (autoFindTargets) FindFighterTargets();
+            if (targetLeft == null && targetRight == null) return;
+        }
+
+        UpdateCameraPosition(Time.deltaTime);
+        UpdateScreenShake(Time.deltaTime);
+    }
+
+    private void UpdateCameraPosition(float deltaTime)
+    {
+        Vector3 leftPos = targetLeft != null ? targetLeft.position : targetRight.position;
+        Vector3 rightPos = targetRight != null ? targetRight.position : targetLeft.position;
+
+        // 1. Calculate midpoint between fighters
+        Vector3 midpoint = (leftPos + rightPos) * 0.5f + midpointOffset;
+
+        // 1b. Apply temporary focus bias toward attacker if requested
+        if (_focusTimeRemaining > 0f && _focusSide.HasValue)
+        {
+            // compute attacker position
+            Vector3 attackerPos = _focusSide == PlayerUI.Side.Left ? leftPos : rightPos;
+            // vector from midpoint to attacker
+            Vector3 toAtt = attackerPos - midpoint;
+            // bias amount (ease out over remaining time)
+            float t = Mathf.Clamp01(_focusTimeRemaining / _focusDuration);
+            float ease = 1f - Mathf.Pow(1f - t, 2f); // ease-out
+            float bias = _focusBias * ease;
+            midpoint += toAtt * bias;
+        }
+
+        // 2. Calculate dynamic distance based on fighter spread
+        float fighterDist = Vector3.Distance(leftPos, rightPos);
+        float targetDist = baseDistance;
+
+        if (enableDynamicZoom)
+        {
+            float distDiff = (fighterDist - referenceFighterDistance) * zoomFactor;
+            targetDist = Mathf.Clamp(baseDistance + distDiff, minDistance, maxDistance);
+        }
+
+        if (deltaTime > 0f)
+        {
+            _currentDistance = Mathf.SmoothDamp(_currentDistance, targetDist, ref _currentZoomVelocity, zoomSmoothTime, Mathf.Infinity, deltaTime);
+        }
+        else
+        {
+            _currentDistance = targetDist;
+        }
+
+        // 3. Target camera position (placed in front on Z axis facing towards -Z)
+        // Since characters are at Z ≈ -1.76 facing X, camera sits at Z = midpoint.z + _currentDistance
+        float targetX = midpoint.x;
+        float targetY = midpoint.y;
+        float targetZ = midpoint.z + _currentDistance;
+
+        // 4. Clamping
+        if (clampHorizontal)
+        {
+            targetX = Mathf.Clamp(targetX, minStageX, maxStageX);
+        }
+        if (clampVertical)
+        {
+            targetY = Mathf.Clamp(targetY, minStageY, maxStageY);
+        }
+
+        Vector3 desiredPosition = new Vector3(targetX, targetY, targetZ);
+
+        // 5. Smooth Damp to desired position
+        Vector3 newPos;
+        if (deltaTime > 0f)
+        {
+            newPos = Vector3.SmoothDamp(transform.position - _shakeOffset, desiredPosition, ref _currentVelocity, smoothTime, Mathf.Infinity, deltaTime);
+        }
+        else
+        {
+            newPos = desiredPosition;
+        }
+
+        // Apply shake offset
+        transform.position = newPos + _shakeOffset;
+
+        // 6. Camera rotation: facing -Z (Y = 180 deg) with pitch angle
+        transform.rotation = Quaternion.Euler(pitchAngle, 180f, 0f);
+    }
+
+    /// <summary>
+    /// Snaps camera immediately to target without smoothing (e.g. at round start).
+    /// </summary>
+    public void SnapToTarget()
+    {
+        _currentVelocity = Vector3.zero;
+        _currentZoomVelocity = 0f;
+        UpdateCameraPosition(0f);
+    }
+
+    /// <summary>
+    /// Triggers screen shake with custom intensity and duration.
+    /// </summary>
+    public void TriggerShake(float intensity, float duration)
+    {
+        if (!enableScreenShake) return;
+        _currentShakeIntensity = intensity;
+        _shakeTimeRemaining = duration;
+    }
+
+    /// <summary>
+    /// Triggers default impact shake (for punches, kicks, hits).
+    /// </summary>
+    public void TriggerImpactShake()
+    {
+        TriggerShake(defaultShakeIntensity, defaultShakeDuration);
+    }
+
+    /// <summary>
+    /// Triggers heavy impact shake (for critical hits, K.O., special moves).
+    /// </summary>
+    public void TriggerHeavyShake()
+    {
+        TriggerShake(defaultShakeIntensity * 2.2f, defaultShakeDuration * 1.5f);
+    }
+
+    private void UpdateScreenShake(float deltaTime)
+    {
+        if (_shakeTimeRemaining > 0f)
+        {
+            _shakeTimeRemaining -= deltaTime;
+            float damper = _shakeTimeRemaining / defaultShakeDuration;
+            float rx = (Random.value * 2f - 1f) * _currentShakeIntensity * damper;
+            float ry = (Random.value * 2f - 1f) * _currentShakeIntensity * damper;
+            _shakeOffset = new Vector3(rx, ry, 0f);
+
+            if (_shakeTimeRemaining <= 0f)
+            {
+                _shakeOffset = Vector3.zero;
+            }
+        }
+        else
+        {
+            _shakeOffset = Vector3.zero;
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (targetLeft != null && targetRight != null)
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawLine(targetLeft.position, targetRight.position);
+            Vector3 mid = (targetLeft.position + targetRight.position) * 0.5f + midpointOffset;
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireSphere(mid, 0.25f);
+        }
+
+        if (clampHorizontal)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(new Vector3(minStageX, 0f, 0f), new Vector3(minStageX, 5f, 0f));
+            Gizmos.DrawLine(new Vector3(maxStageX, 0f, 0f), new Vector3(maxStageX, 5f, 0f));
+        }
+    }
+}

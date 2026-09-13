@@ -1,0 +1,43 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = crlf
+insert_final_newline = true
+trim_trailing_whitespace = true
+max_line_length = 120
+
+[*.cs]
+indent_style = space
+indent_size = 4
+charset = utf-8
+end_of_line = crlf
+insert_final_newline = true
+trim_trailing_whitespace = true
+max_line_length = 120
+# Visual Studio / Roslyn preferences
+dotnet_sort_system_directives_first = true
+csharp_style_var_for_built_in_types = false:suggestion
+csharp_style_var_when_type_is_apparent = true:suggestion
+csharp_style_expression_bodied_methods = when_on_single_line:suggestion
+csharp_style_expression_bodied_ctors = false:suggestion
+csharp_prefer_braces = true:warning
+csharp_new_line_before_open_brace = all
+
+# Naming conventions
+dotnet_naming_rule.private_fields_should_be_camel_case_and_start_with_underscore.severity = suggestion
+dotnet_naming_rule.private_fields_should_be_camel_case_and_start_with_underscore.symbols = private_fields
+dotnet_naming_rule.private_fields_should_be_camel_case_and_start_with_underscore.style = camel_case_with_underscore
+
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+
+dotnet_naming_style.camel_case_with_underscore.capitalization = camel_case
+dotnet_naming_style.camel_case_with_underscore.required_prefix = _
+
+# Unity-specific
+[Assembly-CSharp-Editor/**/*]
+# Editor code may use different settings if needed
+
+[*.meta]
+binary = true

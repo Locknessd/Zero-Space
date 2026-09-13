@@ -1,0 +1,772 @@
+﻿using UnityEngine;
+/// <summary>
+/// PROJECT ARCHITECTURE: Core Logic Layer (Controller trung tâm)
+/// ROLE: Điều phối luồng trận đấu, nhận dữ liệu từ WebSocketManager và phân phối xuống các hệ thống UI/Animation.
+/// RESPONSIBILITIES:
+/// - Lưu trữ trạng thái trận đấu hiện tại (MatchState) theo tài liệu thiết kế.
+/// - Phân tích (Parse) các gói tin JSON từ Server thành các C# Object tương ứng.
+/// - Gọi các hàm cập nhật giao diện của PlayerUI, RoundManager và AnimationController khi có sự kiện mới.
+/// AI NOTE: Script này đóng vai trò bộ não trung tâm của Client, không tự tính toán sát thương (vì BE đã tính), chỉ nhận kết quả và điều phối hiển thị.
+/// </summary>
+using System;
+using System.Reflection;
+using UnityEngine;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
+public class GameManager : MonoBehaviour
+{
+    public static GameManager Instance { get; private set; }
+
+    // References
+    // Backwards compatible single PlayerUI (kept for legacy scenes)
+    public PlayerUI playerUI;
+
+    [Header("Player UI Sides")]
+    [Tooltip("Assign separate PlayerUI components for Left (bot_a) and Right (bot_b) to allow dragging UI parts in the Inspector.")]
+    public PlayerUI leftPlayerUI;
+    public PlayerUI rightPlayerUI;
+    public RoundManager roundManager;
+    public AnimationController animationController;
+
+    [Header("Local Test")]
+    public bool enableLocalInputTesting = true;
+
+    [Header("Auto Subscribe")]
+    [Tooltip("If set, GameManager will subscribe to this matchId when WebSocket is connected")]
+    public string initialMatchId = "";
+
+    [Header("Debug")]
+    [Tooltip("Show debug info in console")]
+    public bool debugMode = true;
+
+    // state
+    private System.Collections.Generic.Dictionary<string, long> _characterMaxHp = new System.Collections.Generic.Dictionary<string, long>();
+    private System.Collections.Generic.Dictionary<string, string> _characterNames = new System.Collections.Generic.Dictionary<string, string>();
+    private MemeBattleMatchSnapshot _latestSnapshot;
+    private bool _matchEnded = false;
+    private PlayerUI.Side? _loserSideForDieAnimation = null;  // Track which side should play die animation
+
+    void Awake()
+    {
+        Instance = this;
+    }
+
+    void Start()
+    {
+        PrintDebugInfo();
+
+        if (WebSocketManager.Instance != null)
+        {
+            WebSocketManager.Instance.OnRawMessageReceived += HandleRawMessage;
+            if (!string.IsNullOrEmpty(initialMatchId))
+            {
+                if (WebSocketManager.Instance.IsConnected())
+                {
+                    _ = WebSocketManager.Instance.SubscribeToMatch(initialMatchId, 0);
+                }
+                else
+                {
+                    WebSocketManager.Instance.OnConnectionProgress += WaitAndSubscribe;
+                }
+            }
+        }
+
+
+
+        void OnDestroy()
+        {
+            if (WebSocketManager.Instance != null)
+            {
+                WebSocketManager.Instance.OnRawMessageReceived -= HandleRawMessage;
+                WebSocketManager.Instance.OnConnectionProgress -= WaitAndSubscribe;
+            }
+            if (Instance == this) Instance = null;
+        }
+    }
+    // Helper to resolve the correct PlayerUI instance for a given side.
+    private PlayerUI GetPlayerUIForSide(PlayerUI.Side side)
+    {
+        if (side == PlayerUI.Side.Left)
+        {
+            if (leftPlayerUI != null) return leftPlayerUI;
+        }
+        else if (side == PlayerUI.Side.Right)
+        {
+            if (rightPlayerUI != null) return rightPlayerUI;
+        }
+
+        // Fallback to legacy single playerUI for compatibility
+        return playerUI;
+    }
+
+
+    void WaitAndSubscribe(float p, string status)
+    {
+        if (p >= 1f && !string.IsNullOrEmpty(initialMatchId))
+        {
+            _ = WebSocketManager.Instance.SubscribeToMatch(initialMatchId, 0);
+            WebSocketManager.Instance.OnConnectionProgress -= WaitAndSubscribe;
+        }
+    }
+
+    // Public API for forwarding buffered messages
+    public void ApplyRawMessage(string json)
+    {
+        HandleRawMessage(json);
+    }
+
+    // Debug helpers
+    public void DebugTriggerQ()
+    {
+        var p = GetRandomPreset();
+        if (p != null)
+        {
+            Debug.Log($"[DebugTrigger] Q -> Play preset '{p.key}' (Left attacks)");
+            PlayBothAnimations(p.leftState, p.rightState);
+        }
+        else Debug.LogWarning("[DebugTrigger] Q -> no valid presets");
+    }
+
+    public void DebugTriggerE()
+    {
+        var p = GetRandomPreset();
+        if (p != null)
+        {
+            Debug.Log($"[DebugTrigger] E -> Play preset '{p.key}' (Right attacks)");
+            PlayBothAnimations(p.rightState, p.leftState);
+        }
+        else Debug.LogWarning("[DebugTrigger] E -> no valid presets");
+    }
+
+    void Update()
+    {
+        if (!enableLocalInputTesting) return;
+        if (IsKeyDown(KeyCode.Q))
+        {
+            var p = GetRandomPreset();
+            if (p != null) PlayBothAnimations(p.leftState, p.rightState);
+            MortalKombatCamera.Instance?.TriggerImpactShake();
+        }
+        if (IsKeyDown(KeyCode.E))
+        {
+            var p = GetRandomPreset();
+            if (p != null) PlayBothAnimations(p.rightState, p.leftState);
+            MortalKombatCamera.Instance?.TriggerImpactShake();
+        }
+    }
+
+    // Input helper (kept existing behavior)
+    private bool _inputChecked = false;
+    private bool _useNewInputSystem = false;
+    private Type _keyboardType;
+    private PropertyInfo _keyboardCurrentProp;
+    private PropertyInfo _keyQProp;
+    private PropertyInfo _keyEProp;
+    private PropertyInfo _wasPressedProp;
+
+    bool IsKeyDown(KeyCode key)
+    {
+        if (!_inputChecked)
+        {
+            try
+            {
+                bool v = Input.GetKeyDown(key);
+                _useNewInputSystem = false;
+                _inputChecked = true;
+                Debug.Log("GameManager: Input system check - using legacy Input");
+                return v;
+            }
+            catch (System.InvalidOperationException)
+            {
+                _useNewInputSystem = true;
+                _inputChecked = true;
+                Debug.Log("GameManager: falling back to new Input System (reflection)");
+            }
+        }
+
+        if (_useNewInputSystem)
+        {
+            try
+            {
+                if (_keyboardType == null)
+                {
+                    _keyboardType = Type.GetType("UnityEngine.InputSystem.Keyboard, Unity.InputSystem") ?? Type.GetType("UnityEngine.InputSystem.Keyboard, UnityEngine.InputSystem");
+                    if (_keyboardType != null)
+                    {
+                        _keyboardCurrentProp = _keyboardType.GetProperty("current", BindingFlags.Public | BindingFlags.Static);
+                        _keyQProp = _keyboardType.GetProperty("qKey");
+                        _keyEProp = _keyboardType.GetProperty("eKey");
+                        var keyControlType = Type.GetType("UnityEngine.InputSystem.Controls.KeyControl, Unity.InputSystem") ?? Type.GetType("UnityEngine.InputSystem.Controls.KeyControl, UnityEngine.InputSystem");
+                        if (keyControlType != null) _wasPressedProp = keyControlType.GetProperty("wasPressedThisFrame", BindingFlags.Public | BindingFlags.Instance);
+                    }
+                }
+
+                if (_keyboardType == null || _keyboardCurrentProp == null) return false;
+                var current = _keyboardCurrentProp.GetValue(null);
+                if (current == null) return false;
+
+                PropertyInfo keyProp = null;
+                if (key == KeyCode.Q) keyProp = _keyQProp; else if (key == KeyCode.E) keyProp = _keyEProp; else return false;
+                if (keyProp == null || _wasPressedProp == null) return false;
+                var keyControl = keyProp.GetValue(current);
+                var val = _wasPressedProp.GetValue(keyControl);
+                return val is bool b && b;
+            }
+            catch { return false; }
+        }
+
+        return Input.GetKeyDown(key);
+    }
+
+    void HandleRawMessage(string json)
+    {
+        if (string.IsNullOrEmpty(json)) return;
+        Debug.Log($"GameManager INCOMING [{System.DateTime.UtcNow:o}]: HandleRawMessage raw={json}");
+        try
+        {
+            var j = JObject.Parse(json);
+            var type = j.Value<string>("type");
+            if (!string.IsNullOrEmpty(type))
+            {
+                switch (type)
+                {
+                    case "meme_battle_start_result":
+                        {
+                            // payload may be under j["result"] or under j["raw"] as a string
+                            JToken res = j["result"];
+                            if (res == null)
+                            {
+                                var raw = j.Value<string>("raw");
+                                if (!string.IsNullOrEmpty(raw))
+                                {
+                                    try { var parsed = JToken.Parse(raw); if (parsed.Type == JTokenType.Array && parsed.HasValues) res = parsed.First; else res = parsed; } catch { }
+                                }
+                            }
+
+                            if (res != null && res.Type == JTokenType.Object)
+                            {
+                                var err = res["error"];
+                                if (err != null)
+                                {
+                                    var code = err.Value<string>("code");
+                                    var msg = err.Value<string>("message");
+                                    Debug.LogError($"GameManager: start_result error code={code} message={msg}");
+                                    // try to show message on loading UI if present
+                                    var lm = UnityEngine.Object.FindObjectOfType<LoaddingManager>();
+                                    if (lm != null) lm.HandleExternalError(code ?? "MATCH_START_FAILED", msg ?? "Start match failed");
+                                    break;
+                                }
+
+                                // success: update match snapshot if provided
+                                var matchId = res.Value<string>("matchId");
+                                // If server provided characterIds here, capture mapping for side keys
+                                try
+                                {
+                                    var charIds = res["characterIds"] as JArray ?? j["characterIds"] as JArray;
+                                    if (charIds != null && charIds.Count >= 2)
+                                    {
+                                        string a = charIds[0].ToString();
+                                        string b = charIds[1].ToString();
+                                        _characterNames["bot_a"] = a;
+                                        _characterNames["bot_b"] = b;
+                                    }
+                                }
+                                catch { }
+
+                                var snapshotToken = res["snapshot"];
+                                if (snapshotToken != null && snapshotToken.Type == JTokenType.Object)
+                                {
+                                    try
+                                    {
+                                        var startSnap = snapshotToken.ToObject<MemeBattleMatchSnapshot>();
+                                        if (startSnap != null)
+                                        {
+                                            _latestSnapshot = startSnap;
+                                            // store max HP map locally
+                                            _characterMaxHp = startSnap.characterMaxHpAtomic ?? new System.Collections.Generic.Dictionary<string, long>();
+                                            // ensure both side-keys and actual character ids exist in _characterMaxHp
+                                            try
+                                            {
+                                                if (startSnap.characterMaxHpAtomic != null)
+                                                {
+                                                    foreach (var kv in startSnap.characterMaxHpAtomic)
+                                                    {
+                                                        if (!_characterMaxHp.ContainsKey(kv.Key)) _characterMaxHp[kv.Key] = kv.Value;
+                                                    }
+                                                }
+                                                if (_characterNames.TryGetValue("bot_a", out var aid) && !_characterMaxHp.ContainsKey(aid))
+                                                {
+                                                    // try to copy from 'bot_a' if exists
+                                                    if (startSnap.characterMaxHpAtomic != null && startSnap.characterMaxHpAtomic.TryGetValue("bot_a", out var ma)) _characterMaxHp[aid] = ma;
+                                                }
+                                                if (_characterNames.TryGetValue("bot_b", out var bid) && !_characterMaxHp.ContainsKey(bid))
+                                                {
+                                                    if (startSnap.characterMaxHpAtomic != null && startSnap.characterMaxHpAtomic.TryGetValue("bot_b", out var mb)) _characterMaxHp[bid] = mb;
+                                                }
+                                            }
+                                            catch { }
+                                            if (startSnap.characterHpAtomic != null)
+                                            {
+                                                UpdatePlayerHpFromSnapshot("bot_a", PlayerUI.Side.Left, startSnap);
+                                                UpdatePlayerHpFromSnapshot("bot_b", PlayerUI.Side.Right, startSnap);
+                                            }
+                                            if (startSnap.currentTurn != null)
+                                            {
+                                                roundManager?.StartTurnTimer(startSnap.currentTurn.turnNumber, startSnap.currentTurn.opensAt, startSnap.currentTurn.closesAt);
+                                            }
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Debug.LogWarning($"GameManager: failed to apply start_result snapshot: {ex}");
+                                    }
+                                }
+                            }
+                            break;
+                        }
+                    case "meme_battle_snapshot":
+                        var snap = j["snapshot"].ToObject<MemeBattleMatchSnapshot>();
+                        if (snap != null)
+                        {
+                            _latestSnapshot = snap;
+                            _characterMaxHp = snap.characterMaxHpAtomic ?? new System.Collections.Generic.Dictionary<string, long>();
+                            // Ensure mapping under side keys if we know characterIds
+                            try
+                            {
+                                // if top-level contains characterIds, capture mapping
+                                var chars = j["characterIds"] as JArray;
+                                if (chars != null && chars.Count >= 2)
+                                {
+                                    _characterNames["bot_a"] = chars[0].ToString();
+                                    _characterNames["bot_b"] = chars[1].ToString();
+                                }
+
+                                if (snap.characterMaxHpAtomic != null)
+                                {
+                                    foreach (var kv in snap.characterMaxHpAtomic)
+                                    {
+                                        if (!_characterMaxHp.ContainsKey(kv.Key)) _characterMaxHp[kv.Key] = kv.Value;
+                                    }
+                                    if (_characterNames.TryGetValue("bot_a", out var aid) && !_characterMaxHp.ContainsKey(aid))
+                                    {
+                                        if (snap.characterMaxHpAtomic.TryGetValue("bot_a", out var ma)) _characterMaxHp[aid] = ma;
+                                    }
+                                    if (_characterNames.TryGetValue("bot_b", out var bid) && !_characterMaxHp.ContainsKey(bid))
+                                    {
+                                        if (snap.characterMaxHpAtomic.TryGetValue("bot_b", out var mb)) _characterMaxHp[bid] = mb;
+                                    }
+                                }
+                            }
+                            catch { }
+
+                            if (snap.characterHpAtomic != null)
+                            {
+                                UpdatePlayerHpFromSnapshot("bot_a", PlayerUI.Side.Left, snap);
+                                UpdatePlayerHpFromSnapshot("bot_b", PlayerUI.Side.Right, snap);
+                            }
+                            if (snap.currentTurn != null)
+                            {
+                                roundManager?.StartTurnTimer(snap.currentTurn.turnNumber, snap.currentTurn.opensAt, snap.currentTurn.closesAt);
+                            }
+                        }
+                        break;
+                    case "meme_battle_event":
+                        var ev = j["event"].ToObject<MemeBattleEvent>();
+                        if (ev != null) HandleMemeBattleEvent(ev);
+                        break;
+                    case "error":
+                        Debug.LogError($"GameManager: socket error: {j.Value<string>("error")}");
+                        break;
+                    default:
+                        break;
+                }
+                return;
+            }
+        }
+        catch (Exception)
+        {
+            // legacy
+        }
+
+        string evtName = ExtractEventName(json);
+        if (string.IsNullOrEmpty(evtName)) return;
+        switch (evtName)
+        {
+            case "playerLeftAttack":
+                int dmg = ExtractInt(json, "damage");
+                PlaySingleAnimation(PlayerUI.Side.Left, "LeftAttack");
+                    GetPlayerUIForSide(PlayerUI.Side.Left)?.ShowDamage(PlayerUI.Side.Left, dmg);
+                break;
+            case "playerRightHit":
+                int dmg2 = ExtractInt(json, "damage");
+                PlaySingleAnimation(PlayerUI.Side.Right, "RightHit");
+                    GetPlayerUIForSide(PlayerUI.Side.Right)?.ShowDamage(PlayerUI.Side.Right, dmg2);
+                break;
+            case "playerLeftAnswer":
+                string text = ExtractString(json, "answer") ?? ExtractString(json, "text");
+                    GetPlayerUIForSide(PlayerUI.Side.Left)?.SetDialogue(PlayerUI.Side.Left, text);
+                PlaySingleAnimation(PlayerUI.Side.Left, "Talk");
+                break;
+            case "ShowQuestion":
+            case "question_start":
+                string q = ExtractString(json, "question") ?? ExtractString(json, "text");
+                roundManager?.ShowQuestion(q);
+                break;
+            default:
+                break;
+        }
+    }
+
+    void UpdatePlayerHpFromSnapshot(string characterId, PlayerUI.Side side, MemeBattleMatchSnapshot snap)
+    {
+        if (snap.characterHpAtomic != null)
+        {
+            string lookupId = characterId;
+            // If snapshot doesn't have the provided key, try mapping from known side->characterId
+            if (!snap.characterHpAtomic.ContainsKey(lookupId) && _characterNames.TryGetValue(characterId, out var mapped))
+            {
+                lookupId = mapped;
+            }
+
+            if (snap.characterHpAtomic.TryGetValue(lookupId, out long hp))
+            {
+                long max = 0;
+                if (snap.characterMaxHpAtomic != null) snap.characterMaxHpAtomic.TryGetValue(lookupId, out max);
+                var ui = GetPlayerUIForSide(side);
+                ui?.UpdateFromState(side, (float)hp, (float)max, 0f, 1f, lookupId);
+            }
+        }
+
+        // Also update PlayerUI health display
+        UpdatePlayerHealthDisplay(snap);
+    }
+
+    void UpdatePlayerHealthDisplay(MemeBattleMatchSnapshot snap)
+    {
+        if (snap == null) return;
+
+        // Resolve actual character ids for each side (fall back to side-key if mapping missing)
+        string leftId = _characterNames.TryGetValue("bot_a", out var l) ? l : "bot_a";
+        string rightId = _characterNames.TryGetValue("bot_b", out var r) ? r : "bot_b";
+
+        long hpA = 0, hpB = 0, maxHpA = 0, maxHpB = 0;
+
+        if (snap.characterHpAtomic != null)
+        {
+            snap.characterHpAtomic.TryGetValue(leftId, out hpA);
+            snap.characterHpAtomic.TryGetValue(rightId, out hpB);
+        }
+
+        if (snap.characterMaxHpAtomic != null)
+        {
+            snap.characterMaxHpAtomic.TryGetValue(leftId, out maxHpA);
+            snap.characterMaxHpAtomic.TryGetValue(rightId, out maxHpB);
+        }
+
+        // Fallback: check local _characterMaxHp store if snapshot doesn't provide a max
+        if (maxHpA == 0) _characterMaxHp.TryGetValue(leftId, out maxHpA);
+        if (maxHpA == 0) _characterMaxHp.TryGetValue("bot_a", out maxHpA);
+        if (maxHpB == 0) _characterMaxHp.TryGetValue(rightId, out maxHpB);
+        if (maxHpB == 0) _characterMaxHp.TryGetValue("bot_b", out maxHpB);
+
+        // Update health display for both sides (slider + text)
+        GetPlayerUIForSide(PlayerUI.Side.Left)?.UpdateHealthDisplay(PlayerUI.Side.Left, hpA, maxHpA);
+        GetPlayerUIForSide(PlayerUI.Side.Right)?.UpdateHealthDisplay(PlayerUI.Side.Right, hpB, maxHpB);
+
+        Debug.Log($"UpdatePlayerHealthDisplay: Left={hpA}/{maxHpA}, Right={hpB}/{maxHpB}");
+    }
+
+    void HandleMemeBattleEvent(MemeBattleEvent ev)
+    {
+        var t = ev.eventType;
+        var payload = ev.payload;
+        switch (t)
+        {
+            case "MATCH_CREATED":
+                {
+                    var characterIds = payload.Value<Newtonsoft.Json.Linq.JArray>("characterIds");
+                    long initialHpAtomic = payload.Value<long?>("initialHpAtomic") ?? 1000;
+                    if (characterIds != null && characterIds.Count >= 2)
+                    {
+                        string botA = characterIds[0].ToString();
+                        string botB = characterIds[1].ToString();
+                        // store mapping from side keys to actual character ids
+                        _characterNames["bot_a"] = botA;
+                        _characterNames["bot_b"] = botB;
+
+                        GetPlayerUIForSide(PlayerUI.Side.Left)?.UpdateName(PlayerUI.Side.Left, botA);
+                        GetPlayerUIForSide(PlayerUI.Side.Right)?.UpdateName(PlayerUI.Side.Right, botB);
+
+                        // store max HP under both the side-key and the actual character id so lookups succeed
+                        _characterMaxHp["bot_a"] = initialHpAtomic;
+                        _characterMaxHp["bot_b"] = initialHpAtomic;
+                        _characterMaxHp[botA] = initialHpAtomic;
+                        _characterMaxHp[botB] = initialHpAtomic;
+                        // Store character names for health display
+                        // Initialize health display with initial HP
+                        GetPlayerUIForSide(PlayerUI.Side.Left)?.UpdateHealthDisplay(PlayerUI.Side.Left, initialHpAtomic, initialHpAtomic);
+                        GetPlayerUIForSide(PlayerUI.Side.Right)?.UpdateHealthDisplay(PlayerUI.Side.Right, initialHpAtomic, initialHpAtomic);
+                    }
+                    Debug.Log($"MATCH_CREATED initialHpAtomic={initialHpAtomic}");
+                }
+                break;
+            case "MATCH_STARTED":
+                bool open = payload.Value<bool?>("contributionWindowOpen") ?? false;
+                Debug.Log($"MATCH_STARTED contributionWindowOpen={open}");
+                break;
+            case "TURN_STARTED":
+                {
+                    int turnNumber = payload.Value<int?>("turnNumber") ?? 0;
+                    string opensAtIso = payload.Value<string>("opensAt");
+                    string closesAtIso = payload.Value<string>("closesAt");
+                    roundManager?.StartTurnTimer(turnNumber, opensAtIso, closesAtIso);
+
+                    // Clear old dialogue from previous turn
+                    GetPlayerUIForSide(PlayerUI.Side.Left)?.ClearDialogue(PlayerUI.Side.Left);
+                    GetPlayerUIForSide(PlayerUI.Side.Right)?.ClearDialogue(PlayerUI.Side.Right);
+
+                    Debug.Log($"TURN_STARTED turnNumber={turnNumber}");
+                }
+                break;
+            case "ARGUMENT_SELECTED":
+                {
+                    string argumentId = payload.Value<string>("argumentId");
+                    string actorCharacterId = payload.Value<string>("actorCharacterId");
+                    string targetCharacterId = payload.Value<string>("targetCharacterId");
+                    string memeText = payload.Value<string>("memeText");
+                    string animationId = payload.Value<string>("animationId");
+
+                    Debug.Log($"ARGUMENT_SELECTED argumentId={argumentId} actor={actorCharacterId} target={targetCharacterId} anim={animationId} meme='{memeText}'");
+
+                    // Determine which side is attacking and which is being hit
+                    PlayerUI.Side? attackerSide = SideFromCharacterId(actorCharacterId);
+                    PlayerUI.Side? targetSide = SideFromCharacterId(targetCharacterId);
+
+                    // Debug: Log sides
+                    Debug.Log($"[ARGUMENT_SELECTED] attackerSide={attackerSide}, targetSide={targetSide}, animationId='{animationId}'");
+
+                    // Play matched attack & hit animations (same variant number for both)
+                    if (!string.IsNullOrEmpty(animationId) && attackerSide.HasValue && targetSide.HasValue)
+                    {
+                        // Attacker plays attack, target plays hit (with matched variant numbers)
+                        string hitAnimationId = animationId.Replace("attack", "hit");
+                        Debug.Log($"✅ [ARGUMENT_SELECTED] Playing MATCHED: attacker {attackerSide} plays '{animationId}' → target {targetSide} plays '{hitAnimationId}'");
+                        animationController?.PlayBothAnimationsWithMatchedVariant(attackerSide.Value, animationId, targetSide.Value, hitAnimationId);
+                    }
+                    else if (!string.IsNullOrEmpty(animationId) && attackerSide.HasValue)
+                    {
+                        // Fallback if we only have attacker side
+                        Debug.LogWarning($"❌ [ARGUMENT_SELECTED] Could not determine target side. Attacker={attackerSide}, Target={targetSide}, using single animation");
+                        animationController?.PlayAnimation(attackerSide.Value, animationId);
+                    }
+                    else
+                    {
+                        Debug.LogError($"❌ [ARGUMENT_SELECTED] Missing required data: animationId='{animationId}', attackerSide={attackerSide}");
+                    }
+
+                    // Show meme text on attacker
+                    if (attackerSide.HasValue && !string.IsNullOrEmpty(memeText))
+                    {
+                        GetPlayerUIForSide(attackerSide.Value)?.SetDialogue(attackerSide.Value, memeText);
+                    }
+
+                    // Show voting totals if provided
+                    if (payload["finalTotalsAtomic"] != null)
+                    {
+                        try 
+                        { 
+                            var dict = payload["finalTotalsAtomic"].ToObject<System.Collections.Generic.Dictionary<string, long>>(); 
+                            roundManager?.ShowFinalTotals(dict); 
+                        } 
+                        catch (System.Exception ex) 
+                        { 
+                            Debug.LogWarning($"Failed to parse finalTotalsAtomic: {ex}");
+                        }
+                    }
+                }
+                break;
+            case "MULTIPLIER_SELECTED":
+                {
+                    int multiplierScaled = payload.Value<int?>("multiplierScaled") ?? 0;
+                    int multiplierScale = payload.Value<int?>("multiplierScale") ?? 1;
+                    float mult = multiplierScale != 0 ? ((float)multiplierScaled) / multiplierScale : 0f;
+                    roundManager?.ShowMultiplier(mult);
+                }
+                break;
+            case "DAMAGE_APPLIED":
+                {
+                    string targetId = payload.Value<string>("targetCharacterId");
+                    long damage = payload.Value<long?>("damageAtomic") ?? 0;
+                    long hpAfter = payload.Value<long?>("hpAfterAtomic") ?? 0;
+                    string animationId = payload.Value<string>("animationId");
+                    var side = SideFromCharacterId(targetId);
+
+                    if (side.HasValue)
+                    {
+                        // Resolve max HP: try local store, then latest snapshot, then fall back to hpBefore/hpAfter
+                        long maxHp = 0;
+                        if (!_characterMaxHp.TryGetValue(targetId, out maxHp) || maxHp == 0)
+                        {
+                            // try mapping from side key
+                            if (_characterNames.TryGetValue(targetId, out var mapped) && _characterMaxHp.TryGetValue(mapped, out var mm)) maxHp = mm;
+                        }
+                        if ((maxHp == 0 || maxHp < hpAfter) && _latestSnapshot?.characterMaxHpAtomic != null)
+                        {
+                            _latestSnapshot.characterMaxHpAtomic.TryGetValue(targetId, out maxHp);
+                            if (maxHp == 0 && _characterNames.TryGetValue("bot_a", out var aid) && _latestSnapshot.characterMaxHpAtomic.TryGetValue(aid, out var altA)) maxHp = altA;
+                        }
+                        // final fallback: use hpAfter or hpBefore if those seem like the full HP
+                        if (maxHp == 0)
+                        {
+                            long hpBefore = payload.Value<long?>("hpBeforeAtomic") ?? hpAfter;
+                            maxHp = hpBefore > 0 ? hpBefore : hpAfter;
+                        }
+
+                        // Update both slider and text display
+                        GetPlayerUIForSide(side.Value)?.UpdateHealthDisplay(side.Value, hpAfter, maxHp);
+
+                        // Show damage popup
+                        if (damage > 0)
+                        {
+                            GetPlayerUIForSide(side.Value)?.ShowDamage(side.Value, (int)damage);
+                        }
+
+                        Debug.Log($"DAMAGE_APPLIED {targetId}: -{damage} = {hpAfter}/{maxHp}");
+                    }
+                }
+                break;
+            case "HP_CHANGED":
+                {
+                    string targetId = payload.Value<string>("characterId");
+                    long hpAfter = payload.Value<long?>("hpAfterAtomic") ?? 0;
+                    var side = SideFromCharacterId(targetId);
+
+                    if (side.HasValue)
+                    {
+                        long maxHp = 0;
+                        if (!_characterMaxHp.TryGetValue(targetId, out maxHp) || maxHp == 0)
+                        {
+                            if (_latestSnapshot?.characterMaxHpAtomic != null) _latestSnapshot.characterMaxHpAtomic.TryGetValue(targetId, out maxHp);
+                            if (maxHp == 0 && _characterNames.TryGetValue(targetId, out var mapped) && _latestSnapshot?.characterMaxHpAtomic != null) _latestSnapshot.characterMaxHpAtomic.TryGetValue(mapped, out maxHp);
+                        }
+                        if (maxHp == 0)
+                        {
+                            // try local store
+                            _characterMaxHp.TryGetValue(targetId, out maxHp);
+                            if (maxHp == 0 && _characterNames.TryGetValue("bot_a", out var aid)) _characterMaxHp.TryGetValue(aid, out maxHp);
+                        }
+                        if (maxHp == 0) maxHp = hpAfter; // fallback
+
+                        // Update both slider and text display
+                        GetPlayerUIForSide(side.Value)?.UpdateHealthDisplay(side.Value, hpAfter, maxHp);
+
+                        Debug.Log($"HP_CHANGED {targetId}: {hpAfter}/{maxHp}");
+                    }
+
+                    // Also update snapshot for future reference
+                    if (_latestSnapshot != null && _latestSnapshot.characterHpAtomic != null)
+                    {
+                        _latestSnapshot.characterHpAtomic[targetId] = hpAfter;
+                    }
+                }
+                break;
+            case "WINNER_DECLARED":
+                {
+                    // Only process once
+                    if (_matchEnded) return;
+                    _matchEnded = true;
+
+                    string winnerId = payload.Value<string>("winnerCharacterId");
+                    var winnerSide = SideFromCharacterId(winnerId);
+                    var loserSide = winnerSide == PlayerUI.Side.Left ? PlayerUI.Side.Right : PlayerUI.Side.Left;
+
+                    Debug.Log($"WINNER_DECLARED winnerId={winnerId} side={winnerSide}");
+                    if (winnerSide.HasValue)
+                    {
+                        // Winner: show victory dialogue and play victory animation
+                        GetPlayerUIForSide(winnerSide.Value)?.SetDialogue(winnerSide.Value, "VICTORY!");
+                        animationController?.PlayAnimation(winnerSide.Value, "victory");
+
+                        // Loser: play die animation (only once)
+                        if (!_loserSideForDieAnimation.HasValue || _loserSideForDieAnimation != loserSide)
+                        {
+                            _loserSideForDieAnimation = loserSide;
+                            animationController?.PlayAnimation(loserSide, "die");
+                        }
+                    }
+                    OnMatchEnded(winnerId);
+                }
+                break;
+            default:
+                Debug.LogWarning($"GameManager: Unknown MemeBattleEvent type: {t}");
+                break;
+        }
+    }
+
+    void OnMatchEnded(string winnerCharacterId)
+    {
+        Debug.Log($"OnMatchEnded: winner={winnerCharacterId}");
+        // Future: Show match result UI, offer rematch button, etc.
+    }
+
+    // Debug helper: print setup info to console
+    void PrintDebugInfo()
+    {
+        if (!debugMode) return;
+        Debug.Log("=== GameManager Debug Info ===");
+        Debug.Log($"PlayerUI: {(playerUI != null ? "✓" : "✗")}");
+        Debug.Log($"RoundManager: {(roundManager != null ? "✓" : "✗")}");
+        Debug.Log($"AnimationController: {(animationController != null ? "✓" : "✗")}");
+        if (animationController != null)
+        {
+            Debug.Log($"  - LeftAnimator: {(animationController.leftAnimator != null ? "✓" : "✗")}");
+            Debug.Log($"  - RightAnimator: {(animationController.rightAnimator != null ? "✓" : "✗")}");
+        }
+        Debug.Log($"WebSocketManager: {(WebSocketManager.Instance != null ? "✓" : "✗")}");
+    }
+
+    PlayerUI.Side? SideFromCharacterId(string id)
+    {
+        if (string.IsNullOrEmpty(id)) return null;
+        if (id.Equals("bot_a", StringComparison.OrdinalIgnoreCase)) return PlayerUI.Side.Left;
+        if (id.Equals("bot_b", StringComparison.OrdinalIgnoreCase)) return PlayerUI.Side.Right;
+        return null;
+    }
+
+    public void PlaySingleAnimation(PlayerUI.Side side, string animationId, float crossFade = -1f)
+    {
+        animationController?.PlayAnimation(side, animationId, crossFade);
+    }
+
+    public void PlayBothAnimations(string leftAnimationId, string rightAnimationId, float crossFade = -1f)
+    {
+        animationController?.PlayBoth(leftAnimationId, rightAnimationId, crossFade);
+    }
+
+    AnimationController.AnimationPair GetRandomPreset()
+    {
+        if (animationController == null || animationController.presets == null || animationController.presets.Length == 0) return null;
+        var valid = new System.Collections.Generic.List<AnimationController.AnimationPair>();
+        foreach (var p in animationController.presets) { if (p == null) continue; if (string.IsNullOrEmpty(p.leftState) || string.IsNullOrEmpty(p.rightState)) continue; valid.Add(p); }
+        if (valid.Count == 0) return null; int idx = UnityEngine.Random.Range(0, valid.Count); return valid[idx];
+    }
+
+    string ExtractEventName(string json)
+    {
+        try { var j = JObject.Parse(json); return j.Value<string>("eventName") ?? j.Value<string>("event"); }
+        catch { return null; }
+    }
+
+    int ExtractInt(string json, string key)
+    {
+        try { var j = JObject.Parse(json); return j.Value<int?>(key) ?? 0; }
+        catch { return 0; }
+    }
+
+    string ExtractString(string json, string key)
+    {
+        try { var j = JObject.Parse(json); return j.Value<string>(key); }
+        catch { return null; }
+    }
+}

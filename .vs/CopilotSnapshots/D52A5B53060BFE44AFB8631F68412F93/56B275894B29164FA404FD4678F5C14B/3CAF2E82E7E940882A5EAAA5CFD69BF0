@@ -1,0 +1,175 @@
+﻿using System.Collections;
+using UnityEngine;
+using UnityEngine.UI;
+
+/// <summary>
+/// Presentation / UI Layer
+/// PlayerUI represents UI for a single player (left or right).
+/// It exposes small helpers to update HP, Rage, name and dialogue.
+/// </summary>
+public class PlayerUI : MonoBehaviour
+{
+    public enum Side { Left, Right }
+
+    [System.Serializable]
+    public class Elements
+    {
+        public Slider hpSlider;
+        public Slider rageSlider;
+        public Text nameText;
+        public Text speechBubbleText;
+    }
+
+    [Header("Left Player UI")]
+    public Elements left;
+
+    [Header("Right Player UI")]
+    public Elements right;
+
+    [Header("Health Display")]
+    [Tooltip("Text to display left player's HP (e.g., '800/1000')")]
+    public Text healthLeftText;
+    [Tooltip("Text to display right player's HP (e.g., '950/1000')")]
+    public Text healthRightText;
+
+    Elements GetElements(Side side) => side == Side.Left ? left : right;
+
+    // Coroutines to animate HP slider changes per side
+    private Coroutine _hpLerpLeft;
+    private Coroutine _hpLerpRight;
+
+    public void UpdateHP(Side side, float current, float max)
+    {
+        var e = GetElements(side);
+        if (e == null || e.hpSlider == null) return;
+        float v = max > 0f ? Mathf.Clamp01(current / max) : 0f;
+        // Smoothly animate slider toward target value
+        // Stop previous coroutine for this side if running
+        if (side == Side.Left)
+        {
+            if (_hpLerpLeft != null) StopCoroutine(_hpLerpLeft);
+            _hpLerpLeft = StartCoroutine(LerpSliderRoutine(e.hpSlider, v));
+        }
+        else
+        {
+            if (_hpLerpRight != null) StopCoroutine(_hpLerpRight);
+            _hpLerpRight = StartCoroutine(LerpSliderRoutine(e.hpSlider, v));
+        }
+    }
+
+    IEnumerator LerpSliderRoutine(Slider slider, float target)
+    {
+        if (slider == null) yield break;
+        float start = slider.value;
+        if (Mathf.Approximately(start, target))
+        {
+            slider.value = target;
+            yield break;
+        }
+        float diff = Mathf.Abs(target - start);
+        // Duration scales with difference; decreases more slowly when losing HP
+        float baseDur = Mathf.Clamp(diff * 0.6f, 0.05f, 1.0f);
+        if (target < start) baseDur *= 1.5f; // slower when decreasing
+        float elapsed = 0f;
+        while (elapsed < baseDur)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(elapsed / baseDur));
+            slider.value = Mathf.Lerp(start, target, t);
+            yield return null;
+        }
+        slider.value = target;
+    }
+
+    public void UpdateRage(Side side, float current, float max)
+    {
+        var e = GetElements(side);
+        if (e == null || e.rageSlider == null) return;
+        float v = max > 0f ? Mathf.Clamp01(current / max) : 0f;
+        e.rageSlider.value = v;
+    }
+
+    public void UpdateName(Side side, string newName)
+    {
+        var e = GetElements(side);
+        if (e == null || e.nameText == null) return;
+        e.nameText.text = newName ?? string.Empty;
+    }
+
+    public void SetDialogue(Side side, string text)
+    {
+        var e = GetElements(side);
+        if (e == null || e.speechBubbleText == null) return;
+        e.speechBubbleText.text = text ?? string.Empty;
+    }
+
+    public void ClearDialogue(Side side)
+    {
+        var e = GetElements(side);
+        if (e == null || e.speechBubbleText == null) return;
+        e.speechBubbleText.text = string.Empty;
+    }
+
+    public void ShowDamage(Side side, int amount)
+    {
+        var e = GetElements(side);
+        if (e == null || e.speechBubbleText == null) return;
+        e.speechBubbleText.text = $"-{amount}";
+        // clear after a short delay
+        // Start a short delayed clear
+        StartClearCoroutine(e.speechBubbleText, 1.5f);
+    }
+
+    async void StartClearCoroutine(Text text, float delay)
+    {
+        await TaskDelaySeconds(delay);
+        if (text != null) text.text = string.Empty;
+    }
+
+    // Task-based delay to avoid adding MonoBehaviour helper; uses Unity's time via Task.Delay since running in editor/play mode is fine
+    System.Threading.Tasks.Task TaskDelaySeconds(float seconds)
+    {
+        return System.Threading.Tasks.Task.Delay((int)(seconds * 1000));
+    }
+
+    public void UpdateFromState(Side side, float hpCurrent, float hpMax, float rageCurrent, float rageMax, string playerName)
+    {
+        UpdateHP(side, hpCurrent, hpMax);
+        UpdateRage(side, rageCurrent, rageMax);
+        UpdateName(side, playerName);
+    }
+
+    /// <summary>
+    /// Update health display for a specific side.
+    /// Example: UpdateHealthDisplay(Side.Left, 800, 1000)
+    /// Updates both the HP slider and the text display.
+    /// </summary>
+    public void UpdateHealthDisplay(Side side, long currentHp, long maxHp)
+    {
+        // Update slider
+        UpdateHP(side, (float)currentHp, (float)maxHp);
+
+        // Update text
+        var textField = side == Side.Left ? healthLeftText : healthRightText;
+        if (textField == null)
+        {
+            Debug.LogWarning($"PlayerUI.UpdateHealthDisplay: healthLeftText/healthRightText is NULL for side {side}! Please assign in Inspector.");
+            return;
+        }
+        textField.text = $"{currentHp}/{maxHp}";
+        Debug.Log($"PlayerUI.UpdateHealthDisplay [{side}]: {currentHp}/{maxHp}");
+    }
+
+    /// <summary>
+    /// Clear health display text for a specific side.
+    /// </summary>
+    public void ClearHealthDisplay(Side side)
+    {
+        var textField = side == Side.Left ? healthLeftText : healthRightText;
+        if (textField != null)
+        {
+            textField.text = string.Empty;
+        }
+    }
+}
+

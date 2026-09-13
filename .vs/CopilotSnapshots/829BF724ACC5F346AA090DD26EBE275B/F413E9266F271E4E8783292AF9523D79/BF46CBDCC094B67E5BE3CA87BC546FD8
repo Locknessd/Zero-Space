@@ -1,0 +1,26 @@
+﻿using UnityEngine;
+using TMPro;
+
+/// <summary>
+/// PROJECT ARCHITECTURE: Presentation / UI Layer
+/// ROLE: Qu?n lý thông tin v? vòng ??u và ??ng h? ??m ng??c trên giao di?n.
+/// RESPONSIBILITIES:
+/// - Hi?n th? s? vòng ??u hi?n t?i (Ví d?: ROUND 3).
+/// - Qu?n lý và hi?n th? ??ng h? ??m ng??c th?i gian tr? l?i c?a vòng ??u (time_limit) d?a trên s? ki?n question_start t? Server.
+/// AI NOTE: Nh?n giá tr? th?i gian t? GameManager và t? ??m ng??c (Countdown timer) m?i frame.
+/// </summary>
+public class RoundManager : MonoBehaviour
+{
+    [Header("Round UI References")]
+    public TextMeshProUGUI roundNumberText;
+    public TextMeshProUGUI timerText;
+
+    // TODO: AI hãy vi?t logic ??m ng??c th?i gian (timer) và hi?n th? s? vòng ??u.
+    public void ShowQuestion(string question)
+    {
+        if (timerText != null)
+        {
+            timerText.text = question ?? string.Empty;
+        }
+    }
+}

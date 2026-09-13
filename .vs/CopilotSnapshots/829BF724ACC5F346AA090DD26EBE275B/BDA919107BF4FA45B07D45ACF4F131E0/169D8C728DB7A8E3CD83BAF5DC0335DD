@@ -1,0 +1,21 @@
+﻿using UnityEngine;
+
+/// <summary>
+/// PROJECT ARCHITECTURE: Presentation / Animation Layer
+/// ROLE: Quản lý hiệu ứng hình ảnh, mô hình 3D và hoạt ảnh (Animations/Meme) của nhân vật.
+/// RESPONSIBILITIES:
+/// - Kích hoạt các hoạt ảnh tương ứng (Idle, Talking, Victory, Hurt, Dance) dựa trên animation_id nhận từ sự kiện round_result của Server.
+/// - Hiển thị khung hình ảnh Meme GIF động tương ứng với meme_gif_url nếu có.
+/// AI NOTE: Gắn script này vào các đối tượng nhân vật (Pepe/Doge) để điều khiển Animator Component.
+/// </summary>
+public class AnimationController : MonoBehaviour
+{
+    private Animator animator;
+
+    void Start()
+    {
+        animator = GetComponent<Animator>();
+    }
+
+    // TODO: AI hãy viết hàm PlayAnimation(string animationId) để trigger Animator các trạng thái đấm bốc/trúng đòn.
+}

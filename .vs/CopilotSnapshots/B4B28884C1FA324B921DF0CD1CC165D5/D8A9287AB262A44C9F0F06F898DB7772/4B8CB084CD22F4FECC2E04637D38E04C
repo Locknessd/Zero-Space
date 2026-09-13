@@ -1,0 +1,205 @@
+﻿using System.Net.WebSockets;
+using System;
+using System.Collections.Concurrent;
+using System.Text;
+using System.Threading.Tasks;
+using UnityEngine;
+using SocketIOClient;
+
+/*
+ * WebSocketManager supports two modes:
+ * - If you install NativeWebSocket and define the scripting symbol `NATIVE_WEB_SOCKET`, the manager will use NativeWebSocket (recommended).
+ * - Otherwise a lightweight stub implementation is used so the project compiles; it logs warnings and does not perform real networking.
+ */
+
+
+public class WebSocketManager : MonoBehaviour
+{
+    public static WebSocketManager Instance { get; private set; }
+
+    [Header("Connection")]
+    [Tooltip("WSS endpoint for the game backend.")]
+    [SerializeField]
+    private string _serverUrl = "http://<backend-host>:9092";
+
+    [Tooltip("Automatically try to reconnect on unexpected disconnect.")]
+    [SerializeField]
+    private bool _autoReconnect = true;
+
+    [Tooltip("Seconds to wait before attempting reconnect.")]
+    [SerializeField]
+    private float _reconnectDelay = 3f;
+
+    public event Action<string> OnRawMessageReceived;
+    private SocketIO _ws;
+    //private NativeWebSocket.WebSocket _ws;
+    private readonly ConcurrentQueue<string> _incomingMessages = new ConcurrentQueue<string>();
+    private bool _isClosing;
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
+    private void Start()
+    {
+        _ = ConnectAsync();
+    }
+
+    private void Update()
+    {
+        // NativeWebSocket requires DispatchMessageQueue on main thread for WebGL
+        _ws?.DispatchMessageQueue();
+
+        while (_incomingMessages.TryDequeue(out string msg))
+        {
+            try
+            {
+                OnRawMessageReceived?.Invoke(msg);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"WebSocketManager: message handler exception: {ex}");
+            }
+        }
+    }
+
+    public async Task ConnectAsync()
+    {
+        if (_ws != null)
+            return;
+
+        _isClosing = false;
+        _ws = new NativeWebSocket.WebSocket(_serverUrl);
+
+        _ws.OnOpen += () => Debug.Log("WebSocketManager: Connected.");
+        _ws.OnError += (e) => Debug.LogError($"WebSocketManager: Error: {e}");
+        _ws.OnClose += (e) =>
+        {
+            Debug.Log($"WebSocketManager: Closed: {e}");
+            _ws = null;
+            if (_autoReconnect && !_isClosing)
+            {
+                _ = Task.Delay(TimeSpan.FromSeconds(_reconnectDelay)).ContinueWith(_ => ConnectAsync());
+            }
+        };
+
+        _ws.OnMessage += (bytes) =>
+        {
+            var message = Encoding.UTF8.GetString(bytes);
+            _incomingMessages.Enqueue(message);
+        };
+
+        try
+        {
+            await _ws.Connect();
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"WebSocketManager: Connect failed: {ex}");
+            _ws = null;
+        }
+    }
+
+    public async Task DisconnectAsync()
+    {
+        _isClosing = true;
+        _autoReconnect = false;
+
+        if (_ws != null)
+        {
+            try
+            {
+                await _ws.Close();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"WebSocketManager: Close exception: {ex}");
+            }
+
+            _ws = null;
+        }
+    }
+
+    public async Task SendMessageToServer(string message)
+    {
+        if (string.IsNullOrEmpty(message))
+        {
+            Debug.LogWarning("WebSocketManager: Attempted to send empty message.");
+            return;
+        }
+
+        if (_ws == null || _ws.State != NativeWebSocket.WebSocketState.Open)
+        {
+            Debug.LogWarning("WebSocketManager: Socket not open.");
+            return;
+        }
+
+        await _ws.SendText(message);
+    }
+
+    private async void OnApplicationQuit()
+    {
+        await DisconnectAsync();
+    }
+
+    private async void OnDestroy()
+    {
+        if (Instance == this) Instance = null;
+        await DisconnectAsync();
+    }
+}
+
+#else
+
+// Fallback stub: compiles when NativeWebSocket/System.WebSockets aren't available.
+// Logs warnings and provides the same public surface so other systems compile.
+public class WebSocketManager : MonoBehaviour
+{
+    public static WebSocketManager Instance { get; private set; }
+
+    [Header("Connection")]
+    [SerializeField]
+    private string _serverUrl = "http://<backend-host>:9092";
+
+    public event Action<string> OnRawMessageReceived;
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
+    public Task ConnectAsync()
+    {
+        Debug.LogWarning("WebSocketManager: NativeWebSocket not available. Install NativeWebSocket package and define 'NATIVE_WEB_SOCKET' in Player Settings to enable real networking.");
+        return Task.CompletedTask;
+    }
+
+    public Task DisconnectAsync()
+    {
+        return Task.CompletedTask;
+    }
+
+    public Task SendMessageToServer(string message)
+    {
+        Debug.LogWarning("WebSocketManager: SendMessageToServer called but no websocket implementation is available.");
+        return Task.CompletedTask;
+    }
+}
+
+#endif
+

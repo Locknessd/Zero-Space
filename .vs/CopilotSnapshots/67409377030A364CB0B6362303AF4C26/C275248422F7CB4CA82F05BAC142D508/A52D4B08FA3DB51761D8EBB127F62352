@@ -1,0 +1,128 @@
+﻿using System;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEditor.Animations;
+using UnityEngine;
+
+/// <summary>
+/// Scans AnimatorController assets (or controllers attached to selected GameObjects) for transitions
+/// that reference parameters not declared on the controller. Useful to find missing Trigger/Bool/Float/Int parameters
+/// that cause transitions to never fire at runtime.
+/// </summary>
+public static class AnimatorMissingParameterScanner
+{
+    [MenuItem("Tools/Animator/List Missing Transition Parameters (Selected Controllers)")]
+    public static void ScanSelectedControllers()
+    {
+        var objs = Selection.objects;
+        if (objs == null || objs.Length == 0)
+        {
+            Debug.LogWarning("AnimatorMissingParameterScanner: No assets selected. Select AnimatorController assets in Project window.");
+            return;
+        }
+
+        foreach (var o in objs)
+        {
+            var controller = o as AnimatorController;
+            if (controller == null) continue;
+            ScanController(controller);
+        }
+    }
+
+    [MenuItem("Tools/Animator/List Missing Transition Parameters (Controllers on Selected GameObjects)")]
+    public static void ScanControllersOnSelectedGameObjects()
+    {
+        var gos = Selection.gameObjects;
+        if (gos == null || gos.Length == 0)
+        {
+            Debug.LogWarning("AnimatorMissingParameterScanner: No GameObjects selected. Select GameObjects that have an Animator.");
+            return;
+        }
+
+        foreach (var go in gos)
+        {
+            var anim = go.GetComponent<Animator>();
+            if (anim == null) continue;
+            var controller = anim.runtimeAnimatorController as AnimatorController;
+            if (controller == null) continue;
+            ScanController(controller);
+        }
+    }
+
+    static void ScanController(AnimatorController controller)
+    {
+        if (controller == null) return;
+        Debug.Log($"AnimatorMissingParameterScanner: Scanning controller '{controller.name}'...");
+
+        var definedParams = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var p in controller.parameters) definedParams.Add(p.name);
+
+        int missingCount = 0;
+        for (int li = 0; li < controller.layers.Length; li++)
+        {
+            var layer = controller.layers[li];
+            ScanStateMachine(layer.stateMachine, controller, layer.name, definedParams, ref missingCount);
+        }
+
+        if (missingCount == 0) Debug.Log($"AnimatorMissingParameterScanner: No missing transition parameters found in '{controller.name}'.");
+        else Debug.LogWarning($"AnimatorMissingParameterScanner: Found {missingCount} missing parameter reference(s) in '{controller.name}'.");
+    }
+
+    static void ScanStateMachine(AnimatorStateMachine sm, AnimatorController controller, string layerName, HashSet<string> definedParams, ref int missingCount)
+    {
+        if (sm == null) return;
+
+        // AnyState transitions
+        try
+        {
+            var anyTrans = sm.anyStateTransitions;
+            foreach (var t in anyTrans)
+            {
+                CheckTransitionConditions(t, "AnyState", t.destinationState != null ? t.destinationState.name : "<unknown>", controller, layerName, definedParams, ref missingCount);
+            }
+        }
+        catch { }
+
+        // State transitions
+        foreach (var cs in sm.states)
+        {
+            var state = cs.state;
+            if (state == null) continue;
+            var transitions = state.transitions;
+            foreach (var t in transitions)
+            {
+                CheckTransitionConditions(t, state.name, t.destinationState != null ? t.destinationState.name : "<unknown>", controller, layerName, definedParams, ref missingCount);
+            }
+        }
+
+        // Recurse into nested state machines
+        foreach (var child in sm.stateMachines)
+        {
+            ScanStateMachine(child.stateMachine, controller, layerName + "/" + child.stateMachine.name, definedParams, ref missingCount);
+        }
+    }
+
+    static void CheckTransitionConditions(AnimatorStateTransition transition, string fromState, string toState, AnimatorController controller, string layerName, HashSet<string> definedParams, ref int missingCount)
+    {
+        if (transition == null) return;
+        try
+        {
+            var conditions = transition.conditions;
+            if (conditions == null || conditions.Length == 0) return;
+            foreach (var c in conditions)
+            {
+                var pname = c.parameter;
+                if (string.IsNullOrEmpty(pname)) continue;
+                if (!definedParams.Contains(pname))
+                {
+                    missingCount++;
+                    Debug.LogWarning($"Controller '{controller.name}' (layer '{layerName}'): Transition from '{fromState}' -> '{toState}' references missing parameter '{pname}'.");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"AnimatorMissingParameterScanner: Failed to inspect transition conditions: {ex.Message}");
+        }
+    }
+}

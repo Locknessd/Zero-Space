@@ -1,0 +1,20 @@
+﻿using UnityEngine;
+
+/// <summary>
+/// PROJECT ARCHITECTURE: Core Logic Layer (Controller trung tâm)
+/// ROLE: Điều phối luồng trận đấu, nhận dữ liệu từ WebSocketManager và phân phối xuống các hệ thống UI/Animation.
+/// RESPONSIBILITIES:
+/// - Lưu trữ trạng thái trận đấu hiện tại (MatchState) theo tài liệu thiết kế.
+/// - Phân tích (Parse) các gói tin JSON từ Server thành các C# Object tương ứng.
+/// - Gọi các hàm cập nhật giao diện của PlayerUI, RoundManager và AnimationController khi có sự kiện mới.
+/// AI NOTE: Script này đóng vai trò bộ não trung tâm của Client, không tự tính toán sát thương (vì BE đã tính), chỉ nhận kết quả và điều phối hiển thị.
+/// </summary>
+public class GameManager : MonoBehaviour
+{
+    // Tham chiếu đến các quản lý thành phần khác trong scene
+    public PlayerUI playerUI;
+    public RoundManager roundManager;
+    public AnimationController animationController;
+
+    // TODO: AI hãy viết các hàm nhận JSON string từ WebSocketManager, phân loại event và gọi UI/Animation tương ứng.
+}

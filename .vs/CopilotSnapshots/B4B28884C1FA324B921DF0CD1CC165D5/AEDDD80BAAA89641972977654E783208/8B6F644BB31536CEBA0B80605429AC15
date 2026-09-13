@@ -1,0 +1,242 @@
+﻿using UnityEngine;
+
+using UnityEngine;
+using UnityEngine.UI;
+using System;
+
+public class LoaddingManager : MonoBehaviour
+{
+    [Header("UI References")]
+    public GameObject loadingPanel;
+    public Slider progressSlider;
+    public Text percentText;
+    public Text statusText;
+
+    [Header("Behavior")]
+    [Tooltip("Hide loading panel automatically when connected")] public bool hideOnConnected = true;
+    [Tooltip("Seconds to wait after connected before hiding panel")] public float hideDelay = 0.5f;
+    [Tooltip("Scene name to load after websocket connected")]
+    public string targetSceneName = "BattleScene";
+    [Tooltip("Automatically load target scene when connected")]
+    public bool loadSceneOnConnected = true;
+
+    float _targetProgress = 0f;
+    string _status = "";
+    bool _subscribed = false;
+    bool _hasReachedFull = false;
+    [Header("Auto Subscribe")]
+    [Tooltip("If set, LoaddingManager will subscribe to this matchId as soon as socket connects and buffer incoming messages until Battle scene GameManager is ready.")]
+    public string autoSubscribeMatchId = "";
+
+    private System.Collections.Generic.List<string> _bufferedMessages = new System.Collections.Generic.List<string>();
+    private System.Action<string> _bufferHandler;
+    private bool _isBuffering = false;
+
+    void Start()
+    {
+        if (loadingPanel != null) loadingPanel.SetActive(true);
+        TrySubscribe();
+        // If auto-subscribe configured, persist across scene load so we can buffer messages
+        if (!string.IsNullOrEmpty(autoSubscribeMatchId))
+        {
+            DontDestroyOnLoad(gameObject);
+        }
+    }
+
+    void TrySubscribe()
+    {
+        if (_subscribed) return;
+        if (WebSocketManager.Instance != null)
+        {
+            WebSocketManager.Instance.OnConnectionProgress += HandleConnectionProgress;
+            WebSocketManager.Instance.OnConnectionError += HandleConnectionError;
+            _subscribed = true;
+        }
+    }
+
+    void OnDestroy()
+    {
+        if (_subscribed && WebSocketManager.Instance != null)
+        {
+            WebSocketManager.Instance.OnConnectionProgress -= HandleConnectionProgress;
+            WebSocketManager.Instance.OnConnectionError -= HandleConnectionError;
+        }
+    }
+
+    void HandleConnectionProgress(float value, string status)
+    {
+        // invoked on main thread by WebSocketManager.Update
+        // If we've already handled the first full connection, ignore subsequent lower updates
+        if (_hasReachedFull)
+        {
+            // still update status if provided, but keep progress at full
+            _status = status ?? string.Empty;
+            return;
+        }
+
+        _targetProgress = Mathf.Clamp01(value);
+        _status = status ?? string.Empty;
+        if (_targetProgress >= 1f && hideOnConnected)
+        {
+            _hasReachedFull = true;
+            // optionally hide after delay
+            Invoke(nameof(HidePanel), hideDelay);
+            if (!string.IsNullOrEmpty(autoSubscribeMatchId))
+            {
+                // start buffering and subscribe
+                StartBufferAndSubscribe();
+            }
+            if (loadSceneOnConnected && !string.IsNullOrEmpty(targetSceneName))
+            {
+                // start scene load once
+                if (!IsInvoking(nameof(LoadTargetScene))) Invoke(nameof(LoadTargetScene), hideDelay + 0.05f);
+            }
+        }
+        else
+        {
+            if (loadingPanel != null) loadingPanel.SetActive(true);
+        }
+    }
+
+    async void StartBufferAndSubscribe()
+    {
+        if (_isBuffering) return;
+        if (WebSocketManager.Instance == null) return;
+        _isBuffering = true;
+        _bufferedMessages.Clear();
+        _bufferHandler = (msg) => { _bufferedMessages.Add(msg); };
+        WebSocketManager.Instance.OnRawMessageReceived += _bufferHandler;
+        try
+        {
+            await WebSocketManager.Instance.SubscribeToMatch(autoSubscribeMatchId, 0);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"LoaddingManager: SubscribeToMatch failed: {ex}");
+        }
+    }
+
+    void HandleConnectionError(string code, string msg)
+    {
+        // keep loading panel visible and show friendly error
+        if (loadingPanel != null) loadingPanel.SetActive(true);
+        _targetProgress = 0f;
+        _status = MapErrorCodeToUserMessage(code, msg ?? string.Empty);
+        // prevent auto hide / scene load
+        CancelInvoke(nameof(LoadTargetScene));
+        CancelInvoke(nameof(HidePanel));
+    }
+
+    void LoadTargetScene()
+    {
+        // Async load the target scene (single mode)
+        if (string.IsNullOrEmpty(targetSceneName)) return;
+        if (gameObject.activeInHierarchy)
+        {
+            StartCoroutine(LoadAndForward(targetSceneName));
+        }
+        else
+        {
+            // If this manager is inactive, use a temporary runner so coroutine executes
+            CoroutineRunner.Run(LoadAndForward(targetSceneName));
+        }
+    }
+
+    System.Collections.IEnumerator LoadAndForward(string sceneName)
+    {
+        var op = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName, UnityEngine.SceneManagement.LoadSceneMode.Single);
+        if (op == null)
+        {
+            yield break;
+        }
+        while (!op.isDone) yield return null;
+
+        // wait a frame for scene objects to initialize
+        yield return null;
+        yield return null;
+
+        // try to find GameManager instance
+        GameManager gm = GameManager.Instance ?? UnityEngine.Object.FindObjectOfType<GameManager>();
+        if (gm != null && _isBuffering && _bufferedMessages.Count > 0)
+        {
+            // forward buffered messages
+            foreach (var m in _bufferedMessages)
+            {
+                try
+                {
+                    gm.ApplyRawMessage(m);
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"LoaddingManager: forwarding buffered message exception: {ex}");
+                }
+            }
+        }
+
+        // cleanup buffer subscription
+        if (_isBuffering && WebSocketManager.Instance != null && _bufferHandler != null)
+        {
+            WebSocketManager.Instance.OnRawMessageReceived -= _bufferHandler;
+        }
+        _isBuffering = false;
+        _bufferHandler = null;
+        _bufferedMessages.Clear();
+
+        // destroy loading manager if it was moved to DontDestroyOnLoad
+        if (!string.IsNullOrEmpty(autoSubscribeMatchId))
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    void HidePanel()
+    {
+        if (loadingPanel != null) loadingPanel.SetActive(false);
+    }
+
+    void Update()
+    {
+        if (!_subscribed)
+            TrySubscribe();
+
+        // smooth progress towards target
+        if (progressSlider != null)
+        {
+            float cur = progressSlider.value;
+            float next = Mathf.MoveTowards(cur, _targetProgress, Time.deltaTime * 0.5f);
+            progressSlider.value = next;
+            if (percentText != null)
+            {
+                int pct = Mathf.RoundToInt(progressSlider.value * 100f);
+                percentText.text = pct.ToString() + "%";
+            }
+        }
+
+        if (statusText != null)
+        {
+            statusText.text = _status ?? string.Empty;
+        }
+    }
+
+    string MapErrorCodeToUserMessage(string code, string raw)
+    {
+        switch (code)
+        {
+            case "SOCKET_AUTH_REQUIRED":
+            case "UNITY_AUTH_REQUIRED":
+                return "Không thể xác thực Unity renderer";
+            case "UNITY_AUTH_INVALID":
+                return "Thông tin xác thực của Unity không hợp lệ";
+            case "UNITY_EVENT_FORBIDDEN":
+                return "Unity renderer không được phép gọi event này";
+            case "MATCH_SUBSCRIBE_INVALID":
+                return "Dữ liệu subscribe không hợp lệ";
+            case "MATCH_NOT_FOUND":
+                return "Không tìm thấy match";
+            case "SOCKET_RECONNECT_FAILED":
+                return "Không thể kết nối lại với game server";
+            default:
+                return raw;
+        }
+    }
+}

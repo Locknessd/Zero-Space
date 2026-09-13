@@ -1,0 +1,16 @@
+﻿using UnityEngine;
+
+/// <summary>
+/// PROJECT ARCHITECTURE: Network Layer
+/// ROLE: Quản lý kết nối WebSocket thời gian thực giữa Unity Client và Backend (BE).
+/// RESPONSIBILITIES:
+/// - Kết nối tới WebSocket server bằng giao thức WSS.
+/// - Lắng nghe các gói tin JSON sự kiện từ BE (ví dụ: game_init, question_start, round_result, battle_end).
+/// - Chuyển tiếp (Forward) dữ liệu JSON nhận được tới GameManager để xử lý logic hiển thị.
+/// - Gửi các yêu cầu/hành động của người chơi (như dùng booster/skill) ngược lại lên Backend.
+/// AI NOTE: Hãy viết logic kết nối NativeWebSocket hoặc ClientWebSocket, nhận chuỗi byte/string và đẩy sự kiện cho GameManager.
+/// </summary>
+public class WebSocketManager : MonoBehaviour
+{
+    // TODO: AI hãy viết code khởi tạo kết nối, xử lý sự kiện OnMessage và hàm SendMessageToServer ở đây.
+}

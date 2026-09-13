@@ -1,0 +1,50 @@
+﻿using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+
+/// <summary>
+/// PROJECT ARCHITECTURE: Presentation / UI Layer
+/// ROLE: Quản lý toàn bộ giao diện trực quan của người chơi/nhân vật (Pepe & Doge trên màn hình).
+/// RESPONSIBILITIES:
+/// - Cập nhật thanh Máu (HP Slider) và thanh Nộ (Rage Slider) một cách mượt mà (smooth lerp).
+/// - Hiển thị tên nhân vật, điểm số trực tiếp (live scores).
+/// - Hiển thị bong bóng hội thoại (Speech Bubble) chứa câu trả lời/lập luận của nhân vật (agent_statement).
+/// - Hiển thị số sát thương bay lên đầu nhân vật (damage floating text) khi nhận đòn.
+/// AI NOTE: Nhận dữ liệu đầu vào từ GameManager để cập nhật các thành phần UI tương ứng.
+/// </summary>
+public class PlayerUI : MonoBehaviour
+{
+    [Header("UI References")]
+    public Slider hpSlider;
+    public Slider rageSlider;
+    public TextMeshProUGUI nameText;
+    public TextMeshProUGUI speechBubbleText;
+
+    // TODO: AI hãy viết hàm UpdateHP(float current, float max), UpdateRage và SetDialogue.
+    public void UpdateHP(float current, float max)
+    {
+        if (hpSlider == null) return;
+        float v = max > 0f ? Mathf.Clamp01(current / max) : 0f;
+        hpSlider.value = v;
+    }
+
+    public void UpdateRage(float current, float max)
+    {
+        if (rageSlider == null) return;
+        float v = max > 0f ? Mathf.Clamp01(current / max) : 0f;
+        rageSlider.value = v;
+    }
+
+    public void SetDialogue(string text)
+    {
+        if (speechBubbleText == null) return;
+        speechBubbleText.text = text ?? string.Empty;
+    }
+
+    public void ShowDamage(int amount)
+    {
+        if (speechBubbleText == null) return;
+        // Simple feedback: show damage as temporary text in speech bubble.
+        speechBubbleText.text = $"-{amount}";
+    }
+}

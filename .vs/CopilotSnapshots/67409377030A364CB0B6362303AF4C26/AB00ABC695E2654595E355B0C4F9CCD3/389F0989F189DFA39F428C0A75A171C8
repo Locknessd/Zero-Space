@@ -1,0 +1,83 @@
+﻿using UnityEditor;
+using UnityEditor.Animations;
+using UnityEngine;
+
+/// <summary>
+/// Small editor utility to sync Animator state names with their assigned AnimationClip names.
+/// Use when clip asset names changed but state names in AnimatorController were not updated.
+/// </summary>
+public static class AnimatorStateSyncer
+{
+    [MenuItem("Tools/Animator/Sync State Names With Clip Names (Selected Controllers)")]
+    static void SyncSelectedControllers()
+    {
+        var objs = Selection.objects;
+        int total = 0;
+        foreach (var o in objs)
+        {
+            var controller = o as AnimatorController;
+            if (controller == null) continue;
+            int changed = SyncController(controller);
+            if (changed > 0) Debug.Log($"AnimatorStateSyncer: Updated {changed} state names on controller '{controller.name}'");
+            total += changed;
+        }
+        if (total == 0) Debug.Log("AnimatorStateSyncer: No state names needed updating on selected controllers.");
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+    }
+
+    [MenuItem("Tools/Animator/Sync State Names With Clip Names (Controllers on Selected GameObjects)")]
+    static void SyncControllersOnSelectedGameObjects()
+    {
+        var gos = Selection.gameObjects;
+        int total = 0;
+        foreach (var go in gos)
+        {
+            var anim = go.GetComponent<Animator>();
+            if (anim == null) continue;
+            var controller = anim.runtimeAnimatorController as AnimatorController;
+            if (controller == null) continue;
+            int changed = SyncController(controller);
+            if (changed > 0) Debug.Log($"AnimatorStateSyncer: Updated {changed} state names on controller '{controller.name}' (from GameObject '{go.name}')");
+            total += changed;
+        }
+        if (total == 0) Debug.Log("AnimatorStateSyncer: No state names needed updating on selected GameObjects' controllers.");
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+    }
+
+    // Returns number of changed states
+    static int SyncController(AnimatorController controller)
+    {
+        if (controller == null) return 0;
+        int changed = 0;
+        // Register undo for the controller asset
+        Undo.RegisterCompleteObjectUndo(controller, "Sync Animator State Names");
+
+        var layers = controller.layers;
+        for (int li = 0; li < layers.Length; li++)
+        {
+            var layer = layers[li];
+            var states = layer.stateMachine.states;
+            for (int si = 0; si < states.Length; si++)
+            {
+                var cs = states[si];
+                var state = cs.state;
+                if (state == null) continue;
+                var motion = state.motion as AnimationClip;
+                if (motion == null) continue;
+                var clipName = motion.name;
+                if (string.IsNullOrEmpty(clipName)) continue;
+                if (state.name != clipName)
+                {
+                    Debug.Log($"AnimatorStateSyncer: Renaming state '{state.name}' -> '{clipName}' in controller '{controller.name}', layer '{layer.name}'");
+                    state.name = clipName;
+                    changed++;
+                }
+            }
+        }
+
+        if (changed > 0) EditorUtility.SetDirty(controller);
+        return changed;
+    }
+}

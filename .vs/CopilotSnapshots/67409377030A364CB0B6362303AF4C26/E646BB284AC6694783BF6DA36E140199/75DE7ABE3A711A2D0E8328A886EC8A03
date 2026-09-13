@@ -1,0 +1,303 @@
+﻿using UnityEngine;
+/// <summary>
+/// PROJECT ARCHITECTURE: Core Logic Layer (Controller trung tâm)
+/// ROLE: Điều phối luồng trận đấu, nhận dữ liệu từ WebSocketManager và phân phối xuống các hệ thống UI/Animation.
+/// RESPONSIBILITIES:
+/// - Lưu trữ trạng thái trận đấu hiện tại (MatchState) theo tài liệu thiết kế.
+/// - Phân tích (Parse) các gói tin JSON từ Server thành các C# Object tương ứng.
+/// - Gọi các hàm cập nhật giao diện của PlayerUI, RoundManager và AnimationController khi có sự kiện mới.
+/// AI NOTE: Script này đóng vai trò bộ não trung tâm của Client, không tự tính toán sát thương (vì BE đã tính), chỉ nhận kết quả và điều phối hiển thị.
+/// </summary>
+using System;
+using System.Reflection;
+using UnityEngine;
+
+public class GameManager : MonoBehaviour
+{
+    // Tham chiếu đến các quản lý thành phần khác trong scene
+    public PlayerUI playerUI;
+    public RoundManager roundManager;
+    public AnimationController animationController;
+    [Header("Local Test")]
+    public bool enableLocalInputTesting = true;
+
+    void Start()
+    {
+        if (WebSocketManager.Instance != null)
+        {
+            WebSocketManager.Instance.OnRawMessageReceived += HandleRawMessage;
+        }
+    }
+
+    // Debug helpers callable from editor buttons
+    public void DebugTriggerQ()
+    {
+        var p = GetRandomPreset();
+        if (p != null)
+        {
+            Debug.Log($"[DebugTrigger] Q -> Play preset '{p.key}' (Left attacks)");
+            PlayBothAnimations(p.leftState, p.rightState);
+        }
+        else Debug.LogWarning("[DebugTrigger] Q -> no valid presets");
+    }
+
+    public void DebugTriggerE()
+    {
+        var p = GetRandomPreset();
+        if (p != null)
+        {
+            Debug.Log($"[DebugTrigger] E -> Play preset '{p.key}' (Right attacks)");
+            PlayBothAnimations(p.rightState, p.leftState);
+        }
+        else Debug.LogWarning("[DebugTrigger] E -> no valid presets");
+    }
+
+    void Update()
+    {
+        if (!enableLocalInputTesting) return;
+        // Quick local testing:
+        // Q -> randomly pick a preset, left attacks / right hit
+        if (IsKeyDown(KeyCode.Q))
+        {
+            var p = GetRandomPreset();
+            if (p != null)
+            {
+                Debug.Log($"[LocalTest] Q pressed -> Play preset '{p.key}' (Left attacks)");
+                PlayBothAnimations(p.leftState, p.rightState);
+            }
+            else
+            {
+                Debug.LogWarning("[LocalTest] Q pressed but no valid animation presets available.");
+            }
+        }
+
+        // E -> randomly pick a preset, RIGHT attacks / LEFT hit (reverse sides)
+        if (IsKeyDown(KeyCode.E))
+        {
+            var p = GetRandomPreset();
+            if (p != null)
+            {
+                Debug.Log($"[LocalTest] E pressed -> Play preset '{p.key}' (Right attacks)");
+                // reverse: left should play the victim/hit (p.rightState), right should play attacker (p.leftState)
+                PlayBothAnimations(p.rightState, p.leftState);
+            }
+            else
+            {
+                Debug.LogWarning("[LocalTest] E pressed but no valid animation presets available.");
+            }
+        }
+    }
+
+    void OnDestroy()
+    {
+        if (WebSocketManager.Instance != null)
+        {
+            WebSocketManager.Instance.OnRawMessageReceived -= HandleRawMessage;
+        }
+    }
+
+    // Input system detection: support both legacy Input and the new Input System package.
+    private bool _inputChecked = false;
+    private bool _useNewInputSystem = false;
+    // reflection cache for Input System types/properties
+    private Type _keyboardType;
+    private PropertyInfo _keyboardCurrentProp;
+    private PropertyInfo _keyQProp;
+    private PropertyInfo _keyEProp;
+    private PropertyInfo _wasPressedProp;
+
+    bool IsKeyDown(KeyCode key)
+    {
+        if (!_inputChecked)
+        {
+            try
+            {
+                // Try legacy Input once; if it throws, fall back to new Input System
+                bool v = Input.GetKeyDown(key);
+                _useNewInputSystem = false;
+                _inputChecked = true;
+                Debug.Log("GameManager: Input system check - using legacy Input");
+                return v;
+            }
+            catch (System.InvalidOperationException)
+            {
+                _useNewInputSystem = true;
+                _inputChecked = true;
+                Debug.Log("GameManager: Input system check - legacy Input threw, falling back to new Input System (reflection)");
+            }
+        }
+
+        if (_useNewInputSystem)
+        {
+            try
+            {
+                // lazy initialize reflection info
+                if (_keyboardType == null)
+                {
+                    _keyboardType = Type.GetType("UnityEngine.InputSystem.Keyboard, Unity.InputSystem")
+                                    ?? Type.GetType("UnityEngine.InputSystem.Keyboard, UnityEngine.InputSystem");
+                    if (_keyboardType != null)
+                    {
+                        _keyboardCurrentProp = _keyboardType.GetProperty("current", BindingFlags.Public | BindingFlags.Static);
+                        _keyQProp = _keyboardType.GetProperty("qKey");
+                        _keyEProp = _keyboardType.GetProperty("eKey");
+                        // KeyControl type for wasPressedThisFrame
+                        var keyControlType = Type.GetType("UnityEngine.InputSystem.Controls.KeyControl, Unity.InputSystem")
+                                         ?? Type.GetType("UnityEngine.InputSystem.Controls.KeyControl, UnityEngine.InputSystem");
+                        if (keyControlType != null)
+                        {
+                            _wasPressedProp = keyControlType.GetProperty("wasPressedThisFrame", BindingFlags.Public | BindingFlags.Instance);
+                        }
+                    }
+                }
+
+                if (_keyboardType == null || _keyboardCurrentProp == null) return false;
+                var current = _keyboardCurrentProp.GetValue(null);
+                if (current == null) return false;
+
+                PropertyInfo keyProp = null;
+                if (key == KeyCode.Q) keyProp = _keyQProp;
+                else if (key == KeyCode.E) keyProp = _keyEProp;
+                else return false; // only support Q/E for now
+
+                if (keyProp == null) return false;
+                var keyControl = keyProp.GetValue(current);
+                if (keyControl == null || _wasPressedProp == null) return false;
+                var val = _wasPressedProp.GetValue(keyControl);
+                return val is bool b && b;
+            }
+            catch
+            {
+                Debug.LogWarning("GameManager: Reflection-based input check failed.");
+                return false;
+            }
+        }
+
+        // Legacy
+        return Input.GetKeyDown(key);
+    }
+
+    void HandleRawMessage(string json)
+    {
+        if (string.IsNullOrEmpty(json)) return;
+        string evt = ExtractEventName(json);
+        switch (evt)
+        {
+            case "playerLeftAttack":
+                {
+                    int dmg = ExtractInt(json, "damage");
+                    PlaySingleAnimation(PlayerUI.Side.Left, "LeftAttack");
+                    playerUI?.ShowDamage(PlayerUI.Side.Left, dmg);
+                    break;
+                }
+            case "playerRightHit":
+                {
+                    int dmg = ExtractInt(json, "damage");
+                    PlaySingleAnimation(PlayerUI.Side.Right, "RightHit");
+                    playerUI?.ShowDamage(PlayerUI.Side.Right, dmg);
+                    break;
+                }
+            case "playerLeftAnswer":
+                {
+                    string text = ExtractString(json, "answer") ?? ExtractString(json, "text");
+                    playerUI?.SetDialogue(PlayerUI.Side.Left, text);
+                    PlaySingleAnimation(PlayerUI.Side.Left, "Talk");
+                    break;
+                }
+            case "ShowQuestion":
+            case "question_start":
+                {
+                    string q = ExtractString(json, "question") ?? ExtractString(json, "text");
+                    roundManager?.ShowQuestion(q);
+                    break;
+                }
+            default:
+                break;
+        }
+    }
+
+    // Helper: play an animation on one side via the AnimationController
+    public void PlaySingleAnimation(PlayerUI.Side side, string animationId, float crossFade = -1f)
+    {
+        Debug.Log($"GameManager: PlaySingleAnimation side={side} animationId={animationId} crossFade={crossFade}");
+        animationController?.PlayAnimation(side, animationId, crossFade);
+    }
+
+    // Helper: play animations for both sides at once
+    public void PlayBothAnimations(string leftAnimationId, string rightAnimationId, float crossFade = -1f)
+    {
+        Debug.Log($"GameManager: PlayBothAnimations left={leftAnimationId} right={rightAnimationId} crossFade={crossFade}");
+        animationController?.PlayBoth(leftAnimationId, rightAnimationId, crossFade);
+    }
+
+    // Return a random preset pair that has both left and right states defined
+    AnimationController.AnimationPair GetRandomPreset()
+    {
+        if (animationController == null || animationController.presets == null || animationController.presets.Length == 0)
+            return null;
+
+        var valid = new System.Collections.Generic.List<AnimationController.AnimationPair>();
+        foreach (var p in animationController.presets)
+        {
+            if (p == null) continue;
+            if (string.IsNullOrEmpty(p.leftState) || string.IsNullOrEmpty(p.rightState)) continue;
+            valid.Add(p);
+        }
+
+        if (valid.Count == 0) return null;
+        int idx = UnityEngine.Random.Range(0, valid.Count);
+        return valid[idx];
+    }
+
+    string ExtractEventName(string json)
+    {
+        string[] keys = new[] { "event", "type", "action" };
+        foreach (var k in keys)
+        {
+            var v = ExtractString(json, k);
+            if (!string.IsNullOrEmpty(v)) return v;
+        }
+        return null;
+    }
+
+    string ExtractString(string json, string key)
+    {
+        if (string.IsNullOrEmpty(json) || string.IsNullOrEmpty(key)) return null;
+        string pattern = '"' + key + '"' + ":";
+        int idx = json.IndexOf(pattern);
+        if (idx < 0) return null;
+        idx += pattern.Length;
+        // skip spaces
+        while (idx < json.Length && char.IsWhiteSpace(json[idx])) idx++;
+        if (idx >= json.Length) return null;
+        if (json[idx] == '"')
+        {
+            idx++;
+            int end = idx;
+            while (end < json.Length)
+            {
+                if (json[end] == '\\') { end += 2; continue; }
+                if (json[end] == '"') break;
+                end++;
+            }
+            if (end >= json.Length) return null;
+            return json.Substring(idx, end - idx);
+        }
+        return null;
+    }
+
+    int ExtractInt(string json, string key)
+    {
+        if (string.IsNullOrEmpty(json) || string.IsNullOrEmpty(key)) return 0;
+        string pattern = '"' + key + '"' + ":";
+        int idx = json.IndexOf(pattern);
+        if (idx < 0) return 0;
+        idx += pattern.Length;
+        while (idx < json.Length && (char.IsWhiteSpace(json[idx]) || json[idx] == '"')) idx++;
+        int end = idx;
+        while (end < json.Length && (char.IsDigit(json[end]) || json[end] == '-')) end++;
+        if (end <= idx) return 0;
+        if (int.TryParse(json.Substring(idx, end - idx), out int v)) return v;
+        return 0;
+    }
+}

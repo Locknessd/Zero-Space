@@ -1,0 +1,430 @@
+﻿using UnityEngine;
+
+using UnityEngine;
+using UnityEngine.UI;
+using Newtonsoft.Json.Linq;
+using System;
+
+public class LoaddingManager : MonoBehaviour
+{
+    [Header("UI References")]
+    public GameObject loadingPanel;
+    public Slider progressSlider;
+    public Text percentText;
+    public Text statusText;
+
+    [Header("Behavior")]
+    [Tooltip("Hide loading panel automatically when connected")] public bool hideOnConnected = true;
+    [Tooltip("Seconds to wait after connected before hiding panel")] public float hideDelay = 0.5f;
+    [Tooltip("Scene name to load after websocket connected")]
+    public string targetSceneName = "BattleScene";
+    [Tooltip("Automatically load target scene when connected")]
+    public bool loadSceneOnConnected = true;
+
+    float _targetProgress = 0f;
+    string _status = "";
+    bool _subscribed = false;
+    bool _hasReachedFull = false;
+    [Header("Auto Subscribe")]
+    [Tooltip("If set, LoaddingManager will subscribe to this matchId as soon as socket connects and buffer incoming messages until Battle scene GameManager is ready.")]
+    public string autoSubscribeMatchId = "";
+
+    private System.Collections.Generic.List<string> _bufferedMessages = new System.Collections.Generic.List<string>();
+    private System.Action<string> _bufferHandler;
+    private bool _isBuffering = false;
+    private bool _matchStarted = false;
+    private AsyncOperation _loadOp = null;
+    private bool _sceneReady = false;
+    private bool _preloadStarted = false;
+
+    void Start()
+    {
+        if (loadingPanel != null) loadingPanel.SetActive(true);
+        TrySubscribe();
+        // If auto-subscribe configured, persist across scene load so we can buffer messages
+        if (!string.IsNullOrEmpty(autoSubscribeMatchId))
+        {
+            DontDestroyOnLoad(gameObject);
+        }
+        }
+
+    // Called by other systems (e.g. GameManager) to display an external error in the loading UI
+    public void HandleExternalError(string code, string message)
+    {
+        if (loadingPanel != null) loadingPanel.SetActive(true);
+        _targetProgress = 0f;
+        _status = MapErrorCodeToUserMessage(code, message ?? string.Empty);
+        CancelInvoke(nameof(LoadTargetScene));
+        CancelInvoke(nameof(HidePanel));
+    }
+
+    void TrySubscribe()
+    {
+        if (_subscribed) return;
+        if (WebSocketManager.Instance != null)
+        {
+            WebSocketManager.Instance.OnConnectionProgress += HandleConnectionProgress;
+            WebSocketManager.Instance.OnConnectionError += HandleConnectionError;
+            _subscribed = true;
+        }
+    }
+
+    void OnDestroy()
+    {
+        if (_subscribed && WebSocketManager.Instance != null)
+        {
+            WebSocketManager.Instance.OnConnectionProgress -= HandleConnectionProgress;
+            WebSocketManager.Instance.OnConnectionError -= HandleConnectionError;
+        }
+    }
+
+    void HandleConnectionProgress(float value, string status)
+    {
+        // invoked on main thread by WebSocketManager.Update
+        // If we've already handled the first full connection, ignore subsequent lower updates
+        if (_hasReachedFull)
+        {
+            // still update status if provided, but keep progress at full
+            _status = status ?? string.Empty;
+            return;
+        }
+
+        _targetProgress = Mathf.Clamp01(value);
+        _status = status ?? string.Empty;
+        if (_targetProgress >= 1f && hideOnConnected)
+        {
+            _hasReachedFull = true;
+            // Start buffering/subscribe if configured
+            if (!string.IsNullOrEmpty(autoSubscribeMatchId))
+            {
+                StartBufferAndSubscribe();
+            }
+            // begin preloading the target scene (allow activation only after start_result)
+            if (loadSceneOnConnected && !string.IsNullOrEmpty(targetSceneName))
+            {
+                if (!_preloadStarted)
+                {
+                    _preloadStarted = true;
+                    // start preload immediately
+                    if (gameObject.activeInHierarchy)
+                        StartCoroutine(PreloadAndForward(targetSceneName));
+                    else
+                        CoroutineRunner.Run(PreloadAndForward(targetSceneName));
+                }
+            }
+        }
+        else
+        {
+            if (loadingPanel != null) loadingPanel.SetActive(true);
+        }
+    }
+
+    async void StartBufferAndSubscribe()
+    {
+        if (_isBuffering) return;
+        if (WebSocketManager.Instance == null) return;
+        _isBuffering = true;
+        _bufferedMessages.Clear();
+        _bufferHandler = (msg) => { BufferAndDetectStart(msg); };
+        WebSocketManager.Instance.OnRawMessageReceived += _bufferHandler;
+        try
+        {
+            await WebSocketManager.Instance.SubscribeToMatch(autoSubscribeMatchId, 0);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"LoaddingManager: SubscribeToMatch failed: {ex}");
+        }
+    }
+
+    void BufferAndDetectStart(string msg)
+    {
+        if (string.IsNullOrEmpty(msg)) return;
+        _bufferedMessages.Add(msg);
+        try
+        {
+            var j = JObject.Parse(msg);
+            var type = j.Value<string>("type");
+            if (!string.IsNullOrEmpty(type))
+            {
+                // Handle start_result: check requestId match, error or success
+                if (type == "meme_battle_start_result")
+                {
+                    string incomingRequestId = j.Value<string>("requestId");
+                    string raw = j.Value<string>("raw");
+                    JToken inner = null;
+                    if (!string.IsNullOrEmpty(raw))
+                    {
+                        try { var parsed = JToken.Parse(raw); inner = (parsed.Type == JTokenType.Array && parsed.HasValues) ? parsed.First : parsed; }
+                        catch { }
+                    }
+
+                    if (inner != null && inner.Type == JTokenType.Object && string.IsNullOrEmpty(incomingRequestId))
+                    {
+                        incomingRequestId = inner.Value<string>("requestId");
+                    }
+
+                    // expected request id from WebSocketManager (if set). If empty, accept any start_result.
+                    string expected = WebSocketManager.Instance != null ? WebSocketManager.Instance.startMatchRequestId : null;
+                    if (!string.IsNullOrEmpty(expected) && !string.IsNullOrEmpty(incomingRequestId) && !string.Equals(expected, incomingRequestId, StringComparison.Ordinal))
+                    {
+                        // Not the start_result we are waiting for — ignore
+                        return;
+                    }
+
+                    // if inner indicates error, show it
+                    if (inner != null && inner.Type == JTokenType.Object)
+                    {
+                        var err = inner["error"];
+                        if (err != null)
+                        {
+                            var code = err.Value<string>("code");
+                            var message = err.Value<string>("message");
+                            _status = MapErrorCodeToUserMessage(code ?? "MATCH_START_FAILED", message ?? "Start failed");
+                            if (loadingPanel != null) loadingPanel.SetActive(true);
+                            CancelInvoke(nameof(LoadTargetScene));
+                            CancelInvoke(nameof(HidePanel));
+                            return;
+                        }
+                        var state = inner.Value<string>("state");
+                        if (string.IsNullOrEmpty(state) || state.Equals("ACTIVE", StringComparison.OrdinalIgnoreCase))
+                        {
+                            OnMatchStartedDetected();
+                            return;
+                        }
+                    }
+                    // fallback: if no inner object, but wrapped result may exist under j["result"] (older path)
+                    var result = j["result"];
+                    if (result != null && result.Type == JTokenType.Object)
+                    {
+                        var state2 = result.Value<string>("state");
+                        if (string.IsNullOrEmpty(state2) || state2.Equals("ACTIVE", StringComparison.OrdinalIgnoreCase))
+                        {
+                            OnMatchStartedDetected();
+                            return;
+                        }
+                    }
+                }
+
+                if (type == "meme_battle_snapshot")
+                {
+                    // snapshot indicates match state available -> consider match started
+                    OnMatchStartedDetected();
+                    return;
+                }
+                if (type == "meme_battle_start_result")
+                {
+                    // start result from server indicates match created/active
+                    var result = j["result"];
+                    if (result != null)
+                    {
+                        var state = result.Value<string>("state");
+                        if (string.IsNullOrEmpty(state) || state.Equals("ACTIVE", StringComparison.OrdinalIgnoreCase))
+                        {
+                            OnMatchStartedDetected();
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        // Some messages are enqueued with a raw string under 'raw' (when SocketIO client could not parse into JObject).
+                        var raw = j.Value<string>("raw");
+                        if (!string.IsNullOrEmpty(raw))
+                        {
+                            try
+                            {
+                                var inner = JObject.Parse(raw);
+                                var innerState = inner.Value<string>("state");
+                                if (string.IsNullOrEmpty(innerState) || innerState.Equals("ACTIVE", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    OnMatchStartedDetected();
+                                    return;
+                                }
+                            }
+                            catch { }
+                        }
+                        else
+                        {
+                            // if structure differs, still consider start result as match started
+                            OnMatchStartedDetected();
+                            return;
+                        }
+                    }
+                }
+                if (type == "meme_battle_event")
+                {
+                    var ev = j["event"];
+                    if (ev != null)
+                    {
+                        var eventType = ev.Value<string>("eventType");
+                        if (!string.IsNullOrEmpty(eventType) && (eventType == "MATCH_STARTED" || eventType == "MATCH_CREATED"))
+                        {
+                            OnMatchStartedDetected();
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+        catch { }
+    }
+
+    void OnMatchStartedDetected()
+    {
+        if (_matchStarted) return;
+        _matchStarted = true;
+        // Only load scene when both conditions met:
+        // - connection progress reached full (_hasReachedFull)
+        // - match start result received (_matchStarted)
+        if (_hasReachedFull && loadSceneOnConnected && !string.IsNullOrEmpty(targetSceneName))
+        {
+            if (!IsInvoking(nameof(LoadTargetScene))) Invoke(nameof(LoadTargetScene), hideDelay + 0.05f);
+        }
+    }
+
+    void HandleConnectionError(string code, string msg)
+    {
+        // keep loading panel visible and show friendly error
+        if (loadingPanel != null) loadingPanel.SetActive(true);
+        _targetProgress = 0f;
+        _status = MapErrorCodeToUserMessage(code, msg ?? string.Empty);
+        // prevent auto hide / scene load
+        CancelInvoke(nameof(LoadTargetScene));
+        CancelInvoke(nameof(HidePanel));
+    }
+
+    void LoadTargetScene()
+    {
+        // Async load the target scene (single mode)
+        if (string.IsNullOrEmpty(targetSceneName)) return;
+        // kept for backward compatibility, but main flow uses PreloadAndForward
+        if (gameObject.activeInHierarchy)
+        {
+            StartCoroutine(PreloadAndForward(targetSceneName));
+        }
+        else
+        {
+            CoroutineRunner.Run(PreloadAndForward(targetSceneName));
+        }
+    }
+
+    System.Collections.IEnumerator PreloadAndForward(string sceneName)
+    {
+        var op = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName, UnityEngine.SceneManagement.LoadSceneMode.Single);
+        if (op == null) yield break;
+        // don't activate until both scene ready and match started
+        op.allowSceneActivation = false;
+        _loadOp = op;
+
+        // wait until scene is loaded to the activation point (progress >= 0.9)
+        while (op.progress < 0.9f)
+        {
+            yield return null;
+        }
+        _sceneReady = true;
+        // attempt activation if both conditions met
+        TryActivateScene();
+
+        // wait until scene activation completes
+        while (!op.isDone)
+        {
+            yield return null;
+        }
+
+        // wait a frame for scene objects to initialize
+        yield return null;
+        yield return null;
+
+        // try to find GameManager instance
+        GameManager gm = GameManager.Instance ?? UnityEngine.Object.FindObjectOfType<GameManager>();
+        if (gm != null && _isBuffering && _bufferedMessages.Count > 0)
+        {
+            // forward buffered messages
+            foreach (var m in _bufferedMessages)
+            {
+                try
+                {
+                    gm.ApplyRawMessage(m);
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"LoaddingManager: forwarding buffered message exception: {ex}");
+                }
+            }
+        }
+
+        // cleanup buffer subscription
+        if (_isBuffering && WebSocketManager.Instance != null && _bufferHandler != null)
+        {
+            WebSocketManager.Instance.OnRawMessageReceived -= _bufferHandler;
+        }
+        _isBuffering = false;
+        _bufferHandler = null;
+        _bufferedMessages.Clear();
+
+        // destroy loading manager if it was moved to DontDestroyOnLoad
+        if (!string.IsNullOrEmpty(autoSubscribeMatchId)) Destroy(gameObject);
+    }
+
+    void TryActivateScene()
+    {
+        if (_loadOp == null) return;
+        if (!_sceneReady) return;
+        if (!_matchStarted) return;
+        // allow activation
+        _loadOp.allowSceneActivation = true;
+        // hide panel shortly after activation begins
+        Invoke(nameof(HidePanel), hideDelay);
+    }
+
+    void HidePanel()
+    {
+        if (loadingPanel != null) loadingPanel.SetActive(false);
+    }
+
+    void Update()
+    {
+        if (!_subscribed)
+            TrySubscribe();
+
+        // smooth progress towards target
+        if (progressSlider != null)
+        {
+            float cur = progressSlider.value;
+            float next = Mathf.MoveTowards(cur, _targetProgress, Time.deltaTime * 0.5f);
+            progressSlider.value = next;
+            if (percentText != null)
+            {
+                int pct = Mathf.RoundToInt(progressSlider.value * 100f);
+                percentText.text = pct.ToString() + "%";
+            }
+        }
+
+        if (statusText != null)
+        {
+            statusText.text = _status ?? string.Empty;
+        }
+    }
+
+    string MapErrorCodeToUserMessage(string code, string raw)
+    {
+        switch (code)
+        {
+            case "SOCKET_AUTH_REQUIRED":
+            case "UNITY_AUTH_REQUIRED":
+                return "Không thể xác thực Unity renderer";
+            case "UNITY_AUTH_INVALID":
+                return "Thông tin xác thực của Unity không hợp lệ";
+            case "UNITY_EVENT_FORBIDDEN":
+                return "Unity renderer không được phép gọi event này";
+            case "MATCH_SUBSCRIBE_INVALID":
+                return "Dữ liệu subscribe không hợp lệ";
+            case "MATCH_NOT_FOUND":
+                return "Không tìm thấy match";
+            case "SOCKET_RECONNECT_FAILED":
+                return "Không thể kết nối lại với game server";
+            default:
+                return raw;
+        }
+    }
+}

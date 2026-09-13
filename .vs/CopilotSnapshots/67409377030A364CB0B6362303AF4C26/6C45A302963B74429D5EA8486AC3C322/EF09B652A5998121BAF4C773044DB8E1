@@ -1,0 +1,185 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using UnityEditor;
+using UnityEditor.Animations;
+using UnityEngine;
+
+/// <summary>
+/// Editor tool to automatically generate/pair Attack/Hit presets for selected GameObjects
+/// that have the runtime `AnimationController` component.
+///
+/// Behavior:
+/// - Scans left/right AnimatorController states for names containing "Attack"/"Hit".
+/// - If numeric suffixes are present (e.g. Attack5 and Hit5) pairs by number.
+/// - Otherwise pairs by index order (first attack with first hit, ...).
+/// - Writes `AnimationController.presets` on the component with `Pair{N}` keys.
+/// </summary>
+public static class ApplyAttackHitPresets
+{
+    [MenuItem("Tools/Animator/AutoApply Attack-Hit Presets To Selected AnimationController")]
+    public static void ApplyToSelected()
+    {
+        var gos = Selection.gameObjects;
+        if (gos == null || gos.Length == 0)
+        {
+            Debug.LogWarning("ApplyAttackHitPresets: No GameObjects selected. Select GameObjects that have an AnimationController component.");
+            return;
+        }
+
+        int totalApplied = 0;
+        foreach (var go in gos)
+        {
+            var animComp = go.GetComponent<global::AnimationController>();
+            if (animComp == null)
+            {
+                Debug.LogWarning($"ApplyAttackHitPresets: GameObject '{go.name}' does not have AnimationController component.");
+                continue;
+            }
+
+            try
+            {
+                int applied = ProcessAnimationController(animComp);
+                if (applied > 0)
+                {
+                    Debug.Log($"ApplyAttackHitPresets: Applied {applied} presets to AnimationController on '{go.name}'.");
+                    totalApplied += applied;
+                }
+                else
+                {
+                    Debug.LogWarning($"ApplyAttackHitPresets: No pairs found for '{go.name}'.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"ApplyAttackHitPresets: Failed for '{go.name}': {ex}");
+            }
+        }
+
+        if (totalApplied == 0) Debug.Log("ApplyAttackHitPresets: No presets applied.");
+    }
+
+    static int ProcessAnimationController(global::AnimationController animComp)
+    {
+        if (animComp == null) return 0;
+
+        var left = animComp.leftAnimator;
+        var right = animComp.rightAnimator;
+        if (left == null || right == null)
+        {
+            Debug.LogWarning("ApplyAttackHitPresets: leftAnimator or rightAnimator is null on component '" + animComp.name + "'.");
+            return 0;
+        }
+
+        var leftController = left.runtimeAnimatorController as AnimatorController;
+        var rightController = right.runtimeAnimatorController as AnimatorController;
+        if (leftController == null || rightController == null)
+        {
+            Debug.LogWarning("ApplyAttackHitPresets: left/right AnimatorController asset missing or not an AnimatorController.");
+            return 0;
+        }
+
+        var leftStates = CollectPlainStateNames(leftController);
+        var rightStates = CollectPlainStateNames(rightController);
+
+        // find named Attack/Hit candidates
+        var attackRegex = new Regex(@"attack[_\s-]?(\d+)$", RegexOptions.IgnoreCase);
+        var hitRegex = new Regex(@"hit[_\s-]?(\d+)$", RegexOptions.IgnoreCase);
+
+        var attacksByNum = new Dictionary<int, string>();
+        var hitsByNum = new Dictionary<int, string>();
+        var attackCandidates = new List<string>();
+        var hitCandidates = new List<string>();
+
+        foreach (var s in leftStates)
+        {
+            var m = attackRegex.Match(s);
+            if (m.Success && int.TryParse(m.Groups[1].Value, out int n)) attacksByNum[n] = s;
+            if (s.IndexOf("attack", StringComparison.OrdinalIgnoreCase) >= 0) attackCandidates.Add(s);
+        }
+        foreach (var s in rightStates)
+        {
+            var m = hitRegex.Match(s);
+            if (m.Success && int.TryParse(m.Groups[1].Value, out int n)) hitsByNum[n] = s;
+            if (s.IndexOf("hit", StringComparison.OrdinalIgnoreCase) >= 0) hitCandidates.Add(s);
+        }
+
+        var pairs = new List<global::AnimationController.AnimationPair>();
+
+        // numeric intersection
+        var nums = new List<int>(attacksByNum.Keys);
+        nums.Sort();
+        bool usedNumeric = false;
+        foreach (var num in nums)
+        {
+            if (hitsByNum.ContainsKey(num))
+            {
+                var pair = new global::AnimationController.AnimationPair();
+                pair.key = "Pair" + num;
+                pair.leftState = attacksByNum[num];
+                pair.rightState = hitsByNum[num];
+                pairs.Add(pair);
+                usedNumeric = true;
+            }
+        }
+
+        // if no numeric mapping found, fallback to index-based pairing using candidates lists
+        if (!usedNumeric)
+        {
+            // if candidates are empty, try to heuristically pick states that start with "Attack" or "Hit"
+            if (attackCandidates.Count == 0)
+                attackCandidates = leftStates.Where(s => s.IndexOf("attack", StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+            if (hitCandidates.Count == 0)
+                hitCandidates = rightStates.Where(s => s.IndexOf("hit", StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+
+            // fallback: take first N paired by index
+            int count = Math.Min(attackCandidates.Count, hitCandidates.Count);
+            for (int i = 0; i < count; i++)
+            {
+                var pair = new global::AnimationController.AnimationPair();
+                pair.key = "Pair" + (i + 1);
+                pair.leftState = attackCandidates[i];
+                pair.rightState = hitCandidates[i];
+                pairs.Add(pair);
+            }
+        }
+
+        if (pairs.Count == 0) return 0;
+
+        Undo.RecordObject(animComp, "Auto Apply Attack-Hit Presets");
+        animComp.presets = pairs.ToArray();
+        EditorUtility.SetDirty(animComp);
+        return pairs.Count;
+    }
+
+    static List<string> CollectPlainStateNames(AnimatorController controller)
+    {
+        var list = new List<string>();
+        foreach (var layer in controller.layers)
+        {
+            CollectStatesRecursive(layer.stateMachine, list);
+        }
+        // dedupe preserving order
+        var outList = new List<string>();
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var s in list)
+        {
+            if (string.IsNullOrEmpty(s)) continue;
+            if (!seen.Contains(s)) { seen.Add(s); outList.Add(s); }
+        }
+        return outList;
+    }
+
+    static void CollectStatesRecursive(AnimatorStateMachine sm, List<string> outList)
+    {
+        foreach (var cs in sm.states)
+        {
+            if (cs.state != null) outList.Add(cs.state.name);
+        }
+        foreach (var child in sm.stateMachines)
+        {
+            CollectStatesRecursive(child.stateMachine, outList);
+        }
+    }
+}

@@ -1,0 +1,662 @@
+﻿using UnityEngine;
+
+/// <summary>
+/// PROJECT ARCHITECTURE: Presentation / Animation Layer
+/// ROLE: Quản lý hiệu ứng hình ảnh, mô hình 3D và hoạt ảnh (Animations/Meme) của nhân vật.
+/// RESPONSIBILITIES:
+/// - Kích hoạt các hoạt ảnh tương ứng (Idle, Talking, Victory, Hurt, Dance) dựa trên animation_id nhận từ sự kiện round_result của Server.
+/// - Hiển thị khung hình ảnh Meme GIF động tương ứng với meme_gif_url nếu có.
+/// AI NOTE: Gắn script này vào các đối tượng nhân vật (Pepe/Doge) để điều khiển Animator Component.
+/// </summary>
+using UnityEngine;
+
+public class AnimationController : MonoBehaviour
+{
+    public Animator leftAnimator;
+    public Animator rightAnimator;
+    [Header("Compatibility")]
+    [Tooltip("If your animator references in the Inspector are reversed, enable this to swap left/right at runtime.")]
+    public bool swapAnimatorSides = false;
+    [Header("VFX")]
+    public GameObject skillVfxPrefab;
+    public Transform leftVfxAnchor;
+    public Transform rightVfxAnchor;
+
+    [Tooltip("Default crossfade duration in seconds when switching animations")]
+    public float defaultCrossFade = 0.12f;
+
+    [Header("Random Animation Config")]
+    [Tooltip("Number of attack variants per side (1-5)")]
+    public int attackVariants = 5;
+    [Tooltip("Number of hit variants per side (1-5)")]
+    public int hitVariants = 5;
+
+    [Header("Combat Positioning")]
+    [Tooltip("Keep fighters at optimal attack distance when returning to Idle or finishing attacks")]
+    public bool enablePositionRecovery = true;
+    [Tooltip("Ideal spacing between the two fighters")]
+    public float combatDistance = 1.5f;
+    [Tooltip("Center point on the fighting line")]
+    public Vector3 combatCenter = new Vector3(-1.0f, 0f, -1.0f);
+    [Tooltip("Smooth return speed to combat positions")]
+    public float positionRecoverySpeed = 6f;
+    [Tooltip("Ensure Animators have Root Motion disabled so animations don't drift permanently")]
+    public bool enforceNoRootMotion = true;
+
+    // Anchor positions
+    private Vector3 _leftAnchorPos;
+    private Vector3 _rightAnchorPos;
+    private Quaternion _leftAnchorRot;
+    private Quaternion _rightAnchorRot;
+
+    // Resolved animator mapping (logical left/right -> actual Animator instance)
+    private Animator _resolvedLeftAnimator;
+    private Animator _resolvedRightAnimator;
+
+    void Awake()
+    {
+        CalculateAnchors();
+    }
+
+    public void CalculateAnchors()
+    {
+        float halfDist = combatDistance * 0.5f;
+        _leftAnchorPos = new Vector3(combatCenter.x - halfDist, combatCenter.y, combatCenter.z);
+        _rightAnchorPos = new Vector3(combatCenter.x + halfDist, combatCenter.y, combatCenter.z);
+        _leftAnchorRot = Quaternion.Euler(0f, 90f, 0f);
+        _rightAnchorRot = Quaternion.Euler(0f, 270f, 0f);
+    }
+
+    void Start()
+    {
+        if (leftAnimator == null || rightAnimator == null)
+        {
+            var a = GetComponent<Animator>();
+            if (a != null && leftAnimator == null) leftAnimator = a;
+        }
+        ResolveAnimatorMapping();
+
+        CalculateAnchors();
+        ApplyRootMotionSettings();
+        SnapToCombatPositions();
+    }
+
+    public void ApplyRootMotionSettings()
+    {
+        if (enforceNoRootMotion)
+        {
+            if (_resolvedLeftAnimator != null) _resolvedLeftAnimator.applyRootMotion = false;
+            if (_resolvedRightAnimator != null) _resolvedRightAnimator.applyRootMotion = false;
+        }
+    }
+
+    /// <summary>
+    /// Snaps both fighters immediately to their ideal combat positions and rotations.
+    /// </summary>
+    public void SnapToCombatPositions()
+    {
+        CalculateAnchors();
+        if (_resolvedLeftAnimator != null)
+        {
+            _resolvedLeftAnimator.transform.position = _leftAnchorPos;
+            _resolvedLeftAnimator.transform.rotation = _leftAnchorRot;
+        }
+        if (_resolvedRightAnimator != null)
+        {
+            _resolvedRightAnimator.transform.position = _rightAnchorPos;
+            _resolvedRightAnimator.transform.rotation = _rightAnchorRot;
+        }
+    }
+
+    void LateUpdate()
+    {
+        if (!enablePositionRecovery) return;
+        // Smoothly realign characters to combat anchors when in idle or between turns
+        if (_resolvedLeftAnimator != null)
+        {
+            bool isIdle = IsAnimatorInState(_resolvedLeftAnimator, "idle");
+            float speed = isIdle ? positionRecoverySpeed : positionRecoverySpeed * 0.3f;
+            _resolvedLeftAnimator.transform.position = Vector3.Lerp(_resolvedLeftAnimator.transform.position, _leftAnchorPos, Time.deltaTime * speed);
+            _resolvedLeftAnimator.transform.rotation = Quaternion.Slerp(_resolvedLeftAnimator.transform.rotation, _leftAnchorRot, Time.deltaTime * speed);
+        }
+
+        if (_resolvedRightAnimator != null)
+        {
+            bool isIdle = IsAnimatorInState(_resolvedRightAnimator, "idle");
+            float speed = isIdle ? positionRecoverySpeed : positionRecoverySpeed * 0.3f;
+            _resolvedRightAnimator.transform.position = Vector3.Lerp(_resolvedRightAnimator.transform.position, _rightAnchorPos, Time.deltaTime * speed);
+            _resolvedRightAnimator.transform.rotation = Quaternion.Slerp(_resolvedRightAnimator.transform.rotation, _rightAnchorRot, Time.deltaTime * speed);
+        }
+    }
+
+    // Resolve which animator instance should be treated as logical Left/Right.
+    // Priority: explicit manual override via 'swapAnimatorSides' -> if set, swap the assigned references.
+    // Otherwise, if both animators provided, determine left/right by world X position (smaller x = left).
+    void ResolveAnimatorMapping()
+    {
+        _resolvedLeftAnimator = leftAnimator;
+        _resolvedRightAnimator = rightAnimator;
+
+        if (swapAnimatorSides)
+        {
+            _resolvedLeftAnimator = rightAnimator;
+            _resolvedRightAnimator = leftAnimator;
+            Debug.Log("AnimationController: swapAnimatorSides=TRUE -> swapping resolved animator mapping");
+            return;
+        }
+        // Do NOT attempt to auto-swap based on world positions -- that can change at runtime
+        // and lead to animations being sent to the wrong visual. Use inspector assignment
+        // as source-of-truth, with `swapAnimatorSides` available as a manual override above.
+    }
+
+    private bool IsAnimatorInState(Animator anim, string stateName)
+    {
+        if (anim == null || !Application.isPlaying) return true;
+        try
+        {
+            var info = anim.GetCurrentAnimatorStateInfo(0);
+            return info.IsName(stateName);
+        }
+        catch
+        {
+            return true;
+        }
+    }
+
+    public void PlaySkillVFX(PlayerUI.Side side, string animationId, float crossFade = -1f)
+    {
+        Debug.Log($"AnimationController: PlaySkillVFX side={side} animationId={animationId}");
+        if (string.IsNullOrEmpty(animationId)) return;
+            PlayAnimation(side, animationId, crossFade);
+
+        if (skillVfxPrefab != null)
+        {
+            Transform anchor = side == PlayerUI.Side.Left ? leftVfxAnchor : rightVfxAnchor;
+            Vector3 pos = Vector3.zero;
+            if (anchor != null) pos = anchor.position;
+            else
+            {
+                var anim = GetAnimator(side);
+                if (anim != null) pos = anim.transform.position;
+            }
+            Quaternion rot = anchor != null ? anchor.rotation : Quaternion.identity;
+            var go = GameObject.Instantiate(skillVfxPrefab, pos, rot);
+            GameObject.Destroy(go, 3f);
+        }
+    }
+
+    [System.Serializable]
+    public class AnimationPair
+    {
+        public string key;
+        public string leftState;
+        public string rightState;
+    }
+
+    [Header("Presets")]
+    [Tooltip("Define logical animation pairs so you can call PlayPair('Attack1') and it will play the mapped animations on left/right animators.")]
+    public AnimationPair[] presets = new AnimationPair[0];
+
+    public void PlayPair(string key, float crossFade = -1f)
+    {
+        if (string.IsNullOrEmpty(key)) return;
+        foreach (var p in presets)
+        {
+            if (p == null) continue;
+            if (string.Equals(p.key, key, System.StringComparison.OrdinalIgnoreCase))
+            {
+                PlayBoth(p.leftState, p.rightState, crossFade);
+                return;
+            }
+        }
+    }
+
+    public void PlayPairSingle(PlayerUI.Side side, string key, float crossFade = -1f)
+    {
+        if (string.IsNullOrEmpty(key)) return;
+        foreach (var p in presets)
+        {
+            if (p == null) continue;
+            if (string.Equals(p.key, key, System.StringComparison.OrdinalIgnoreCase))
+            {
+                var state = (side == PlayerUI.Side.Left) ? p.leftState : p.rightState;
+                PlayAnimation(side, state, crossFade);
+                return;
+            }
+        }
+    }
+
+    Animator GetAnimator(PlayerUI.Side side)
+    {
+        bool isLeft = side == PlayerUI.Side.Left;
+        return isLeft ? _resolvedLeftAnimator : _resolvedRightAnimator;
+    }
+
+    public void SetAnimatorBool(PlayerUI.Side side, string parameterName, bool value)
+    {
+        var animator = GetAnimator(side);
+        if (animator == null)
+        {
+            Debug.LogError($"AnimationController: Animator is NULL for side {side}!");
+            return;
+        }
+        animator.SetBool(parameterName, value);
+        Debug.Log($"AnimationController: SetAnimatorBool [{side}] {parameterName}={value}");
+    }
+
+    public string ResolveAnimationId(string animationId)
+    {
+        if (string.IsNullOrEmpty(animationId)) return animationId;
+
+        string lower = animationId.ToLowerInvariant();
+
+        if (lower.Contains("attack"))
+        {
+            int randomAttack = Random.Range(1, attackVariants + 1);
+            string result = $"attack{randomAttack}";
+            Debug.Log($"AnimationController: Resolved '{animationId}' → '{result}' (random from 1-{attackVariants})");
+            return result;
+        }
+
+        if (lower.Contains("hit"))
+        {
+            int randomHit = Random.Range(1, hitVariants + 1);
+            string result = $"hit{randomHit}";
+            Debug.Log($"AnimationController: Resolved '{animationId}' → '{result}' (random from 1-{hitVariants})");
+            return result;
+        }
+
+        return animationId;
+    }
+
+    // Try to find a matching state name on the provided animator using the server-provided animationId as a hint.
+    // This attempts to be forgiving about prefixes like 'bot_a_' and different separators/casing.
+    private string FindBestStateName(Animator animator, string animationId)
+    {
+        if (animator == null || string.IsNullOrEmpty(animationId)) return null;
+
+        // 1) Try presets first (exact state names stored on component)
+        if (presets != null)
+        {
+            foreach (var p in presets)
+            {
+                if (p == null) continue;
+                if (!string.IsNullOrEmpty(p.leftState) && p.leftState.IndexOf(animationId, System.StringComparison.OrdinalIgnoreCase) >= 0) return p.leftState;
+                if (!string.IsNullOrEmpty(p.rightState) && p.rightState.IndexOf(animationId, System.StringComparison.OrdinalIgnoreCase) >= 0) return p.rightState;
+            }
+        }
+
+        string lower = animationId.ToLowerInvariant();
+        int idxAttack = lower.IndexOf("attack");
+        int idxHit = lower.IndexOf("hit");
+
+        var candidates = new System.Collections.Generic.List<string>();
+        // raw candidates
+        candidates.Add(animationId);
+        candidates.Add(animationId.Replace('-', '_'));
+        candidates.Add(animationId.Replace('-', ' '));
+        candidates.Add(animationId.ToLowerInvariant());
+
+        // try substring from 'attack' or 'hit' tokens, e.g. 'attack_light' or 'attacklight'
+        int tokenIndex = idxAttack >= 0 ? idxAttack : (idxHit >= 0 ? idxHit : -1);
+        if (tokenIndex >= 0)
+        {
+            string sub = animationId.Substring(tokenIndex);
+            candidates.Add(sub);
+            candidates.Add(sub.Replace('-', '_'));
+            candidates.Add(sub.Replace("_", ""));
+            candidates.Add(char.ToUpperInvariant(sub[0]) + sub.Substring(1));
+            candidates.Add(sub.ToLowerInvariant());
+        }
+
+        // Also try removing leading tokens like 'bot_a_' -> 'attack_light'
+        var parts = animationId.Split(new[] { '_', '-' }, System.StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length > 1)
+        {
+            var tail = string.Join("_", parts, 1, parts.Length - 1);
+            candidates.Add(tail);
+            candidates.Add(tail.Replace("_", ""));
+            candidates.Add(tail.ToLowerInvariant());
+            candidates.Add(char.ToUpperInvariant(tail[0]) + tail.Substring(1));
+        }
+
+        // Deduplicate while preserving order
+        var seen = new System.Collections.Generic.HashSet<string>(System.StringComparer.Ordinal);
+        var final = new System.Collections.Generic.List<string>();
+        foreach (var c in candidates)
+        {
+            if (string.IsNullOrEmpty(c)) continue;
+            if (!seen.Contains(c)) { seen.Add(c); final.Add(c); }
+        }
+
+        // Check if any candidate exists on the animator layers
+        foreach (var cand in final)
+        {
+            if (AnimatorHasStateByName(animator, cand)) return cand;
+        }
+
+        return null;
+    }
+
+    private bool AnimatorHasStateByName(Animator animator, string stateName)
+    {
+        if (animator == null || string.IsNullOrEmpty(stateName)) return false;
+        try
+        {
+            int hash = Animator.StringToHash(stateName);
+            for (int li = 0; li < animator.layerCount; li++) if (animator.HasState(li, hash)) return true;
+        }
+        catch { }
+        return false;
+    }
+
+    public void PlayAnimation(PlayerUI.Side side, string animationId, float crossFade = -1f)
+    {
+        Debug.Log($"AnimationController: PlayAnimation side={side} animationId={animationId} crossFade={crossFade}");
+        if (string.IsNullOrEmpty(animationId)) 
+        {
+            Debug.LogWarning("AnimationController: PlayAnimation called with empty animationId");
+            return;
+        }
+
+        var animator = GetAnimator(side);
+        Debug.Log($"AnimationController: resolved animator for side={side} -> {(animator!=null?animator.gameObject.name:"(null)")}");
+        if (animator == null)
+        {
+            Debug.LogError($"AnimationController: Animator is NULL for side {side}! Make sure to assign animator in inspector.");
+            return;
+        }
+
+        // Prefer finding an exact/matching state name on the animator using the server-provided id
+        // (handles names like 'bot_a_attack_light' -> 'attack_light' or presets). Fallback to ResolveAnimationId.
+        string resolvedId = FindBestStateName(animator, animationId) ?? ResolveAnimationId(animationId);
+
+        if (!Application.isPlaying)
+        {
+            Debug.LogWarning("AnimationController: PlayAnimation called while not playing. Skipping runtime Animator calls.");
+            return;
+        }
+
+        float t = crossFade >= 0f ? crossFade : defaultCrossFade;
+
+        if (AnimatorHasTrigger(animator, resolvedId))
+        {
+            Debug.Log($"AnimationController: Found trigger '{resolvedId}', calling SetTrigger");
+            animator.SetTrigger(resolvedId);
+            return;
+        }
+
+        try
+        {
+            if (animator.runtimeAnimatorController == null || animator.layerCount <= 0)
+            {
+                Debug.LogWarning("AnimationController: Animator has no controller or layers - cannot CrossFade.");
+                return;
+            }
+            int hash = Animator.StringToHash(resolvedId);
+            int foundLayer = -1;
+            for (int li = 0; li < animator.layerCount; li++)
+            {
+                if (animator.HasState(li, hash)) { foundLayer = li; break; }
+            }
+            if (foundLayer >= 0)
+            {
+                Debug.Log($"AnimationController: Found state '{resolvedId}' on layer {foundLayer}, calling CrossFadeInFixedTime");
+                animator.CrossFadeInFixedTime(hash, t, foundLayer);
+            }
+            else
+            {
+                Debug.LogWarning($"AnimationController: state '{resolvedId}' (hash {hash}) not found on any animator layer. Available states: {ListAnimatorStates(animator)}");
+            }
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning("AnimationController: CrossFade failed: " + ex.Message);
+        }
+    }
+
+    string ListAnimatorStates(Animator animator)
+    {
+        if (animator == null || animator.runtimeAnimatorController == null) return "(no controller)";
+        var controller = animator.runtimeAnimatorController as UnityEditor.Animations.AnimatorController;
+        if (controller == null)
+        {
+            return $"(Runtime: {animator.layerCount} layers)";
+        }
+
+        var sb = new System.Text.StringBuilder();
+        for (int li = 0; li < controller.layers.Length; li++)
+        {
+            sb.Append($"Layer{li}[");
+            var states = controller.layers[li].stateMachine.states;
+            for (int i = 0; i < states.Length; i++)
+            {
+                if (i > 0) sb.Append(", ");
+                sb.Append(states[i].state.name);
+            }
+            sb.Append("] ");
+        }
+        return sb.ToString();
+    }
+
+    /// <summary>
+    /// Play attack and hit animations with matched variants (same number for both).
+    /// Example: If resolves to "attack3", hit will also be "hit3".
+    /// Attacker plays attack animation, target plays corresponding hit animation.
+    /// ✅ MATCHED ANIMATIONS - Same variant number for both sides
+    /// </summary>
+    public void PlayBothAnimationsWithMatchedVariant(PlayerUI.Side attackerSide, string attackAnimationId, PlayerUI.Side targetSide, string hitAnimationId, float crossFade = -1f)
+    {
+        if (string.IsNullOrEmpty(attackAnimationId) || string.IsNullOrEmpty(hitAnimationId)) return;
+
+        string lowerAttack = attackAnimationId.ToLowerInvariant();
+        string lowerHit = hitAnimationId.ToLowerInvariant();
+
+        // Accept either (attack, hit) or swapped (hit, attack).
+        // Some callers may intentionally pass the hit id first and attack id second to match scene animator setups.
+        bool attackThenHit = lowerAttack.Contains("attack") && lowerHit.Contains("hit");
+        bool hitThenAttack = lowerAttack.Contains("hit") && lowerHit.Contains("attack");
+        if (!attackThenHit && !hitThenAttack)
+        {
+            Debug.LogWarning($"AnimationController: PlayBothAnimationsWithMatchedVariant expected attack/hit tokens in inputs; got: '{attackAnimationId}', '{hitAnimationId}'. Proceeding with best-effort.");
+        }
+
+        // First try to map server-provided ids to actual animator state names (presets or best-match).
+        var attackerAnimator = GetAnimator(attackerSide);
+        var targetAnimator = GetAnimator(targetSide);
+
+        string bestAttack = FindBestStateName(attackerAnimator, attackAnimationId);
+        string bestHit = FindBestStateName(targetAnimator, hitAnimationId);
+
+        if (!string.IsNullOrEmpty(bestAttack) && !string.IsNullOrEmpty(bestHit))
+        {
+            Debug.Log($"AnimationController: PlayBothAnimationsWithMatchedVariant using matched states '{bestAttack}' + '{bestHit}'");
+            PlayAnimationDirect(attackerSide, bestAttack, crossFade);
+            PlayAnimationDirect(targetSide, bestHit, crossFade);
+            return;
+        }
+
+        // Random ONLY ONCE for both animations (fallback to numbered variants)
+        int randomVariant = Random.Range(1, attackVariants + 1);
+        string resolvedAttack = $"attack{randomVariant}";
+        string resolvedHit = $"hit{randomVariant}";
+
+        // If caller passed swapped tokens (hit first, attack second), keep the matched variant names swapped
+        if (hitThenAttack)
+        {
+            resolvedAttack = $"hit{randomVariant}";
+            resolvedHit = $"attack{randomVariant}";
+        }
+
+        // If one side had a best-match, prefer it for that side
+        if (!string.IsNullOrEmpty(bestAttack)) resolvedAttack = bestAttack;
+        if (!string.IsNullOrEmpty(bestHit)) resolvedHit = bestHit;
+
+        Debug.Log($"AnimationController: PlayBothAnimationsWithMatchedVariant '{attackAnimationId}' + '{hitAnimationId}' → '{resolvedAttack}' + '{resolvedHit}' (matched variant {randomVariant})");
+
+        // Play both with same variant or matched fallback
+        PlayAnimationDirect(attackerSide, resolvedAttack, crossFade);
+        PlayAnimationDirect(targetSide, resolvedHit, crossFade);
+    }
+
+    /// <summary>
+    /// Internal method: Play animation with already-resolved ID (skip ResolveAnimationId to avoid double-randomization).
+    /// </summary>
+    private void PlayAnimationDirect(PlayerUI.Side side, string resolvedId, float crossFade)
+    {
+        Debug.Log($"AnimationController: PlayAnimationDirect [{side}] resolvedId={resolvedId}");
+        if (string.IsNullOrEmpty(resolvedId))
+        {
+            Debug.LogWarning("AnimationController: PlayAnimationDirect called with empty resolvedId");
+            return;
+        }
+
+        var animator = GetAnimator(side);
+        if (animator == null)
+        {
+            Debug.LogError($"AnimationController: Animator is NULL for side {side}!");
+            return;
+        }
+
+        if (!Application.isPlaying)
+        {
+            Debug.LogWarning("AnimationController: PlayAnimationDirect called while not playing.");
+            return;
+        }
+
+        float t = crossFade >= 0f ? crossFade : defaultCrossFade;
+
+        // Try trigger first
+        bool hasTrigger = AnimatorHasTrigger(animator, resolvedId);
+        Debug.Log($"🔍 AnimatorHasTrigger('{resolvedId}'): {hasTrigger}");
+
+        if (hasTrigger)
+        {
+            Debug.Log($"✅ AnimationController: PlayAnimationDirect [{side}] SetTrigger('{resolvedId}')");
+            animator.SetTrigger(resolvedId);
+            return;
+        }
+
+        // Fall back to CrossFadeInFixedTime
+        try
+        {
+            if (animator.runtimeAnimatorController == null || animator.layerCount <= 0)
+            {
+                Debug.LogWarning($"AnimationController: [{side}] Animator has no controller or layers");
+                return;
+            }
+
+            int hash = Animator.StringToHash(resolvedId);
+            int foundLayer = -1;
+            for (int li = 0; li < animator.layerCount; li++)
+            {
+                if (animator.HasState(li, hash)) 
+                { 
+                    foundLayer = li; 
+                    break; 
+                }
+            }
+
+            if (foundLayer >= 0)
+            {
+                Debug.Log($"✅ AnimationController: PlayAnimationDirect [{side}] CrossFadeInFixedTime('{resolvedId}', {t}s, layer {foundLayer})");
+                animator.CrossFadeInFixedTime(hash, t, foundLayer);
+            }
+            else
+            {
+                Debug.LogError($"❌ AnimationController: [{side}] State '{resolvedId}' NOT found in any layer. Available triggers: {ListAnimatorTriggers(animator)}");
+            }
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError($"AnimationController: PlayAnimationDirect [{side}] Exception: {ex}");
+        }
+    }
+
+    private string ListAnimatorTriggers(Animator animator)
+    {
+        if (animator == null || animator.runtimeAnimatorController == null) return "(no controller)";
+        var parms = animator.parameters;
+        var triggers = new System.Collections.Generic.List<string>();
+        foreach (var p in parms)
+        {
+            if (p.type == AnimatorControllerParameterType.Trigger)
+            {
+                triggers.Add(p.name);
+            }
+        }
+        return triggers.Count > 0 ? string.Join(", ", triggers) : "(no triggers)";
+    }
+
+    public void PlayBoth(string leftAnimationId, string rightAnimationId, float crossFade = -1f)
+    {
+        Debug.Log($"AnimationController: PlayBoth left={leftAnimationId} right={rightAnimationId} crossFade={crossFade}");
+        float t = crossFade >= 0f ? crossFade : defaultCrossFade;
+        if (!Application.isPlaying)
+        {
+            Debug.LogWarning("AnimationController: PlayBoth called while not playing. Skipping runtime Animator calls.");
+            return;
+        }
+
+        var resolvedLeft = GetAnimator(PlayerUI.Side.Left);
+        var resolvedRight = GetAnimator(PlayerUI.Side.Right);
+
+        if (!string.IsNullOrEmpty(leftAnimationId) && resolvedLeft != null)
+        {
+            if (AnimatorHasTrigger(resolvedLeft, leftAnimationId))
+            {
+                resolvedLeft.SetTrigger(leftAnimationId);
+            }
+            else
+            {
+                try
+                {
+                    if (resolvedLeft.runtimeAnimatorController != null && resolvedLeft.layerCount > 0)
+                    {
+                        int hash = Animator.StringToHash(leftAnimationId);
+                        int found = -1;
+                        for (int li = 0; li < resolvedLeft.layerCount; li++) if (resolvedLeft.HasState(li, hash)) { found = li; break; }
+                        if (found >= 0) resolvedLeft.CrossFadeInFixedTime(hash, t, found);
+                        else Debug.LogWarning($"AnimationController: Left animator state '{leftAnimationId}' not found on any layer; skipping CrossFade.");
+                    }
+                }
+                catch (System.Exception ex) { Debug.LogWarning("AnimationController: Left CrossFade failed: " + ex.Message); }
+            }
+        }
+
+        if (!string.IsNullOrEmpty(rightAnimationId) && resolvedRight != null)
+        {
+            if (AnimatorHasTrigger(resolvedRight, rightAnimationId))
+            {
+                resolvedRight.SetTrigger(rightAnimationId);
+            }
+            else
+            {
+                try
+                {
+                    if (resolvedRight.runtimeAnimatorController != null && resolvedRight.layerCount > 0)
+                    {
+                        int hash = Animator.StringToHash(rightAnimationId);
+                        int foundR = -1;
+                        for (int li = 0; li < resolvedRight.layerCount; li++) if (resolvedRight.HasState(li, hash)) { foundR = li; break; }
+                        if (foundR >= 0) resolvedRight.CrossFadeInFixedTime(hash, t, foundR);
+                        else Debug.LogWarning($"AnimationController: Right animator state '{rightAnimationId}' not found on any layer; skipping CrossFade.");
+                    }
+                }
+                catch (System.Exception ex) { Debug.LogWarning("AnimationController: Right CrossFade failed: " + ex.Message); }
+            }
+        }
+    }
+
+    bool AnimatorHasTrigger(Animator animator, string name)
+    {
+        if (animator == null || string.IsNullOrEmpty(name)) return false;
+        var parms = animator.parameters;
+        for (int i = 0; i < parms.Length; i++)
+        {
+            var p = parms[i];
+            if (p.type == AnimatorControllerParameterType.Trigger && p.name == name) return true;
+        }
+        return false;
+    }
+}

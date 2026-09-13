@@ -1,0 +1,145 @@
+﻿using UnityEngine;
+
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+
+public class LoaddingManager : MonoBehaviour
+{
+    [Header("UI References")]
+    public GameObject loadingPanel;
+    public Slider progressSlider;
+    public TextMeshProUGUI percentText;
+    public TextMeshProUGUI statusText;
+
+    [Header("Behavior")]
+    [Tooltip("Hide loading panel automatically when connected")] public bool hideOnConnected = true;
+    [Tooltip("Seconds to wait after connected before hiding panel")] public float hideDelay = 0.5f;
+    [Tooltip("Scene name to load after websocket connected")]
+    public string targetSceneName = "BattleScene";
+    [Tooltip("Automatically load target scene when connected")]
+    public bool loadSceneOnConnected = true;
+
+    float _targetProgress = 0f;
+    string _status = "";
+    bool _subscribed = false;
+
+    void Start()
+    {
+        if (loadingPanel != null) loadingPanel.SetActive(true);
+        TrySubscribe();
+    }
+
+    void TrySubscribe()
+    {
+        if (_subscribed) return;
+        if (WebSocketManager.Instance != null)
+        {
+            WebSocketManager.Instance.OnConnectionProgress += HandleConnectionProgress;
+            _subscribed = true;
+        }
+    }
+
+    void OnDestroy()
+    {
+        if (_subscribed && WebSocketManager.Instance != null)
+        {
+            WebSocketManager.Instance.OnConnectionProgress -= HandleConnectionProgress;
+        }
+    }
+
+    void HandleConnectionProgress(float value, string status)
+    {
+        // invoked on main thread by WebSocketManager.Update
+        _targetProgress = Mathf.Clamp01(value);
+        // parse potential error token from status (format: "ERROR:CODE:message")
+        if (!string.IsNullOrEmpty(status) && status.StartsWith("ERROR:"))
+        {
+            // keep panel visible
+            if (loadingPanel != null) loadingPanel.SetActive(true);
+            // parse
+            var parts = status.Split(new[] { ':' }, 3);
+            string code = parts.Length > 1 ? parts[1] : "UNKNOWN_ERROR";
+            string msg = parts.Length > 2 ? parts[2] : "An error occurred";
+            _status = MapErrorCodeToUserMessage(code, msg);
+            // on error do not auto-hide or load scene
+            CancelInvoke(nameof(LoadTargetScene));
+            CancelInvoke(nameof(HidePanel));
+            return;
+        }
+
+        _status = status ?? string.Empty;
+        if (_targetProgress >= 1f && hideOnConnected)
+        {
+            // optionally hide after delay
+            Invoke(nameof(HidePanel), hideDelay);
+            if (loadSceneOnConnected && !string.IsNullOrEmpty(targetSceneName))
+            {
+                // start scene load once
+                if (!IsInvoking(nameof(LoadTargetScene))) Invoke(nameof(LoadTargetScene), hideDelay + 0.05f);
+            }
+        }
+        else
+        {
+            if (loadingPanel != null) loadingPanel.SetActive(true);
+        }
+    }
+
+    void LoadTargetScene()
+    {
+        // Async load the target scene (single mode)
+        if (string.IsNullOrEmpty(targetSceneName)) return;
+        UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(targetSceneName, UnityEngine.SceneManagement.LoadSceneMode.Single);
+    }
+
+    void HidePanel()
+    {
+        if (loadingPanel != null) loadingPanel.SetActive(false);
+    }
+
+    void Update()
+    {
+        if (!_subscribed)
+            TrySubscribe();
+
+        // smooth progress towards target
+        if (progressSlider != null)
+        {
+            float cur = progressSlider.value;
+            float next = Mathf.MoveTowards(cur, _targetProgress, Time.deltaTime * 0.5f);
+            progressSlider.value = next;
+            if (percentText != null)
+            {
+                int pct = Mathf.RoundToInt(progressSlider.value * 100f);
+                percentText.text = pct.ToString() + "%";
+            }
+        }
+
+        if (statusText != null)
+        {
+            statusText.text = _status ?? string.Empty;
+        }
+    }
+
+    string MapErrorCodeToUserMessage(string code, string raw)
+    {
+        switch (code)
+        {
+            case "SOCKET_AUTH_REQUIRED":
+            case "UNITY_AUTH_REQUIRED":
+                return "Không thể xác thực Unity renderer";
+            case "UNITY_AUTH_INVALID":
+                return "Thông tin xác thực của Unity không hợp lệ";
+            case "UNITY_EVENT_FORBIDDEN":
+                return "Unity renderer không được phép gọi event này";
+            case "MATCH_SUBSCRIBE_INVALID":
+                return "Dữ liệu subscribe không hợp lệ";
+            case "MATCH_NOT_FOUND":
+                return "Không tìm thấy match";
+            case "SOCKET_RECONNECT_FAILED":
+                return "Không thể kết nối lại với game server";
+            default:
+                return raw;
+        }
+    }
+}

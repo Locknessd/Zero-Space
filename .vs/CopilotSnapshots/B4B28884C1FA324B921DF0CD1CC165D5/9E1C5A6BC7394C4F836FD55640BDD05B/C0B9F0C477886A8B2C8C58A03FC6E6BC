@@ -1,0 +1,295 @@
+﻿using System.Net.WebSockets;
+using System;
+using System.Collections.Concurrent;
+using System.Text;
+using System.Threading.Tasks;
+using UnityEngine;
+using SocketIOClient;
+using Newtonsoft.Json;
+
+/*
+ * WebSocketManager supports two modes:
+ * - If you install NativeWebSocket and define the scripting symbol `NATIVE_WEB_SOCKET`, the manager will use NativeWebSocket (recommended).
+ * - Otherwise a lightweight stub implementation is used so the project compiles; it logs warnings and does not perform real networking.
+ */
+
+
+public class WebSocketManager : MonoBehaviour
+{
+    public static WebSocketManager Instance { get; private set; }
+
+    [Header("Connection")]
+    [Tooltip("WSS endpoint for the game backend.")]
+    [SerializeField]
+    private string _serverUrl = "http://<backend-host>:9092";
+
+    [Tooltip("Automatically try to reconnect on unexpected disconnect.")]
+    [SerializeField]
+    private bool _autoReconnect = true;
+
+    [Tooltip("Seconds to wait before attempting reconnect.")]
+    [SerializeField]
+    private float _reconnectDelay = 3f;
+
+    public event Action<string> OnRawMessageReceived;
+    private SocketIO _ws;
+    //private NativeWebSocket.WebSocket _ws;
+    private readonly ConcurrentQueue<string> _incomingMessages = new ConcurrentQueue<string>();
+    private bool _isClosing;
+    private string _currentMatchId;
+    private long _lastAppliedSequence = 0;
+
+    [Header("Socket.IO Auth")]
+    [Tooltip("Service token for Socket.IO auth (do not commit in source control).")]
+    [SerializeField]
+    private string _serviceToken = "";
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
+    private void Start()
+    {
+        _ = ConnectAsync();
+    }
+
+    public void SetServiceToken(string token)
+    {
+        _serviceToken = token;
+    }
+
+    private void Update()
+    {
+        while (_incomingMessages.TryDequeue(out string msg))
+        {
+            try
+            {
+                OnRawMessageReceived?.Invoke(msg);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"WebSocketManager: message handler exception: {ex}");
+            }
+        }
+    }
+
+    public async Task ConnectAsync()
+    {
+        if (_ws != null)
+            return;
+
+        _isClosing = false;
+        var options = new SocketIOOptions
+        {
+            Auth = new
+            {
+                clientType = "UNITY_RENDERER",
+                serviceToken = _serviceToken
+            }
+        };
+
+        _ws = new SocketIO(_serverUrl, options);
+
+        _ws.OnConnected += async (sender, e) =>
+        {
+            Debug.Log("WebSocketManager: Connected.");
+            // auto-resubscribe if we had a match before disconnect
+            if (!string.IsNullOrEmpty(_currentMatchId))
+            {
+                await SubscribeToMatch(_currentMatchId, _lastAppliedSequence);
+            }
+        };
+
+        _ws.OnDisconnected += async (sender, e) =>
+        {
+            Debug.Log($"WebSocketManager: Disconnected: {e}");
+            _ws = null;
+            if (_autoReconnect && !_isClosing)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(_reconnectDelay));
+                _ = ConnectAsync();
+            }
+        };
+
+        // Snapshot: includes current state + optionally an array of events
+        _ws.On("meme_battle_snapshot", response =>
+        {
+            try
+            {
+                var snapResp = response.GetValue<SnapshotResponse>();
+                if (!string.IsNullOrEmpty(snapResp.error))
+                {
+                    Debug.LogError($"WebSocketManager: subscribe error: {snapResp.error}");
+                    _incomingMessages.Enqueue(JsonConvert.SerializeObject(new { type = "error", error = snapResp.error }));
+                    return;
+                }
+
+                if (snapResp.snapshot != null)
+                {
+                    // set last applied sequence from snapshot
+                    _lastAppliedSequence = snapResp.snapshot.latestSequence;
+                    // enqueue snapshot for consumers
+                    _incomingMessages.Enqueue(JsonConvert.SerializeObject(new { type = "meme_battle_snapshot", snapshot = snapResp.snapshot }));
+                }
+
+                // apply additional events that server included (events with sequence > afterSequence)
+                if (snapResp.events != null)
+                {
+                    // ensure events are sorted
+                    snapResp.events.Sort((a, b) => a.sequence.CompareTo(b.sequence));
+                    foreach (var ev in snapResp.events)
+                    {
+                        if (ev.sequence <= _lastAppliedSequence)
+                        {
+                            // skip duplicates
+                            continue;
+                        }
+                        // enqueue the raw event JSON for consumers
+                        _incomingMessages.Enqueue(JsonConvert.SerializeObject(new { type = "meme_battle_event", @event = ev }));
+                        _lastAppliedSequence = ev.sequence;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"WebSocketManager: meme_battle_snapshot exception: {ex}");
+            }
+        });
+
+        // Individual game events
+        _ws.On("meme_battle_event", response =>
+        {
+            try
+            {
+                var ev = response.GetValue<MemeBattleEvent>();
+                if (ev == null)
+                {
+                    Debug.LogWarning("WebSocketManager: received null meme_battle_event");
+                    return;
+                }
+
+                // sequence handling: ignore duplicates, require in-order
+                if (ev.sequence <= _lastAppliedSequence)
+                {
+                    // duplicate/old
+                    return;
+                }
+
+                if (ev.sequence > _lastAppliedSequence + 1)
+                {
+                    // gap detected: request resync by subscribing with last applied sequence
+                    Debug.LogWarning($"WebSocketManager: sequence gap detected. last={_lastAppliedSequence} incoming={ev.sequence}. Resubscribing.");
+                    if (!string.IsNullOrEmpty(_currentMatchId))
+                    {
+                        _ = SubscribeToMatch(_currentMatchId, _lastAppliedSequence);
+                    }
+                    return;
+                }
+
+                // in-order event: enqueue and advance sequence
+                _incomingMessages.Enqueue(JsonConvert.SerializeObject(new { type = "meme_battle_event", @event = ev }));
+                _lastAppliedSequence = ev.sequence;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"WebSocketManager: meme_battle_event exception: {ex}");
+            }
+        });
+
+        try
+        {
+            await _ws.ConnectAsync();
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"WebSocketManager: Connect failed: {ex}");
+            _ws = null;
+        }
+    }
+
+    /// <summary>
+    /// Subscribe to a meme battle match. Payload must be a JSON string per backend spec.
+    /// </summary>
+    public async Task SubscribeToMatch(string matchId, long afterSequence = 0)
+    {
+        if (string.IsNullOrEmpty(matchId)) throw new ArgumentNullException(nameof(matchId));
+        _currentMatchId = matchId;
+
+        if (_ws == null || !_ws.Connected)
+        {
+            Debug.LogWarning("WebSocketManager: cannot subscribe, socket not connected.");
+            return;
+        }
+
+        var req = new SubscribeRequest { matchId = matchId, afterSequence = afterSequence };
+        string payload = JsonConvert.SerializeObject(req);
+        try
+        {
+            await _ws.EmitAsync("meme_battle_subscribe", payload);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"WebSocketManager: SubscribeToMatch failed: {ex}");
+        }
+    }
+
+    public async Task DisconnectAsync()
+    {
+        _isClosing = true;
+        _autoReconnect = false;
+
+        if (_ws != null)
+        {
+            try
+            {
+                await _ws.DisconnectAsync();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"WebSocketManager: Close exception: {ex}");
+            }
+
+            _ws = null;
+        }
+    }
+
+    public async Task SendMessageToServer(string message)
+    {
+        if (string.IsNullOrEmpty(message))
+        {
+            Debug.LogWarning("WebSocketManager: Attempted to send empty message.");
+            return;
+        }
+
+        if (_ws == null || !_ws.Connected)
+        {
+            Debug.LogWarning("WebSocketManager: Socket not open.");
+            return;
+        }
+
+        // Emit as "message" event. Adjust event name if your server expects a different event.
+        await _ws.EmitAsync("message", message);
+    }
+
+    private async void OnApplicationQuit()
+    {
+        await DisconnectAsync();
+    }
+
+    private async void OnDestroy()
+    {
+        if (Instance == this) Instance = null;
+        await DisconnectAsync();
+    }
+}
+
+
+

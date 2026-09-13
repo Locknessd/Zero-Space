@@ -1,0 +1,91 @@
+﻿using UnityEngine;
+
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+
+public class LoaddingManager : MonoBehaviour
+{
+    [Header("UI References")]
+    public GameObject loadingPanel;
+    public Slider progressSlider;
+    public TextMeshProUGUI percentText;
+    public TextMeshProUGUI statusText;
+
+    [Header("Behavior")]
+    [Tooltip("Hide loading panel automatically when connected")] public bool hideOnConnected = true;
+    [Tooltip("Seconds to wait after connected before hiding panel")] public float hideDelay = 0.5f;
+
+    float _targetProgress = 0f;
+    string _status = "";
+    bool _subscribed = false;
+
+    void Start()
+    {
+        if (loadingPanel != null) loadingPanel.SetActive(true);
+        TrySubscribe();
+    }
+
+    void TrySubscribe()
+    {
+        if (_subscribed) return;
+        if (WebSocketManager.Instance != null)
+        {
+            WebSocketManager.Instance.OnConnectionProgress += HandleConnectionProgress;
+            _subscribed = true;
+        }
+    }
+
+    void OnDestroy()
+    {
+        if (_subscribed && WebSocketManager.Instance != null)
+        {
+            WebSocketManager.Instance.OnConnectionProgress -= HandleConnectionProgress;
+        }
+    }
+
+    void HandleConnectionProgress(float value, string status)
+    {
+        // invoked on main thread by WebSocketManager.Update
+        _targetProgress = Mathf.Clamp01(value);
+        _status = status ?? string.Empty;
+        if (_targetProgress >= 1f && hideOnConnected)
+        {
+            // optionally hide after delay
+            Invoke(nameof(HidePanel), hideDelay);
+        }
+        else
+        {
+            if (loadingPanel != null) loadingPanel.SetActive(true);
+        }
+    }
+
+    void HidePanel()
+    {
+        if (loadingPanel != null) loadingPanel.SetActive(false);
+    }
+
+    void Update()
+    {
+        if (!_subscribed)
+            TrySubscribe();
+
+        // smooth progress towards target
+        if (progressSlider != null)
+        {
+            float cur = progressSlider.value;
+            float next = Mathf.MoveTowards(cur, _targetProgress, Time.deltaTime * 0.5f);
+            progressSlider.value = next;
+            if (percentText != null)
+            {
+                int pct = Mathf.RoundToInt(progressSlider.value * 100f);
+                percentText.text = pct.ToString() + "%";
+            }
+        }
+
+        if (statusText != null)
+        {
+            statusText.text = _status ?? string.Empty;
+        }
+    }
+}

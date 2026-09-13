@@ -1,0 +1,223 @@
+using UnityEditor;
+using UnityEditor.Animations;
+using UnityEngine;
+
+/// <summary>
+/// Small editor utility to sync Animator state names with their assigned AnimationClip names.
+/// Use when clip asset names changed but state names in AnimatorController were not updated.
+/// </summary>
+public static class AnimatorStateSyncer
+{
+    [MenuItem("Tools/Animator/Sync State Names With Clip Names (Selected Controllers)")]
+    static void SyncSelectedControllers()
+    {
+        var objs = Selection.objects;
+        if (objs == null || objs.Length == 0)
+        {
+            Debug.LogWarning("AnimatorStateSyncer: No objects selected.");
+            return;
+        }
+
+        int total = 0;
+        foreach (var o in objs)
+        {
+            var controller = o as AnimatorController;
+            if (controller == null) continue;
+            int changed = SyncController(controller);
+            if (changed > 0) Debug.Log($"AnimatorStateSyncer: Updated {changed} state names on controller '{controller.name}'");
+            total += changed;
+        }
+
+        if (total == 0) Debug.Log("AnimatorStateSyncer: No state names needed updating on selected controllers.");
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+    }
+
+    [MenuItem("Tools/Animator/Ensure Trigger Parameters For State Names (Selected Controllers)")]
+    static void EnsureTriggersForSelectedControllers()
+    {
+        var objs = Selection.objects;
+        if (objs == null || objs.Length == 0)
+        {
+            Debug.LogWarning("AnimatorStateSyncer: No objects selected.");
+            return;
+        }
+
+        int total = 0;
+        foreach (var o in objs)
+        {
+            var controller = o as AnimatorController;
+            if (controller == null) continue;
+            int changed = EnsureTriggers(controller);
+            if (changed > 0) Debug.Log($"AnimatorStateSyncer: Added {changed} trigger parameters on controller '{controller.name}'");
+            total += changed;
+        }
+        if (total == 0) Debug.Log("AnimatorStateSyncer: No triggers added on selected controllers.");
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+    }
+
+    [MenuItem("Tools/Animator/Rename Trigger Parameters To Match State Names (Selected Controllers) (RISKY)")]
+    static void RenameTriggersToMatchStates_SelectedControllers()
+    {
+        var objs = Selection.objects;
+        if (objs == null || objs.Length == 0)
+        {
+            Debug.LogWarning("AnimatorStateSyncer: No objects selected.");
+            return;
+        }
+
+        int total = 0;
+        foreach (var o in objs)
+        {
+            var controller = o as AnimatorController;
+            if (controller == null) continue;
+            int changed = RenameParametersToStates(controller);
+            if (changed > 0) Debug.Log($"AnimatorStateSyncer: Renamed {changed} parameters on controller '{controller.name}'");
+            total += changed;
+        }
+        if (total == 0) Debug.Log("AnimatorStateSyncer: No parameters renamed on selected controllers.");
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+    }
+
+    [MenuItem("Tools/Animator/Sync State Names With Clip Names (Controllers on Selected GameObjects)")]
+    static void SyncControllersOnSelectedGameObjects()
+    {
+        var gos = Selection.gameObjects;
+        if (gos == null || gos.Length == 0)
+        {
+            Debug.LogWarning("AnimatorStateSyncer: No game objects selected.");
+            return;
+        }
+
+        int total = 0;
+        foreach (var go in gos)
+        {
+            var anim = go.GetComponent<Animator>();
+            if (anim == null) continue;
+            var controller = anim.runtimeAnimatorController as AnimatorController;
+            if (controller == null) continue;
+            int changed = SyncController(controller);
+            if (changed > 0) Debug.Log($"AnimatorStateSyncer: Updated {changed} state names on controller '{controller.name}' (from GameObject '{go.name}')");
+            total += changed;
+        }
+        if (total == 0) Debug.Log("AnimatorStateSyncer: No state names needed updating on selected GameObjects' controllers.");
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+    }
+
+    // Ensure trigger parameters exist for each state.motion.name (safe option)
+    static int EnsureTriggers(AnimatorController controller)
+    {
+        if (controller == null) return 0;
+        int added = 0;
+        Undo.RegisterCompleteObjectUndo(controller, "Ensure Trigger Parameters");
+        var layers = controller.layers;
+        var existing = new System.Collections.Generic.HashSet<string>();
+        foreach (var p in controller.parameters) existing.Add(p.name);
+
+        foreach (var layer in layers)
+        {
+            foreach (var cs in layer.stateMachine.states)
+            {
+                var state = cs.state;
+                if (state == null) continue;
+                var motion = state.motion as AnimationClip;
+                if (motion == null) continue;
+                var desired = motion.name;
+                if (string.IsNullOrEmpty(desired)) continue;
+                if (!existing.Contains(desired))
+                {
+                    var param = new AnimatorControllerParameter { name = desired, type = AnimatorControllerParameterType.Trigger };
+                    var list = new System.Collections.Generic.List<AnimatorControllerParameter>(controller.parameters) { param };
+                    controller.parameters = list.ToArray();
+                    existing.Add(desired);
+                    added++;
+                }
+            }
+        }
+        if (added > 0) EditorUtility.SetDirty(controller);
+        return added;
+    }
+
+    // RISKY: rename existing trigger parameters to match state.motion.names by order.
+    // This will map the first N trigger parameters to the first N state names collected (by layer/state order).
+    static int RenameParametersToStates(AnimatorController controller)
+    {
+        if (controller == null) return 0;
+        Undo.RegisterCompleteObjectUndo(controller, "Rename Parameters To Match States");
+        var stateNames = new System.Collections.Generic.List<string>();
+        foreach (var layer in controller.layers)
+        {
+            foreach (var cs in layer.stateMachine.states)
+            {
+                var state = cs.state;
+                if (state == null) continue;
+                var motion = state.motion as AnimationClip;
+                if (motion == null) continue;
+                var name = motion.name;
+                if (!string.IsNullOrEmpty(name)) stateNames.Add(name);
+            }
+        }
+
+        var parameters = controller.parameters;
+        int renameCount = System.Math.Min(parameters.Length, stateNames.Count);
+        int changed = 0;
+        for (int i = 0; i < renameCount; i++)
+        {
+            var p = parameters[i];
+            var desired = stateNames[i];
+            if (p.name != desired)
+            {
+                // only rename triggers (safer)
+                if (p.type == AnimatorControllerParameterType.Trigger)
+                {
+                    parameters[i].name = desired;
+                    changed++;
+                }
+            }
+        }
+        if (changed > 0)
+        {
+            controller.parameters = parameters; // reassign
+            EditorUtility.SetDirty(controller);
+        }
+        return changed;
+    }
+
+    // Returns number of changed states
+    static int SyncController(AnimatorController controller)
+    {
+        if (controller == null) return 0;
+        int changed = 0;
+        // Register undo for the controller asset
+        Undo.RegisterCompleteObjectUndo(controller, "Sync Animator State Names");
+
+        var layers = controller.layers;
+        for (int li = 0; li < layers.Length; li++)
+        {
+            var layer = layers[li];
+            var states = layer.stateMachine.states;
+            for (int si = 0; si < states.Length; si++)
+            {
+                var cs = states[si];
+                var state = cs.state;
+                if (state == null) continue;
+                var motion = state.motion as AnimationClip;
+                if (motion == null) continue;
+                var clipName = motion.name;
+                if (string.IsNullOrEmpty(clipName)) continue;
+                if (state.name != clipName)
+                {
+                    Debug.Log($"AnimatorStateSyncer: Renaming state '{state.name}' -> '{clipName}' in controller '{controller.name}', layer '{layer.name}'");
+                    state.name = clipName;
+                    changed++;
+                }
+            }
+        }
+
+        if (changed > 0) EditorUtility.SetDirty(controller);
+        return changed;
+    }
+}

@@ -1,0 +1,121 @@
+﻿using UnityEngine;
+
+/// <summary>
+/// PROJECT ARCHITECTURE: Presentation / Animation Layer
+/// ROLE: Quản lý hiệu ứng hình ảnh, mô hình 3D và hoạt ảnh (Animations/Meme) của nhân vật.
+/// RESPONSIBILITIES:
+/// - Kích hoạt các hoạt ảnh tương ứng (Idle, Talking, Victory, Hurt, Dance) dựa trên animation_id nhận từ sự kiện round_result của Server.
+/// - Hiển thị khung hình ảnh Meme GIF động tương ứng với meme_gif_url nếu có.
+/// AI NOTE: Gắn script này vào các đối tượng nhân vật (Pepe/Doge) để điều khiển Animator Component.
+/// </summary>
+using UnityEngine;
+
+public class AnimationController : MonoBehaviour
+{
+    public Animator leftAnimator;
+    public Animator rightAnimator;
+
+    [Tooltip("Default crossfade duration in seconds when switching animations")]
+    public float defaultCrossFade = 0.12f;
+
+    void Start()
+    {
+        // optional: if this script is attached to a character, try to grab Animator
+        if (leftAnimator == null || rightAnimator == null)
+        {
+            var a = GetComponent<Animator>();
+            if (a != null && leftAnimator == null) leftAnimator = a;
+        }
+
+    [System.Serializable]
+    public class AnimationPair
+    {
+        public string key; // logical name, e.g. "Attack1", "Hit1"
+        public string leftState; // animator trigger or state name for left animator
+        public string rightState; // animator trigger or state name for right animator
+    }
+
+    [Header("Presets")]
+    [Tooltip("Define logical animation pairs so you can call PlayPair('Attack1') and it will play the mapped animations on left/right animators.")]
+    public AnimationPair[] presets = new AnimationPair[0];
+
+    // Play the preset pair by key. If a side state is empty it will be ignored.
+    public void PlayPair(string key, float crossFade = -1f)
+    {
+        if (string.IsNullOrEmpty(key)) return;
+        foreach (var p in presets)
+        {
+            if (p == null) continue;
+            if (string.Equals(p.key, key, System.StringComparison.OrdinalIgnoreCase))
+            {
+                PlayBoth(p.leftState, p.rightState, crossFade);
+                return;
+            }
+        }
+    }
+
+    // Play preset only on one side (useful for single-player actions)
+    public void PlayPairSingle(PlayerUI.Side side, string key, float crossFade = -1f)
+    {
+        if (string.IsNullOrEmpty(key)) return;
+        foreach (var p in presets)
+        {
+            if (p == null) continue;
+            if (string.Equals(p.key, key, System.StringComparison.OrdinalIgnoreCase))
+            {
+                var state = (side == PlayerUI.Side.Left) ? p.leftState : p.rightState;
+                PlayAnimation(side, state, crossFade);
+                return;
+            }
+        }
+    }
+    }
+
+    Animator GetAnimator(PlayerUI.Side side)
+    {
+        return side == PlayerUI.Side.Left ? leftAnimator : rightAnimator;
+    }
+
+    // Play single animation on specified side. animationId can be a trigger name or state name.
+    public void PlayAnimation(PlayerUI.Side side, string animationId, float crossFade = -1f)
+    {
+        if (string.IsNullOrEmpty(animationId)) return;
+        var animator = GetAnimator(side);
+        if (animator == null) return;
+
+        float t = crossFade >= 0f ? crossFade : defaultCrossFade;
+
+        // Try to set trigger first (common pattern). If not present, attempt crossfade to state.
+        try
+        {
+            animator.SetTrigger(animationId);
+            return;
+        }
+        catch { }
+
+        // Fall back to CrossFade by state name/hash
+        try
+        {
+            int hash = Animator.StringToHash(animationId);
+            animator.CrossFadeInFixedTime(hash, t);
+        }
+        catch { }
+    }
+
+    // Play two animations simultaneously (left and right), with same crossfade duration
+    public void PlayBoth(string leftAnimationId, string rightAnimationId, float crossFade = -1f)
+    {
+        float t = crossFade >= 0f ? crossFade : defaultCrossFade;
+        if (!string.IsNullOrEmpty(leftAnimationId) && leftAnimator != null)
+        {
+            try { leftAnimator.SetTrigger(leftAnimationId); }
+            catch { try { leftAnimator.CrossFadeInFixedTime(Animator.StringToHash(leftAnimationId), t); } catch { } }
+        }
+
+        if (!string.IsNullOrEmpty(rightAnimationId) && rightAnimator != null)
+        {
+            try { rightAnimator.SetTrigger(rightAnimationId); }
+            catch { try { rightAnimator.CrossFadeInFixedTime(Animator.StringToHash(rightAnimationId), t); } catch { } }
+        }
+    }
+}

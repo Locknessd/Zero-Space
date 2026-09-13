@@ -1,0 +1,199 @@
+﻿using UnityEngine;
+#if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+#endif
+
+/// <summary>
+/// PROJECT ARCHITECTURE: Core Logic Layer (Controller trung tâm)
+/// ROLE: Điều phối luồng trận đấu, nhận dữ liệu từ WebSocketManager và phân phối xuống các hệ thống UI/Animation.
+/// RESPONSIBILITIES:
+/// - Lưu trữ trạng thái trận đấu hiện tại (MatchState) theo tài liệu thiết kế.
+/// - Phân tích (Parse) các gói tin JSON từ Server thành các C# Object tương ứng.
+/// - Gọi các hàm cập nhật giao diện của PlayerUI, RoundManager và AnimationController khi có sự kiện mới.
+/// AI NOTE: Script này đóng vai trò bộ não trung tâm của Client, không tự tính toán sát thương (vì BE đã tính), chỉ nhận kết quả và điều phối hiển thị.
+/// </summary>
+using UnityEngine;
+
+public class GameManager : MonoBehaviour
+{
+    // Tham chiếu đến các quản lý thành phần khác trong scene
+    public PlayerUI playerUI;
+    public RoundManager roundManager;
+    public AnimationController animationController;
+    [Header("Local Test")]
+    public bool enableLocalInputTesting = true;
+
+    void Start()
+    {
+        if (WebSocketManager.Instance != null)
+        {
+            WebSocketManager.Instance.OnRawMessageReceived += HandleRawMessage;
+        }
+    }
+
+    void Update()
+    {
+        if (!enableLocalInputTesting) return;
+        // Quick local testing:
+        // Q -> randomly pick a preset, left attacks / right hit
+        if (IsKeyDown(KeyCode.Q))
+        {
+            var p = GetRandomPreset();
+            if (p != null)
+            {
+                Debug.Log($"[LocalTest] Q pressed -> Play preset '{p.key}' (Left attacks)");
+                PlayBothAnimations(p.leftState, p.rightState);
+            }
+            else
+            {
+                Debug.LogWarning("[LocalTest] Q pressed but no valid animation presets available.");
+            }
+        }
+
+        // E -> randomly pick a preset, RIGHT attacks / LEFT hit (reverse sides)
+        if (IsKeyDown(KeyCode.E))
+        {
+            var p = GetRandomPreset();
+            if (p != null)
+            {
+                Debug.Log($"[LocalTest] E pressed -> Play preset '{p.key}' (Right attacks)");
+                // reverse: left should play the victim/hit (p.rightState), right should play attacker (p.leftState)
+                PlayBothAnimations(p.rightState, p.leftState);
+            }
+            else
+            {
+                Debug.LogWarning("[LocalTest] E pressed but no valid animation presets available.");
+            }
+        }
+    }
+
+    void OnDestroy()
+    {
+        if (WebSocketManager.Instance != null)
+        {
+            WebSocketManager.Instance.OnRawMessageReceived -= HandleRawMessage;
+        }
+    }
+
+    void HandleRawMessage(string json)
+    {
+        if (string.IsNullOrEmpty(json)) return;
+        string evt = ExtractEventName(json);
+        switch (evt)
+        {
+            case "playerLeftAttack":
+                {
+                    int dmg = ExtractInt(json, "damage");
+                    PlaySingleAnimation(PlayerUI.Side.Left, "LeftAttack");
+                    playerUI?.ShowDamage(PlayerUI.Side.Left, dmg);
+                    break;
+                }
+            case "playerRightHit":
+                {
+                    int dmg = ExtractInt(json, "damage");
+                    PlaySingleAnimation(PlayerUI.Side.Right, "RightHit");
+                    playerUI?.ShowDamage(PlayerUI.Side.Right, dmg);
+                    break;
+                }
+            case "playerLeftAnswer":
+                {
+                    string text = ExtractString(json, "answer") ?? ExtractString(json, "text");
+                    playerUI?.SetDialogue(PlayerUI.Side.Left, text);
+                    PlaySingleAnimation(PlayerUI.Side.Left, "Talk");
+                    break;
+                }
+            case "ShowQuestion":
+            case "question_start":
+                {
+                    string q = ExtractString(json, "question") ?? ExtractString(json, "text");
+                    roundManager?.ShowQuestion(q);
+                    break;
+                }
+            default:
+                break;
+        }
+    }
+
+    // Helper: play an animation on one side via the AnimationController
+    public void PlaySingleAnimation(PlayerUI.Side side, string animationId, float crossFade = -1f)
+    {
+        animationController?.PlayAnimation(side, animationId, crossFade);
+    }
+
+    // Helper: play animations for both sides at once
+    public void PlayBothAnimations(string leftAnimationId, string rightAnimationId, float crossFade = -1f)
+    {
+        animationController?.PlayBoth(leftAnimationId, rightAnimationId, crossFade);
+    }
+
+    // Return a random preset pair that has both left and right states defined
+    AnimationController.AnimationPair GetRandomPreset()
+    {
+        if (animationController == null || animationController.presets == null || animationController.presets.Length == 0)
+            return null;
+
+        var valid = new System.Collections.Generic.List<AnimationController.AnimationPair>();
+        foreach (var p in animationController.presets)
+        {
+            if (p == null) continue;
+            if (string.IsNullOrEmpty(p.leftState) || string.IsNullOrEmpty(p.rightState)) continue;
+            valid.Add(p);
+        }
+
+        if (valid.Count == 0) return null;
+        int idx = UnityEngine.Random.Range(0, valid.Count);
+        return valid[idx];
+    }
+
+    string ExtractEventName(string json)
+    {
+        string[] keys = new[] { "event", "type", "action" };
+        foreach (var k in keys)
+        {
+            var v = ExtractString(json, k);
+            if (!string.IsNullOrEmpty(v)) return v;
+        }
+        return null;
+    }
+
+    string ExtractString(string json, string key)
+    {
+        if (string.IsNullOrEmpty(json) || string.IsNullOrEmpty(key)) return null;
+        string pattern = '"' + key + '"' + ":";
+        int idx = json.IndexOf(pattern);
+        if (idx < 0) return null;
+        idx += pattern.Length;
+        // skip spaces
+        while (idx < json.Length && char.IsWhiteSpace(json[idx])) idx++;
+        if (idx >= json.Length) return null;
+        if (json[idx] == '"')
+        {
+            idx++;
+            int end = idx;
+            while (end < json.Length)
+            {
+                if (json[end] == '\\') { end += 2; continue; }
+                if (json[end] == '"') break;
+                end++;
+            }
+            if (end >= json.Length) return null;
+            return json.Substring(idx, end - idx);
+        }
+        return null;
+    }
+
+    int ExtractInt(string json, string key)
+    {
+        if (string.IsNullOrEmpty(json) || string.IsNullOrEmpty(key)) return 0;
+        string pattern = '"' + key + '"' + ":";
+        int idx = json.IndexOf(pattern);
+        if (idx < 0) return 0;
+        idx += pattern.Length;
+        while (idx < json.Length && (char.IsWhiteSpace(json[idx]) || json[idx] == '"')) idx++;
+        int end = idx;
+        while (end < json.Length && (char.IsDigit(json[end]) || json[end] == '-')) end++;
+        if (end <= idx) return 0;
+        if (int.TryParse(json.Substring(idx, end - idx), out int v)) return v;
+        return 0;
+    }
+}

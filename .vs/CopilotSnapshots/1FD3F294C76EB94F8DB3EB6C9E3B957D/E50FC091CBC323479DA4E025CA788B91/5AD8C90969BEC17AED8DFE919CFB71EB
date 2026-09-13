@@ -1,0 +1,284 @@
+﻿using System.Net.WebSockets;
+using System.Threading;
+using UnityEngine;
+
+/// <summary>
+/// PROJECT ARCHITECTURE: Network Layer
+/// ROLE: Quản lý kết nối WebSocket thời gian thực giữa Unity Client và Backend (BE).
+/// RESPONSIBILITIES:
+/// - Kết nối tới WebSocket server bằng giao thức WSS.
+/// - Lắng nghe các gói tin JSON sự kiện từ BE (ví dụ: game_init, question_start, round_result, battle_end).
+/// - Chuyển tiếp (Forward) dữ liệu JSON nhận được tới GameManager để xử lý logic hiển thị.
+/// - Gửi các yêu cầu/hành động của người chơi (như dùng booster/skill) ngược lại lên Backend.
+/// AI NOTE: Hãy viết logic kết nối NativeWebSocket hoặc ClientWebSocket, nhận chuỗi byte/string và đẩy sự kiện cho GameManager.
+/// </summary>
+public class WebSocketManager : MonoBehaviour
+{
+    public static WebSocketManager Instance { get; private set; }
+
+    [Header("Connection")]
+    [Tooltip("WSS endpoint for the game backend.")]
+    [SerializeField]
+    private string _serverUrl = "wss://example.com/game";
+
+    [Tooltip("Automatically try to reconnect on unexpected disconnect.")]
+    [SerializeField]
+    private bool _autoReconnect = true;
+
+    [Tooltip("Seconds to wait before attempting reconnect.")]
+    [SerializeField]
+    private float _reconnectDelay = 3f;
+
+    // Public event that other systems (e.g., GameManager) can subscribe to.
+    public event Action<string> OnRawMessageReceived;
+
+    // Internal network primitives
+    private ClientWebSocket _client;
+    private CancellationTokenSource _cancellationTokenSource;
+    private readonly ConcurrentQueue<string> _incomingMessages = new ConcurrentQueue<string>();
+    private readonly SemaphoreSlim _sendSemaphore = new SemaphoreSlim(1, 1);
+
+    // State
+    private bool _isClosing;
+    private bool _isConnecting;
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
+    private void Start()
+    {
+        // Auto start connection on Start; caller may also call Connect() manually.
+        _ = ConnectAsync();
+    }
+
+    private void Update()
+    {
+        // Dispatch queued messages on Unity main thread
+        while (_incomingMessages.TryDequeue(out string message))
+        {
+            try
+            {
+                OnRawMessageReceived?.Invoke(message);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"WebSocketManager: Exception while invoking message handler: {ex}");
+            }
+        }
+    }
+
+    private async Task ConnectAsync()
+    {
+        if (_isConnecting)
+        {
+            return;
+        }
+
+        _isConnecting = true;
+        _isClosing = false;
+
+        while (!_isClosing)
+        {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            Debug.LogWarning("WebGL build detected: replace ClientWebSocket with a WebGL-compatible implementation.");
+            // In WebGL builds you MUST use a JS/WebGL-compatible websocket library.
+            // Break here to avoid trying ClientWebSocket on WebGL runtime.
+            break;
+#else
+            _cancellationTokenSource = new CancellationTokenSource();
+            _client = new ClientWebSocket();
+
+            try
+            {
+                Uri uri = new Uri(_serverUrl);
+                Debug.Log($"WebSocketManager: Connecting to {uri} ...");
+                await _client.ConnectAsync(uri, _cancellationTokenSource.Token).ConfigureAwait(false);
+
+                if (_client.State == WebSocketState.Open)
+                {
+                    Debug.Log("WebSocketManager: Connected.");
+                    // Start receive loop
+                    var receiveTask = ReceiveLoopAsync(_client, _cancellationTokenSource.Token);
+                    await receiveTask.ConfigureAwait(false);
+                }
+                else
+                {
+                    Debug.LogWarning($"WebSocketManager: Connect finished with state {_client.State}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"WebSocketManager: Connect failed: {ex}");
+            }
+            finally
+            {
+                await CloseClientAsync().ConfigureAwait(false);
+            }
+
+            if (_autoReconnect && !_isClosing)
+            {
+                Debug.Log($"WebSocketManager: Reconnecting in {_reconnectDelay} seconds...");
+                await Task.Delay(TimeSpan.FromSeconds(_reconnectDelay)).ConfigureAwait(false);
+                // loop to reconnect
+            }
+            else
+            {
+                break;
+            }
+#endif
+        }
+
+        _isConnecting = false;
+    }
+
+    private async Task ReceiveLoopAsync(ClientWebSocket client, CancellationToken token)
+    {
+        var buffer = new ArraySegment<byte>(new byte[8192]);
+
+        try
+        {
+            while (client.State == WebSocketState.Open && !token.IsCancellationRequested)
+            {
+                var ms = new System.IO.MemoryStream();
+                WebSocketReceiveResult result;
+
+                do
+                {
+                    result = await client.ReceiveAsync(buffer, token).ConfigureAwait(false);
+
+                    if (result.MessageType == WebSocketMessageType.Close)
+                    {
+                        Debug.Log("WebSocketManager: Server requested close.");
+                        await client.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None).ConfigureAwait(false);
+                        return;
+                    }
+
+                    ms.Write(buffer.Array, buffer.Offset, result.Count);
+                } while (!result.EndOfMessage);
+
+                string message = Encoding.UTF8.GetString(ms.ToArray());
+                _incomingMessages.Enqueue(message);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // expected when cancelling
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"WebSocketManager: ReceiveLoop exception: {ex}");
+        }
+    }
+
+    public void Connect()
+    {
+        // Expose synchronous method that starts the async connect
+        _ = ConnectAsync();
+    }
+
+    public async Task DisconnectAsync()
+    {
+        _isClosing = true;
+        _autoReconnect = false;
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+        Debug.LogWarning("WebGL build: ensure the WebGL socket implementation is closed via its API.");
+        await Task.Yield();
+#else
+        if (_client != null && (_client.State == WebSocketState.Open || _client.State == WebSocketState.CloseReceived))
+        {
+            try
+            {
+                _cancellationTokenSource?.Cancel();
+                await _client.CloseAsync(WebSocketCloseStatus.NormalClosure, "Client disconnect", CancellationToken.None).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"WebSocketManager: Exception while closing: {ex}");
+            }
+            finally
+            {
+                await CloseClientAsync().ConfigureAwait(false);
+            }
+        }
+#endif
+    }
+
+    private async Task CloseClientAsync()
+    {
+        try
+        {
+            _client?.Dispose();
+            _client = null;
+            _cancellationTokenSource?.Dispose();
+            _cancellationTokenSource = null;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"WebSocketManager: CloseClientAsync exception: {ex}");
+        }
+
+        await Task.Yield();
+    }
+
+    public async Task SendMessageToServer(string message)
+    {
+        if (string.IsNullOrEmpty(message))
+        {
+            Debug.LogWarning("WebSocketManager: Attempted to send empty message.");
+            return;
+        }
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+        Debug.LogWarning("WebGL build: replace SendMessageToServer internals with WebGL-compatible socket send.");
+        await Task.Yield();
+#else
+        if (_client == null || _client.State != WebSocketState.Open)
+        {
+            Debug.LogWarning("WebSocketManager: Cannot send message, socket not open.");
+            return;
+        }
+
+        await _sendSemaphore.WaitAsync().ConfigureAwait(false);
+
+        try
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(message);
+            var segment = new ArraySegment<byte>(bytes);
+            await _client.SendAsync(segment, WebSocketMessageType.Text, true, CancellationToken.None).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"WebSocketManager: Send failed: {ex}");
+        }
+        finally
+        {
+            _sendSemaphore.Release();
+        }
+#endif
+    }
+
+    private async void OnApplicationQuit()
+    {
+        await DisconnectAsync().ConfigureAwait(false);
+    }
+
+    private async void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            Instance = null;
+        }
+
+        await DisconnectAsync().ConfigureAwait(false);
+    }
+}

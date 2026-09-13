@@ -1,0 +1,69 @@
+﻿using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+
+/// <summary>
+/// Data models for Meme Battle game state and events from backend.
+/// These classes are deserialized from JSON messages sent by the backend.
+/// </summary>
+
+[System.Serializable]
+public class MemeBattleMatchSnapshot
+{
+    public string matchId;
+    public Dictionary<string, long> characterHpAtomic;
+    public Dictionary<string, long> characterMaxHpAtomic;
+    public string currentTurnId;
+    public long latestSequence;
+    public string winnerCharacterId;
+    public TurnInfo currentTurn; // local only, not from backend
+}
+
+[System.Serializable]
+public class TurnInfo
+{
+    public int turnNumber;
+    public string voteWindowId;
+    public string opensAt;
+    public string closesAt;
+    public List<Argument> arguments;
+}
+
+[System.Serializable]
+public class Argument
+{
+    public string argumentId;
+    public string actorCharacterId;
+    public string targetCharacterId;
+    public string memeText;
+    public long baseDamageAtomic;
+    public string animationId;
+}
+
+[System.Serializable]
+public class MemeBattleEvent
+{
+    public string eventId;
+    public string eventType;
+    public string matchId;
+    public string turnId;
+    public long sequence;
+    public int schemaVersion;
+    public string occurredAt;
+    public JObject payload;
+}
+
+[System.Serializable]
+public class SubscribeRequest
+{
+    public string matchId;
+    public long afterSequence;
+}
+
+[System.Serializable]
+public class SnapshotResponse
+{
+    public MemeBattleMatchSnapshot snapshot;
+    public List<MemeBattleEvent> events;
+    public string error;
+}

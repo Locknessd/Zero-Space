@@ -1,0 +1,76 @@
+﻿using UnityEngine;
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+
+/// <summary>
+/// Presentation / UI Layer
+/// PlayerUI represents UI for a single player (left or right).
+/// It exposes small helpers to update HP, Rage, name and dialogue.
+/// </summary>
+public class PlayerUI : MonoBehaviour
+{
+    public enum Side { Left, Right }
+
+    [System.Serializable]
+    public class Elements
+    {
+        public Slider hpSlider;
+        public Slider rageSlider;
+        public TextMeshProUGUI nameText;
+        public TextMeshProUGUI speechBubbleText;
+    }
+
+    [Header("Left Player UI")]
+    public Elements left;
+
+    [Header("Right Player UI")]
+    public Elements right;
+
+    Elements GetElements(Side side) => side == Side.Left ? left : right;
+
+    public void UpdateHP(Side side, float current, float max)
+    {
+        var e = GetElements(side);
+        if (e == null || e.hpSlider == null) return;
+        float v = max > 0f ? Mathf.Clamp01(current / max) : 0f;
+        e.hpSlider.value = v;
+    }
+
+    public void UpdateRage(Side side, float current, float max)
+    {
+        var e = GetElements(side);
+        if (e == null || e.rageSlider == null) return;
+        float v = max > 0f ? Mathf.Clamp01(current / max) : 0f;
+        e.rageSlider.value = v;
+    }
+
+    public void UpdateName(Side side, string newName)
+    {
+        var e = GetElements(side);
+        if (e == null || e.nameText == null) return;
+        e.nameText.text = newName ?? string.Empty;
+    }
+
+    public void SetDialogue(Side side, string text)
+    {
+        var e = GetElements(side);
+        if (e == null || e.speechBubbleText == null) return;
+        e.speechBubbleText.text = text ?? string.Empty;
+    }
+
+    public void ShowDamage(Side side, int amount)
+    {
+        var e = GetElements(side);
+        if (e == null || e.speechBubbleText == null) return;
+        e.speechBubbleText.text = $"-{amount}";
+    }
+
+    public void UpdateFromState(Side side, float hpCurrent, float hpMax, float rageCurrent, float rageMax, string playerName)
+    {
+        UpdateHP(side, hpCurrent, hpMax);
+        UpdateRage(side, rageCurrent, rageMax);
+        UpdateName(side, playerName);
+    }
+}
+

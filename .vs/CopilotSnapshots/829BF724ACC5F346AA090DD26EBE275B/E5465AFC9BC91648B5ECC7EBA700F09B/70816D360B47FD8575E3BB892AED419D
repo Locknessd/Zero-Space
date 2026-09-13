@@ -1,0 +1,168 @@
+﻿#if UNITY_EDITOR
+using System;
+using System.Collections.Generic;
+using System.IO;
+using UnityEditor;
+using UnityEngine;
+
+public class AnimatorPresetImporter : EditorWindow
+{
+    string attackerPath = "Assets/Selected/ShowcaseControllers/Frank_Attacker_Master.controller";
+    string victimPath = "Assets/Selected/ShowcaseControllers/Frank_Victim_Master.controller";
+
+    Vector2 scroll;
+    List<string> attackerNames = new List<string>();
+    List<string> victimNames = new List<string>();
+
+    [MenuItem("Tools/Animator Preset Importer")]
+    static void Open()
+    {
+        GetWindow<AnimatorPresetImporter>("Animator Preset Importer");
+    }
+
+    void OnGUI()
+    {
+        EditorGUILayout.LabelField("Controller file paths (YAML .controller files)", EditorStyles.boldLabel);
+        attackerPath = EditorGUILayout.TextField("Attacker controller", attackerPath);
+        victimPath = EditorGUILayout.TextField("Victim controller", victimPath);
+
+        if (GUILayout.Button("Scan files"))
+        {
+            ScanFiles();
+        }
+
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Found attacker states", EditorStyles.boldLabel);
+        scroll = EditorGUILayout.BeginScrollView(scroll, GUILayout.Height(120));
+        foreach (var s in attackerNames) EditorGUILayout.LabelField(s);
+        EditorGUILayout.EndScrollView();
+
+        EditorGUILayout.LabelField("Found victim states", EditorStyles.boldLabel);
+        scroll = EditorGUILayout.BeginScrollView(scroll, GUILayout.Height(120));
+        foreach (var s in victimNames) EditorGUILayout.LabelField(s);
+        EditorGUILayout.EndScrollView();
+
+        EditorGUILayout.Space();
+        EditorGUILayout.HelpBox("Select the GameObject in the scene that has the AnimationController component, then press 'Apply presets to selected AnimationController'. The tool will create paired presets (Pair1, Pair2, ...) using the state names found in files.", MessageType.Info);
+
+        if (GUILayout.Button("Apply presets to selected AnimationController"))
+        {
+            ApplyToSelected();
+        }
+
+        if (GUILayout.Button("Create Attack1 / Hit1 presets for selected AnimationController"))
+        {
+            CreateAttackHitPresets();
+        }
+    }
+
+    void ScanFiles()
+    {
+        attackerNames.Clear();
+        victimNames.Clear();
+        if (File.Exists(attackerPath))
+        {
+            try
+            {
+                foreach (var line in File.ReadAllLines(attackerPath))
+                {
+                    var trimmed = line.Trim();
+                    if (trimmed.StartsWith("m_Name:"))
+                    {
+                        var name = trimmed.Substring("m_Name:".Length).Trim();
+                        if (!string.IsNullOrEmpty(name)) attackerNames.Add(name);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("Error reading attacker controller: " + e);
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Attacker controller file not found: " + attackerPath);
+        }
+
+        if (File.Exists(victimPath))
+        {
+            try
+            {
+                foreach (var line in File.ReadAllLines(victimPath))
+                {
+                    var trimmed = line.Trim();
+                    if (trimmed.StartsWith("m_Name:"))
+                    {
+                        var name = trimmed.Substring("m_Name:".Length).Trim();
+                        if (!string.IsNullOrEmpty(name)) victimNames.Add(name);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("Error reading victim controller: " + e);
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Victim controller file not found: " + victimPath);
+        }
+
+        // Deduplicate while preserving order
+        attackerNames = Dedup(attackerNames);
+        victimNames = Dedup(victimNames);
+    }
+
+    List<string> Dedup(List<string> src)
+    {
+        var seen = new HashSet<string>();
+        var outList = new List<string>();
+        foreach (var s in src)
+        {
+            if (string.IsNullOrEmpty(s)) continue;
+            if (!seen.Contains(s)) { seen.Add(s); outList.Add(s); }
+        }
+        return outList;
+    }
+
+    void ApplyToSelected()
+    {
+        var go = Selection.activeGameObject;
+        if (go == null)
+        {
+            Debug.LogError("No GameObject selected. Select the GameObject that has the AnimationController component.");
+            return;
+        }
+
+        var animCtrl = go.GetComponent<AnimationController>();
+        if (animCtrl == null)
+        {
+            Debug.LogError("Selected GameObject does not have AnimationController component.");
+            return;
+        }
+
+        int count = Math.Min(attackerNames.Count, victimNames.Count);
+        if (count == 0)
+        {
+            Debug.LogError("No matching state names found in scanned files.");
+            return;
+        }
+
+        Undo.RecordObject(animCtrl, "Apply animation presets");
+
+        var presets = new AnimationController.AnimationPair[count];
+        for (int i = 0; i < count; i++)
+        {
+            presets[i] = new AnimationController.AnimationPair();
+            presets[i].key = "Pair" + (i + 1);
+            presets[i].leftState = attackerNames[i];
+            presets[i].rightState = victimNames[i];
+        }
+
+        animCtrl.presets = presets;
+        EditorUtility.SetDirty(animCtrl);
+
+        Debug.Log($"Applied {count} presets to AnimationController on '{go.name}'. Keys: Pair1..Pair{count}");
+    }
+}
+#endif

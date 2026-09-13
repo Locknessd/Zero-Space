@@ -1,0 +1,107 @@
+﻿using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+
+/// <summary>
+/// Presentation / UI Layer
+/// PlayerUI represents UI for a single player (left or right).
+/// It exposes small helpers to update HP, Rage, name and dialogue.
+/// </summary>
+public class PlayerUI : MonoBehaviour
+{
+    public enum Side { Left, Right }
+
+    [Header("Player Identity")]
+    public Side side = Side.Left;
+
+    [Header("UI References")]
+    public Slider hpSlider;
+    public Slider rageSlider;
+    public TextMeshProUGUI nameText;
+    public TextMeshProUGUI speechBubbleText;
+
+    // Update the HP slider (0..max)
+    public void UpdateHP(float current, float max)
+    {
+        if (hpSlider == null) return;
+        float v = max > 0f ? Mathf.Clamp01(current / max) : 0f;
+        hpSlider.value = v;
+    }
+
+    // Update the Rage slider (0..max)
+    public void UpdateRage(float current, float max)
+    {
+        if (rageSlider == null) return;
+        float v = max > 0f ? Mathf.Clamp01(current / max) : 0f;
+        rageSlider.value = v;
+    }
+
+    // Set player's display name
+    public void UpdateName(string newName)
+    {
+        if (nameText == null) return;
+        nameText.text = newName ?? string.Empty;
+    }
+
+    // Set a dialogue/speech bubble text
+    public void SetDialogue(string text)
+    {
+        if (speechBubbleText == null) return;
+        speechBubbleText.text = text ?? string.Empty;
+    }
+
+    // Show damage - simple immediate display (can be replaced by floating text later)
+    public void ShowDamage(int amount)
+    {
+        if (speechBubbleText == null) return;
+        speechBubbleText.text = $"-{amount}";
+    }
+
+    // Convenience: apply a compact state object
+    public void UpdateFromState(float hpCurrent, float hpMax, float rageCurrent, float rageMax, string playerName)
+    {
+        UpdateHP(hpCurrent, hpMax);
+        UpdateRage(rageCurrent, rageMax);
+        UpdateName(playerName);
+    }
+}
+
+/// <summary>
+/// GameUIManager centralizes UI updates for both players (Left and Right).
+/// Attach this to a dedicated UI root and assign Left/Right PlayerUI refs.
+/// </summary>
+public class GameUIManager : MonoBehaviour
+{
+    public PlayerUI leftPlayerUI;
+    public PlayerUI rightPlayerUI;
+
+    PlayerUI GetPlayer(PlayerUI.Side side)
+    {
+        return side == PlayerUI.Side.Left ? leftPlayerUI : rightPlayerUI;
+    }
+
+    public void UpdateHP(PlayerUI.Side side, float current, float max)
+    {
+        GetPlayer(side)?.UpdateHP(current, max);
+    }
+
+    public void UpdateRage(PlayerUI.Side side, float current, float max)
+    {
+        GetPlayer(side)?.UpdateRage(current, max);
+    }
+
+    public void SetDialogue(PlayerUI.Side side, string text)
+    {
+        GetPlayer(side)?.SetDialogue(text);
+    }
+
+    public void ShowDamage(PlayerUI.Side side, int dmg)
+    {
+        GetPlayer(side)?.ShowDamage(dmg);
+    }
+
+    public void UpdateName(PlayerUI.Side side, string name)
+    {
+        GetPlayer(side)?.UpdateName(name);
+    }
+}

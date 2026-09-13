@@ -1,0 +1,206 @@
+﻿using UnityEngine;
+
+/// <summary>
+/// PROJECT ARCHITECTURE: Presentation / Animation Layer
+/// ROLE: Quản lý hiệu ứng hình ảnh, mô hình 3D và hoạt ảnh (Animations/Meme) của nhân vật.
+/// RESPONSIBILITIES:
+/// - Kích hoạt các hoạt ảnh tương ứng (Idle, Talking, Victory, Hurt, Dance) dựa trên animation_id nhận từ sự kiện round_result của Server.
+/// - Hiển thị khung hình ảnh Meme GIF động tương ứng với meme_gif_url nếu có.
+/// AI NOTE: Gắn script này vào các đối tượng nhân vật (Pepe/Doge) để điều khiển Animator Component.
+/// </summary>
+using UnityEngine;
+
+public class AnimationController : MonoBehaviour
+{
+    public Animator leftAnimator;
+    public Animator rightAnimator;
+
+    [Tooltip("Default crossfade duration in seconds when switching animations")]
+    public float defaultCrossFade = 0.12f;
+
+    void Start()
+    {
+        // optional: if this script is attached to a character, try to grab Animator
+        if (leftAnimator == null || rightAnimator == null)
+        {
+            var a = GetComponent<Animator>();
+            if (a != null && leftAnimator == null) leftAnimator = a;
+        }
+    }
+
+    [System.Serializable]
+    public class AnimationPair
+    {
+        public string key; // logical name, e.g. "Attack1", "Hit1"
+        public string leftState; // animator trigger or state name for left animator
+        public string rightState; // animator trigger or state name for right animator
+    }
+
+    [Header("Presets")]
+    [Tooltip("Define logical animation pairs so you can call PlayPair('Attack1') and it will play the mapped animations on left/right animators.")]
+    public AnimationPair[] presets = new AnimationPair[0];
+
+    // Play the preset pair by key. If a side state is empty it will be ignored.
+    public void PlayPair(string key, float crossFade = -1f)
+    {
+        if (string.IsNullOrEmpty(key)) return;
+        foreach (var p in presets)
+        {
+            if (p == null) continue;
+            if (string.Equals(p.key, key, System.StringComparison.OrdinalIgnoreCase))
+            {
+                PlayBoth(p.leftState, p.rightState, crossFade);
+                return;
+            }
+        }
+    }
+
+    // Play preset only on one side (useful for single-player actions)
+    public void PlayPairSingle(PlayerUI.Side side, string key, float crossFade = -1f)
+    {
+        if (string.IsNullOrEmpty(key)) return;
+        foreach (var p in presets)
+        {
+            if (p == null) continue;
+            if (string.Equals(p.key, key, System.StringComparison.OrdinalIgnoreCase))
+            {
+                var state = (side == PlayerUI.Side.Left) ? p.leftState : p.rightState;
+                PlayAnimation(side, state, crossFade);
+                return;
+            }
+        }
+    }
+
+    Animator GetAnimator(PlayerUI.Side side)
+    {
+        return side == PlayerUI.Side.Left ? leftAnimator : rightAnimator;
+    }
+
+    // Play single animation on specified side. animationId can be a trigger name or state name.
+    public void PlayAnimation(PlayerUI.Side side, string animationId, float crossFade = -1f)
+    {
+        Debug.Log($"AnimationController: PlayAnimation side={side} animationId={animationId} crossFade={crossFade}");
+        if (string.IsNullOrEmpty(animationId)) return;
+        var animator = GetAnimator(side);
+        if (animator == null) return;
+
+        // In editor mode the Animator may not be in a playable state -- skip runtime calls when not playing
+        if (!Application.isPlaying)
+        {
+            Debug.LogWarning("AnimationController: PlayAnimation called while not playing. Skipping runtime Animator calls.");
+            return;
+        }
+
+        float t = crossFade >= 0f ? crossFade : defaultCrossFade;
+
+        // Try to set trigger first (common pattern). If not present, attempt crossfade to state.
+        // Calling SetTrigger when the Animator has no parameter with that name results in a Unity warning
+        // but does not throw. Check parameters first to avoid noisy logs.
+        if (AnimatorHasTrigger(animator, animationId))
+        {
+            animator.SetTrigger(animationId);
+            return;
+        }
+
+        // Fall back to CrossFade by state name/hash. Ensure animator has layers and the state exists.
+        try
+        {
+            if (animator.runtimeAnimatorController == null || animator.layerCount <= 0)
+            {
+                Debug.LogWarning("AnimationController: Animator has no controller or layers - cannot CrossFade.");
+                return;
+            }
+            int hash = Animator.StringToHash(animationId);
+            // find a layer that contains the requested state
+            int foundLayer = -1;
+            for (int li = 0; li < animator.layerCount; li++)
+            {
+                if (animator.HasState(li, hash)) { foundLayer = li; break; }
+            }
+            if (foundLayer >= 0)
+            {
+                animator.CrossFadeInFixedTime(hash, t, foundLayer);
+            }
+            else
+            {
+                Debug.LogWarning($"AnimationController: state '{animationId}' (hash {hash}) not found on any animator layer; skipping CrossFade.");
+            }
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning("AnimationController: CrossFade failed: " + ex.Message);
+        }
+    }
+
+    // Play two animations simultaneously (left and right), with same crossfade duration
+    public void PlayBoth(string leftAnimationId, string rightAnimationId, float crossFade = -1f)
+    {
+        Debug.Log($"AnimationController: PlayBoth left={leftAnimationId} right={rightAnimationId} crossFade={crossFade}");
+        float t = crossFade >= 0f ? crossFade : defaultCrossFade;
+        // Don't attempt runtime animator calls when not playing in the editor
+        if (!Application.isPlaying)
+        {
+            Debug.LogWarning("AnimationController: PlayBoth called while not playing. Skipping runtime Animator calls.");
+            return;
+        }
+
+        if (!string.IsNullOrEmpty(leftAnimationId) && leftAnimator != null)
+        {
+            if (AnimatorHasTrigger(leftAnimator, leftAnimationId))
+            {
+                leftAnimator.SetTrigger(leftAnimationId);
+            }
+            else
+            {
+                try
+                {
+                    if (leftAnimator.runtimeAnimatorController != null && leftAnimator.layerCount > 0)
+                    {
+                        int hash = Animator.StringToHash(leftAnimationId);
+                        int found = -1;
+                        for (int li = 0; li < leftAnimator.layerCount; li++) if (leftAnimator.HasState(li, hash)) { found = li; break; }
+                        if (found >= 0) leftAnimator.CrossFadeInFixedTime(hash, t, found);
+                        else Debug.LogWarning($"AnimationController: Left animator state '{leftAnimationId}' not found on any layer; skipping CrossFade.");
+                    }
+                }
+                catch (System.Exception ex) { Debug.LogWarning("AnimationController: Left CrossFade failed: " + ex.Message); }
+            }
+        }
+
+        if (!string.IsNullOrEmpty(rightAnimationId) && rightAnimator != null)
+        {
+            if (AnimatorHasTrigger(rightAnimator, rightAnimationId))
+            {
+                rightAnimator.SetTrigger(rightAnimationId);
+            }
+            else
+            {
+                try
+                {
+                    if (rightAnimator.runtimeAnimatorController != null && rightAnimator.layerCount > 0)
+                    {
+                        int hash = Animator.StringToHash(rightAnimationId);
+                        int foundR = -1;
+                        for (int li = 0; li < rightAnimator.layerCount; li++) if (rightAnimator.HasState(li, hash)) { foundR = li; break; }
+                        if (foundR >= 0) rightAnimator.CrossFadeInFixedTime(hash, t, foundR);
+                        else Debug.LogWarning($"AnimationController: Right animator state '{rightAnimationId}' not found on any layer; skipping CrossFade.");
+                    }
+                }
+                catch (System.Exception ex) { Debug.LogWarning("AnimationController: Right CrossFade failed: " + ex.Message); }
+            }
+        }
+    }
+
+    // Check if the animator contains a trigger parameter with given name
+    bool AnimatorHasTrigger(Animator animator, string name)
+    {
+        if (animator == null || string.IsNullOrEmpty(name)) return false;
+        var parms = animator.parameters;
+        for (int i = 0; i < parms.Length; i++)
+        {
+            var p = parms[i];
+            if (p.type == AnimatorControllerParameterType.Trigger && p.name == name) return true;
+        }
+        return false;
+    }
+}

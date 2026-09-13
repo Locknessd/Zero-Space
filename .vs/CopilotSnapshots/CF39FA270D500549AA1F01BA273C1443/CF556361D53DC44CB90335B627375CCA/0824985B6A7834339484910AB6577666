@@ -1,0 +1,130 @@
+﻿using UnityEngine;
+using UnityEngine;
+using UnityEngine.UI;
+
+/// <summary>
+/// PROJECT ARCHITECTURE: Presentation / UI Layer
+/// ROLE: Qu?n lý thông tin v? vòng ??u và ??ng h? ??m ng??c trên giao di?n.
+/// RESPONSIBILITIES:
+/// - Hi?n th? s? vòng ??u hi?n t?i (Ví d?: ROUND 3).
+/// - Qu?n lý và hi?n th? ??ng h? ??m ng??c th?i gian tr? l?i c?a vòng ??u (time_limit) d?a trên s? ki?n question_start t? Server.
+/// AI NOTE: Nh?n giá tr? th?i gian t? GameManager và t? ??m ng??c (Countdown timer) m?i frame.
+/// </summary>
+public class RoundManager : MonoBehaviour
+{
+    [Header("Round UI References")]
+    public Text roundNumberText;
+    public Text timerText;
+    public Text multiplierText;
+    public Text finalTotalsText;
+
+    // Countdown timer state
+    private System.DateTime _turnClosesAtUtc;
+    private bool _timerRunning = false;
+
+    void Update()
+    {
+        if (!_timerRunning) return;
+        var now = System.DateTime.UtcNow;
+        var remaining = _turnClosesAtUtc - now;
+        if (remaining.TotalSeconds <= 0)
+        {
+            timerText.text = "00:00";
+            _timerRunning = false;
+            return;
+        }
+
+        timerText.text = FormatTimeSpan(remaining);
+    }
+
+    string FormatTimeSpan(System.TimeSpan ts)
+    {
+        if (ts.TotalHours >= 1)
+            return string.Format("{0:D2}:{1:D2}:{2:D2}", (int)ts.TotalHours, ts.Minutes, ts.Seconds);
+        return string.Format("{0:D2}:{1:D2}", ts.Minutes, ts.Seconds);
+    }
+
+    // Show basic round/turn information (question is optional)
+    public void ShowQuestion(string question)
+    {
+        if (timerText != null)
+        {
+            timerText.text = question ?? string.Empty;
+        }
+    }
+
+    // Start a turn timer using ISO-8601 UTC opens/closes strings from server
+    public void StartTurnTimer(int turnNumber, string opensAtIsoUtc, string closesAtIsoUtc)
+    {
+        if (roundNumberText != null)
+        {
+            roundNumberText.text = $"ROUND {turnNumber}";
+        }
+
+        if (string.IsNullOrEmpty(closesAtIsoUtc))
+        {
+            _timerRunning = false;
+            return;
+        }
+
+        if (System.DateTime.TryParse(closesAtIsoUtc, null, System.Globalization.DateTimeStyles.AdjustToUniversal | System.Globalization.DateTimeStyles.AssumeUniversal, out var closes))
+        {
+            _turnClosesAtUtc = closes.ToUniversalTime();
+            _timerRunning = true;
+        }
+        else
+        {
+            Debug.LogWarning($"RoundManager: invalid closesAtIsoUtc='{closesAtIsoUtc}'");
+            _timerRunning = false;
+        }
+    }
+
+    public void StopTimer()
+    {
+        _timerRunning = false;
+    }
+
+    public void ShowMultiplier(float multiplier)
+    {
+        if (multiplierText == null) return;
+        multiplierText.text = multiplier.ToString("0.##") + "x";
+    }
+
+    public void ShowFinalTotals(System.Collections.Generic.Dictionary<string, long> totals)
+    {
+        if (finalTotalsText == null) return;
+        if (totals == null || totals.Count == 0)
+        {
+            finalTotalsText.text = string.Empty;
+            return;
+        }
+        var sb = new System.Text.StringBuilder();
+        foreach (var kv in totals)
+        {
+            sb.AppendLine($"{kv.Key}: {kv.Value}");
+        }
+        finalTotalsText.text = sb.ToString();
+    }
+
+    /// <summary>
+    /// Update health display text with both players' HP.
+    /// Example: "A: 800/1000  |  B: 950/1000"
+    /// </summary>
+    public void UpdateHealthDisplay(string playerAName, long playerAHp, long playerAMaxHp, string playerBName, long playerBHp, long playerBMaxHp)
+    {
+        if (healthInfoText == null) return;
+
+        healthInfoText.text = $"{playerAName}: {playerAHp}/{playerAMaxHp}  |  {playerBName}: {playerBHp}/{playerBMaxHp}";
+    }
+
+    /// <summary>
+    /// Clear health display text.
+    /// </summary>
+    public void ClearHealthDisplay()
+    {
+        if (healthInfoText != null)
+        {
+            healthInfoText.text = string.Empty;
+        }
+    }
+}
