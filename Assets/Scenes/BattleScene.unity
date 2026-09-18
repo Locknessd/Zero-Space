@@ -17566,7 +17566,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 548356361}
-  - component: {fileID: 548356362}
+  - component: {fileID: 548356363}
   m_Layer: 0
   m_Name: UIManager
   m_TagString: Untagged
@@ -17589,7 +17589,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2017338905}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &548356362
+--- !u!114 &548356363
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -17598,25 +17598,35 @@ MonoBehaviour:
   m_GameObject: {fileID: 548356360}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f1fa9cdf9cbe08c488a8e31070666c42, type: 3}
+  m_Script: {fileID: 11500000, guid: 3602e25bf1fbac24495784a0c478e4b8, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerUI
+  m_EditorClassIdentifier: Assembly-CSharp::MemeBattleUI
   left:
+    root: {fileID: 0}
+    nameText: {fileID: 424264540}
     hpSlider: {fileID: 269141573}
     rageSlider: {fileID: 117613516}
-    nameText: {fileID: 424264540}
+    healthText: {fileID: 1202058787}
     speechBubbleText: {fileID: 988146301}
     memeResultObject: {fileID: 1158133636}
     memeResultText: {fileID: 1548131670}
   right:
+    root: {fileID: 0}
+    nameText: {fileID: 1657981788}
     hpSlider: {fileID: 214727215}
     rageSlider: {fileID: 1110464530}
-    nameText: {fileID: 1657981788}
+    healthText: {fileID: 243197061}
     speechBubbleText: {fileID: 2112346670}
     memeResultObject: {fileID: 140254315}
     memeResultText: {fileID: 124329002}
-  healthLeftText: {fileID: 1202058787}
-  healthRightText: {fileID: 243197061}
+  roundNumberText: {fileID: 0}
+  timerText: {fileID: 0}
+  multiplierText: {fileID: 0}
+  finalTotalsText: {fileID: 749073088}
+  resultPanel: {fileID: 0}
+  resultText: {fileID: 0}
+  defaultInitialMaxHpAtomic: 1000
+  verboseLogging: 0
 --- !u!1 &550742500
 GameObject:
   m_ObjectHideFlags: 0
@@ -35621,11 +35631,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c086e837cf728c3479649d1d55c9dbff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  playerUI: {fileID: 548356362}
-  leftPlayerUI: {fileID: 0}
-  rightPlayerUI: {fileID: 0}
+  uiManager: {fileID: 0}
+  useSequentialEventQueue: 1
+  maxEventHoldSeconds: 15
+  playerUI: {fileID: 0}
   roundManager: {fileID: 1131032068}
-  animationController: {fileID: 1147241228}
+  animationController: {fileID: 0}
+  leftBridge: {fileID: 2133522484}
+  rightBridge: {fileID: 1733981160}
+  bridgesTakePriority: 0
   enableLocalInputTesting: 1
   defaultInitialMaxHpAtomic: 1000
   initialMatchId: 
@@ -37816,7 +37830,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1147241227}
-  - component: {fileID: 1147241228}
   m_Layer: 0
   m_Name: AnimManager
   m_TagString: Untagged
@@ -37839,50 +37852,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2017338905}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1147241228
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1147241226}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d503ab236a785f4abeaa735f9f443fe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AnimationController
-  leftAnimator: {fileID: 2133522481}
-  rightAnimator: {fileID: 1733981157}
-  swapAnimatorSides: 0
-  skillVfxPrefab: {fileID: 0}
-  leftVfxAnchor: {fileID: 0}
-  rightVfxAnchor: {fileID: 0}
-  defaultCrossFade: 0.08
-  attackVariants: 5
-  hitVariants: 5
-  enablePositionRecovery: 1
-  managePositions: 0
-  combatDistance: 1.25
-  combatCenter: {x: -1, y: 0, z: -1}
-  positionRecoverySpeed: 6
-  enforceNoRootMotion: 1
-  duplicateAnimationCooldown: 0.6
-  presets:
-  - key: attack1
-    leftState: attack1
-    rightState: hit1
-  - key: attack2
-    leftState: attack2
-    rightState: hit2
-  - key: attack3
-    leftState: attack3
-    rightState: hit3
-  - key: attack4
-    leftState: attack4
-    rightState: hit4
-  - key: attack5
-    leftState: attack5
-    rightState: hit5
 --- !u!1 &1147941332
 GameObject:
   m_ObjectHideFlags: 0
@@ -58487,9 +58456,7 @@ PrefabInstance:
       value: "\nBinding warning: Some generic clip(s) animate transforms that are
         already bound by a Humanoid avatar. These transforms can only be changed
         by Humanoid clips.\n\tTransform 'root'\n\tTransform 'root'\n\tTransform 'root'\n\tFrom
-        animation clip 'combo_weapon(1)'\n\tFrom animation clip 'combo_weapon(6)'\n\tFrom
-        animation clip 'combo_weapon(7)'\n\tFrom animation clip 'Hit3'\n\tFrom animation
-        clip 'Hit5'"
+        animation clip 'Hit3'\n\tFrom animation clip 'Hit5'"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -58498,7 +58465,11 @@ PrefabInstance:
         type: 3}
       insertIndex: 0
       addedObject: {fileID: 140254316}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4e053e0841ad0e34bb3fc7bee74faf7b,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1733981160}
   m_SourcePrefab: {fileID: 100100000, guid: 4e053e0841ad0e34bb3fc7bee74faf7b, type: 3}
 --- !u!4 &1733981156 stripped
 Transform:
@@ -58518,6 +58489,45 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1733981155}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1733981159 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 4e053e0841ad0e34bb3fc7bee74faf7b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1733981155}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1733981160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1733981159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 413bb47ea5bc7ac4b99458977591d41b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterAnimatorBridge
+  animator: {fileID: 1733981157}
+  speedParam: Speed
+  attackIndexParam: AttackIndex
+  triggerAttackParam: TriggerAttack
+  hitIndexParam: HitIndex
+  triggerHitParam: TriggerHit
+  isKnockedDownParam: IsKnockedDown
+  getupTypeParam: GetupType
+  triggerGetupParam: TriggerGetup
+  isDeadParam: IsDead
+  lightAttackIndices: 0100000003000000
+  heavyAttackIndices: 050000000600000007000000
+  lightHitIndices: 0100000003000000
+  heavyHitIndices: 050000000600000007000000
+  validateParametersOnAwake: 1
+  knockdownBlocksActions: 0
+  attackCooldown: 0.05
+  verboseLogging: 0
+  fallbackAnimationDuration: 0.8
+  animationDurationPadding: 0.05
+  maxAnimationWait: 5
 --- !u!1 &1734020275
 GameObject:
   m_ObjectHideFlags: 0
@@ -71465,9 +71475,7 @@ PrefabInstance:
       value: "\nBinding warning: Some generic clip(s) animate transforms that are
         already bound by a Humanoid avatar. These transforms can only be changed
         by Humanoid clips.\n\tTransform 'root'\n\tTransform 'root'\n\tTransform 'root'\n\tFrom
-        animation clip 'combo_weapon(1)'\n\tFrom animation clip 'combo_weapon(6)'\n\tFrom
-        animation clip 'combo_weapon(7)'\n\tFrom animation clip 'Hit3'\n\tFrom animation
-        clip 'Hit5'"
+        animation clip 'Hit3'\n\tFrom animation clip 'Hit5'"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -71476,7 +71484,11 @@ PrefabInstance:
         type: 3}
       insertIndex: 0
       addedObject: {fileID: 1158133637}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4e053e0841ad0e34bb3fc7bee74faf7b,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2133522484}
   m_SourcePrefab: {fileID: 100100000, guid: 4e053e0841ad0e34bb3fc7bee74faf7b, type: 3}
 --- !u!4 &2133522480 stripped
 Transform:
@@ -71496,6 +71508,45 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2133522479}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2133522483 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 4e053e0841ad0e34bb3fc7bee74faf7b,
+    type: 3}
+  m_PrefabInstance: {fileID: 2133522479}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2133522484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2133522483}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 413bb47ea5bc7ac4b99458977591d41b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterAnimatorBridge
+  animator: {fileID: 2133522481}
+  speedParam: Speed
+  attackIndexParam: AttackIndex
+  triggerAttackParam: TriggerAttack
+  hitIndexParam: HitIndex
+  triggerHitParam: TriggerHit
+  isKnockedDownParam: IsKnockedDown
+  getupTypeParam: GetupType
+  triggerGetupParam: TriggerGetup
+  isDeadParam: IsDead
+  lightAttackIndices: 0100000003000000
+  heavyAttackIndices: 050000000600000007000000
+  lightHitIndices: 0100000003000000
+  heavyHitIndices: 050000000600000007000000
+  validateParametersOnAwake: 1
+  knockdownBlocksActions: 0
+  attackCooldown: 0.05
+  verboseLogging: 0
+  fallbackAnimationDuration: 0.8
+  animationDurationPadding: 0.05
+  maxAnimationWait: 5
 --- !u!1 &2133665910
 GameObject:
   m_ObjectHideFlags: 0

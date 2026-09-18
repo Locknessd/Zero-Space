@@ -1,4 +1,3 @@
-using UnityEngine;
 /// <summary>
 /// PROJECT ARCHITECTURE: Core Logic Layer (Controller trung tâm)
 /// ROLE: Điều phối luồng trận đấu, nhận dữ liệu từ WebSocketManager và phân phối xuống các hệ thống UI/Animation.
@@ -19,15 +18,29 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     // References
-    // Backwards compatible single PlayerUI (kept for legacy scenes)
-    public PlayerUI playerUI;
+    [Header("UI")]
+    [Tooltip("Central UI manager for the whole game. When assigned, all UI updates route through it.")]
+    public MemeBattleUI uiManager;
 
-    [Header("Player UI Sides")]
-    [Tooltip("Assign separate PlayerUI components for Left (bot_a) and Right (bot_b) to allow dragging UI parts in the Inspector.")]
-    public PlayerUI leftPlayerUI;
-    public PlayerUI rightPlayerUI;
+    [Header("Event Queue")]
+    [Tooltip("When true, incoming events are applied strictly one at a time, waiting for each triggered animation to finish before the next event (prevents new events from cutting off a running animation).")]
+    public bool useSequentialEventQueue = true;
+    [Tooltip("Safety cap (seconds) a single queued event may hold the queue before force-advancing.")]
+    public float maxEventHoldSeconds = 15f;
+
+    [Header("Legacy UI (deprecated)")]
+    [Tooltip("DEPRECATED: use uiManager (MemeBattleUI) instead. Kept only so old scenes still compile/run.")]
+    public PlayerUI playerUI;
     public RoundManager roundManager;
     public AnimationController animationController;
+
+    [Header("Animator Bridges (optional, per side)")]
+    [Tooltip("Optional CharacterAnimatorBridge for the Left (bot_a) fighter. When assigned, gameplay events are routed to it in addition to AnimationController.")]
+    public CharacterAnimatorBridge leftBridge;
+    [Tooltip("Optional CharacterAnimatorBridge for the Right (bot_b) fighter. When assigned, gameplay events are routed to it in addition to AnimationController.")]
+    public CharacterAnimatorBridge rightBridge;
+    [Tooltip("When true, only the bridge drives animation (AnimationController calls are skipped). Defaults to true: CharacterAnimatorBridge is the single animation authority.")]
+    public bool bridgesTakePriority = true;
 
     [Header("Local Test")]
     public bool enableLocalInputTesting = true;
@@ -93,8 +106,15 @@ public class GameManager : MonoBehaviour
             if (!_characterMaxHp.ContainsKey("bot_b")) _characterMaxHp["bot_b"] = defaultInitialMaxHpAtomic;
 
             // Initialize UI health displays to full
-            GetPlayerUIForSide(PlayerUI.Side.Left)?.UpdateHealthDisplay(PlayerUI.Side.Left, defaultInitialMaxHpAtomic, defaultInitialMaxHpAtomic);
-            GetPlayerUIForSide(PlayerUI.Side.Right)?.UpdateHealthDisplay(PlayerUI.Side.Right, defaultInitialMaxHpAtomic, defaultInitialMaxHpAtomic);
+            if (uiManager != null)
+            {
+                uiManager.ResetForNewMatch();
+            }
+            else
+            {
+                LegacyUI(PlayerUI.Side.Left)?.UpdateHealthDisplay(PlayerUI.Side.Left, defaultInitialMaxHpAtomic, defaultInitialMaxHpAtomic);
+                LegacyUI(PlayerUI.Side.Right)?.UpdateHealthDisplay(PlayerUI.Side.Right, defaultInitialMaxHpAtomic, defaultInitialMaxHpAtomic);
+            }
         }
         catch { }
 
@@ -127,20 +147,19 @@ public class GameManager : MonoBehaviour
         }
         if (Instance == this) Instance = null;
     }
-    // Helper to resolve the correct PlayerUI instance for a given side.
-    private PlayerUI GetPlayerUIForSide(PlayerUI.Side side)
+    // Converts the game's PlayerUI.Side enum to the UIManager side enum.
+    private static MemeBattleUI.Side ToUISide(PlayerUI.Side side)
     {
-        if (side == PlayerUI.Side.Left)
-        {
-            if (leftPlayerUI != null) return leftPlayerUI;
-        }
-        else if (side == PlayerUI.Side.Right)
-        {
-            if (rightPlayerUI != null) return rightPlayerUI;
-        }
+        return side == PlayerUI.Side.Left ? MemeBattleUI.Side.Left : MemeBattleUI.Side.Right;
+    }
 
-        // Fallback to legacy single playerUI for compatibility
-        return playerUI;
+    // Legacy-only UI resolver. Prefer uiManager; this exists so old scenes still function.
+    private PlayerUI LegacyUI(PlayerUI.Side side) => playerUI;
+
+    // Helper to resolve the optional CharacterAnimatorBridge for a given side (may be null).
+    private CharacterAnimatorBridge GetBridgeForSide(PlayerUI.Side side)
+    {
+        return side == PlayerUI.Side.Left ? leftBridge : rightBridge;
     }
 
 
@@ -475,16 +494,16 @@ public class GameManager : MonoBehaviour
             case "playerLeftAttack":
                 int dmg = ExtractInt(json, "damage");
                 PlaySingleAnimation(PlayerUI.Side.Left, "LeftAttack");
-                    GetPlayerUIForSide(PlayerUI.Side.Left)?.ShowDamage(PlayerUI.Side.Left, dmg);
+                    uiManager?.ShowDamage(MemeBattleUI.Side.Left, dmg);
                 break;
             case "playerRightHit":
                 int dmg2 = ExtractInt(json, "damage");
                 PlaySingleAnimation(PlayerUI.Side.Right, "RightHit");
-                    GetPlayerUIForSide(PlayerUI.Side.Right)?.ShowDamage(PlayerUI.Side.Right, dmg2);
+                    uiManager?.ShowDamage(MemeBattleUI.Side.Right, dmg2);
                 break;
             case "playerLeftAnswer":
                 string text = ExtractString(json, "answer") ?? ExtractString(json, "text");
-                    GetPlayerUIForSide(PlayerUI.Side.Left)?.SetDialogue(PlayerUI.Side.Left, text);
+                    uiManager?.SetDialogue(MemeBattleUI.Side.Left, text);
                 PlaySingleAnimation(PlayerUI.Side.Left, "Talk");
                 break;
             case "ShowQuestion":
@@ -512,8 +531,7 @@ public class GameManager : MonoBehaviour
             {
                 long max = 0;
                 if (snap.characterMaxHpAtomic != null) snap.characterMaxHpAtomic.TryGetValue(lookupId, out max);
-                var ui = GetPlayerUIForSide(side);
-                ui?.UpdateFromState(side, (float)hp, (float)max, 0f, 1f, lookupId);
+                uiManager?.UpdateHealth(ToUISide(side), hp, max);
             }
         }
 
@@ -550,13 +568,179 @@ public class GameManager : MonoBehaviour
         if (maxHpB == 0) _characterMaxHp.TryGetValue("bot_b", out maxHpB);
 
         // Update health display for both sides (slider + text)
-        GetPlayerUIForSide(PlayerUI.Side.Left)?.UpdateHealthDisplay(PlayerUI.Side.Left, hpA, maxHpA);
-        GetPlayerUIForSide(PlayerUI.Side.Right)?.UpdateHealthDisplay(PlayerUI.Side.Right, hpB, maxHpB);
+        uiManager?.UpdateHealth(MemeBattleUI.Side.Left, hpA, maxHpA);
+        uiManager?.UpdateHealth(MemeBattleUI.Side.Right, hpB, maxHpB);
 
         Debug.Log($"UpdatePlayerHealthDisplay: Left={hpA}/{maxHpA}, Right={hpB}/{maxHpB}");
     }
 
+    /// <summary>
+    /// Entry point for a gameplay event. Rather than apply it immediately (which would let a
+    /// new event overwrite an animation still mid-play), the event is placed on the sequential
+    /// MemeEventQueue. The queue runs one event at a time and waits for the animation it triggers
+    /// to finish before applying the next one.
+    /// </summary>
     void HandleMemeBattleEvent(MemeBattleEvent ev)
+    {
+        if (ev == null) return;
+
+        // Events that carry an animation hold the queue until that animation finishes.
+        // Advancement is driven by the PRECISE AnimatorStateInfo.normalizedTime >= 1 check
+        // (via CharacterAnimatorBridge.IsAnimationFinished). The estimated duration below is
+        // only a SAFETY UPPER BOUND so a stuck/looping state can never wedge the queue.
+        float duration = EstimateEventDuration(ev);
+
+        string label = $"{ev.eventType} seq={ev.sequence}";
+
+        // Queue is optional: when disabled, apply immediately (legacy behaviour).
+        if (!useSequentialEventQueue)
+        {
+            ApplyMemeBattleEvent(ev);
+            return;
+        }
+
+        // Capture the bridges this event will animate so we can watch them precisely.
+        var watched = BridgesForEvent(ev);
+
+        Action apply = () =>
+        {
+            ApplyMemeBattleEvent(ev);
+            // Start watching each involved fighter's animation right after the command is issued.
+            for (int i = 0; i < watched.Count; i++)
+                watched[i]?.BeginWatchCurrentAnimation();
+        };
+
+        // Advance as soon as ALL watched fighters have finished their animation (precise),
+        // with the estimated duration as a safety upper bound.
+        Func<bool> finished = watched.Count == 0
+            ? (Func<bool>)null
+            : () => AllBridgesFinished(watched);
+
+        _eventQueue.Enqueue(new EventWorkItem(label, apply, duration, finished));
+        EnsureQueueRunning();
+    }
+
+    /// <summary>
+    /// Collects the distinct bridges involved in the given event. Only events that actually
+    /// drive an animation will return entries; UI-only events return an empty list.
+    /// </summary>
+    System.Collections.Generic.List<CharacterAnimatorBridge> BridgesForEvent(MemeBattleEvent ev)
+    {
+        var list = new System.Collections.Generic.List<CharacterAnimatorBridge>();
+        if (ev?.payload == null) return list;
+
+        switch (ev.eventType)
+        {
+            case "ARGUMENT_SELECTED":
+            case "DAMAGE_APPLIED":
+            {
+                AddBridge(list, ev.payload.Value<string>("actorCharacterId"));
+                AddBridge(list, ev.payload.Value<string>("targetCharacterId"));
+                break;
+            }
+            case "WINNER_DECLARED":
+            {
+                AddBridge(list, ev.payload.Value<string>("winnerCharacterId"));
+                // The loser plays the death pose; consider both fighters so the queue waits it out.
+                AddBridge(list, _characterNames.TryGetValue("bot_a", out var a) ? a : "bot_a");
+                AddBridge(list, _characterNames.TryGetValue("bot_b", out var b) ? b : "bot_b");
+                break;
+            }
+        }
+        return list;
+    }
+
+    void AddBridge(System.Collections.Generic.List<CharacterAnimatorBridge> list, string characterId)
+    {
+        var side = SideFromCharacterId(characterId);
+        if (!side.HasValue) return;
+        var bridge = GetBridgeForSide(side.Value);
+        if (bridge != null && !list.Contains(bridge)) list.Add(bridge);
+    }
+
+    static bool AllBridgesFinished(System.Collections.Generic.List<CharacterAnimatorBridge> bridges)
+    {
+        for (int i = 0; i < bridges.Count; i++)
+        {
+            var b = bridges[i];
+            if (b == null) continue;
+            if (!b.IsAnimationFinished()) return false;
+        }
+        return true;
+    }
+
+    /// <summary>
+    /// Estimates how long the queue should wait after applying this event, based on the
+    /// animation it will trigger. Uses the longest of the involved fighters' current animation
+    /// lengths, with a sane fallback for animation-less events. This is the SAFETY upper bound
+    /// that complements the precise animation-finished predicate.
+    /// </summary>
+    float EstimateEventDuration(MemeBattleEvent ev)
+    {
+        if (ev == null) return 0f;
+        // (keep in sync with the ApplyMemeBattleEvent switch below)
+        switch (ev.eventType)
+        {
+            case "MATCH_CREATED":
+            case "MATCH_STARTED":
+            case "TURN_STARTED":
+            case "MULTIPLIER_SELECTED":
+            case "HP_CHANGED":
+                // No animation -> apply promptly (still ordered).
+                return 0f;
+
+            case "ARGUMENT_SELECTED":
+            case "DAMAGE_APPLIED":
+            case "WINNER_DECLARED":
+                return EstimateAnimationWait(ev);
+
+            default:
+                return 0f;
+        }
+    }
+
+    /// <summary>
+    /// Picks the longest recommended wait across the bridges involved in this event
+    /// (attacker/target for arguments and damage, loser/winner for the result).
+    /// </summary>
+    float EstimateAnimationWait(MemeBattleEvent ev)
+    {
+        var payload = ev.payload;
+        if (payload == null) return 0.6f;
+
+        float wait = 0f;
+
+        string actorId = payload.Value<string>("actorCharacterId");
+        string targetId = payload.Value<string>("targetCharacterId");
+        string winnerId = payload.Value<string>("winnerCharacterId");
+        string charId = payload.Value<string>("characterId");
+
+        // Consider every character referenced by the event that has a bridge.
+        wait = Mathf.Max(wait, WaitForCharacter(actorId));
+        wait = Mathf.Max(wait, WaitForCharacter(targetId));
+        wait = Mathf.Max(wait, WaitForCharacter(winnerId));
+        wait = Mathf.Max(wait, WaitForCharacter(charId));
+
+        // Both fighters are involved in a turn exchange -> fall back to the shorter side if neither
+        // resolved, so the flow still paces.
+        if (wait <= 0f) wait = 0.6f;
+        return wait;
+    }
+
+    float WaitForCharacter(string characterId)
+    {
+        PlayerUI.Side? side = SideFromCharacterId(characterId);
+        if (!side.HasValue) return 0f;
+        CharacterAnimatorBridge bridge = GetBridgeForSide(side.Value);
+        if (bridge == null) return 0f;
+        return bridge.GetRecommendedWaitSeconds();
+    }
+
+    /// <summary>
+    /// Actually applies a gameplay event to game state / UI / animation. Called by the queue in
+    /// strict sequence. Do NOT call directly from networking code.
+    /// </summary>
+    void ApplyMemeBattleEvent(MemeBattleEvent ev)
     {
         var t = ev.eventType;
         var payload = ev.payload;
@@ -574,8 +758,8 @@ public class GameManager : MonoBehaviour
                         _characterNames["bot_a"] = botA;
                         _characterNames["bot_b"] = botB;
 
-                        GetPlayerUIForSide(PlayerUI.Side.Left)?.UpdateName(PlayerUI.Side.Left, botA);
-                        GetPlayerUIForSide(PlayerUI.Side.Right)?.UpdateName(PlayerUI.Side.Right, botB);
+                        uiManager?.SetFighterName(MemeBattleUI.Side.Left, botA);
+                        uiManager?.SetFighterName(MemeBattleUI.Side.Right, botB);
 
                         // store max HP under both the side-key and the actual character id so lookups succeed
                         // Persist initial max under both side keys and actual ids
@@ -585,8 +769,8 @@ public class GameManager : MonoBehaviour
                         _characterMaxHp[botB] = initialHpAtomic;
                         // Store character names for health display
                         // Initialize health display with initial HP
-                        GetPlayerUIForSide(PlayerUI.Side.Left)?.UpdateHealthDisplay(PlayerUI.Side.Left, initialHpAtomic, initialHpAtomic);
-                        GetPlayerUIForSide(PlayerUI.Side.Right)?.UpdateHealthDisplay(PlayerUI.Side.Right, initialHpAtomic, initialHpAtomic);
+                        uiManager?.UpdateHealth(MemeBattleUI.Side.Left, initialHpAtomic, initialHpAtomic);
+                        uiManager?.UpdateHealth(MemeBattleUI.Side.Right, initialHpAtomic, initialHpAtomic);
                     }
                     Debug.Log($"MATCH_CREATED initialHpAtomic={initialHpAtomic}");
                 }
@@ -603,8 +787,8 @@ public class GameManager : MonoBehaviour
                     roundManager?.StartTurnTimer(turnNumber, opensAtIso, closesAtIso);
 
                     // Clear old dialogue from previous turn
-                    GetPlayerUIForSide(PlayerUI.Side.Left)?.ClearDialogue(PlayerUI.Side.Left);
-                    GetPlayerUIForSide(PlayerUI.Side.Right)?.ClearDialogue(PlayerUI.Side.Right);
+                    uiManager?.ClearDialogue(MemeBattleUI.Side.Left);
+                    uiManager?.ClearDialogue(MemeBattleUI.Side.Right);
 
                     Debug.Log($"TURN_STARTED turnNumber={turnNumber}");
                 }
@@ -635,13 +819,34 @@ public class GameManager : MonoBehaviour
 
                         // Play and capture the numeric variant chosen so later DAMAGE_APPLIED events can reuse it
                         int variant = 0;
+                        if (!bridgesTakePriority)
+                        {
+                            try
+                            {
+                                variant = animationController?.PlayBothAnimationsWithMatchedVariant(attackerSide.Value, animationId, targetSide.Value, hitAnimationId) ?? 0;
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.LogWarning($"GameManager: PlayBothAnimationsWithMatchedVariant failed: {ex}");
+                            }
+                        }
+
+                        // Route the selected argument to the optional animator bridges:
+                        // attacker plays an attack variant, target plays the matching hit reaction.
                         try
                         {
-                            variant = animationController?.PlayBothAnimationsWithMatchedVariant(attackerSide.Value, animationId, targetSide.Value, hitAnimationId) ?? 0;
+                            var attackerBridge = GetBridgeForSide(attackerSide.Value);
+                            var targetBridge = GetBridgeForSide(targetSide.Value);
+                            if (attackerBridge != null || targetBridge != null)
+                            {
+                                int attackIndex = attackerBridge != null ? attackerBridge.AttackFromAnimationId(animationId) : 0;
+                                targetBridge?.TakeHitFromAnimationId(animationId, attackIndex);
+                                if (attackIndex > 0) variant = attackIndex; // reuse variant for DAMAGE_APPLIED pairing
+                            }
                         }
                         catch (Exception ex)
                         {
-                            Debug.LogWarning($"GameManager: PlayBothAnimationsWithMatchedVariant failed: {ex}");
+                            Debug.LogWarning($"GameManager: bridge ARGUMENT_SELECTED routing failed: {ex}");
                         }
 
                         // Store mapping keyed by turnId:actor:target so DAMAGE_APPLIED can reuse same variant
@@ -683,11 +888,11 @@ public class GameManager : MonoBehaviour
                         {
                             displaySide = (attackerSide.Value == PlayerUI.Side.Left) ? PlayerUI.Side.Right : PlayerUI.Side.Left;
                         }
-                        GetPlayerUIForSide(displaySide)?.SetDialogue(displaySide, memeText);
+                        uiManager?.SetDialogue(ToUISide(displaySide), memeText);
                         // Also show the meme result popup on the attacker side for a short duration
                         try
                         {
-                            GetPlayerUIForSide(attackerSide.Value)?.ShowMemeResult(attackerSide.Value, memeText, 2f);
+                            uiManager?.ShowMemeResult(ToUISide(attackerSide.Value), memeText, 2f);
                         }
                         catch { }
                     }
@@ -695,8 +900,8 @@ public class GameManager : MonoBehaviour
                     // Diagnostic: log which PlayerUI GameObject and Animator GameObject will be used for attacker/target
                     try
                     {
-                        string attUI = attackerSide.HasValue ? (GetPlayerUIForSide(attackerSide.Value)?.gameObject.name ?? "(no UI)") : "(unknown)";
-                        string tarUI = targetSide.HasValue ? (GetPlayerUIForSide(targetSide.Value)?.gameObject.name ?? "(no UI)") : "(unknown)";
+                        string attUI = attackerSide.HasValue ? (uiManager != null ? uiManager.name : "(no UI)") : "(unknown)";
+                        string tarUI = targetSide.HasValue ? (uiManager != null ? uiManager.name : "(no UI)") : "(unknown)";
                         string attAnim = "(none)";
                         string tarAnim = "(none)";
                         if (animationController != null)
@@ -711,13 +916,13 @@ public class GameManager : MonoBehaviour
                     // Show voting totals if provided
                     if (payload["finalTotalsAtomic"] != null)
                     {
-                        try 
-                        { 
-                            var dict = payload["finalTotalsAtomic"].ToObject<System.Collections.Generic.Dictionary<string, long>>(); 
-                            roundManager?.ShowFinalTotals(dict); 
-                        } 
-                        catch (System.Exception ex) 
-                        { 
+                        try
+                        {
+                            var dict = payload["finalTotalsAtomic"].ToObject<System.Collections.Generic.Dictionary<string, long>>();
+                            roundManager?.ShowFinalTotals(dict);
+                        }
+                        catch (System.Exception ex)
+                        {
                             Debug.LogWarning($"Failed to parse finalTotalsAtomic: {ex}");
                         }
                     }
@@ -743,14 +948,14 @@ public class GameManager : MonoBehaviour
                     {
                         try
                         {
-                            var uiObj = GetPlayerUIForSide(side.Value)?.gameObject.name ?? "(no UI)";
+                            var uiObj = uiManager != null ? uiManager.name : "(no UI)";
                             var animObj = animationController != null ? (side == PlayerUI.Side.Left ? (animationController.leftAnimator?.gameObject.name ?? "(no animator)") : (animationController.rightAnimator?.gameObject.name ?? "(no animator)")) : "(no animctrl)";
                             Debug.Log($"HP_CHANGED DIAG: characterId={targetId} side={side} ui={uiObj} animator={animObj}");
                         }
                         catch { }
                         try
                         {
-                            var uiObj = GetPlayerUIForSide(side.Value)?.gameObject.name ?? "(no UI)";
+                            var uiObj = uiManager != null ? uiManager.name : "(no UI)";
                             var animObj = animationController != null ? (side == PlayerUI.Side.Left ? (animationController.leftAnimator?.gameObject.name ?? "(no animator)") : (animationController.rightAnimator?.gameObject.name ?? "(no animator)")) : "(no animctrl)";
                             Debug.Log($"DAMAGE_APPLIED DIAG: targetId={targetId} side={side} ui={uiObj} animator={animObj}");
                         }
@@ -781,12 +986,12 @@ public class GameManager : MonoBehaviour
                         }
 
                         // Update both slider and text display
-                        GetPlayerUIForSide(side.Value)?.UpdateHealthDisplay(side.Value, hpAfter, maxHp);
+                        uiManager?.UpdateHealth(ToUISide(side.Value), hpAfter, maxHp);
 
                         // Show damage popup
                         if (damage > 0)
                         {
-                            GetPlayerUIForSide(side.Value)?.ShowDamage(side.Value, (int)damage);
+                            uiManager?.ShowDamage(ToUISide(side.Value), (int)damage);
                         }
 
                         // Play hit animation (or use provided animationId) then if HP reached zero play die after a short delay
@@ -842,9 +1047,12 @@ public class GameManager : MonoBehaviour
                                     if (!_loserSideForDieAnimation.HasValue || _loserSideForDieAnimation != side)
                                     {
                                         _loserSideForDieAnimation = side;
-                                        Debug.Log($"GameManager: DAMAGE_APPLIED -> HP is 0, playing 'die' on side={side}");
-                                        // Play die immediately with zero crossfade to avoid delay
-                                        animationController?.PlayAnimation(side.Value, "die", 0f);
+                                        Debug.Log($"GameManager: DAMAGE_APPLIED -> HP is 0, playing KB_TopKO (die) on side={side}");
+                                        // Lethal hit: play the permanent death pose immediately.
+                                        // Works for BOTH light and heavy hits that drained the last HP:
+                                        // the character collapses into KB_TopKO and never gets up.
+                                        if (!bridgesTakePriority) animationController?.PlayAnimation(side.Value, "die", 0f);
+                                        GetBridgeForSide(side.Value)?.TakeFatalHit();
                                     }
                                 }
                                 catch (Exception ex)
@@ -854,9 +1062,40 @@ public class GameManager : MonoBehaviour
                             }
                             else
                             {
-                                if (!string.IsNullOrEmpty(toPlay))
+                                if (!bridgesTakePriority && !string.IsNullOrEmpty(toPlay))
                                 {
                                     animationController?.PlayAnimation(side.Value, toPlay);
+                                }
+
+                                // Route the hit reaction to the optional bridge.
+                                // HitIndex mirrors the ATTACK's index (no randomisation): the variant chosen
+                                // in ARGUMENT_SELECTED is reused here so attackN pairs with hitN. Weight is
+                                // inferred from the BE animationId ("heavy" -> knockdown / KB_Idle_1).
+                                try
+                                {
+                                    var targetBridge = GetBridgeForSide(side.Value);
+                                    if (targetBridge != null)
+                                    {
+                                        // Heavy hits drive the knockdown flow; light hits stay inline.
+                                        bool isHeavy = !string.IsNullOrEmpty(animationId) &&
+                                                       animationId.ToLowerInvariant().Contains("heavy");
+                                        if (chosenVariant > 0)
+                                        {
+                                            // Authoritative pairing: hit follows the attack variant exactly.
+                                            targetBridge.TakeHitByAttackIndex(chosenVariant, isHeavy, animationId);
+                                        }
+                                        else
+                                        {
+                                            // No stored attack variant (e.g. missing turnId): fall back to
+                                            // string-based weight classification.
+                                            Debug.LogWarning($"GameManager: no matched attack variant for target {targetId} (turnId='{ev.turnId}'); falling back to animationId-based hit.");
+                                            targetBridge.TakeHitFromAnimationId(animationId);
+                                        }
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    Debug.LogWarning($"GameManager: bridge DAMAGE_APPLIED hit routing failed: {ex}");
                                 }
                             }
                         }
@@ -900,7 +1139,7 @@ public class GameManager : MonoBehaviour
                         }
 
                         // Update both slider and text display
-                        GetPlayerUIForSide(side.Value)?.UpdateHealthDisplay(side.Value, hpAfter, maxHp);
+                        uiManager?.UpdateHealth(ToUISide(side.Value), hpAfter, maxHp);
 
                         Debug.Log($"HP_CHANGED {targetId}: {hpAfter}/{maxHp}");
                     }
@@ -961,15 +1200,19 @@ public class GameManager : MonoBehaviour
                         // Restore normal speech behavior when declaring winner
                         _swapSpeechDuringMatch = false;
                         // Winner: show victory dialogue and play victory animation
-                        GetPlayerUIForSide(winnerSide.Value)?.SetDialogue(winnerSide.Value, "VICTORY!");
-                        animationController?.PlayAnimation(winnerSide.Value, "victory");
+                        uiManager?.SetDialogue(ToUISide(winnerSide.Value), "VICTORY!");
+                        if (!bridgesTakePriority) animationController?.PlayAnimation(winnerSide.Value, "victory");
 
                         // Loser: play die animation (only once)
                         if (!_loserSideForDieAnimation.HasValue || _loserSideForDieAnimation != loserSide)
                         {
                             _loserSideForDieAnimation = loserSide;
                             Debug.Log($"GameManager: Attempting to play die animation on loser side={loserSide}");
-                            if (loserSide.HasValue) animationController?.PlayAnimation(loserSide.Value, "die", 0f);
+                            if (loserSide.HasValue)
+                            {
+                                if (!bridgesTakePriority) animationController?.PlayAnimation(loserSide.Value, "die", 0f);
+                                GetBridgeForSide(loserSide.Value)?.Die();
+                            }
                         }
                     }
                     OnMatchEnded(winnerId);
@@ -1002,7 +1245,8 @@ public class GameManager : MonoBehaviour
     {
         if (!debugMode) return;
         Debug.Log("=== GameManager Debug Info ===");
-        Debug.Log($"PlayerUI: {(playerUI != null ? "✓" : "✗")}");
+        Debug.Log($"UIManager: {(uiManager != null ? "✓" : "✗")}");
+        Debug.Log($"Legacy PlayerUI: {(playerUI != null ? "✓" : "✗")}");
         Debug.Log($"RoundManager: {(roundManager != null ? "✓" : "✗")}");
         Debug.Log($"AnimationController: {(animationController != null ? "✓" : "✗")}");
         if (animationController != null)
@@ -1011,6 +1255,7 @@ public class GameManager : MonoBehaviour
             Debug.Log($"  - RightAnimator: {(animationController.rightAnimator != null ? "✓" : "✗")}");
         }
         Debug.Log($"WebSocketManager: {(WebSocketManager.Instance != null ? "✓" : "✗")}");
+        Debug.Log($"Event queue: {(useSequentialEventQueue ? "ON" : "OFF")} (pending={PendingEventCount})");
     }
 
     PlayerUI.Side? SideFromCharacterId(string id)
@@ -1063,5 +1308,100 @@ public class GameManager : MonoBehaviour
     {
         try { var j = JObject.Parse(json); return j.Value<string>(key); }
         catch { return null; }
+    }
+
+    // ==================================================================
+    // Sequential event queue (built-in)
+    // ------------------------------------------------------------------
+    // Applies incoming events strictly one at a time, holding the queue
+    // for the duration of the animation each event triggers, so a new
+    // event can never cut off an animation still mid-play.
+    // ==================================================================
+
+    /// <summary>
+    /// One queued unit of work: an action, a safety duration, and an optional completion
+    /// predicate. The queue advances as soon as the predicate reports done, or when the
+    /// duration elapses (whichever comes first).
+    /// </summary>
+    private class EventWorkItem
+    {
+        public readonly string label;
+        public readonly Action action;
+        public readonly float duration;
+        public readonly Func<bool> isFinished;
+
+        public EventWorkItem(string label, Action action, float duration, Func<bool> isFinished = null)
+        {
+            this.label = label;
+            this.action = action;
+            this.duration = Mathf.Max(0f, duration);
+            this.isFinished = isFinished;
+        }
+    }
+
+    private readonly System.Collections.Generic.Queue<EventWorkItem> _eventQueue =
+        new System.Collections.Generic.Queue<EventWorkItem>();
+    private Coroutine _eventQueueRunner;
+    private EventWorkItem _eventQueueCurrent;
+
+    /// <summary>Number of events waiting to be applied (excludes the one executing).</summary>
+    public int PendingEventCount => _eventQueue.Count;
+
+    /// <summary>True while an event is being applied or events are waiting.</summary>
+    public bool IsEventQueueBusy => _eventQueueCurrent != null || _eventQueue.Count > 0;
+
+    /// <summary>Drops all pending events (the one currently executing still completes).</summary>
+    public void ClearEventQueue()
+    {
+        int n = _eventQueue.Count;
+        _eventQueue.Clear();
+        if (n > 0 && debugMode) Debug.Log($"GameManager: cleared {n} pending event(s).");
+    }
+
+    private void EnsureQueueRunning()
+    {
+        if (_eventQueueRunner == null) _eventQueueRunner = StartCoroutine(RunEventQueue());
+    }
+
+    private System.Collections.IEnumerator RunEventQueue()
+    {
+        while (_eventQueue.Count > 0)
+        {
+            _eventQueueCurrent = _eventQueue.Dequeue();
+            if (debugMode) Debug.Log($"GameManager: [queue] apply '{_eventQueueCurrent.label}' (pending left {_eventQueue.Count})");
+
+            try
+            {
+                _eventQueueCurrent.action?.Invoke();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"GameManager: event '{_eventQueueCurrent.label}' threw: {ex}");
+            }
+
+            // Hold until the animation finishes (precise predicate) OR the safety duration
+            // elapses, whichever comes first. A short grace frame lets the action's animation
+            // command take effect before we start polling the animator state.
+            yield return null;
+
+            float hold = Mathf.Min(_eventQueueCurrent.duration, Mathf.Max(0f, maxEventHoldSeconds));
+            float elapsed = 0f;
+            while (elapsed < hold)
+            {
+                if (_eventQueueCurrent.isFinished != null)
+                {
+                    bool done;
+                    try { done = _eventQueueCurrent.isFinished(); }
+                    catch { done = true; }
+                    if (done) break;
+                }
+                elapsed += Time.unscaledDeltaTime;
+                yield return null;
+            }
+
+            _eventQueueCurrent = null;
+        }
+
+        _eventQueueRunner = null;
     }
 }
