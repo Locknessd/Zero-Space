@@ -125,6 +125,25 @@ public class CharacterAnimatorBridge : MonoBehaviour
     private bool _isKnockedDown;
     private float _lastAttackTime = -999f;
 
+    // Getup retry state.
+    // The controller's KB_Idle_1 -> Combo_Getup transitions are authored with HasExitTime=true
+    // and an ExitTime near 0.96, so a single TriggerGetup edge fired while the hit clip is still
+    // playing can be consumed/expired before the transition is ever evaluated. When that happens
+    // the character would stay down forever. We therefore remember the pending getup and re-fire
+    // the trigger each frame until the controller actually leaves the knocked-down state.
+    private bool _getupPending;
+    private int _pendingGetupType;
+    [Tooltip("Max seconds to keep re-firing TriggerGetup before giving up (safety valve).")]
+    [SerializeField] private float getupRetryTimeout = 3f;
+    private float _getupRequestTime = -999f;
+
+    /// <summary>
+    /// Raised when the getup has actually been consumed by the controller (the fighter is back on
+    /// its feet). Subscribers use this to recompute choreography that depends on the victim's
+    /// facing, which can change while it stands up.
+    /// </summary>
+    public event Action GetupCompleted;
+
     // Well-known state name hashes for diagnostics / best-effort checks.
     private static readonly string[] KnownStateNames =
     {
@@ -437,15 +456,65 @@ public class CharacterAnimatorBridge : MonoBehaviour
             return;
         }
 
-        if (_hasGetupType) animator.SetInteger(_getupTypeHash, type);
+        // Record the request so the per-frame retry can re-assert it if the controller does not
+        // react to the first trigger edge (see the retry note on _getupPending above).
+        _getupPending = true;
+        _pendingGetupType = type;
+        _getupRequestTime = Time.time;
+
+        ApplyGetup();
+    }
+
+    /// <summary>
+    /// Applies (or re-applies) the pending getup: writes GetupType, clears IsKnockedDown and
+    /// fires TriggerGetup. Split out of <see cref="Getup"/> so the Update() retry can reuse it.
+    /// </summary>
+    private void ApplyGetup()
+    {
+        if (_hasGetupType) animator.SetInteger(_getupTypeHash, _pendingGetupType);
 
         // Leave the knockdown state and fire the getup trigger in a safe order:
         // set the target state selector first, then lower the knockdown flag, then trigger.
         _isKnockedDown = false;
         if (_hasIsKnockedDown) animator.SetBool(_isKnockedDownHash, false);
         FireTrigger(_hasTriggerGetup, _triggerGetupHash, triggerGetupParam);
+    }
 
-        if (verboseLogging) Debug.Log($"[{name}] Getup(type={type})");
+    /// <summary>
+    /// Re-fires a pending getup until the controller actually left the knocked-down state.
+    /// The retry exists because a single trigger edge can be consumed by the controller's
+    /// HasExitTime-authored getup transitions before they are evaluated.
+    /// </summary>
+    private void Update()
+    {
+        if (!_getupPending) return;
+
+        // Safety valve: never spin forever if the controller has no getup states authored.
+        if (Time.time - _getupRequestTime > getupRetryTimeout)
+        {
+            _getupPending = false;
+            if (verboseLogging)
+                Debug.LogWarning($"[{name}] Getup(type={_pendingGetupType}) was never consumed by the controller within {getupRetryTimeout:0.##}s; giving up.", this);
+            return;
+        }
+
+        // A getup is considered consumed once the knockdown flag has been lowered AND the animator
+        // has moved off the knocked-down pose. We re-assert while IsKnockedDown still reads true.
+        bool stillDown = _hasIsKnockedDown && animator.GetBool(_isKnockedDownHash);
+        if (!stillDown)
+        {
+            _getupPending = false;
+            if (verboseLogging) Debug.Log($"[{name}] Getup(type={_pendingGetupType}) applied.");
+
+            // The victim is back on its feet; its facing may now differ from the knockdown pose,
+            // so anyone tracking a position relative to it (e.g. the attack spot) must recompute.
+            try { GetupCompleted?.Invoke(); }
+            catch (Exception ex) { Debug.LogWarning($"[{name}] GetupCompleted handler threw: {ex}", this); }
+            return;
+        }
+
+        if (verboseLogging) Debug.Log($"[{name}] Getup(type={_pendingGetupType}) not yet applied; re-firing TriggerGetup.");
+        ApplyGetup();
     }
 
     /// <summary>
@@ -505,6 +574,13 @@ public class CharacterAnimatorBridge : MonoBehaviour
 
     public bool IsDead => _isDead;
     public bool IsKnockedDown => _isKnockedDown;
+
+    /// <summary>
+    /// True while a getup request is still waiting to be consumed by the controller. The bridge
+    /// re-fires TriggerGetup each frame until the animator leaves the knocked-down pose, so
+    /// callers can poll this to know when the fighter is actually back on its feet.
+    /// </summary>
+    public bool IsGetupPending => _getupPending;
 
     /// <summary>
     /// The Animator driving this fighter (never null once Awake has run).

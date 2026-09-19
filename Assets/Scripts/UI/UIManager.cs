@@ -105,12 +105,18 @@ public class MemeBattleUI : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null && Instance != this)
+        // NOTE: do NOT Destroy(gameObject) on a duplicate.
+        // This component holds THIS scene's widgets; destroying it would wipe the whole UI
+        // hierarchy (and leave GameManager.uiManager pointing at a dead object -> silent no-op).
+        // We simply register the most recent instance so callers can fall back to it by code.
+        if (Instance == null || !Instance.isActiveAndEnabled)
         {
-            Destroy(gameObject);
-            return;
+            Instance = this;
         }
-        Instance = this;
+        else if (verboseLogging && Instance != this)
+        {
+            Debug.LogWarning($"MemeBattleUI: multiple instances active. Resting Instance on '{Instance.name}'; this is '{name}'.", this);
+        }
     }
 
     private void OnDestroy()

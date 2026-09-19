@@ -41,6 +41,18 @@ public class GameManager : MonoBehaviour
     public CharacterAnimatorBridge rightBridge;
     [Tooltip("When true, only the bridge drives animation (AnimationController calls are skipped). Defaults to true: CharacterAnimatorBridge is the single animation authority.")]
     public bool bridgesTakePriority = true;
+    [Tooltip("When true, a heavy hit that does not kill the target automatically plays the getup animation after the knockdown hold, so the fighter returns to Idle.")]
+    public bool autoGetupAfterKnockdown = true;
+    [Tooltip("Seconds the fighter stays knocked down before the getup animation is triggered.")]
+    public float getupDelay = 0.8f;
+    [Tooltip("Which getup direction to play: 1 = Back, 2 = Front.")]
+    public int getupType = 1;
+
+    [Header("Combat Positioning")]
+    [Tooltip("After a hit resolves, compute the attack spot in FRONT of the victim and step the attacker to it. Recomputes after every getup.")]
+    public bool choreographAttackPositions = true;
+    [Tooltip("Optional CombatPositioningController. Auto-found in the scene when left empty.")]
+    public CombatPositioningController positioningController;
 
     [Header("Local Test")]
     public bool enableLocalInputTesting = true;
@@ -147,6 +159,9 @@ public class GameManager : MonoBehaviour
         }
         if (Instance == this) Instance = null;
     }
+    // Resolves the UI manager: inspector-assigned first, else the scene singleton.
+    private MemeBattleUI UI => uiManager != null ? uiManager : MemeBattleUI.Instance;
+
     // Converts the game's PlayerUI.Side enum to the UIManager side enum.
     private static MemeBattleUI.Side ToUISide(PlayerUI.Side side)
     {
@@ -160,6 +175,36 @@ public class GameManager : MonoBehaviour
     private CharacterAnimatorBridge GetBridgeForSide(PlayerUI.Side side)
     {
         return side == PlayerUI.Side.Left ? leftBridge : rightBridge;
+    }
+
+    // Lazily resolve the positioning controller so older scenes without an explicit reference work.
+    private CombatPositioningController Positioning
+    {
+        get
+        {
+            if (positioningController == null)
+                positioningController = CombatPositioningController.Instance;
+            return positioningController;
+        }
+    }
+
+    /// <summary>
+    /// Resolves the world Transform that represents a side's fighter. Prefers the bridge's
+    /// Animator (the object the animations actually drive), then the AnimationController's
+    /// animator. Returns null when nothing is wired up.
+    /// </summary>
+    private Transform GetFighterTransform(PlayerUI.Side side)
+    {
+        var bridge = GetBridgeForSide(side);
+        if (bridge != null && bridge.Animator != null) return bridge.Animator.transform;
+
+        if (animationController != null)
+        {
+            var anim = side == PlayerUI.Side.Left ? animationController.leftAnimator : animationController.rightAnimator;
+            if (anim != null) return anim.transform;
+        }
+
+        return null;
     }
 
 
@@ -1091,11 +1136,31 @@ public class GameManager : MonoBehaviour
                                             Debug.LogWarning($"GameManager: no matched attack variant for target {targetId} (turnId='{ev.turnId}'); falling back to animationId-based hit.");
                                             targetBridge.TakeHitFromAnimationId(animationId);
                                         }
+
+                                        // A heavy hit leaves the fighter knocked down. Nothing else in the
+                                        // flow calls Getup(), so without this the bridge sets IsKnockedDown=true
+                                        // and the controller parks the character in the knockdown idle forever:
+                                        // the getup animation never plays. Schedule the getup so the fighter
+                                        // stands back up and returns to Idle.
+                                        // (Lethal hits never reach here -- they are handled above via
+                                        // TakeFatalHit, which keeps the target down permanently in KB_TopKO.)
+                                        if (isHeavy && autoGetupAfterKnockdown)
+                                        {
+                                            StartCoroutine(PlayGetupAfterDelay(targetBridge, getupType, Mathf.Max(0f, getupDelay), payload.Value<string>("actorCharacterId")));
+                                        }
                                     }
                                 }
                                 catch (Exception ex)
                                 {
                                     Debug.LogWarning($"GameManager: bridge DAMAGE_APPLIED hit routing failed: {ex}");
+                                }
+
+                                // Step the attacker to the spot in front of the victim so the next
+                                // exchange lines up. Done after the hit reaction is issued so the move
+                                // and the animation read as one beat. Runs even when no bridge is wired.
+                                if (choreographAttackPositions)
+                                {
+                                    TryChoreographAttackPosition(payload.Value<string>("actorCharacterId"), targetId);
                                 }
                             }
                         }
@@ -1228,6 +1293,97 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log($"OnMatchEnded: winner={winnerCharacterId}");
         // Future: Show match result UI, offer rematch button, etc.
+    }
+
+    /// <summary>
+    /// Steps the attacker to the attack spot in front of the victim. Resolves both fighters'
+    /// transforms and delegates the actual choreography to the CombatPositioningController.
+    /// Safe to call when positioning is not set up: it simply does nothing.
+    /// </summary>
+    private void TryChoreographAttackPosition(string attackerCharacterId, string victimCharacterId)
+    {
+        var pos = Positioning;
+        if (pos == null) return;
+
+        PlayerUI.Side? attackerSide = SideFromCharacterId(attackerCharacterId);
+        PlayerUI.Side? victimSide = SideFromCharacterId(victimCharacterId);
+        if (!attackerSide.HasValue || !victimSide.HasValue) return;
+
+        Transform attacker = GetFighterTransform(attackerSide.Value);
+        Transform victim = GetFighterTransform(victimSide.Value);
+        if (attacker == null || victim == null) return;
+
+        pos.MoveAttackerToSpot(attacker, victim);
+    }
+
+    /// <summary>
+    /// Waits out the knockdown hold, then triggers the getup on the knocked-down fighter so it
+    /// stands back up and returns to Idle. Guarded against the fighter dying during the wait
+    /// (a lethal hit during the knockdown must stay down in KB_TopKO).
+    ///
+    /// On getup completion the attack spot is recomputed: standing up can change the victim's
+    /// facing, so a spot computed against the knockdown pose would be stale.
+    /// </summary>
+    private System.Collections.IEnumerator PlayGetupAfterDelay(CharacterAnimatorBridge bridge, int type, float delay, string attackerCharacterId)
+    {
+        if (delay > 0f) yield return new WaitForSeconds(delay);
+
+        // The target may have died during the hold -> keep it down, no getup.
+        if (bridge == null || bridge.IsDead) yield break;
+
+        // Recompute the attack spot once the getup has actually been consumed by the controller
+        // (the victim's facing may have changed while standing up). Subscribed per getup and
+        // unsubscribed immediately after, so handlers never leak across turns.
+        PlayerUI.Side? victimSide = bridge.Animator != null ? SideOfBridge(bridge) : (PlayerUI.Side?)null;
+        Action onGetupDone = null;
+        if (choreographAttackPositions && victimSide.HasValue)
+        {
+            var victimSideValue = victimSide.Value;
+            onGetupDone = () =>
+            {
+                var pos = Positioning;
+                if (pos == null) return;
+
+                PlayerUI.Side? attackerSide = SideFromCharacterId(attackerCharacterId);
+                if (!attackerSide.HasValue) return;
+
+                Transform attacker = GetFighterTransform(attackerSide.Value);
+                Transform victim = GetFighterTransform(victimSideValue);
+                if (attacker == null || victim == null) return;
+
+                pos.RecomputeAfterGetup(attacker, victim);
+            };
+            bridge.GetupCompleted += onGetupDone;
+        }
+
+        try
+        {
+            bridge.Getup(type);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"GameManager: failed to play getup animation: {ex}");
+        }
+
+        // Wait until the bridge reports the getup finished (or it gave up retrying) before
+        // dropping the handler, so the recompute is not unsubscribed too early.
+        float waited = 0f;
+        while (bridge != null && !bridge.IsDead && bridge.IsGetupPending && waited < maxEventHoldSeconds)
+        {
+            waited += Time.deltaTime;
+            yield return null;
+        }
+
+        if (onGetupDone != null && bridge != null) bridge.GetupCompleted -= onGetupDone;
+    }
+
+    /// <summary>Maps a bridge back to the side it drives (for getup recompute wiring).</summary>
+    private PlayerUI.Side? SideOfBridge(CharacterAnimatorBridge bridge)
+    {
+        if (bridge == null) return null;
+        if (bridge == leftBridge) return PlayerUI.Side.Left;
+        if (bridge == rightBridge) return PlayerUI.Side.Right;
+        return null;
     }
 
     private System.Collections.IEnumerator PlayDieAfterDelay(PlayerUI.Side side, float delay)

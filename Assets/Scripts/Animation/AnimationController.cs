@@ -51,6 +51,50 @@ public class AnimationController : MonoBehaviour
     private Quaternion _leftAnchorRot;
     private Quaternion _rightAnchorRot;
 
+    // External position control handshake.
+    // Other choreography systems (e.g. CombatPositioningController) need to move a fighter
+    // without LateUpdate's anchor-recovery Lerp dragging it straight back. While this counter is
+    // above zero, anchor recovery is suspended so the external system owns the transforms.
+    private int _externalPositionControlDepth;
+
+    /// <summary>
+    /// True while an external system owns fighter positioning; anchor recovery is suspended.
+    /// </summary>
+    public bool IsUnderExternalPositionControl => _externalPositionControlDepth > 0;
+
+    /// <summary>
+    /// Suspends anchor recovery so an external system can move fighters freely.
+    /// Always pair with <see cref="EndExternalPositionControl"/>. Depth-counted so nested
+    /// callers cannot release each other's control early.
+    /// </summary>
+    public void BeginExternalPositionControl()
+    {
+        _externalPositionControlDepth++;
+    }
+
+    /// <summary>
+    /// Hands positioning back to anchor recovery. When an updated position is supplied, the
+    /// relevant anchor is temporarily adopted as the recovery target so the handover does not
+    /// snap the fighter back to its pre-move anchor.
+    /// </summary>
+    public void EndExternalPositionControl(Transform movedTransform = null, Vector3 updatedPosition = default(Vector3))
+    {
+        if (_externalPositionControlDepth > 0) _externalPositionControlDepth--;
+
+        if (movedTransform == null) return;
+
+        // Re-anchor the recovery target around the new position so recovery resumes smoothly
+        // instead of yanking the fighter back to where it started.
+        if (_resolvedLeftAnimator != null && movedTransform == _resolvedLeftAnimator.transform)
+        {
+            _leftAnchorPos = updatedPosition;
+        }
+        else if (_resolvedRightAnimator != null && movedTransform == _resolvedRightAnimator.transform)
+        {
+            _rightAnchorPos = updatedPosition;
+        }
+    }
+
     // Resolved animator mapping (logical left/right -> actual Animator instance)
     private Animator _resolvedLeftAnimator;
     private Animator _resolvedRightAnimator;
@@ -149,6 +193,8 @@ public class AnimationController : MonoBehaviour
     void LateUpdate()
     {
         if (!enablePositionRecovery || !managePositions) return;
+        // An external choreography system currently owns the transforms -> hands off.
+        if (_externalPositionControlDepth > 0) return;
         // Smoothly realign characters to combat anchors when in idle or between turns
         if (_resolvedLeftAnimator != null)
         {
