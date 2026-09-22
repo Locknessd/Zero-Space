@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -46,15 +47,27 @@ public class CharacterAnimatorBridge : MonoBehaviour
     }
 
     /// <summary>
-    /// Logical attack slots. These map 1:1 to AttackIndex values the controller expects.
+    /// Logical attack slots mapped to the AttackIndex values the CONTROLLER expects.
+    /// NOTE: the Animator's AttackIndex numbering does NOT match the state display names. Verified
+    /// against Enemy_Assistant_Controller.controller:
+    ///   AttackIndex 1 -> state "attack5"
+    ///   AttackIndex 3 -> state "attack3"
+    ///   AttackIndex 5 -> state "combo_weapon 1"
+    ///   AttackIndex 6 -> state "combo_weapon(6)"
+    ///   AttackIndex 7 -> state "combo_weapon(7)"
+    /// The field names describe the SLOT (which pool it belongs to), the values are the raw indices.
     /// </summary>
     public enum AttackType
     {
+        Attack5 = 1,
+        TwoHandedAxe = 2,
         Attack3 = 3,
-        Attack5 = 5,
-        ComboWeapon1 = 1,
+        Assassin = 4,
+        ComboWeapon1 = 5,
         Attack6 = 6,
-        Attack7 = 7
+        Attack7 = 7,
+        DualDaggers = 8,
+        Katana = 9
     }
 
     /// <summary>
@@ -72,6 +85,11 @@ public class CharacterAnimatorBridge : MonoBehaviour
     [SerializeField] private Animator animator;
 
     [Header("Parameter Names (must match the Animator Controller)")]
+    [Tooltip("Base-layer state names that count as a locomotion (Walk/Run) state. Attack/Hit/Getup are typically authored only from Idle, so we wait to leave these before firing a one-shot trigger.")]
+    [SerializeField] private string walkStateName = "Enemy1_Walk";
+    [SerializeField] private string runStateName = "Enemy1_Run";
+    [Tooltip("Base-layer IDLE state name. The queue treats this state as \"settled\" so a getup stack only completes once the fighter is back in Idle.")]
+    [SerializeField] private string idleStateName = "Idle";
     [SerializeField] private string speedParam = "Speed";
     [SerializeField] private string attackIndexParam = "AttackIndex";
     [SerializeField] private string triggerAttackParam = "TriggerAttack";
@@ -94,6 +112,20 @@ public class CharacterAnimatorBridge : MonoBehaviour
     [Tooltip("HitIndex values that a HEAVY hit reaction may pick from (matched to the attack variant when available).")]
     [SerializeField] private int[] heavyHitIndices = new int[] { 5, 6, 7 };
 
+    [Header("VFX")]
+    [Tooltip("Particle system played every time this fighter plays a hit reaction (see TriggerHitEffect). Leave empty to disable.")]
+    public ParticleSystem hitEffect;
+    [Tooltip("Delay (seconds) before the hit effect plays on a HEAVY hit, so it lands on the impact frame instead of the wind-up. Light hits fire immediately.")]
+    [SerializeField] private float heavyHitEffectDelay = 0.5f;
+
+    [Header("Getup Type by Knockdown Hit")]
+    [Tooltip("HitIndex values whose knockdown gets up with GetupType 1 (Combo_Getup01 / Back).")]
+    [SerializeField] private int[] backGetupHitIndices = new int[] { 5, 6 };
+    [Tooltip("HitIndex values whose knockdown gets up with GetupType 2 (Combo_Getup02 / Front).")]
+    [SerializeField] private int[] frontGetupHitIndices = new int[] { 7 };
+    [Tooltip("GetupType used when no knockdown-hit rule matches. 1 = Back (Combo_Getup01), 2 = Front (Combo_Getup02).")]
+    [SerializeField] private int defaultGetupType = 1;
+
     [Header("Safety / Tuning")]
     [Tooltip("When true, verifying that every expected parameter exists on Awake and warn if not.")]
     [SerializeField] private bool validateParametersOnAwake = true;
@@ -101,8 +133,33 @@ public class CharacterAnimatorBridge : MonoBehaviour
     [SerializeField] private bool knockdownBlocksActions = false;
     [Tooltip("Min seconds between two attacks to avoid double-fire from repeated calls in one frame.")]
     [SerializeField] private float attackCooldown = 0.05f;
-    [Tooltip("Log state transitions and parameter writes (verbose debugging).")]
-    [SerializeField] private bool verboseLogging = false;
+    [Tooltip("Log state transitions and parameter writes (verbose debugging). All messages are prefixed with 'Animation'.")]
+    [SerializeField] private bool verboseLogging = true;
+
+    // ------------------------------------------------------------------
+    // Logging
+    // ------------------------------------------------------------------
+    // Every log emitted by this bridge starts with "Animation" so the whole animation pipeline can
+    // be filtered in the console with a single search string.
+    private const string LogTag = "Animation";
+
+    /// <summary>Logs an animation message prefixed with the shared "Animation" tag.</summary>
+    private void Alog(string message)
+    {
+        Debug.Log($"{LogTag} [{name}] {message}", this);
+    }
+
+    /// <summary>Logs an animation WARNING prefixed with the shared "Animation" tag.</summary>
+    private void AlogWarn(string message)
+    {
+        Debug.LogWarning($"{LogTag} [{name}] {message}", this);
+    }
+
+    /// <summary>Logs an animation ERROR prefixed with the shared "Animation" tag.</summary>
+    private void AlogError(string message)
+    {
+        Debug.LogError($"{LogTag} [{name}] {message}", this);
+    }
 
     // ---- Animator parameter hashes (resolved once) ----
     private int _speedHash;
@@ -120,10 +177,30 @@ public class CharacterAnimatorBridge : MonoBehaviour
     private bool _hasHitIndex, _hasTriggerHit, _hasIsKnockedDown;
     private bool _hasGetupType, _hasTriggerGetup, _hasIsDead;
 
+    // ---- Per-clip trigger mode ----------------------------------------------------------------
+    // Some controllers (e.g. Frank_Attacker_Master / Frank_Victim_Master) do NOT use an
+    // AttackIndex/HitIndex int + a shared TriggerAttack/TriggerHit. Instead every clip is its own
+    // Trigger named after the clip: attack1..attack5, hit1..hit5, idle, die. When that shape is
+    // detected we drive those named triggers instead of the index parameters, otherwise the attack
+    // is silently ignored (the trigger we fire simply does not exist on that controller).
+    private bool _usePerClipTriggers;
+    [Tooltip("Trigger name format for per-clip controllers (e.g. 'attack{0}' -> attack1..attack5).")]
+    [SerializeField] private string attackTriggerFormat = "attack{0}";
+    [Tooltip("Trigger name format for per-clip controllers (e.g. 'hit{0}' -> hit1..hit5).")]
+    [SerializeField] private string hitTriggerFormat = "hit{0}";
+    [Tooltip("Idle trigger name for per-clip controllers.")]
+    [SerializeField] private string idleTriggerName = "idle";
+    [Tooltip("Die parameter name for per-clip controllers (trigger or bool).")]
+    [SerializeField] private string perClipDieName = "die";
+
     // Runtime state.
     private bool _isDead;
     private bool _isKnockedDown;
     private float _lastAttackTime = -999f;
+
+    // The HitIndex of the heavy hit that most recently entered the knockdown. Used to derive which
+    // getup direction to play (see GetupTypeForHitIndex) when GetupFromKnockdown() is called.
+    private int _pendingKnockdownHitIndex;
 
     // Getup retry state.
     // The controller's KB_Idle_1 -> Combo_Getup transitions are authored with HasExitTime=true
@@ -133,9 +210,20 @@ public class CharacterAnimatorBridge : MonoBehaviour
     // the trigger each frame until the controller actually leaves the knocked-down state.
     private bool _getupPending;
     private int _pendingGetupType;
-    [Tooltip("Max seconds to keep re-firing TriggerGetup before giving up (safety valve).")]
-    [SerializeField] private float getupRetryTimeout = 3f;
+    [Tooltip("Max seconds before giving up on a getup the controller never consumes, so the queue is never held indefinitely (safety valve).")]
+    [SerializeField] private float getupRetryTimeout = 1.5f;
     private float _getupRequestTime = -999f;
+
+    // True once the getup CLIP has actually been observed playing (a Combo_Getup state was entered).
+    // Used so completion is only reported after the getup really ran, not on the first frame a
+    // trigger edge is fired.
+    private bool _sawGetupState;
+
+    // Seconds elapsed since the getup request was issued. Used as a grace period before we accept
+    // that the fighter has left the knockdown pose without ever entering a recognised getup clip.
+    private float _getupElapsed => Time.time - _getupRequestTime;
+    [Tooltip("Seconds to wait after a getup request before accepting that the fighter has recovered even if no Combo_Getup* clip was observed (safety net for controllers with differently-named getup clips).")]
+    [SerializeField] private float getupSettleGrace = 0.25f;
 
     /// <summary>
     /// Raised when the getup has actually been consumed by the controller (the fighter is back on
@@ -148,8 +236,8 @@ public class CharacterAnimatorBridge : MonoBehaviour
     private static readonly string[] KnownStateNames =
     {
         "Idle", "Walk",
-        "attack3", "attack5", "combo_weapon 1", "attack6", "attack7",
-        "hit3", "hit5", "hit_combo_weapon 1", "hit6", "hit7",
+        "attack3", "attack5", "Damage_Critical_GreatSword", "Damage_Critical_Spear", "Damage_Critical_Warrior",
+        "hit3", "hit5", "Damage_Critical_GreatSword_Hit", "Damage_Critical_Spear_Hit", "Damage_Critical_Warrior_Hit",
         "KB_Idle_1", "Combo_Getup01", "Combo_Getup02", "KB_TopKO"
     };
 
@@ -162,7 +250,7 @@ public class CharacterAnimatorBridge : MonoBehaviour
         if (animator == null) animator = GetComponent<Animator>();
         if (animator == null)
         {
-            Debug.LogError($"{nameof(CharacterAnimatorBridge)}: No Animator found on '{name}'. Bridge will be inert.", this);
+            AlogError("No Animator found. Bridge will be inert.");
             enabled = false;
             return;
         }
@@ -186,15 +274,74 @@ public class CharacterAnimatorBridge : MonoBehaviour
         _triggerGetupHash = Animator.StringToHash(triggerGetupParam);
         _isDeadHash = Animator.StringToHash(isDeadParam);
 
-        _hasSpeed = HasParameter(_speedHash, AnimatorControllerParameterType.Float);
-        _hasAttackIndex = HasParameter(_attackIndexHash, AnimatorControllerParameterType.Int);
-        _hasTriggerAttack = HasParameter(_triggerAttackHash, AnimatorControllerParameterType.Trigger);
-        _hasHitIndex = HasParameter(_hitIndexHash, AnimatorControllerParameterType.Int);
-        _hasTriggerHit = HasParameter(_triggerHitHash, AnimatorControllerParameterType.Trigger);
-        _hasIsKnockedDown = HasParameter(_isKnockedDownHash, AnimatorControllerParameterType.Bool);
-        _hasGetupType = HasParameter(_getupTypeHash, AnimatorControllerParameterType.Int);
-        _hasTriggerGetup = HasParameter(_triggerGetupHash, AnimatorControllerParameterType.Trigger);
-        _hasIsDead = HasParameter(_isDeadHash, AnimatorControllerParameterType.Bool);
+        _hasSpeed = HasParameter(speedParam, _speedHash, AnimatorControllerParameterType.Float);
+        _hasAttackIndex = HasParameter(attackIndexParam, _attackIndexHash, AnimatorControllerParameterType.Int);
+        _hasTriggerAttack = HasParameter(triggerAttackParam, _triggerAttackHash, AnimatorControllerParameterType.Trigger);
+        _hasHitIndex = HasParameter(hitIndexParam, _hitIndexHash, AnimatorControllerParameterType.Int);
+        _hasTriggerHit = HasParameter(triggerHitParam, _triggerHitHash, AnimatorControllerParameterType.Trigger);
+        _hasIsKnockedDown = HasParameter(isKnockedDownParam, _isKnockedDownHash, AnimatorControllerParameterType.Bool);
+        _hasGetupType = HasParameter(getupTypeParam, _getupTypeHash, AnimatorControllerParameterType.Int);
+        _hasTriggerGetup = HasParameter(triggerGetupParam, _triggerGetupHash, AnimatorControllerParameterType.Trigger);
+        _hasIsDead = HasParameter(isDeadParam, _isDeadHash, AnimatorControllerParameterType.Bool);
+
+        // Detect the per-clip trigger convention: a controller that has NO AttackIndex/TriggerAttack
+        // but DOES have a trigger literally named "attack1" drives attacks with one trigger per clip.
+        _usePerClipTriggers = !_hasTriggerAttack && HasTriggerByName(string.Format(attackTriggerFormat, 1));
+
+        _parametersResolved = true;
+    }
+
+    /// <summary>
+    /// Resolves a per-clip trigger index that actually exists on this controller.
+    /// Tries the requested index first; if that clip is missing (e.g. a fighter with only
+    /// attack1..attack5 but the heavy pool asks for 6/7), it falls back to the nearest EXISTING
+    /// index, preferring the same number, then any index that has a clip (scanned from 1 upward).
+    /// Returns 0 when no clip exists at all.
+    /// </summary>
+    private int ResolvePerClipIndex(string format, int requestedIndex)
+    {
+        if (requestedIndex > 0 && HasTriggerByName(string.Format(format, requestedIndex)))
+            return requestedIndex;
+
+        // Scan a reasonable range for the first existing clip trigger.
+        for (int i = 1; i <= 8; i++)
+            if (HasTriggerByName(string.Format(format, i)))
+                return i;
+
+        return 0;
+    }
+
+    /// <summary>True when the Animator declares a Trigger parameter with exactly this name.</summary>
+    private bool HasTriggerByName(string triggerName)
+    {
+        if (animator == null || string.IsNullOrEmpty(triggerName)) return false;
+        int hash = Animator.StringToHash(triggerName);
+        foreach (var p in animator.parameters)
+            if (p.type == AnimatorControllerParameterType.Trigger &&
+                (p.nameHash == hash || string.Equals(p.name, triggerName, StringComparison.Ordinal)))
+                return true;
+        return false;
+    }
+
+    // Whether ResolveParameterHashes() has run against a populated Animator. Guards against the
+    // common case where Awake runs before the runtime AnimatorController is assigned, leaving the
+    // capability flags all false -- which silently drops every parameter write (e.g. AttackIndex).
+    private bool _parametersResolved;
+
+    /// <summary>
+    /// Lazily (re)resolves the parameter capability flags the first time a write is attempted if they
+    /// were never resolved against a populated controller. This makes the bridge robust to Animator /
+    /// runtime-controller assignment order, which otherwise causes parameters (AttackIndex, etc.) to
+    /// never be sent at runtime.
+    /// </summary>
+    private void EnsureParametersResolved()
+    {
+        if (_parametersResolved) return;
+        if (animator == null) animator = GetComponent<Animator>();
+        if (animator == null || animator.runtimeAnimatorController == null) return;
+
+        ResolveParameterHashes();
+        if (verboseLogging) Alog("Parameters resolved lazily (animator assigned after Awake).");
     }
 
     private void ValidateParameters()
@@ -212,13 +359,30 @@ public class CharacterAnimatorBridge : MonoBehaviour
 
         if (missing.Count > 0)
         {
-            Debug.LogWarning(
-                $"{nameof(CharacterAnimatorBridge)} on '{name}': missing/mistyped Animator parameters:\n  - " +
-                string.Join("\n  - ", missing), this);
+            AlogWarn("missing/mistyped Animator parameters:\n  - " + string.Join("\n  - ", missing));
         }
         else if (verboseLogging)
         {
-            Debug.Log($"{nameof(CharacterAnimatorBridge)} on '{name}': all parameters validated.", this);
+            Alog("all parameters validated.");
+        }
+
+        // Always log the resolved capability flags + the animator's real parameter list, so a runtime
+        // "the index is never sent" report can be traced to a missing/mistyped parameter immediately.
+        if (animator != null)
+        {
+            var names = new List<string>();
+            foreach (var p in animator.parameters) names.Add($"{p.name}:{p.type}");
+            string controllerName = animator.runtimeAnimatorController != null
+                ? animator.runtimeAnimatorController.name
+                : "(none)";
+            Alog(
+                $"capability:\n" +
+                $"  animator GameObject='{animator.gameObject.name}', controller='{controllerName}'\n" +
+                $"  mode={( _usePerClipTriggers ? "PER-CLIP (attackN/hitN triggers)" : "INDEX (AttackIndex+TriggerAttack)")}\n" +
+                $"  Speed={_hasSpeed}, AttackIndex={_hasAttackIndex}, TriggerAttack={_hasTriggerAttack}, " +
+                $"HitIndex={_hasHitIndex}, TriggerHit={_hasTriggerHit}, IsKnockedDown={_hasIsKnockedDown}, " +
+                $"GetupType={_hasGetupType}, TriggerGetup={_hasTriggerGetup}, IsDead={_hasIsDead}\n" +
+                $"  animator parameters: [{string.Join(", ", names)}]");
         }
     }
 
@@ -247,12 +411,128 @@ public class CharacterAnimatorBridge : MonoBehaviour
     /// </summary>
     public void Move(float value)
     {
+        EnsureParametersResolved();
         if (!CanAct()) return;
         if (!_hasSpeed) return;
 
         animator.SetFloat(_speedHash, Mathf.Clamp01(value));
-        if (verboseLogging) Debug.Log($"[{name}] Move(Speed={value:0.##})");
+        if (verboseLogging) Alog($"Move(Speed={value:0.##})");
     }
+
+    /// <summary>
+    /// True when the base layer is NOT in a locomotion (Walk/Run) blend, i.e. it is safe to fire a
+    /// one-shot trigger (Attack / Hit / Getup).
+    ///
+    /// This matters because in the shipped controller (Enemy_Assistant_Controller) the attack/hit/
+    /// getup transitions are authored ONLY from the Idle state. If the model is still in Walk (Speed
+    /// was driven by a move) the trigger has no valid transition and is silently swallowed.
+    /// The caller can poll this after a move before firing the attack.
+    /// </summary>
+    public bool IsLocomotionSettled()
+    {
+        if (animator == null) return true;
+        if (!_hasSpeed) return true;
+
+        // Settled when the animator reads Speed ~0 AND is no longer in a walk/run-named state.
+        try
+        {
+            float speed = animator.GetFloat(_speedHash);
+            if (speed > 0.1f) return false;
+
+            var info = animator.GetCurrentAnimatorStateInfo(0);
+            if (info.IsName(walkStateName) || info.IsName(runStateName)) return false;
+        }
+        catch { }
+        return true;
+    }
+
+    /// <summary>
+    /// True when the base layer is currently sitting in a real standing idle pose. Used by the queue
+    /// to hold a getup item until the fighter has FULLY stood back up and returned to Idle before the
+    /// next queued stack is allowed to run.
+    ///
+    /// IMPORTANT: the knockdown idle (KB_Idle_1) is deliberately NOT counted as idle. Treating it as
+    /// "idle" made the queue believe a knocked-down fighter had already settled, so the pending getup
+    /// item could be marked finished while the character was still lying down -- which is exactly how
+    /// the fighter ended up stuck in the hit / knockdown pose.
+    /// </summary>
+    public bool IsInIdleState()
+    {
+        if (animator == null) return true;
+
+        // While an action we initiated is still in flight, this is NOT settled -- even if the animator
+        // has not evaluated its transition yet and still reports Idle. Without this gate the camera
+        // (and the queue) saw "idle" for the first frames of every attack and snapped back to centre
+        // mid-swing.
+        if (_actionInFlight) return false;
+
+        try
+        {
+            var info = animator.GetCurrentAnimatorStateInfo(0);
+            // Standing idles only. KB_Idle_1 (knocked down) is explicitly excluded.
+            return info.IsName("Idle") || info.IsName("Enemy1_Idle") || info.IsName(idleStateName);
+        }
+        catch { return true; }
+    }
+
+    /// <summary>
+    /// Convenience: true when this fighter is standing idle AND not knocked down / not mid-getup. The
+    /// queue uses this to know a previous getup has fully settled back into Idle.
+    /// </summary>
+    public bool IsIdleAndSettled => IsInIdleState() && !_isKnockedDown && !_getupPending;
+
+    /// <summary>
+    /// STRICT version of <see cref="IsIdleAndSettled"/> for the camera: true ONLY when the animator is
+    /// literally playing the Idle state right now, no action is in flight, and the fighter is neither
+    /// knocked down nor mid-getup.
+    ///
+    /// The looser check above returned true during the transition frames of a hit / knockdown too (the
+    /// animator still reported Idle for a frame or two), which made the camera snap back to centre while
+    /// a heavy hit reaction was still on screen.
+    /// </summary>
+    public bool IsFullyIdleNow
+    {
+        get
+        {
+            if (_isKnockedDown || _getupPending || _isDead) return false;
+            if (animator == null) return false;
+
+            try
+            {
+                var info = animator.GetCurrentAnimatorStateInfo(0);
+
+                // Must literally BE the standing idle state -- not merely "not in a hit pose". This is
+                // checked BEFORE the in-flight flag, because the flag is only released once we can see
+                // the animator has genuinely settled into Idle.
+                bool inIdle = info.IsName("Idle") || info.IsName("Enemy1_Idle") || info.IsName(idleStateName);
+                if (!inIdle)
+                {
+                    // Still mid-clip (attack / hit / knockdown / getup): nothing is settled yet.
+                    return false;
+                }
+
+                // The animator is in Idle now: the previously issued action has fully landed, so it is
+                // safe to release the in-flight flag for good.
+                _actionInFlight = false;
+
+                // And the idle clip must be looping along normally (not a one-shot tail of something else).
+                return info.normalizedTime > 0.01f || info.loop;
+            }
+            catch { return false; }
+        }
+    }
+
+    // True from the moment an action is issued until the animator has genuinely settled back into a
+    // standing Idle state. This is what makes IsInIdleState() honest during the transition frames, when
+    // the animator still reports Idle because it has not evaluated the new transition yet.
+    //
+    // It is released INSIDE IsFullyIdleNow when the animator is observed in Idle -- NOT on a state exit.
+    // A state exit also happens when a hit reaction hands off to the knockdown pose, so releasing it
+    // there made a still-down fighter count as settled.
+    private bool _actionInFlight;
+
+    /// <summary>True while an issued action (attack / hit / getup) has not yet reported its clip end.</summary>
+    public bool IsActionInFlight => _actionInFlight;
 
     /// <summary>
     /// Fires a specific attack. index maps to AttackIndex values (1, 3, 5, 6, 7).
@@ -261,21 +541,80 @@ public class CharacterAnimatorBridge : MonoBehaviour
     /// </summary>
     public void Attack(int index)
     {
-        if (!CanAct()) return;
+        EnsureParametersResolved();
+        // A new attack owns the end signal: drop any stale flag from the previous state exit, and mark
+        // the fighter as BUSY so nothing treats it as settled during the transition frames.
+        BeginAction();
+        Alog($"Attack({index}) ENTER (isDead={_isDead}, isKnockedDown={_isKnockedDown}, perClip={_usePerClipTriggers})");
+
+        if (!CanAct())
+        {
+            AlogWarn($"Attack({index}) BLOCKED: CanAct()=false (isDead={_isDead}, isKnockedDown={_isKnockedDown}).");
+            return;
+        }
         if (!IsValidAttackIndex(index))
         {
-            Debug.LogWarning($"{nameof(CharacterAnimatorBridge)} on '{name}': Attack({index}) is not in the light {PoolToString(lightAttackIndices)} or heavy {PoolToString(heavyAttackIndices)} pool.", this);
+            AlogWarn($"Attack({index}) is not in the light {PoolToString(lightAttackIndices)} or heavy {PoolToString(heavyAttackIndices)} pool.");
             return;
         }
 
         // Cooldown guard against accidental double-fire within a single frame.
-        if (Time.time - _lastAttackTime < attackCooldown) return;
+        if (Time.time - _lastAttackTime < attackCooldown)
+        {
+            Alog($"Attack({index}) skipped: within cooldown ({attackCooldown:0.###}s).");
+            return;
+        }
         _lastAttackTime = Time.time;
 
-        if (_hasAttackIndex) animator.SetInteger(_attackIndexHash, index);
+        // Force the locomotion blend to a stop before attacking (harmless when the controller has no
+        // Speed parameter -- the write is simply skipped).
+        if (_hasSpeed) animator.SetFloat(_speedHash, 0f);
+
+        // PER-CLIP mode: the controller has one Trigger per clip. Fire it, falling back to an existing
+        // index if the requested one has no clip on this controller (e.g. a fighter with only
+        // attack1..attack5 but the heavy pool asks for index 6/7).
+        if (_usePerClipTriggers)
+        {
+            int resolved = ResolvePerClipIndex(attackTriggerFormat, index);
+            string triggerName = resolved > 0 ? string.Format(attackTriggerFormat, resolved) : null;
+            if (triggerName != null && FireTriggerByName(triggerName))
+            {
+                if (verboseLogging) Alog($"Attack(index={index} -> clip {resolved}) fired per-clip Trigger '{triggerName}'.");
+            }
+            else
+            {
+                AlogError($"per-clip controller has no usable '{attackTriggerFormat}' trigger. " +
+                          $"Check attackTriggerFormat and the clip trigger names on the controller.");
+            }
+            return;
+        }
+
+        // INDEX mode: AttackIndex (Int) + a shared TriggerAttack.
+        if (!_hasTriggerAttack)
+        {
+            AlogError($"Animator has neither Trigger '{triggerAttackParam}' nor a per-clip '{string.Format(attackTriggerFormat, 1)}' trigger. " +
+                      $"Set the parameter names to match the Animator Controller.");
+            return;
+        }
+
+        if (_hasAttackIndex)
+        {
+            animator.SetInteger(_attackIndexHash, index);
+        }
+        else
+        {
+            AlogError($"cannot set '{attackIndexParam}' (Animator parameter missing or wrong type). " +
+                      $"The AttackIndex will NOT be passed and the attack transition cannot match.");
+        }
         FireTrigger(_hasTriggerAttack, _triggerAttackHash, triggerAttackParam);
 
-        if (verboseLogging) Debug.Log($"[{name}] Attack(index={index})");
+        // PROOF: read the value back from the Animator we are driving. If it does not equal `index`,
+        // the Animator instance we hold is not the one the gameplay code thinks it is (e.g. a damage
+        // sub-object's Animator), which is exactly how the index can appear "not sent" at runtime.
+        int readBack = -999;
+        try { readBack = animator.GetInteger(_attackIndexHash); } catch { }
+        Alog($"Attack(index={index}) fired. AttackIndex readback={readBack} " +
+             $"(animator='{animator.name}', hasTrigger={_hasTriggerAttack}, hasIndex={_hasAttackIndex})");
     }
 
     /// <summary>
@@ -296,9 +635,13 @@ public class CharacterAnimatorBridge : MonoBehaviour
     {
         var weight = ClassifyWeight(animationId);
         int index = PickFromPool(weight == HitWeight.Heavy ? heavyAttackIndices : lightAttackIndices);
+
+        // Always-on trace so a "the attack never fires" report can be pinned to this call site.
+        Alog($"AttackFromAnimationId('{animationId}') weight={weight} -> index={index}");
+
         if (index == 0)
         {
-            Debug.LogWarning($"{nameof(CharacterAnimatorBridge)} on '{name}': no attack variants configured for weight={weight} ('{animationId}').", this);
+            AlogWarn($"no attack variants configured for weight={weight} ('{animationId}').");
             return 0;
         }
         Attack(index);
@@ -328,7 +671,7 @@ public class CharacterAnimatorBridge : MonoBehaviour
 
         if (index == 0)
         {
-            Debug.LogWarning($"{nameof(CharacterAnimatorBridge)} on '{name}': no hit variants configured for weight={weight} ('{animationId}').", this);
+            AlogWarn($"no hit variants configured for weight={weight} ('{animationId}').");
             return 0;
         }
         TakeHit(index, isHeavy);
@@ -345,7 +688,7 @@ public class CharacterAnimatorBridge : MonoBehaviour
     {
         if (attackIndex == 0)
         {
-            Debug.LogWarning($"{nameof(CharacterAnimatorBridge)} on '{name}': TakeHitByAttackIndex called with index 0.", this);
+            AlogWarn("TakeHitByAttackIndex called with index 0.");
             return 0;
         }
 
@@ -376,25 +719,71 @@ public class CharacterAnimatorBridge : MonoBehaviour
     /// <param name="isHeavy">True for heavy/knockdown hits, false for light inline reactions.</param>
     public void TakeHit(int hitIndex, bool isHeavy)
     {
+        EnsureParametersResolved();
         if (_isDead) return; // Death has highest priority; ignore hits once dead.
+
+        // A new hit reaction owns the end signal: drop any stale flag from the previous state exit,
+        // otherwise the queue sees "already finished" and fires the getup before this hit has played.
+        BeginAction();
+
         if (!IsValidHitIndex(hitIndex, isHeavy))
         {
-            Debug.LogWarning($"{nameof(CharacterAnimatorBridge)} on '{name}': TakeHit({hitIndex}, heavy={isHeavy}) is not in the expected hit pool.", this);
+            AlogWarn($"TakeHit({hitIndex}, heavy={isHeavy}) is not in the expected hit pool.");
             return;
         }
 
-        if (_hasHitIndex) animator.SetInteger(_hitIndexHash, hitIndex);
+        // Force locomotion to a stop first: the controller authors hit transitions only from Idle,
+        // so a hit fired while still in Walk would be swallowed (same reason as Attack).
+        if (_hasSpeed) animator.SetFloat(_speedHash, 0f);
+
+        // VFX: play the hit effect every time a hit reaction starts (no-op when none is assigned).
+        //
+        // A HEAVY hit waits `heavyHitEffectDelay` first, so the effect lands on the IMPACT frame of the
+        // heavy reaction rather than on its wind-up. A LIGHT hit fires immediately.
+        if (isHeavy && heavyHitEffectDelay > 0f)
+        {
+            StartCoroutine(TriggerHitEffectDelayed(heavyHitEffectDelay));
+        }
+        else
+        {
+            TriggerHitEffect();
+        }
 
         if (isHeavy)
         {
             // Flag the knockdown for controllers that author a knockdown idle.
             if (_hasIsKnockedDown) animator.SetBool(_isKnockedDownHash, true);
             if (knockdownBlocksActions) _isKnockedDown = true;
+
+            // Remember which heavy hit knocked us down so the getup direction can be derived from it
+            // (hit 5/6 -> GetupType 1, hit 7 -> GetupType 2 by default; see GetupTypeForHitIndex).
+            _pendingKnockdownHitIndex = hitIndex;
         }
 
+        // PER-CLIP mode: one Trigger per clip (hit1..hit5), with the same fallback as attacks.
+        if (_usePerClipTriggers)
+        {
+            int resolved = ResolvePerClipIndex(hitTriggerFormat, hitIndex);
+            string triggerName = resolved > 0 ? string.Format(hitTriggerFormat, resolved) : null;
+            if (triggerName != null && FireTriggerByName(triggerName))
+            {
+                if (verboseLogging) Alog($"TakeHit(index={hitIndex} -> clip {resolved}, heavy={isHeavy}) fired per-clip Trigger '{triggerName}'.");
+            }
+            else
+            {
+                AlogError($"per-clip controller has no usable '{hitTriggerFormat}' trigger. " +
+                          $"Check hitTriggerFormat and the clip trigger names on the controller.");
+            }
+            return;
+        }
+
+        // INDEX mode.
+        if (_hasHitIndex) animator.SetInteger(_hitIndexHash, hitIndex);
         FireTrigger(_hasTriggerHit, _triggerHitHash, triggerHitParam);
 
-        if (verboseLogging) Debug.Log($"[{name}] TakeHit(index={hitIndex}, heavy={isHeavy})");
+        int hitReadBack = -999;
+        try { hitReadBack = animator.GetInteger(_hitIndexHash); } catch { }
+        Alog($"TakeHit(index={hitIndex}, heavy={isHeavy}) fired. HitIndex readback={hitReadBack} (animator='{animator.name}')");
     }
 
     /// <summary>
@@ -429,6 +818,52 @@ public class CharacterAnimatorBridge : MonoBehaviour
     }
 
     /// <summary>
+    /// Maps a knockdown-producing HitIndex to the getup direction the controller should play.
+    /// By default hit 5/6 get up with GetupType 1 (Combo_Getup01 / Back) and hit 7 with GetupType 2
+    /// (Combo_Getup02 / Front). The mapping is configurable via backGetupHitIndices/frontGetupHitIndices.
+    /// Returns the Inspector default getupType when no rule matches.
+    /// </summary>
+    public int GetupTypeForHitIndex(int hitIndex)
+    {
+        if (PoolContains(frontGetupHitIndices, hitIndex)) return (int)GetupDirection.Front; // 2
+        if (PoolContains(backGetupHitIndices, hitIndex)) return (int)GetupDirection.Back;   // 1
+        return defaultGetupType;
+    }
+
+    // TEMPORARY: force every getup to type 1 (Back / Combo_Getup01). Some knockdown hits (5/6/7) were
+    // not reliably leaving the hit state, so the fight could get stuck in a hit pose and never get
+    // back to Idle. Until the per-hit getup transitions are verified, always use type 1.
+    [Tooltip("TEMP: when true, ALL getups use forceGetupType (default 1) instead of the per-hit mapping, so a fighter can never get stuck in a hit pose.")]
+    [SerializeField] private bool forceGetupType = true;
+    [Tooltip("GetupType used while forceGetupType is on. 1 = Back (Combo_Getup01).")]
+    [SerializeField] private int forcedGetupTypeValue = 1;
+
+    /// <summary>
+    /// Performs the getup that matches the heavy hit which knocked this fighter down.
+    ///
+    /// TEMPORARY BEHAVIOUR: while <see cref="forceGetupType"/> is on (the default), every getup uses
+    /// <see cref="forcedGetupTypeValue"/> (1 / Back) regardless of the knockdown hit, so the fighter
+    /// always leaves the hit pose and returns to Idle. Turn it off to restore the per-hit mapping
+    /// (hit 5/6 -> type 1, hit 7 -> type 2).
+    /// </summary>
+    public void GetupFromKnockdown()
+    {
+        int type;
+        if (forceGetupType)
+        {
+            type = forcedGetupTypeValue;
+        }
+        else
+        {
+            type = _pendingKnockdownHitIndex > 0
+                ? GetupTypeForHitIndex(_pendingKnockdownHitIndex)
+                : defaultGetupType;
+        }
+        if (verboseLogging) Alog($"GetupFromKnockdown -> type={type} (forced={forceGetupType}, knockdown hit={_pendingKnockdownHitIndex})");
+        Getup(type);
+    }
+
+    /// <summary>
     /// Explicitly forces the knockdown state without a specific hit reaction
     /// (useful if a knockdown is triggered by something other than a hit event).
     /// </summary>
@@ -437,7 +872,7 @@ public class CharacterAnimatorBridge : MonoBehaviour
         if (_isDead) return;
         if (knockdownBlocksActions) _isKnockedDown = true;
         if (_hasIsKnockedDown) animator.SetBool(_isKnockedDownHash, true);
-        if (verboseLogging) Debug.Log($"[{name}] Knockdown()");
+        if (verboseLogging) Alog("Knockdown()");
     }
 
     /// <summary>
@@ -449,41 +884,88 @@ public class CharacterAnimatorBridge : MonoBehaviour
     /// </summary>
     public void Getup(int type)
     {
+        EnsureParametersResolved();
         if (_isDead) return;
+
+        // The getup owns the end signal from now on.
+        BeginAction();
+
         if (type != (int)GetupDirection.Back && type != (int)GetupDirection.Front)
         {
-            Debug.LogWarning($"{nameof(CharacterAnimatorBridge)} on '{name}': Getup({type}) must be 1 (Back) or 2 (Front).", this);
+            AlogWarn($"Getup({type}) must be 1 (Back) or 2 (Front).");
+            return;
+        }
+        if (!_hasTriggerGetup)
+        {
+            // Per-clip controllers (e.g. Frank_*_Master) have no knockdown/getup graph: their hit
+            // clips return to Idle on their own, so a getup request is simply a no-op here. Do NOT
+            // log an error for them, or every heavy hit would spam the console.
+            if (_usePerClipTriggers)
+            {
+                if (verboseLogging) Alog($"Getup(type={type}) ignored: per-clip controller has no '{triggerGetupParam}'.");
+                return;
+            }
+            AlogError($"Animator has no Trigger '{triggerGetupParam}'. Set the parameter name to match the Animator Controller.");
             return;
         }
 
         // Record the request so the per-frame retry can re-assert it if the controller does not
         // react to the first trigger edge (see the retry note on _getupPending above).
+        // NOTE: a NEW getup resets the re-fire window; a repeated getup for an already-pending request
+        // does NOT (otherwise a caller re-issuing getup every frame would keep the window open forever).
+        if (!_getupPending)
+        {
+            _getupCallCount = 0;
+            _loggedWindowExpired = false;
+            _getupRequestTime = Time.time;
+        }
+        _getupCallCount++;
         _getupPending = true;
         _pendingGetupType = type;
-        _getupRequestTime = Time.time;
 
         ApplyGetup();
+
+        if (verboseLogging) Alog($"Getup(type={type}) fired (TriggerGetup={_hasTriggerGetup}, GetupType={_hasGetupType}, IsKnockedDownParam={_hasIsKnockedDown}).");
     }
 
     /// <summary>
-    /// Applies (or re-applies) the pending getup: writes GetupType, clears IsKnockedDown and
-    /// fires TriggerGetup. Split out of <see cref="Getup"/> so the Update() retry can reuse it.
+    /// Fires the getup trigger and LOWERS IsKnockedDown.
+    ///
+    /// IMPORTANT (why the flag is cleared HERE, not kept up):
+    /// The shipped controller's getup transitions (Combo_Getup01 / Combo_Getup02) are authored with
+    /// conditions on TriggerGetup + GetupType ONLY -- they are NOT gated on IsKnockedDown. Nothing in
+    /// the animator graph ever drives IsKnockedDown back to false, so if the script kept the flag up
+    /// until "the animator reports not knocked down", that condition could never become true and the
+    /// getup would deadlock (the character stayed in the hit/KB pose forever).
+    /// Clearing the flag together with firing the trigger mirrors reality -- the fighter is standing
+    /// up right now -- and lets Update() judge completion from the ACTUAL animator state instead.
     /// </summary>
     private void ApplyGetup()
     {
+        // Stop locomotion so the getup transition is not blocked by a lingering Walk/Run blend.
+        if (_hasSpeed) animator.SetFloat(_speedHash, 0f);
+
+        // Select the getup direction first, then fire the trigger.
         if (_hasGetupType) animator.SetInteger(_getupTypeHash, _pendingGetupType);
 
-        // Leave the knockdown state and fire the getup trigger in a safe order:
-        // set the target state selector first, then lower the knockdown flag, then trigger.
-        _isKnockedDown = false;
+        // Lower the knockdown flag BEFORE firing so any state/transition that reads it is already
+        // consistent, and so Update()'s completion check below can no longer deadlock.
         if (_hasIsKnockedDown) animator.SetBool(_isKnockedDownHash, false);
+        _isKnockedDown = false;
+
         FireTrigger(_hasTriggerGetup, _triggerGetupHash, triggerGetupParam);
     }
 
     /// <summary>
-    /// Re-fires a pending getup until the controller actually left the knocked-down state.
-    /// The retry exists because a single trigger edge can be consumed by the controller's
-    /// HasExitTime-authored getup transitions before they are evaluated.
+    /// Drives the pending getup to completion, frame by frame:
+    ///   1) re-assert TriggerGetup while the animator has not reacted yet,
+    ///   2) watch the ACTUAL animator state (not a bool the graph never clears),
+    ///   3) report completion once the getup clip has played and the fighter is back in an idle pose.
+    ///
+    /// Completion is judged from state names so it cannot deadlock: we finish when EITHER
+    ///   - a getup clip (Combo_Getup*) has been seen AND/OR the animator is back in an idle pose, or
+    ///   - the animator has left the hit/knockdown pose and settled on something other than the
+    ///     state we started from.
     /// </summary>
     private void Update()
     {
@@ -492,33 +974,149 @@ public class CharacterAnimatorBridge : MonoBehaviour
         // Safety valve: never spin forever if the controller has no getup states authored.
         if (Time.time - _getupRequestTime > getupRetryTimeout)
         {
+            // Give up on the trigger but still release the knockdown flag so the fighter is not
+            // locked out of future actions.
             _getupPending = false;
+            _sawGetupState = false;
+            _getupCallCount = 0;
+            _loggedWindowExpired = false;
+            _isKnockedDown = false;
+            if (_hasIsKnockedDown) animator.SetBool(_isKnockedDownHash, false);
             if (verboseLogging)
-                Debug.LogWarning($"[{name}] Getup(type={_pendingGetupType}) was never consumed by the controller within {getupRetryTimeout:0.##}s; giving up.", this);
+                AlogWarn($"Getup(type={_pendingGetupType}) was never consumed by the controller within {getupRetryTimeout:0.##}s; giving up and clearing knockdown.");
             return;
         }
 
-        // A getup is considered consumed once the knockdown flag has been lowered AND the animator
-        // has moved off the knocked-down pose. We re-assert while IsKnockedDown still reads true.
-        bool stillDown = _hasIsKnockedDown && animator.GetBool(_isKnockedDownHash);
-        if (!stillDown)
+        // Inspect the real base-layer state. This is the authoritative signal -- the animator graph
+        // never writes IsKnockedDown, so completion must be derived from states.
+        bool inGetupClip = false;
+        bool inKnockdownPose = false;
+        bool inIdlePose = false;
+        bool inHitPose = false;
+        try
         {
-            _getupPending = false;
-            if (verboseLogging) Debug.Log($"[{name}] Getup(type={_pendingGetupType}) applied.");
+            var info = animator.GetCurrentAnimatorStateInfo(0);
+            inGetupClip = info.IsName("Combo_Getup01") || info.IsName("Combo_Getup02");
+            inKnockdownPose = info.IsName("KB_Idle_1");
+            inIdlePose = IsInIdleState();
+            // Recognise the authored hit-reaction poses (hit3 / hit5 / hit_combo_weapon*) so we can tell
+            // "still on the ground in a hit pose" from "has got back up into a normal state".
+            inHitPose = info.IsName("hit3") || info.IsName("hit5") ||
+                        info.IsName("hit_combo_weapon 1") || info.IsName("hit_combo_weapon(2)") ||
+                        info.IsName("hit_combo_weapon(4)") || info.IsName("hit_combo_weapon(5)") ||
+                        info.IsName("hit_combo_weapon(6)") || info.IsName("hit_combo_weapon(7)") ||
+                        info.IsName("hit_combo_weapon(8)") || info.IsName("hit_combo_weapon(9)");
+        }
+        catch { }
 
-            // The victim is back on its feet; its facing may now differ from the knockdown pose,
-            // so anyone tracking a position relative to it (e.g. the attack spot) must recompute.
-            try { GetupCompleted?.Invoke(); }
-            catch (Exception ex) { Debug.LogWarning($"[{name}] GetupCompleted handler threw: {ex}", this); }
-            return;
+        if (inGetupClip) _sawGetupState = true;
+
+        if (_sawGetupState)
+        {
+            // The getup clip ran; it is done once the animator has left it (settled on idle or any
+            // other state).
+            if (!inGetupClip)
+            {
+                CompleteGetup();
+                return;
+            }
+        }
+        else if (!inHitPose && !inKnockdownPose && !inGetupClip)
+        {
+            // The fighter is NOT parked in any hit / knockdown pose and no getup clip is playing, so it
+            // is back on its feet. This is the important escape hatch: the shipped controller often
+            // parks in a hit_combo_weapon pose (NOT KB_Idle_1) after a heavy hit, so requiring an exact
+            // "Idle" name left the getup pending until the 1.5s timeout every time -- the original stall.
+            //
+            // A short grace keeps us from completing on the single frame between firing the trigger and
+            // the animator actually entering the getup clip.
+            if (_getupElapsed > getupSettleGrace || inIdlePose)
+            {
+                CompleteGetup();
+                return;
+            }
         }
 
-        if (verboseLogging) Debug.Log($"[{name}] Getup(type={_pendingGetupType}) not yet applied; re-firing TriggerGetup.");
-        ApplyGetup();
+        // Re-assert the trigger ONLY during a short initial window. The shipped controller consumes the
+        // trigger within a frame or two; continuing to re-fire after that is what produced the long spam
+        // of "not yet applied" logs and (because the trigger is reset+set every frame) actively PREVENTED
+        // the getup transition from ever being evaluated. Once the window has passed we simply watch the
+        // state and let the normal idle-settle branch above finish the job.
+        if (!_sawGetupState && _getupElapsed <= getupRetryWindow)
+        {
+            if (verboseLogging)
+            {
+                string stateName = "?";
+                try { stateName = animator.GetCurrentAnimatorStateInfo(0).IsName("") ? "?" : DescribeCurrentState(); }
+                catch { }
+                Alog($"Getup(type={_pendingGetupType}) not yet applied (inKnockdownPose={inKnockdownPose}, state='{stateName}', " +
+                     $"elapsed={_getupElapsed:0.###}/{getupRetryWindow:0.###}, timeScale={Time.timeScale:0.##}, calls={_getupCallCount}); re-firing TriggerGetup.");
+            }
+            ApplyGetup();
+        }
+        else if (!_sawGetupState && verboseLogging && !_loggedWindowExpired)
+        {
+            _loggedWindowExpired = true;
+            Alog($"Getup(type={_pendingGetupType}) re-fire window EXPIRED after {_getupElapsed:0.###}s " +
+                 $"(window={getupRetryWindow:0.###}); now passively watching for the getup clip / idle settle. " +
+                 $"calls={_getupCallCount}, timeScale={Time.timeScale:0.##}");
+        }
+    }
+
+    // Number of times Getup() has been entered since the last completion. A value >1 means something is
+    // re-issuing the getup every frame, which would keep resetting the re-fire window (the observed spam).
+    private int _getupCallCount;
+    private bool _loggedWindowExpired;
+
+    /// <summary>Human-readable name of the base-layer state currently playing (diagnostics only).</summary>
+    private string DescribeCurrentState()
+    {
+        try
+        {
+            var info = animator.GetCurrentAnimatorStateInfo(0);
+            // StateInfo has no name; match against the known names so the log is readable.
+            foreach (var n in KnownStateNames)
+                if (info.IsName(n)) return n;
+
+            // Also probe the locomotion names configured on this bridge.
+            if (info.IsName(walkStateName)) return walkStateName;
+            if (info.IsName(runStateName)) return runStateName;
+            if (info.IsName(idleStateName)) return idleStateName;
+
+            return $"(hash={info.fullPathHash})";
+        }
+        catch { return "?"; }
+    }
+
+    // Seconds during which TriggerGetup is re-asserted before we switch to passive state-watching.
+    // Kept short on purpose: re-firing the trigger every frame resets the pending edge, which can stop
+    // the transition from ever firing (the 2-second stall seen in the logs).
+    [Tooltip("Seconds to keep re-asserting TriggerGetup before switching to passive state-watching.")]
+    [SerializeField] private float getupRetryWindow = 0.3f;
+
+    /// <summary>
+    /// Marks the pending getup as applied: clears the knockdown flags, stops watching, and raises
+    /// <see cref="GetupCompleted"/> so followers recompute anything that depended on the downed pose.
+    /// </summary>
+    private void CompleteGetup()
+    {
+        _getupPending = false;
+        _sawGetupState = false;
+        _getupCallCount = 0;
+        _loggedWindowExpired = false;
+        _isKnockedDown = false;
+        EndAction();   // the getup is finished: the fighter counts as settled again
+        if (_hasIsKnockedDown) animator.SetBool(_isKnockedDownHash, false);
+        if (verboseLogging) Alog($"Getup(type={_pendingGetupType}) applied.");
+
+        // The victim is back on its feet; its facing may now differ from the knockdown pose,
+        // so anyone tracking a position relative to it (e.g. the attack spot) must recompute.
+        try { GetupCompleted?.Invoke(); }
+        catch (Exception ex) { AlogWarn($"GetupCompleted handler threw: {ex}"); }
     }
 
     /// <summary>
-    /// Convenience overload for the getup direction enum.
+    /// Convenience overload for the getup direction enum (Back / Front).
     /// </summary>
     public void Getup(GetupDirection direction)
     {
@@ -532,7 +1130,10 @@ public class CharacterAnimatorBridge : MonoBehaviour
     /// </summary>
     public void Die()
     {
+        EnsureParametersResolved();
         if (_isDead) return;
+        ClearAnimationEndSignal();
+        _actionInFlight = false;   // death is terminal; nothing is "settling" any more
         _isDead = true;
         _isKnockedDown = false;
 
@@ -543,10 +1144,66 @@ public class CharacterAnimatorBridge : MonoBehaviour
         if (_hasIsKnockedDown) animator.SetBool(_isKnockedDownHash, false);
         if (_hasSpeed) animator.SetFloat(_speedHash, 0f);
 
-        // Death flag last: this is what the Any-State -> KB_TopKO transition listens for.
+        // PER-CLIP mode: the controller declares 'die' as a Bool (or Trigger) rather than IsDead.
+        if (_usePerClipTriggers)
+        {
+            bool isBool = HasParameter(perClipDieName, Animator.StringToHash(perClipDieName), AnimatorControllerParameterType.Bool);
+            bool isTrigger = HasTriggerByName(perClipDieName);
+            if (isBool) animator.SetBool(Animator.StringToHash(perClipDieName), true);
+            else if (isTrigger) FireTriggerByName(perClipDieName);
+            else if (verboseLogging) AlogWarn($"per-clip controller has no '{perClipDieName}' parameter; death pose not triggered.");
+
+            string kind = isBool ? "bool" : (isTrigger ? "trigger" : "missing");
+            if (verboseLogging) Alog($"Die() (per-clip '{perClipDieName}' {kind})");
+            return;
+        }
+
+        // INDEX mode: death flag last -- this is what the Any-State -> KB_TopKO transition listens for.
         if (_hasIsDead) animator.SetBool(_isDeadHash, true);
 
-        if (verboseLogging) Debug.Log($"[{name}] Die()");
+        if (verboseLogging) Alog("Die()");
+    }
+
+    /// <summary>
+    /// Plays the assigned hit VFX. Called from <see cref="TakeHit"/> every time a hit reaction starts,
+    /// so the effect fires on the frame the hit is triggered. No-op when no effect is assigned.
+    /// </summary>
+    public void TriggerHitEffect()
+    {
+        if (hitEffect == null) return;
+
+        try
+        {
+            // Play(true) restarts the system even when it is already emitting (a heavy combo can land
+            // several hits while one burst is still alive), and re-enables the GameObject if a previous
+            // stop disabled it.
+            hitEffect.Play(true);
+
+            if (verboseLogging)
+                Alog($"TriggerHitEffect() played '{hitEffect.name}'.");
+        }
+        catch (Exception ex)
+        {
+            AlogWarn($"TriggerHitEffect() failed: {ex}");
+        }
+    }
+
+    /// <summary>
+    /// Plays the hit VFX after <paramref name="delay"/> seconds. Used for HEAVY hits so the effect lands
+    /// on the reaction's impact frame instead of its wind-up.
+    /// </summary>
+    /// <remarks>
+    /// The delay is driven by a coroutine on THIS component. If the fighter dies during the delay the
+    /// effect is skipped, so a lethal heavy hit does not spit a hit spark out of the corpse.
+    /// </remarks>
+    private IEnumerator TriggerHitEffectDelayed(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        // The fighter may have died (or the object been disabled) while we waited.
+        if (_isDead || !isActiveAndEnabled) yield break;
+
+        TriggerHitEffect();
     }
 
     /// <summary>
@@ -565,7 +1222,7 @@ public class CharacterAnimatorBridge : MonoBehaviour
         if (_hasIsKnockedDown) animator.SetBool(_isKnockedDownHash, false);
         if (_hasSpeed) animator.SetFloat(_speedHash, 0f);
 
-        if (verboseLogging) Debug.Log($"[{name}] ResetToIdle()");
+        if (verboseLogging) Alog("ResetToIdle()");
     }
 
     // ------------------------------------------------------------------
@@ -596,8 +1253,8 @@ public class CharacterAnimatorBridge : MonoBehaviour
     [SerializeField] private float fallbackAnimationDuration = 0.8f;
     [Tooltip("Extra padding (seconds) added on top of an animation's length before the queue advances.")]
     [SerializeField] private float animationDurationPadding = 0.05f;
-    [Tooltip("Maximum seconds the queue will wait for a single animation before forcing the next event.")]
-    [SerializeField] private float maxAnimationWait = 5f;
+    [Tooltip("Maximum seconds the queue will wait for a single animation before forcing the next event. Must exceed the longest authored clip (heavy hits are ~6s here).")]
+    [SerializeField] private float maxAnimationWait = 12f;
 
     /// <summary>
     /// Attempts to read the duration (seconds) of the animation that is currently playing on the
@@ -609,12 +1266,55 @@ public class CharacterAnimatorBridge : MonoBehaviour
         if (animator == null || animator.runtimeAnimatorController == null) return -1f;
         try
         {
+            // IMPORTANT: right after firing a trigger the animator is still in the PREVIOUS state
+            // (usually Idle) until the transition is evaluated -- reporting THAT state's length is how
+            // a 5-6s heavy hit ended up being measured as ~1.0s (the Idle clip length).
+            //
+            // Prefer the length of the ACTION state we are actually watching, and fall back to the
+            // current state only when we have no better information.
+            if (_watching && _sawActionState && _actionStateHash != 0)
+            {
+                var watched = animator.GetCurrentAnimatorStateInfo(0);
+                if (watched.fullPathHash == _actionStateHash && watched.length > 0f)
+                    return watched.length;
+            }
+
             var info = animator.GetCurrentAnimatorStateInfo(0);
             if (info.length > 0f && !float.IsNaN(info.length) && !float.IsInfinity(info.length))
                 return info.length;
         }
         catch { }
         return -1f;
+    }
+
+    /// <summary>
+    /// True while the currently-watched action clip is still playing. Unlike
+    /// <see cref="IsAnimationFinished"/> this is a pure query that does not mutate the watch state, so
+    /// callers can poll it repeatedly (e.g. to hold a getup until the hit animation has run through).
+    /// Returns false when nothing is being watched.
+    /// </summary>
+    public bool IsActionPlaying()
+    {
+        if (animator == null || !_watching) return false;
+
+        // AUTHORITATIVE: AnimationEndAction already reported the watched state exiting -> not playing.
+        if (_animationEndedSignal) return false;
+
+        try
+        {
+            var info = animator.GetCurrentAnimatorStateInfo(0);
+
+            // The action state has not been entered yet -> it is about to start, so it IS "playing".
+            if (!_sawActionState) return true;
+
+            // Still on the action state and not finished yet -> playing.
+            if (info.fullPathHash == _actionStateHash)
+                return info.normalizedTime < 1f;
+
+            // Moved to a different state -> the action is over.
+            return false;
+        }
+        catch { return false; }
     }
 
     /// <summary>
@@ -632,45 +1332,157 @@ public class CharacterAnimatorBridge : MonoBehaviour
 
     // ---- Precise completion tracking (for the sequential event queue) ----
 
-    // Hash of the state that was playing when we last started watching for completion.
-    private int _watchedStateHash;
+    // Snapshot of the state that was playing when we started watching, plus a flag for whether the
+    // action's own state has actually been ENTERED yet. Right after firing a trigger the transition
+    // may not have been evaluated, so the "current" state is still the previous one (e.g. Idle).
+    // Without the _sawActionState gate, IsAnimationFinished() would report "finished" on the very
+    // next frame (state changed away from the snapshot) and the queue would cut the clip off early.
+    private int _watchedStateHash;      // state playing when watching began (usually the pre-action state)
+    private int _actionStateHash;       // the state we are actually waiting to see and finish
+    private bool _sawActionState;
     private bool _watching;
 
     /// <summary>
-    /// Begins watching the currently-playing animation so <see cref="IsAnimationFinished"/> can
-    /// report when it completes. Call this right AFTER issuing the animation command; the queue
-    /// then polls IsAnimationFinished() each frame to advance as soon as the clip ends.
+    /// Begins watching for the animation that is ABOUT to be triggered. Call this right AFTER
+    /// issuing the animation command. Because the controller may not have evaluated the transition
+    /// yet, this does not assume the action state is already current: it waits until the regular
+    /// (looping/locomotion) state has been left AND has then played through before reporting done.
     /// </summary>
     public void BeginWatchCurrentAnimation()
     {
         if (animator == null) { _watching = false; return; }
         _watchedStateHash = animator.GetCurrentAnimatorStateInfo(0).fullPathHash;
+        _actionStateHash = 0;
+        _sawActionState = false;
         _watching = true;
+
+        // A new action owns the end signal from now on.
+        _animationEndedSignal = false;
+        _hasEnteredActionStateViaSignal = false;
+    }
+
+    // ------------------------------------------------------------------
+    // Authoritative animation-end signal (driven by AnimationEndAction)
+    // ------------------------------------------------------------------
+    // Set by the AnimationEndAction StateMachineBehaviour that is attached to the attack / hit / getup
+    // states. This is the REAL end of the clip, so the queue can advance on an event instead of
+    // guessing a duration.
+    private bool _animationEndedSignal;
+    private bool _hasEnteredActionStateViaSignal;
+
+    /// <summary>
+    /// Called by <see cref="AnimationEndAction"/> when a state is ENTERED. Lets the bridge tell "the
+    /// action has not started yet" apart from "the action has not been watched yet", which is what
+    /// makes the end signal reliable.
+    /// </summary>
+    public void NotifyAnimationStateEntered(int stateHash)
+    {
+        _hasEnteredActionStateViaSignal = true;
+        _animationEndedSignal = false;
+        if (_watching) _sawActionState = true;
     }
 
     /// <summary>
-    /// True once the watched animation has finished. Completion means either:
-    ///   - the watched state's normalizedTime has reached 1 (clip played through), OR
-    ///   - the animator has transitioned away to a different state.
+    /// Called by <see cref="AnimationEndAction"/> when a state EXITS. This is the authoritative
+    /// "the clip is over" edge that callers should wait on.
+    /// </summary>
+    public void NotifyAnimationStateExited(int stateHash)
+    {
+        _animationEndedSignal = true;
+
+        // NOTE: we deliberately do NOT clear _actionInFlight here. This fires on EVERY state exit --
+        // including the hit state exiting into the KNOCKDOWN pose -- so clearing it here made a
+        // knocked-down fighter report "fully idle" while it was still lying on the ground, which is how
+        // the walk-home / camera recentre yanked it to the middle mid-collapse. The flag is now cleared
+        // lazily in IsFullyIdleNow, once the animator really lands in a standing idle state.
+
+        if (verboseLogging)
+            Alog($"animation-end signal set (state {stateHash}).");
+    }
+
+    /// <summary>
+    /// Clears the pending animation-end signal because a NEW action is about to be fired. MUST be called
+    /// every time an action is issued (attack / hit / getup / die).
+    ///
+    /// WHY: the signal is a one-shot flag. Once a state exits it stays true until something clears it.
+    /// Without clearing here, the LAST action's exit was still being reported as "finished", so the
+    /// queue's post-hit hold broke out instantly (held 0.00s) and the getup fired while the fresh hit
+    /// reaction had not even started -- which is the "fighter lies down and never gets up" symptom.
+    /// </summary>
+    public void ClearAnimationEndSignal()
+    {
+        _animationEndedSignal = false;
+        _hasEnteredActionStateViaSignal = false;
+    }
+
+    /// <summary>
+    /// Marks the start of an action we issued (attack / hit / getup). From now until the end signal
+    /// arrives, IsInIdleState() reports false so nothing treats the fighter as settled mid-clip.
+    /// </summary>
+    private void BeginAction()
+    {
+        _actionInFlight = true;
+        ClearAnimationEndSignal();
+    }
+
+    /// <summary>
+    /// Marks the end of the in-flight action. Called as soon as the state exits (the end signal) and
+    /// from the getup completion path.
+    /// </summary>
+    private void EndAction()
+    {
+        _actionInFlight = false;
+    }
+
+    /// <summary>
+    /// True once the state we were watching has actually EXITED (reported by AnimationEndAction), i.e.
+    /// the clip genuinely finished or was interrupted. This is the precise signal; prefer it over
+    /// timing. Returns false when nothing is being watched.
+    /// </summary>
+    public bool HasAnimationEndSignal => _watching && _animationEndedSignal;
+
+    /// <summary>
+    /// True once the watched action animation has finished. Semantics:
+    ///   - Until the animator leaves the state we started watching (the pre-action/Idle state), we are
+    ///     still waiting for the action to begin -> NOT finished. This is what stops a clip from being
+    ///     cut off by an early "finished" report the frame after the trigger is fired.
+    ///   - Once the action state is entered, it is finished when its normalizedTime reaches 1, or when
+    ///     the animator transitions away to yet another state.
     /// Returns true immediately when not watching (so the queue never stalls).
     /// </summary>
     public bool IsAnimationFinished()
     {
         if (animator == null || !_watching) return true;
+
+        // AUTHORITATIVE: AnimationEndAction reported the watched state exiting. This is the real end of
+        // the clip, reported as an event -- no guessing from normalizedTime or durations.
+        if (_animationEndedSignal) return true;
+
         try
         {
             var info = animator.GetCurrentAnimatorStateInfo(0);
 
-            // State changed -> the watched animation is no longer current, so it's done.
-            if (info.fullPathHash != _watchedStateHash) return true;
+            // Still on the pre-action state -> the action has not started yet; keep waiting.
+            if (!_sawActionState)
+            {
+                if (info.fullPathHash == _watchedStateHash) return false;
 
-            // Still the same state: finished when it has played through (or is looping past 1).
-            if (info.normalizedTime >= 1f) return true;
+                // The action state has just been entered: remember it and start measuring it.
+                _sawActionState = true;
+                _actionStateHash = info.fullPathHash;
+                return false;
+            }
 
-            // A non-looping clip that has been interrupted also counts as done.
-            if (!info.loop && info.normalizedTime >= 0.99f) return true;
+            // Action state finished naturally.
+            if (info.fullPathHash == _actionStateHash)
+            {
+                if (info.normalizedTime >= 1f) return true;
+                if (!info.loop && info.normalizedTime >= 0.99f) return true;
+                return false;
+            }
 
-            return false;
+            // Transitioned away from the action state -> done.
+            return true;
         }
         catch
         {
@@ -711,14 +1523,46 @@ public class CharacterAnimatorBridge : MonoBehaviour
         animator.SetTrigger(hash);
     }
 
-    private bool HasParameter(int hash, AnimatorControllerParameterType type)
+    /// <summary>
+    /// Fires a Trigger by name (per-clip controllers). Returns false when no Trigger with that exact
+    /// name exists, so the caller can report a clear error instead of silently doing nothing.
+    /// </summary>
+    private bool FireTriggerByName(string triggerName)
+    {
+        if (animator == null || string.IsNullOrEmpty(triggerName)) return false;
+        if (!HasTriggerByName(triggerName)) return false;
+
+        int hash = Animator.StringToHash(triggerName);
+        animator.ResetTrigger(hash);
+        animator.SetTrigger(hash);
+        return true;
+    }
+
+    /// <summary>
+    /// True when the Animator declares a parameter with the given name and type.
+    ///
+    /// Matching is done by NAME (not by hash) because comparing hashes is brittle: if the declared
+    /// type differs from what we expect, a hash+type check silently fails and the parameter is never
+    /// written -- which is exactly how an AttackIndex can end up never being sent at runtime.
+    /// A name match with the WRONG type is reported (once) so the mismatch is obvious in the console.
+    /// </summary>
+    private bool HasParameter(string paramName, int hash, AnimatorControllerParameterType type)
     {
         if (animator == null) return false;
         var parameters = animator.parameters;
         for (int i = 0; i < parameters.Length; i++)
         {
-            if (parameters[i].nameHash == hash && parameters[i].type == type)
-                return true;
+            var p = parameters[i];
+            bool nameMatch = p.nameHash == hash ||
+                             string.Equals(p.name, paramName, StringComparison.Ordinal);
+            if (!nameMatch) continue;
+
+            if (p.type == type) return true;
+
+            AlogWarn(
+                $"Animator parameter '{p.name}' is {p.type} " +
+                $"but '{type}' was expected. Fix the parameter type in the Animator Controller (the value will not be written until then).");
+            return false;
         }
         return false;
     }
@@ -785,12 +1629,12 @@ public class CharacterAnimatorBridge : MonoBehaviour
     {
         if (animator == null || animator.runtimeAnimatorController == null)
         {
-            Debug.LogWarning($"{nameof(CharacterAnimatorBridge)} on '{name}': no Animator controller assigned.", this);
+            AlogWarn("no Animator controller assigned.");
             return;
         }
 
         var sb = new System.Text.StringBuilder();
-        sb.AppendLine($"{nameof(CharacterAnimatorBridge)} on '{name}' -- controller states:");
+        sb.AppendLine($"{LogTag} [{name}] controller states:");
         var controller = animator.runtimeAnimatorController as UnityEditor.Animations.AnimatorController;
         if (controller != null)
         {

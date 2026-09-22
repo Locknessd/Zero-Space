@@ -87,6 +87,12 @@ public class MemeBattleUI : MonoBehaviour
     [Tooltip("Verbose UI logging (debug only).")]
     public bool verboseLogging = false;
 
+    [Header("Speech Bubble Billboard")]
+    [Tooltip("Make the world-space speech bubbles (and meme result popups) always FACE the camera, so the text stays readable while the camera orbits in 3D.")]
+    public bool billboardSpeechBubbles = true;
+    [Tooltip("Extra yaw (degrees) applied after facing the camera. 0 = look straight at it; 180 flips the text if it reads backwards.")]
+    public float bubbleYawOffset = 0f;
+
     // ------------------------------------------------------------------
     // Runtime state
     // ------------------------------------------------------------------
@@ -127,6 +133,73 @@ public class MemeBattleUI : MonoBehaviour
     private void Update()
     {
         UpdateTimer();
+        UpdateSpeechBubbleBillboards();
+    }
+
+    /// <summary>
+    /// Makes each fighter's world-space speech bubble (and meme result popup) FACE the main camera.
+    /// The bubbles live on world-space canvases above the characters, so once the camera orbits in 3D
+    /// they would otherwise be seen edge-on / mirrored. Rotating them to match the camera keeps the
+    /// text readable from any angle.
+    /// </summary>
+    private void UpdateSpeechBubbleBillboards()
+    {
+        if (!billboardSpeechBubbles) return;
+
+        Camera cam = Camera.main;
+        if (cam == null) return;
+
+        // NOTE: speechBubbleText is intentionally NOT billboarded -- it is kept at rotation 0 as
+        // authored in the scene. Only the meme-result popup is turned, because that one is a separate
+        // world-space element that reads mirrored / edge-on while the camera orbits.
+        BillboardTowardCamera(left != null ? left.memeResultObject : null, cam);
+        BillboardTowardCamera(right != null ? right.memeResultObject : null, cam);
+    }
+
+    /// <summary>
+    /// Same facing correction applied to a whole GameObject's transform (used for the meme-result
+    /// popup). No-op when the object or camera is missing.
+    /// </summary>
+    private void BillboardTowardCamera(GameObject target, Camera cam)
+    {
+        if (target == null || cam == null) return;
+        BillboardTowardCamera(target.transform, cam);
+    }
+
+    /// <summary>
+    /// Rotates the transform owning <paramref name="text"/> so it FACES the camera (its forward axis
+    /// points from the bubble toward the camera), plus the configured yaw offset.
+    ///
+    /// NOTE ON THE MATH: this must be LookRotation(cameraPos - bubblePos), NOT a copy of the camera's
+    /// rotation. Copying the camera rotation points the canvas' forward AWAY from the camera, which
+    /// makes a world-space Canvas render its text MIRRORED ("-200" appeared as "002-").
+    /// No-op when the text or camera is missing.
+    /// </summary>
+    private void BillboardTowardCamera(Text text, Camera cam)
+    {
+        if (text == null || cam == null) return;
+        BillboardTowardCamera(text.transform, cam);
+    }
+
+    /// <summary>
+    /// Core facing correction: aims <paramref name="t"/>'s forward axis at the camera so its front face
+    /// (and therefore its text) is readable from the current camera angle. Shared by the speech bubble
+    /// and the meme-result popup.
+    /// </summary>
+    private void BillboardTowardCamera(Transform t, Camera cam)
+    {
+        if (t == null || cam == null) return;
+
+        // Direction from the bubble TO the camera. A world-space canvas shows its front face toward its
+        // own forward axis, so aiming that axis at the camera is what keeps the text readable.
+        Vector3 toCamera = cam.transform.position - t.position;
+        toCamera.y = 0f; // keep the bubble upright; only yaw is adjusted
+        if (toCamera.sqrMagnitude < 0.0001f) return; // degenerate: camera exactly above/below
+        Quaternion facing = Quaternion.LookRotation(toCamera.normalized, Vector3.up);
+        t.rotation = facing * Quaternion.Euler(0f, bubbleYawOffset, 0f);
+
+        // NOTE: the bubble follows its TARGET every frame elsewhere, so we only touch rotation here --
+        // changing position here would fight that follow logic.
     }
 
     // ------------------------------------------------------------------
@@ -183,26 +256,55 @@ public class MemeBattleUI : MonoBehaviour
         slot.rageSlider.value = max > 0f ? Mathf.Clamp01(current / max) : 0f;
     }
 
+    // The speech bubble is ONE Text shared by the meme dialogue and the damage number. To stop them
+    // fighting each other, each side tracks its own "who owns the bubble right now":
+    //   - _dialogueText[side]  = the meme line currently displayed (empty when none)
+    //   - _damageHideRoutine[side] = the pending auto-clear for the damage number
+    // When the damage number's timer expires we restore the meme line (if any) instead of blanking the
+    // bubble, which is what used to erase the dialogue the moment a hit landed.
+    private readonly string[] _dialogueText = new string[2];
+    private readonly Coroutine[] _damageHideRoutine = new Coroutine[2];
+
+    private static int SideIndex(Side side) => side == Side.Left ? 0 : 1;
+
     /// <summary>
-    /// Shows a damage popup (rendered in the fighter's speech bubble) briefly.
+    /// Shows a damage popup in the fighter's speech bubble briefly. When the popup expires the meme
+    /// dialogue (if one is set) is restored, so the damage number never permanently erases it.
     /// </summary>
     public void ShowDamage(Side side, int amount)
     {
         var slot = GetSlot(side);
         if (slot?.speechBubbleText == null) return;
 
+        int i = SideIndex(side);
+
+        // Restart the hide timer so a new damage number is not wiped by the PREVIOUS number's timer.
+        if (_damageHideRoutine[i] != null) StopCoroutine(_damageHideRoutine[i]);
+
         slot.speechBubbleText.text = $"-{amount}";
-        StartCoroutine(ClearTextAfter(slot.speechBubbleText, 1.5f));
+        _damageHideRoutine[i] = StartCoroutine(HideDamageThenRestoreDialogue(side, slot.speechBubbleText, 1.5f));
     }
 
     /// <summary>
-    /// Sets the fighter's dialogue / speech bubble text (used for meme text).
+    /// Sets the fighter's dialogue / speech bubble text (used for meme text). Remembered so a damage
+    /// popup can restore it once its own timer expires.
     /// </summary>
     public void SetDialogue(Side side, string text)
     {
         var slot = GetSlot(side);
         if (slot?.speechBubbleText == null) return;
-        slot.speechBubbleText.text = text ?? string.Empty;
+
+        int i = SideIndex(side);
+        _dialogueText[i] = text ?? string.Empty;
+
+        // A damage popup that is currently counting down must NOT overwrite this dialogue.
+        if (_damageHideRoutine[i] != null)
+        {
+            StopCoroutine(_damageHideRoutine[i]);
+            _damageHideRoutine[i] = null;
+        }
+
+        slot.speechBubbleText.text = _dialogueText[i];
     }
 
     /// <summary>
@@ -212,6 +314,16 @@ public class MemeBattleUI : MonoBehaviour
     {
         var slot = GetSlot(side);
         if (slot?.speechBubbleText == null) return;
+
+        int i = SideIndex(side);
+        _dialogueText[i] = string.Empty;
+
+        if (_damageHideRoutine[i] != null)
+        {
+            StopCoroutine(_damageHideRoutine[i]);
+            _damageHideRoutine[i] = null;
+        }
+
         slot.speechBubbleText.text = string.Empty;
     }
 
@@ -386,42 +498,19 @@ public class MemeBattleUI : MonoBehaviour
 
     private void StartSliderLerp(Side side, Slider slider, float target)
     {
+        if (slider == null) return;
+
+        // Any change is applied IMMEDIATELY. The health bar must drop the moment the attack plays
+        // (i.e. when the damage event is applied), not tween down over time.
         if (side == Side.Left)
         {
-            if (_hpLerpLeft != null) StopCoroutine(_hpLerpLeft);
-            _hpLerpLeft = StartCoroutine(LerpSliderRoutine(slider, target));
+            if (_hpLerpLeft != null) { StopCoroutine(_hpLerpLeft); _hpLerpLeft = null; }
         }
         else
         {
-            if (_hpLerpRight != null) StopCoroutine(_hpLerpRight);
-            _hpLerpRight = StartCoroutine(LerpSliderRoutine(slider, target));
-        }
-    }
-
-    private IEnumerator LerpSliderRoutine(Slider slider, float target)
-    {
-        if (slider == null) yield break;
-
-        float start = slider.value;
-        if (Mathf.Approximately(start, target))
-        {
-            slider.value = target;
-            yield break;
+            if (_hpLerpRight != null) { StopCoroutine(_hpLerpRight); _hpLerpRight = null; }
         }
 
-        float diff = Mathf.Abs(target - start);
-        // Duration scales with the size of the change; slower when losing HP.
-        float duration = Mathf.Clamp(diff * 0.6f, 0.05f, 1.0f);
-        if (target < start) duration *= 1.5f;
-
-        float elapsed = 0f;
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(elapsed / duration));
-            slider.value = Mathf.Lerp(start, target, t);
-            yield return null;
-        }
         slider.value = target;
     }
 
@@ -435,10 +524,19 @@ public class MemeBattleUI : MonoBehaviour
         textField.text = string.Empty;
     }
 
-    private IEnumerator ClearTextAfter(Text text, float delay)
+    /// <summary>
+    /// Hides the damage number after <paramref name="delay"/> and restores whatever meme dialogue the
+    /// side had (empty when none). Restoring -- instead of blanking -- is what keeps the dialogue from
+    /// being erased by a hit landing on the same fighter.
+    /// </summary>
+    private IEnumerator HideDamageThenRestoreDialogue(Side side, Text text, float delay)
     {
         yield return new WaitForSeconds(delay);
-        if (text != null) text.text = string.Empty;
+
+        int i = SideIndex(side);
+        _damageHideRoutine[i] = null;
+
+        if (text != null) text.text = _dialogueText[i] ?? string.Empty;
     }
 
     private void UpdateTimer()

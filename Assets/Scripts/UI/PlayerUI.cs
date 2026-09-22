@@ -50,42 +50,26 @@ public class PlayerUI : MonoBehaviour
         var e = GetElements(side);
         if (e == null || e.hpSlider == null) return;
         float v = max > 0f ? Mathf.Clamp01(current / max) : 0f;
-        // Smoothly animate slider toward target value
-        // Stop previous coroutine for this side if running
+
+        // Apply the new HP IMMEDIATELY (no tween). The bar must drop the instant the attack plays,
+        // not slide down over ~1s.
         if (side == Side.Left)
         {
-            if (_hpLerpLeft != null) StopCoroutine(_hpLerpLeft);
-            _hpLerpLeft = StartCoroutine(LerpSliderRoutine(e.hpSlider, v));
+            if (_hpLerpLeft != null) { StopCoroutine(_hpLerpLeft); _hpLerpLeft = null; }
         }
         else
         {
-            if (_hpLerpRight != null) StopCoroutine(_hpLerpRight);
-            _hpLerpRight = StartCoroutine(LerpSliderRoutine(e.hpSlider, v));
+            if (_hpLerpRight != null) { StopCoroutine(_hpLerpRight); _hpLerpRight = null; }
         }
+
+        e.hpSlider.value = v;
     }
 
     IEnumerator LerpSliderRoutine(Slider slider, float target)
     {
         if (slider == null) yield break;
-        float start = slider.value;
-        if (Mathf.Approximately(start, target))
-        {
-            slider.value = target;
-            yield break;
-        }
-        float diff = Mathf.Abs(target - start);
-        // Duration scales with difference; decreases more slowly when losing HP
-        float baseDur = Mathf.Clamp(diff * 0.6f, 0.05f, 1.0f);
-        if (target < start) baseDur *= 1.5f; // slower when decreasing
-        float elapsed = 0f;
-        while (elapsed < baseDur)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(elapsed / baseDur));
-            slider.value = Mathf.Lerp(start, target, t);
-            yield return null;
-        }
         slider.value = target;
+        yield break;
     }
 
     public void UpdateRage(Side side, float current, float max)

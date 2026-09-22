@@ -4,8 +4,11 @@
 /// RESPONSIBILITIES:
 /// - Lưu trữ trạng thái trận đấu hiện tại (MatchState) theo tài liệu thiết kế.
 /// - Phân tích (Parse) các gói tin JSON từ Server thành các C# Object tương ứng.
-/// - Gọi các hàm cập nhật giao diện của PlayerUI, RoundManager và AnimationController khi có sự kiện mới.
+/// - Gọi các hàm cập nhật giao diện của PlayerUI, RoundManager và CombatPositioningController khi có sự kiện mới.
 /// AI NOTE: Script này đóng vai trò bộ não trung tâm của Client, không tự tính toán sát thương (vì BE đã tính), chỉ nhận kết quả và điều phối hiển thị.
+/// QUEUE: Mọi sự kiện gameplay được đẩy vào MỘT hàng đợi duy nhất do CombatPositioningController sở hữu
+/// (xem HandleMemeBattleEvent). Hàng đợi đó chạy tuần tự từng item: APPLY (UI/state/hit routing) -> MOVE -> ANIMATE -> WAIT,
+/// nên không có scheduler thứ hai nào tranh chấp vị trí/animation của nhân vật.
 /// </summary>
 using System;
 using System.Reflection;
@@ -32,14 +35,13 @@ public class GameManager : MonoBehaviour
     [Tooltip("DEPRECATED: use uiManager (MemeBattleUI) instead. Kept only so old scenes still compile/run.")]
     public PlayerUI playerUI;
     public RoundManager roundManager;
-    public AnimationController animationController;
 
     [Header("Animator Bridges (optional, per side)")]
-    [Tooltip("Optional CharacterAnimatorBridge for the Left (bot_a) fighter. When assigned, gameplay events are routed to it in addition to AnimationController.")]
+    [Tooltip("Optional CharacterAnimatorBridge for the Left (bot_a) fighter. This is the animation authority for the left side.")]
     public CharacterAnimatorBridge leftBridge;
-    [Tooltip("Optional CharacterAnimatorBridge for the Right (bot_b) fighter. When assigned, gameplay events are routed to it in addition to AnimationController.")]
+    [Tooltip("Optional CharacterAnimatorBridge for the Right (bot_b) fighter. This is the animation authority for the right side.")]
     public CharacterAnimatorBridge rightBridge;
-    [Tooltip("When true, only the bridge drives animation (AnimationController calls are skipped). Defaults to true: CharacterAnimatorBridge is the single animation authority.")]
+    [Tooltip("Deprecated: bridges are now always the animation authority. Kept so old scenes still expose the toggle.")]
     public bool bridgesTakePriority = true;
     [Tooltip("When true, a heavy hit that does not kill the target automatically plays the getup animation after the knockdown hold, so the fighter returns to Idle.")]
     public bool autoGetupAfterKnockdown = true;
@@ -49,10 +51,13 @@ public class GameManager : MonoBehaviour
     public int getupType = 1;
 
     [Header("Combat Positioning")]
-    [Tooltip("After a hit resolves, compute the attack spot in FRONT of the victim and step the attacker to it. Recomputes after every getup.")]
+    [Tooltip("Route attack/damage events through CombatPositioningController so the attacker MOVES to the attack spot before the animation pair plays. Each event is queued and runs to completion before the next.")]
     public bool choreographAttackPositions = true;
     [Tooltip("Optional CombatPositioningController. Auto-found in the scene when left empty.")]
     public CombatPositioningController positioningController;
+
+    [Tooltip("Default crossfade (seconds) used when the positioning flow fires a combat clip.")]
+    public float defaultCrossFade = 0.1f;
 
     [Header("Local Test")]
     public bool enableLocalInputTesting = true;
@@ -82,6 +87,62 @@ public class GameManager : MonoBehaviour
     // Map to remember which numeric variant was used when playing attack/hit pairs for a given turn+actor+target.
     private System.Collections.Generic.Dictionary<string, int> _matchedVariantMap = new System.Collections.Generic.Dictionary<string, int>();
 
+    // Exchange keys (turnId:actor:target) whose knockout getup was already chained onto the
+    // ARGUMENT_SELECTED item. The later DAMAGE_APPLIED for the same exchange must NOT schedule a
+    // second getup, otherwise the victim would stand up twice (and the second one could stall a turn).
+    private readonly System.Collections.Generic.HashSet<string> _exchangeGetupHandled = new System.Collections.Generic.HashSet<string>();
+
+    // Lethal-hit tracking. Set the moment a DAMAGE_APPLIED with hpAfter <= 0 arrives (before its queue
+    // item runs), so the still-running ARGUMENT_SELECTED exchange can suppress the victim's hit reaction
+    // and cancel its chained getup, and the death pose takes over immediately.
+    private readonly System.Collections.Generic.HashSet<string> _lethalExchangeKeys = new System.Collections.Generic.HashSet<string>();
+
+    // (turnId:characterId) pairs whose per-turn HP has already been written to the bar.
+    //
+    // HP for a turn comes from the turn's HP event (HP_CHANGED, or DAMAGE_APPLIED as a fallback) and is
+    // applied by ApplyTurnHpOnce -- the SINGLE guarded writer. The value is ABSOLUTE (hpAfterAtomic), so
+    // even a stray duplicate would not corrupt the number; this set guarantees each turn moves the bar
+    // EXACTLY ONCE, and also stops a reconnect replay from repainting/flickering it.
+    private readonly System.Collections.Generic.HashSet<string> _hpChangedAppliedKeys = new System.Collections.Generic.HashSet<string>();
+
+    [Tooltip("Extra seconds the queue holds after a chained getup so the getup clip can fully play before the next turn starts.")]
+    public float getupSettleSeconds = 1.5f;
+
+    [Tooltip("Seconds the queue waits before triggering a chained getup after a knockout exchange, so the hit reaction clip finishes first (the hit must run through before the fighter stands up).")]
+    public float getupAfterHitDelay = 1.0f;
+
+    // Key (turnId:actor:target) of the exchange currently being animated by the queue. Set when an
+    // ARGUMENT_SELECTED is enqueued and consumed by PlayAnimationForSide to record the chosen attack
+    // variant so the matching DAMAGE_APPLIED pairs attackN with hitN.
+    private string _pendingExchangeKey;
+
+    // Variant index the attacker just played in the current exchange. The victim's hit reaction in
+    // the SAME exchange reads this so attackN pairs with hitN (no random mismatch between fighters).
+    private int _lastAttackVariant;
+
+    // ==================================================================
+    // ONE TURN = ONE STACK
+    // ------------------------------------------------------------------
+    // The backend streams a turn as SEVERAL events that all share the SAME turnId:
+    //   TURN_STARTED -> ARGUMENT_SELECTED -> MULTIPLIER_SELECTED -> DAMAGE_APPLIED -> HP_CHANGED
+    //
+    // Applying them as separate queue items let the turn's fight "leak" across the queue: HP could drop
+    // at the wrong moment or twice, and the next turn could interleave with the current one.
+    //
+    // Every event of a turn is therefore BUFFERED here and FLUSHED as ONE single queue stack, so the
+    // whole turn (who attacks, with what animation, who is hit, how much HP is lost) runs as one atomic
+    // beat. The next turn's stack only starts once this one has fully finished, and each stack applies
+    // its HP change EXACTLY ONCE per hit.
+    private string _bufferedTurnId;
+    private readonly System.Collections.Generic.List<MemeBattleEvent> _bufferedTurnEvents = new System.Collections.Generic.List<MemeBattleEvent>();
+
+    [Tooltip("Seconds to wait after the LAST buffered event of a turn before flushing it as one stack, when no following TURN_STARTED arrives (safety for the final turn of a match).")]
+    public float turnStackFlushDelay = 0.5f;
+
+    // Wall-clock (Time.unscaledTime) deadline after which the buffered turn is force-flushed.
+    private float _turnFlushDeadline;
+    private bool _turnFlushScheduled;
+
     // Helper: ensure we have a sensible recorded max HP for a given character id
     private void EnsureKnownMaxHp(string characterId, long hpBefore = 0, long hpAfter = 0)
     {
@@ -99,16 +160,285 @@ public class GameManager : MonoBehaviour
             if (_characterNames.TryGetValue("bot_a", out var aid) && aid == characterId) _characterMaxHp["bot_a"] = candidate;
             if (_characterNames.TryGetValue("bot_b", out var bid) && bid == characterId) _characterMaxHp["bot_b"] = candidate;
         }
+    }
 
+    /// <summary>
+    /// Clears every PER-TURN idempotency key and the queue's per-turn barrier state. Called when a new
+    /// match starts so nothing from a previous match (or a reconnect replay) can leak into the new one:
+    /// a turn id the backend REUSES would otherwise look like an already-applied exchange / already-seen
+    /// turn and its HP update would be silently skipped.
+    /// </summary>
+    private void ResetPerTurnGuardsForNewMatch()
+    {
+        _hpChangedAppliedKeys.Clear();
+        _lethalExchangeKeys.Clear();
+        _exchangeGetupHandled.Clear();
+        _matchedVariantMap.Clear();
+        _pendingExchangeKey = null;
+
+        // Drop any half-collected turn from a previous match; a fresh match starts with an empty buffer.
+        _bufferedTurnId = null;
+        _bufferedTurnEvents.Clear();
+        _turnFlushScheduled = false;
+
+        try { Positioning?.ResetTurnBarrier(); }
+        catch (System.Exception ex) { Debug.LogWarning($"GameManager: ResetTurnBarrier failed: {ex}"); }
     }
 
     void Awake()
     {
         Instance = this;
+        WirePositioningHandlers();
+    }
+
+    /// <summary>
+    /// Wires the CombatPositioningController's handler hooks to this GameManager's delegates.
+    /// Called from Awake, Start and again whenever the controller is (re)resolved, because the
+    /// controller's Awake may run AFTER GameManager's -- in which case CombatPositioningController
+    /// .Instance is still null during our Awake and the hooks would never be assigned (which makes
+    /// every queued animation a silent no-op: the queued attack never reaches the bridge).
+    /// </summary>
+    private void WirePositioningHandlers()
+    {
+        var pos = Positioning;
+        if (pos == null) return;
+
+        // Re-assign every time; delegates are cheap and this guarantees the hooks are live even if
+        // the controller was created late or the reference was reset.
+        pos.PlayAnimationHandler = PlayAnimationForSide;
+        pos.MoveSpeedHandler = DriveMoveSpeed;
+        pos.LocomotionSettledHandler = IsLocomotionSettled;
+        pos.AnimationFinishedHandler = IsSideAnimationFinished;
+        pos.SideActionPlayingHandler = IsSideActionPlaying;
+        pos.SideIdleSettledHandler = IsSideIdleSettled;
+        pos.SideDeadHandler = IsSideDead;
+        pos.SideAnimationEndSignalledHandler = IsSideAnimationEndSignalled;
+        pos.AttackFinishedHandler = EndCameraAttackFocus;
+    }
+
+    /// <summary>
+    /// Drives a side's locomotion blend while it steps to the attack spot. Routes to the bridge's
+    /// Move(value) which writes the Animator "Speed" float (1 = run, 0 = idle). Used as the
+    /// CombatPositioningController move-speed hook.
+    /// </summary>
+    private void DriveMoveSpeed(PlayerUI.Side side, float value)
+    {
+        var bridge = GetBridgeForSide(side);
+        if (bridge == null) return;
+        try { bridge.Move(value); }
+        catch (System.Exception ex) { Debug.LogWarning($"Animation [GameManager] DriveMoveSpeed on {side} failed: {ex}"); }
+    }
+
+    /// <summary>
+    /// True when the side's animator has left its locomotion (Walk/Run) blend and is safe to fire a
+    /// one-shot trigger. Used as the CombatPositioningController settled hook. Returns true when no
+    /// bridge is wired so the flow is never blocked.
+    /// </summary>
+    private bool IsLocomotionSettled(PlayerUI.Side side)
+    {
+        var bridge = GetBridgeForSide(side);
+        if (bridge == null) return true;
+        try { return bridge.IsLocomotionSettled(); }
+        catch { return true; }
+    }
+
+    /// <summary>
+    /// True when the side's currently-playing clip has finished. Used as the
+    /// CombatPositioningController animation-finished hook so the queue waits out the real clip.
+    /// Returns true when no bridge is wired so the flow is never blocked.
+    /// </summary>
+    private bool IsSideAnimationFinished(PlayerUI.Side side)
+    {
+        var bridge = GetBridgeForSide(side);
+        if (bridge == null) return true;
+        try { return bridge.IsAnimationFinished(); }
+        catch { return true; }
+    }
+
+    /// <summary>
+    /// True when the side's AnimationEndAction behaviour has reported the watched state EXITING.
+    /// This is the AUTHORITATIVE end-of-clip signal (an actual event, not a guessed duration) and is
+    /// what the queue should prefer. Returns false when no bridge is wired.
+    /// </summary>
+    private bool IsSideAnimationEndSignalled(PlayerUI.Side side)
+    {
+        var bridge = GetBridgeForSide(side);
+        if (bridge == null) return false;
+        try { return bridge.HasAnimationEndSignal; }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// True while the side's watched action clip is still playing. Non-mutating companion to
+    /// IsSideAnimationFinished, used to hold a chained getup until the hit reaction truly finishes.
+    /// Returns false when no bridge is wired so the flow is never blocked.
+    /// </summary>
+    private bool IsSideActionPlaying(PlayerUI.Side side)
+    {
+        var bridge = GetBridgeForSide(side);
+        if (bridge == null) return false;
+        try { return bridge.IsActionPlaying(); }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// True when the side is standing idle AND fully settled (idle pose, not knocked down, no pending
+    /// getup). The positioning queue uses this as a fast-path so the next queued stack starts the moment
+    /// both fighters are visibly at rest, instead of waiting out the remaining timing holds.
+    /// Returns true when no bridge is wired so the flow is never blocked.
+    /// </summary>
+    /// <summary>
+    /// True when the side's fighter is permanently dead. Used by the queue to cut a post-attack hold
+    /// short on a lethal hit only (a dead fighter's KO pose never reports clip-finished). A knocked-down
+    /// survivor must NOT be treated as dead, otherwise the getup fires mid-hit.
+    /// </summary>
+    private bool IsSideDead(PlayerUI.Side side)
+    {
+        var bridge = GetBridgeForSide(side);
+        if (bridge == null) return false;
+        try { return bridge.IsDead; }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// STRICT idle test used by the queue to decide when the camera may return to the centre: the side
+    /// must literally be playing the Idle state, with no action in flight and not knocked down / mid-
+    /// getup. The looser "idle + settled" check returned true during the transition frames of a hit /
+    /// knockdown, which is why the camera snapped to the middle while a heavy hit reaction was still on
+    /// screen.
+    /// </summary>
+    private bool IsSideIdleSettled(PlayerUI.Side side)
+    {
+        var bridge = GetBridgeForSide(side);
+        if (bridge == null) return true;
+        try { return bridge.IsFullyIdleNow; }
+        catch { return true; }
+    }
+
+    /// <summary>
+    /// Releases the camera's attack shot so it eases back to the midpoint between both fighters. Used
+    /// as the CombatPositioningController attack-finished hook (an exchange has fully completed).
+    /// </summary>
+    private void EndCameraAttackFocus()
+    {
+        try { MortalKombatCamera.Instance?.EndAttackFocus(); }
+        catch { }
+    }
+
+    /// <summary>
+    /// True when this side already took a LETHAL hit for the exchange currently being animated
+    /// (hpAfter reached 0). Checked when the exchange's victim animation is about to be fired, so a
+    /// lethal light hit skips the hit reaction and collapses straight into the death pose, and a lethal
+    /// heavy hit never gets chained a getup.
+    /// </summary>
+    private bool IsVictimLethalForCurrentExchange(PlayerUI.Side side)
+    {
+        var bridge = GetBridgeForSide(side);
+        if (bridge != null && bridge.IsDead) return true;
+
+        // The ONLY reliable lethal test for the CURRENT exchange is its own key. The old code also
+        // matched a plain side flag (_lethalVictimSide), which was never cleared -- so once a fighter
+        // had ever been hit lethally, EVERY later attack on that side was treated as lethal and the
+        // death pose played while the fighter still had HP ("die qua som, chua het mau da die").
+        if (!string.IsNullOrEmpty(_pendingExchangeKey) && _lethalExchangeKeys.Contains(_pendingExchangeKey)) return true;
+
+        return false;
+    }
+
+    /// <summary>
+    /// Plays an animation id on a side through that side's CharacterAnimatorBridge and returns the
+    /// clip length in seconds (0 when unknown). Used as the CombatPositioningController playback hook.
+    /// </summary>
+    private float PlayAnimationForSide(PlayerUI.Side side, string animationId, float crossFade)
+    {
+        if (string.IsNullOrEmpty(animationId)) return 0f;
+
+        var bridge = GetBridgeForSide(side);
+        if (bridge == null) return 0f;
+
+        string lower = animationId.ToLowerInvariant();
+        try
+        {
+            if (lower.Contains("attack"))
+            {
+                // Fires the attack and returns the variant applied (paired below). Record it under the pending
+                // exchange key so the matching DAMAGE_APPLIED (queued right after) reuses the same
+                // variant -- this is where attackN/hitN pairing is established now that firing the
+                // attack happens inside the queued move+animate item (after the move).
+                int index = bridge.AttackFromAnimationId(animationId);
+                _lastAttackVariant = index; // used to pair the victim's hit in the same exchange
+                if (index > 0 && !string.IsNullOrEmpty(_pendingExchangeKey))
+                {
+                    _matchedVariantMap[_pendingExchangeKey] = index;
+                    if (debugMode) Debug.Log($"Animation [GameManager] matched variant {index} stored for {_pendingExchangeKey}");
+                }
+            }
+            else if (lower.Contains("hit"))
+            {
+                bool isHeavyHit = lower.Contains("heavy");
+
+                // LETHAL GUARD -- LIGHT HITS ONLY.
+                //
+                // A light hit that drains the last HP skips its hit reaction and collapses straight into
+                // the death pose (the tiny light reaction would otherwise play and the collapse only
+                // happened afterwards, reading as a delayed death).
+                //
+                // A HEAVY hit ALWAYS plays its normal hit reaction, even when it is lethal -- the heavy
+                // knockdown is the whole point of the animation, so it must not be replaced.
+                if (!isHeavyHit && IsVictimLethalForCurrentExchange(side))
+                {
+                    if (debugMode) Debug.Log($"Animation [GameManager] lethal LIGHT hit on {side}: skipping hit reaction, playing KB_TopKO.");
+                    _loserSideForDieAnimation = side;
+                    bridge.TakeFatalHit();
+                }
+                else
+                {
+                    // Pair the hit reaction with the attack variant chosen moments earlier in the SAME
+                    // exchange (attackN -> hitN). Without this the victim picks a random hit index and the
+                    // two fighters can play mismatched variants.
+                    int variant = _lastAttackVariant;
+                    if (variant > 0)
+                    {
+                        bridge.TakeHitByAttackIndex(variant, isHeavyHit, animationId);
+                    }
+                    else
+                    {
+                        bridge.TakeHitFromAnimationId(animationId);
+                    }
+                }
+            }
+            else if (lower.Contains("getup") || lower.Contains("standup"))
+            {
+                // Route through GetupFromKnockdown so the same getup direction policy applies here too
+                // (currently forced to type 1 so a fighter can never get stuck in a hit pose).
+                bridge.GetupFromKnockdown();
+            }
+            else if (lower.Contains("die") || lower.Contains("ko"))
+            {
+                bridge.TakeFatalHit();
+            }
+            else
+            {
+                // Unknown id: treat it as a one-shot hit-style reaction so something still plays.
+                bridge.TakeHitFromAnimationId(animationId);
+            }
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning($"Animation [GameManager] PlayAnimationForSide '{animationId}' on {side} failed: {ex}");
+            return 0f;
+        }
+
+        bridge.BeginWatchCurrentAnimation();
+        return bridge.GetCurrentAnimationDuration();
     }
 
     void Start()
     {
+        // Re-wire now that ALL Awakes have run, so the positioning controller's hooks are guaranteed
+        // to be assigned (the controller's own Awake may have been later than ours).
+        WirePositioningHandlers();
+
         PrintDebugInfo();
 
         // Set default initial HP for both sides so UI shows full health immediately
@@ -189,22 +519,16 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Resolves the world Transform that represents a side's fighter. Prefers the bridge's
-    /// Animator (the object the animations actually drive), then the AnimationController's
-    /// animator. Returns null when nothing is wired up.
+    /// Resolves the world Transform that represents a side's fighter: the bridge's Animator (the
+    /// object the animations actually drive), else the positioning controller's fighter root.
+    /// Returns null when nothing is wired up.
     /// </summary>
     private Transform GetFighterTransform(PlayerUI.Side side)
     {
         var bridge = GetBridgeForSide(side);
         if (bridge != null && bridge.Animator != null) return bridge.Animator.transform;
 
-        if (animationController != null)
-        {
-            var anim = side == PlayerUI.Side.Left ? animationController.leftAnimator : animationController.rightAnimator;
-            if (anim != null) return anim.transform;
-        }
-
-        return null;
+        return Positioning?.GetFighter(side);
     }
 
 
@@ -226,39 +550,37 @@ public class GameManager : MonoBehaviour
     // Debug helpers
     public void DebugTriggerQ()
     {
-        var p = GetRandomPreset();
-        if (p != null)
-        {
-            Debug.Log($"[DebugTrigger] Q -> Play preset '{p.key}' (Left attacks)");
-            PlayBothAnimations(p.leftState, p.rightState);
-        }
-        else Debug.LogWarning("[DebugTrigger] Q -> no valid presets");
+        // Local test: Left attacks Right, routed through the same queue the backend events use.
+        Debug.Log("[DebugTrigger] Q -> Left attacks Right");
+        RouteCombatAction(PlayerUI.Side.Left, PlayerUI.Side.Right, "attack1", "hit1");
     }
 
     public void DebugTriggerE()
     {
-        var p = GetRandomPreset();
-        if (p != null)
-        {
-            Debug.Log($"[DebugTrigger] E -> Play preset '{p.key}' (Right attacks)");
-            PlayBothAnimations(p.rightState, p.leftState);
-        }
-        else Debug.LogWarning("[DebugTrigger] E -> no valid presets");
+        // Local test: Right attacks Left.
+        Debug.Log("[DebugTrigger] E -> Right attacks Left");
+        RouteCombatAction(PlayerUI.Side.Right, PlayerUI.Side.Left, "attack1", "hit1");
     }
 
     void Update()
     {
+        // SAFETY FLUSH: the FINAL turn of a match has no following TURN_STARTED to trigger its flush, so
+        // we flush a buffered turn once its deadline passes. The deadline is pushed back on every new
+        // event of the same turn, so this only fires when the turn has really stopped arriving.
+        if (_turnFlushScheduled && Time.unscaledTime >= _turnFlushDeadline)
+        {
+            FlushBufferedTurn("idle timeout");
+        }
+
         if (!enableLocalInputTesting) return;
         if (IsKeyDown(KeyCode.Q))
         {
-            var p = GetRandomPreset();
-            if (p != null) PlayBothAnimations(p.leftState, p.rightState);
+            RouteCombatAction(PlayerUI.Side.Left, PlayerUI.Side.Right, "attack1", "hit1");
             MortalKombatCamera.Instance?.TriggerImpactShake();
         }
         if (IsKeyDown(KeyCode.E))
         {
-            var p = GetRandomPreset();
-            if (p != null) PlayBothAnimations(p.rightState, p.leftState);
+            RouteCombatAction(PlayerUI.Side.Right, PlayerUI.Side.Left, "attack1", "hit1");
             MortalKombatCamera.Instance?.TriggerImpactShake();
         }
     }
@@ -576,93 +898,357 @@ public class GameManager : MonoBehaviour
             {
                 long max = 0;
                 if (snap.characterMaxHpAtomic != null) snap.characterMaxHpAtomic.TryGetValue(lookupId, out max);
+                if (max <= 0) max = hp;
                 uiManager?.UpdateHealth(ToUISide(side), hp, max);
             }
         }
 
-        // Also update PlayerUI health display
-        UpdatePlayerHealthDisplay(snap);
-    }
-
-    void UpdatePlayerHealthDisplay(MemeBattleMatchSnapshot snap)
-    {
-        if (snap == null) return;
-
-        // Resolve actual character ids for each side (fall back to side-key if mapping missing)
-        string leftId = _characterNames.TryGetValue("bot_a", out var l) ? l : "bot_a";
-        string rightId = _characterNames.TryGetValue("bot_b", out var r) ? r : "bot_b";
-
-        long hpA = 0, hpB = 0, maxHpA = 0, maxHpB = 0;
-
-        if (snap.characterHpAtomic != null)
-        {
-            snap.characterHpAtomic.TryGetValue(leftId, out hpA);
-            snap.characterHpAtomic.TryGetValue(rightId, out hpB);
-        }
-
-        if (snap.characterMaxHpAtomic != null)
-        {
-            snap.characterMaxHpAtomic.TryGetValue(leftId, out maxHpA);
-            snap.characterMaxHpAtomic.TryGetValue(rightId, out maxHpB);
-        }
-
-        // Fallback: check local _characterMaxHp store if snapshot doesn't provide a max
-        if (maxHpA == 0) _characterMaxHp.TryGetValue(leftId, out maxHpA);
-        if (maxHpA == 0) _characterMaxHp.TryGetValue("bot_a", out maxHpA);
-        if (maxHpB == 0) _characterMaxHp.TryGetValue(rightId, out maxHpB);
-        if (maxHpB == 0) _characterMaxHp.TryGetValue("bot_b", out maxHpB);
-
-        // Update health display for both sides (slider + text)
-        uiManager?.UpdateHealth(MemeBattleUI.Side.Left, hpA, maxHpA);
-        uiManager?.UpdateHealth(MemeBattleUI.Side.Right, hpB, maxHpB);
-
-        Debug.Log($"UpdatePlayerHealthDisplay: Left={hpA}/{maxHpA}, Right={hpB}/{maxHpB}");
+        // NOTE: UpdatePlayerHealthDisplay(snap) used to be called here as well. It is a SECOND writer
+        // of the SAME two bars, and it reads from the snapshot rather than from this call's side/hp
+        // pair -- so wherever the snapshot's key order or mapping differed it silently overwrote the
+        // value just written, which is how a side could appear to lose HP it never lost. One snapshot
+        // application now writes each bar exactly once, through the side it was resolved for.
     }
 
     /// <summary>
-    /// Entry point for a gameplay event. Rather than apply it immediately (which would let a
-    /// new event overwrite an animation still mid-play), the event is placed on the sequential
-    /// MemeEventQueue. The queue runs one event at a time and waits for the animation it triggers
-    /// to finish before applying the next one.
+    /// Entry point for a gameplay event.
+    ///
+    /// ONE TURN = ONE STACK: every event of a turn (they all share the turnId) is BUFFERED here instead of
+    /// being queued individually. The buffered turn is flushed as ONE single queue stack either when the
+    /// NEXT turn's first event arrives (a new turnId) or, for the final turn, after
+    /// <see cref="turnStackFlushDelay"/> of silence. The queue then runs the whole turn as one atomic
+    /// beat: UI/dialogue + move + attack/hit pair + the single HP write + getup.
+    ///
+    /// This is what guarantees the turn never interleaves with the next turn, and that HP is deducted
+    /// EXACTLY ONCE per hit -- the HP write happens inside the stack, driven by the turn's HP event.
     /// </summary>
     void HandleMemeBattleEvent(MemeBattleEvent ev)
     {
         if (ev == null) return;
 
-        // Events that carry an animation hold the queue until that animation finishes.
-        // Advancement is driven by the PRECISE AnimatorStateInfo.normalizedTime >= 1 check
-        // (via CharacterAnimatorBridge.IsAnimationFinished). The estimated duration below is
-        // only a SAFETY UPPER BOUND so a stuck/looping state can never wedge the queue.
-        float duration = EstimateEventDuration(ev);
-
-        string label = $"{ev.eventType} seq={ev.sequence}";
-
-        // Queue is optional: when disabled, apply immediately (legacy behaviour).
-        if (!useSequentialEventQueue)
+        // WINNER_DECLARED / match-level events are NOT part of a turn's stack: flush whatever turn is
+        // pending first so the result only plays after the last turn has fully resolved, then queue the
+        // result event on its own.
+        if (ev.eventType == "WINNER_DECLARED" || string.IsNullOrEmpty(ev.turnId))
         {
-            ApplyMemeBattleEvent(ev);
+            FlushBufferedTurn("non-turn event: " + ev.eventType);
+            EnqueueSingleEventStack(ev);
             return;
         }
 
-        // Capture the bridges this event will animate so we can watch them precisely.
-        var watched = BridgesForEvent(ev);
+        // A DIFFERENT turnId means the previous turn is complete: flush it as one stack before we start
+        // buffering this new turn. This is the primary turn boundary.
+        if (!string.IsNullOrEmpty(_bufferedTurnId) &&
+            !string.Equals(_bufferedTurnId, ev.turnId, StringComparison.Ordinal))
+        {
+            FlushBufferedTurn($"turn changed to {ev.turnId}");
+        }
 
+        // Buffer this event into the current turn.
+        _bufferedTurnId = ev.turnId;
+        _bufferedTurnEvents.Add(ev);
+
+        // (Re)arm the safety flush: if no further event of this turn arrives, flush it after the delay.
+        _turnFlushScheduled = true;
+        _turnFlushDeadline = Time.unscaledTime + Mathf.Max(0.05f, turnStackFlushDelay);
+    }
+
+    /// <summary>
+    /// Flushes the buffered turn as ONE queue stack. Does nothing when no turn is buffered.
+    /// </summary>
+    private void FlushBufferedTurn(string reason)
+    {
+        if (_bufferedTurnEvents.Count == 0)
+        {
+            _bufferedTurnId = null;
+            _turnFlushScheduled = false;
+            return;
+        }
+
+        string turnId = _bufferedTurnId;
+        var events = new System.Collections.Generic.List<MemeBattleEvent>(_bufferedTurnEvents);
+
+        _bufferedTurnId = null;
+        _bufferedTurnEvents.Clear();
+        _turnFlushScheduled = false;
+
+        if (debugMode)
+            Debug.Log($"[TurnStack] flushing turn '{turnId}' ({events.Count} events) -> {reason}");
+
+        EnqueueTurnStack(turnId, events);
+    }
+
+    /// <summary>
+    /// Builds and enqueues the SINGLE stack for one turn. The stack is one queue item whose apply step:
+    ///   1) applies the turn's non-animation events in order (TURN_STARTED, MULTIPLIER_SELECTED, dialogue,
+    ///      camera framing), fully state-driven;
+    ///   2) plays the ARGUMENT_SELECTED attack/hit pair (moved to the attack spot by the queue);
+    ///   3) writes the turn's HP change EXACTLY ONCE, from the turn's HP event;
+    ///   4) routes the hit reaction / death pose / getup.
+    /// Because it is one item, the next turn's stack cannot start until this one has finished.
+    /// </summary>
+    private void EnqueueTurnStack(string turnId, System.Collections.Generic.List<MemeBattleEvent> events)
+    {
+        var pos = Positioning;
+
+        // Identify the turn's key events up front.
+        MemeBattleEvent turnStarted = null;
+        MemeBattleEvent multiplier = null;
+        MemeBattleEvent argumentSelected = null;
+        MemeBattleEvent damageApplied = null;
+        MemeBattleEvent hpChanged = null;
+        foreach (var e in events)
+        {
+            switch (e.eventType)
+            {
+                case "TURN_STARTED": turnStarted = e; break;
+                case "MULTIPLIER_SELECTED": multiplier = e; break;
+                case "ARGUMENT_SELECTED": argumentSelected = e; break;
+                case "DAMAGE_APPLIED": damageApplied = e; break;
+                case "HP_CHANGED": hpChanged = e; break;
+            }
+        }
+
+        // ---- Derived exchange info (who attacks whom, with what) -------------------------------------
+        string animationId = argumentSelected?.payload?.Value<string>("animationId");
+        PlayerUI.Side? attackerSide = SideFromCharacterId(argumentSelected?.payload?.Value<string>("actorCharacterId"));
+        PlayerUI.Side? victimSide = SideFromCharacterId(argumentSelected?.payload?.Value<string>("targetCharacterId"));
+
+        // The HP target/damage for this turn. HP comes from the turn's HP event (HP_CHANGED carries the
+        // authoritative characterId + hpAfterAtomic). When only DAMAGE_APPLIED is present we fall back to
+        // its target/hpAfterAtomic so the turn still lands. In BOTH cases the value is applied ONCE here.
+        string hpTargetId = hpChanged?.payload?.Value<string>("characterId");
+        long hpAfter = hpChanged?.payload?.Value<long?>("hpAfterAtomic") ?? -1;
+        if (string.IsNullOrEmpty(hpTargetId) && damageApplied != null)
+        {
+            hpTargetId = damageApplied.payload?.Value<string>("targetCharacterId");
+            hpAfter = damageApplied.payload?.Value<long?>("hpAfterAtomic") ?? -1;
+        }
+        PlayerUI.Side? hpSide = SideFromCharacterId(hpTargetId);
+
+        long damageAmount = damageApplied?.payload?.Value<long?>("damageAtomic") ?? 0;
+
+        // Bridges this turn animates (attacker + victim) -- used to wait the clips out precisely.
+        var watched = new System.Collections.Generic.List<CharacterAnimatorBridge>();
+        if (argumentSelected != null)
+        {
+            AddBridge(watched, argumentSelected.payload?.Value<string>("actorCharacterId"));
+            AddBridge(watched, argumentSelected.payload?.Value<string>("targetCharacterId"));
+        }
+        if (damageApplied != null)
+        {
+            AddBridge(watched, damageApplied.payload?.Value<string>("targetCharacterId"));
+        }
+
+        // Whether this turn has an actual attack exchange to move+animate.
+        bool hasExchange = !string.IsNullOrEmpty(animationId) && attackerSide.HasValue && victimSide.HasValue;
+        string hitAnimationId = hasExchange
+            ? System.Text.RegularExpressions.Regex.Replace(animationId, "attack", "hit", System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+            : null;
+
+        string exchangeKey = !string.IsNullOrEmpty(turnId) && hasExchange
+            ? $"{turnId}:{argumentSelected.payload?.Value<string>("actorCharacterId")}:{argumentSelected.payload?.Value<string>("targetCharacterId")}"
+            : null;
+
+        bool lethalThisTurn = hpAfter == 0;
+        if (lethalThisTurn && !string.IsNullOrEmpty(exchangeKey)) _lethalExchangeKeys.Add(exchangeKey);
+
+        // ---- The turn's single apply step -------------------------------------------------------------
         Action apply = () =>
         {
-            ApplyMemeBattleEvent(ev);
-            // Start watching each involved fighter's animation right after the command is issued.
+            // 1) Turn bookkeeping / non-animation UI (turn timer, dialogue reset, multiplier).
+            if (turnStarted != null) ApplyMemeBattleEvent(turnStarted);
+            if (multiplier != null) ApplyMemeBattleEvent(multiplier);
+
+            // 2) The attack itself (dialogue, camera framing, meme popup, totals). The MOVE + the
+            //    attack/hit clip pair are issued by the queue around this call.
+            if (argumentSelected != null)
+            {
+                _pendingExchangeKey = exchangeKey;
+                ApplyMemeBattleEvent(argumentSelected);
+            }
+
+            // 3) THE SINGLE HP WRITE FOR THIS TURN. Applied exactly once, here, inside the stack.
+            ApplyTurnHpOnce(turnId, hpTargetId, hpAfter, damageAmount, damageApplied?.payload?.Value<string>("animationId") ?? animationId);
+
+            // 4) Death pose / hit routing that depends on the damage event.
+            if (damageApplied != null)
+            {
+                RouteTurnDamageReaction(damageApplied, victimSide, hpSide, exchangeKey, hpAfter);
+            }
+
             for (int i = 0; i < watched.Count; i++)
                 watched[i]?.BeginWatchCurrentAnimation();
         };
 
-        // Advance as soon as ALL watched fighters have finished their animation (precise),
-        // with the estimated duration as a safety upper bound.
         Func<bool> finished = watched.Count == 0
             ? (Func<bool>)null
             : () => AllBridgesFinished(watched);
 
-        _eventQueue.Enqueue(new EventWorkItem(label, apply, duration, finished));
-        EnsureQueueRunning();
+        float duration = hasExchange ? Mathf.Max(EstimateAnimationWait(argumentSelected), EstimateAnimationWait(damageApplied)) : 0f;
+
+        if (!useSequentialEventQueue || pos == null)
+        {
+            // Legacy / no-queue fallback: apply the whole turn immediately, in order.
+            WirePositioningHandlers();
+            try { apply(); } catch (Exception ex) { Debug.LogWarning($"GameManager: turn stack apply failed: {ex}"); }
+            return;
+        }
+
+        WirePositioningHandlers();
+        pos.SetFighters(GetFighterTransform(PlayerUI.Side.Left), GetFighterTransform(PlayerUI.Side.Right));
+
+        if (hasExchange)
+        {
+            // HEAVY exchanges knock the victim down: chain the getup INSIDE this same stack so the victim
+            // stands back up before the next turn's stack can run (the fighter must never attack while
+            // still on the ground). Lethal turns never chain a getup (the death pose owns the fighter).
+            bool isHeavyExchange = animationId.ToLowerInvariant().Contains("heavy");
+            Action afterExchange = null;
+            float afterHold = 0f;
+            var knockedBridge = GetBridgeForSide(victimSide.Value);
+            if (isHeavyExchange && autoGetupAfterKnockdown && knockedBridge != null && !lethalThisTurn)
+            {
+                if (!string.IsNullOrEmpty(exchangeKey)) _exchangeGetupHandled.Add(exchangeKey);
+                afterExchange = () =>
+                {
+                    bool lethal = knockedBridge == null || knockedBridge.IsDead ||
+                                  (exchangeKey != null && _lethalExchangeKeys.Contains(exchangeKey));
+                    if (lethal)
+                    {
+                        if (debugMode) Debug.Log($"Animation [GameManager] chained getup suppressed: lethal hit on {victimSide}.");
+                        return;
+                    }
+                    try { knockedBridge.GetupFromKnockdown(); }
+                    catch (Exception ex) { Debug.LogWarning($"Animation [GameManager] chained getup failed: {ex}"); }
+                };
+                afterHold = Mathf.Max(0f, getupAfterHitDelay) + Mathf.Max(0f, getupDelay);
+            }
+
+            pos.EnqueueMoveThenAnimate($"TURN {turnId}", apply, attackerSide.Value, victimSide.Value,
+                                       animationId, hitAnimationId, finished, duration,
+                                       afterExchange, afterHold, Mathf.Max(0f, getupSettleSeconds));
+        }
+        else
+        {
+            // No attack exchange this turn (e.g. only a TURN_STARTED or an HP-only turn): still one stack.
+            pos.EnqueueWork($"TURN {turnId}", apply, finished, duration);
+        }
+    }
+
+    /// <summary>
+    /// Writes a turn's HP change to the bar EXACTLY ONCE. Guarded by (turnId:target) so no re-delivery,
+    /// re-flush or second event of the same turn can move the bar a second time. This is the ONLY place
+    /// that applies per-turn HP, so "trừ máu 1 lần khi bị hit" holds by construction.
+    /// </summary>
+    private void ApplyTurnHpOnce(string turnId, string targetId, long hpAfter, long damage, string animationIdForWeight)
+    {
+        if (hpAfter < 0 || string.IsNullOrEmpty(targetId)) return;
+
+        var side = SideFromCharacterId(targetId);
+        if (!side.HasValue)
+        {
+            Debug.LogWarning($"Animation [GameManager] turn HP ignored: could not resolve '{targetId}' to a side.");
+            return;
+        }
+
+        string hpKey = !string.IsNullOrEmpty(turnId) ? $"{turnId}:{targetId}" : null;
+        if (!string.IsNullOrEmpty(hpKey) && !_hpChangedAppliedKeys.Add(hpKey))
+        {
+            if (debugMode) Debug.Log($"Animation [GameManager] turn HP for {targetId} ignored: '{hpKey}' already applied.");
+            return;
+        }
+
+        // Record the max candidate from any known hp value so the bar's max stays stable.
+        EnsureKnownMaxHp(targetId, 0, hpAfter);
+
+        ApplyHealthToUi(side.Value, hpAfter);
+        if (damage > 0) uiManager?.ShowDamage(ToUISide(side.Value), (int)damage);
+
+        if (debugMode)
+            Debug.Log($"Animation [GameManager] turn HP applied ONCE for {targetId}: -{damage} = {hpAfter}");
+    }
+
+    /// <summary>
+    /// Routes the DAMAGE_APPLIED reaction for a turn: death pose on a lethal hit, otherwise the hit
+    /// reaction paired to the attack variant (attackN -> hitN). Does NOT touch HP -- the single HP write
+    /// for the turn happened in <see cref="ApplyTurnHpOnce"/>.
+    /// </summary>
+    private void RouteTurnDamageReaction(MemeBattleEvent damageApplied, PlayerUI.Side? victimSide,
+                                         PlayerUI.Side? hpSide, string exchangeKey, long hpAfter)
+    {
+        var payload = damageApplied?.payload;
+        if (payload == null) return;
+
+        string targetId = payload.Value<string>("targetCharacterId");
+        string animationId = payload.Value<string>("animationId");
+        var side = SideFromCharacterId(targetId);
+        if (!side.HasValue) return;
+
+        // Lethal hit: play the permanent death pose, once.
+        if (hpAfter == 0)
+        {
+            if (!_loserSideForDieAnimation.HasValue || _loserSideForDieAnimation != side)
+            {
+                _loserSideForDieAnimation = side;
+                if (debugMode) Debug.Log($"Animation [GameManager] lethal hit -> KB_TopKO (die) on side={side}");
+                GetBridgeForSide(side.Value)?.TakeFatalHit();
+            }
+            return;
+        }
+
+        // Non-lethal: the attack+hit pair already played in the exchange step of this SAME stack (the
+        // queue fired the hit reaction on the same frame as the attack). So we only need to schedule the
+        // getup for a knocked-down survivor. When the exchange chained the getup already
+        // (_exchangeGetupHandled) we do nothing -- a duplicate getup would replay the stand-up.
+        var targetBridge = GetBridgeForSide(side.Value);
+        if (targetBridge == null) return;
+
+        bool isHeavy = !string.IsNullOrEmpty(animationId) && animationId.ToLowerInvariant().Contains("heavy");
+        bool knockedDownNow = targetBridge.IsKnockedDown ||
+                              (targetBridge.Animator != null && targetBridge.Animator.GetBool("IsKnockedDown"));
+
+        bool getupAlreadyChained = !string.IsNullOrEmpty(exchangeKey) && _exchangeGetupHandled.Contains(exchangeKey);
+        if (getupAlreadyChained)
+        {
+            if (debugMode) Debug.Log($"Animation [GameManager] DAMAGE_APPLIED {targetId}: getup already chained in '{exchangeKey}' -> not scheduling another.");
+            _exchangeGetupHandled.Remove(exchangeKey);
+        }
+
+        // Only schedule a getup when there was NO attack exchange in this turn (i.e. the exchange step
+        // did not already fire the hit + chained getup). When there was an exchange, everything is done.
+        if (string.IsNullOrEmpty(exchangeKey))
+        {
+            if (autoGetupAfterKnockdown && (isHeavy || knockedDownNow))
+                ScheduleGetupThroughQueue(side.Value, targetBridge, getupType, Mathf.Max(0f, getupDelay));
+        }
+    }
+
+    /// <summary>
+    /// Queues a single event that is NOT part of a turn (e.g. WINNER_DECLARED) as its own stack.
+    /// </summary>
+    private void EnqueueSingleEventStack(MemeBattleEvent ev)
+    {
+        var watched = BridgesForEvent(ev);
+        Action apply = () =>
+        {
+            ApplyMemeBattleEvent(ev);
+            for (int i = 0; i < watched.Count; i++)
+                watched[i]?.BeginWatchCurrentAnimation();
+        };
+        Func<bool> finished = watched.Count == 0 ? (Func<bool>)null : () => AllBridgesFinished(watched);
+        float duration = EstimateEventDuration(ev);
+
+        var pos = Positioning;
+        if (!useSequentialEventQueue || pos == null)
+        {
+            try { apply(); } catch (Exception ex) { Debug.LogWarning($"GameManager: event stack apply failed: {ex}"); }
+            return;
+        }
+
+        WirePositioningHandlers();
+        pos.SetFighters(GetFighterTransform(PlayerUI.Side.Left), GetFighterTransform(PlayerUI.Side.Right));
+        pos.EnqueueWork($"{ev.eventType} seq={ev.sequence}", apply, finished, duration);
     }
 
     /// <summary>
@@ -782,6 +1368,59 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Resolves the max HP to display for a character, using every source in the same priority order so
+    /// DAMAGE_APPLIED, HP_CHANGED and the snapshot all agree (the bar used to jump because each caller
+    /// resolved max HP with its own slightly different fallback chain).
+    /// </summary>
+    private long ResolveMaxHpFor(string characterId, long hpBefore, long hpAfter)
+    {
+        long maxHp = 0;
+
+        // 1) Locally cached max (populated by MATCH_CREATED / the snapshot / any earlier event).
+        if (!string.IsNullOrEmpty(characterId))
+        {
+            _characterMaxHp.TryGetValue(characterId, out maxHp);
+
+            // Also accept the side-key alias for this character.
+            if (maxHp == 0 && _characterNames.TryGetValue("bot_a", out var a) && a == characterId) _characterMaxHp.TryGetValue("bot_a", out maxHp);
+            if (maxHp == 0 && _characterNames.TryGetValue("bot_b", out var b) && b == characterId) _characterMaxHp.TryGetValue("bot_b", out maxHp);
+        }
+
+        // 2) The latest snapshot's max HP table.
+        if (maxHp == 0 && _latestSnapshot?.characterMaxHpAtomic != null)
+        {
+            if (!string.IsNullOrEmpty(characterId)) _latestSnapshot.characterMaxHpAtomic.TryGetValue(characterId, out maxHp);
+        }
+
+        // 3) Record the highest HP we have EVER seen for this character as the max.
+        EnsureKnownMaxHp(characterId, hpBefore, hpAfter);
+        if (maxHp == 0 && !string.IsNullOrEmpty(characterId)) _characterMaxHp.TryGetValue(characterId, out maxHp);
+
+        // 4) Last resort: use the HP we were given so the display never reads "current/current".
+        if (maxHp <= 0) maxHp = System.Math.Max(hpBefore, hpAfter);
+
+        return maxHp;
+    }
+
+    /// <summary>
+    /// Single entry point for writing a side's HP to the UI. All HP sources (DAMAGE_APPLIED, HP_CHANGED,
+    /// the pending flush) go through here so they cannot disagree about max HP or double-apply.
+    /// </summary>
+    private void ApplyHealthToUi(PlayerUI.Side side, long hpAfter)
+    {
+        string charId = CharacterIdForSide(side);
+        long maxHp = ResolveMaxHpFor(charId, 0, hpAfter);
+        uiManager?.UpdateHealth(ToUISide(side), hpAfter, maxHp);
+    }
+
+    /// <summary>Resolves the backend character id for a side (falls back to the conventional side key).</summary>
+    private string CharacterIdForSide(PlayerUI.Side side)
+    {
+        string key = side == PlayerUI.Side.Left ? "bot_a" : "bot_b";
+        return _characterNames.TryGetValue(key, out var id) && !string.IsNullOrEmpty(id) ? id : key;
+    }
+
+    /// <summary>
     /// Actually applies a gameplay event to game state / UI / animation. Called by the queue in
     /// strict sequence. Do NOT call directly from networking code.
     /// </summary>
@@ -817,6 +1456,11 @@ public class GameManager : MonoBehaviour
                         uiManager?.UpdateHealth(MemeBattleUI.Side.Left, initialHpAtomic, initialHpAtomic);
                         uiManager?.UpdateHealth(MemeBattleUI.Side.Right, initialHpAtomic, initialHpAtomic);
                     }
+
+                    // A new match starts a fresh turn timeline: drop the queue's per-turn barrier state and
+                    // every per-turn idempotency key, so a turn id the backend REUSES for the new match is
+                    // not mistaken for a stale replay of the previous match's turn.
+                    ResetPerTurnGuardsForNewMatch();
                     Debug.Log($"MATCH_CREATED initialHpAtomic={initialHpAtomic}");
                 }
                 break;
@@ -860,68 +1504,35 @@ public class GameManager : MonoBehaviour
                     {
                         // Default behaviour: attacker plays the attack animation, target plays the hit animation.
                         string hitAnimationId = animationId.Replace("attack", "hit");
-                        Debug.Log($"✅ [ARGUMENT_SELECTED] Playing MATCHED: attacker {attackerSide} plays '{animationId}' → target {targetSide} plays '{hitAnimationId}'");
+                        Debug.Log($"Animation ✅ [ARGUMENT_SELECTED] Playing MATCHED: attacker {attackerSide} plays '{animationId}' → target {targetSide} plays '{hitAnimationId}'");
 
-                        // Play and capture the numeric variant chosen so later DAMAGE_APPLIED events can reuse it
-                        int variant = 0;
-                        if (!bridgesTakePriority)
-                        {
-                            try
-                            {
-                                variant = animationController?.PlayBothAnimationsWithMatchedVariant(attackerSide.Value, animationId, targetSide.Value, hitAnimationId) ?? 0;
-                            }
-                            catch (Exception ex)
-                            {
-                                Debug.LogWarning($"GameManager: PlayBothAnimationsWithMatchedVariant failed: {ex}");
-                            }
-                        }
+                        // NOTE: neither the move nor the attack/hit playback is issued here.
+                        //   - HandleMemeBattleEvent composes the single queue item (move first, then the
+                        //     attack/hit pair) so the attacker steps into position BEFORE the clip plays.
+                        //   - The attack itself fires inside that item (PlayAnimationForSide), which is
+                        //     also where the chosen variant is recorded for the matching DAMAGE_APPLIED.
+                        // Firing the attack here as well would double-play it, so this block only does
+                        // the non-animation work (camera framing below).
 
-                        // Route the selected argument to the optional animator bridges:
-                        // attacker plays an attack variant, target plays the matching hit reaction.
+                        // Hold the camera on the ATTACKER for the whole attack; it eases back to the
+                        // midpoint between the fighters when the exchange ends (see the queue item's
+                        // completion below). This is the persistent attack shot, not a short bias.
                         try
                         {
-                            var attackerBridge = GetBridgeForSide(attackerSide.Value);
-                            var targetBridge = GetBridgeForSide(targetSide.Value);
-                            if (attackerBridge != null || targetBridge != null)
-                            {
-                                int attackIndex = attackerBridge != null ? attackerBridge.AttackFromAnimationId(animationId) : 0;
-                                targetBridge?.TakeHitFromAnimationId(animationId, attackIndex);
-                                if (attackIndex > 0) variant = attackIndex; // reuse variant for DAMAGE_APPLIED pairing
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Debug.LogWarning($"GameManager: bridge ARGUMENT_SELECTED routing failed: {ex}");
-                        }
-
-                        // Store mapping keyed by turnId:actor:target so DAMAGE_APPLIED can reuse same variant
-                        try
-                        {
-                            if (variant > 0 && !string.IsNullOrEmpty(ev.turnId))
-                            {
-                                string key = $"{ev.turnId}:{actorCharacterId}:{targetCharacterId}";
-                                _matchedVariantMap[key] = variant;
-                                Debug.Log($"GameManager: Stored matched variant {variant} for key {key}");
-                            }
-                        }
-                        catch { }
-                        // Request camera to focus toward attacker briefly and trigger a subtle shake
-                        try
-                        {
-                            MortalKombatCamera.Instance?.FocusOnSide(attackerSide.Value, 0.35f, 0.45f);
+                            MortalKombatCamera.Instance?.BeginAttackFocus(attackerSide.Value);
                             MortalKombatCamera.Instance?.TriggerImpactShake();
                         }
                         catch { }
                     }
                     else if (!string.IsNullOrEmpty(animationId) && attackerSide.HasValue)
                     {
-                        // Fallback if we only have attacker side
-                        Debug.LogWarning($"❌ [ARGUMENT_SELECTED] Could not determine target side. Attacker={attackerSide}, Target={targetSide}, using single animation");
-                        animationController?.PlayAnimation(attackerSide.Value, animationId);
+                        // Fallback if we only have attacker side: play the attack in place (no move).
+                        Debug.LogWarning($"Animation ❌ [ARGUMENT_SELECTED] Could not determine target side. Attacker={attackerSide}, Target={targetSide}, using single animation");
+                        PlayAnimationForSide(attackerSide.Value, animationId, defaultCrossFade);
                     }
                     else
                     {
-                        Debug.LogError($"❌ [ARGUMENT_SELECTED] Missing required data: animationId='{animationId}', attackerSide={attackerSide}");
+                        Debug.LogError($"Animation ❌ [ARGUMENT_SELECTED] Missing required data: animationId='{animationId}', attackerSide={attackerSide}");
                     }
 
                     // Show meme text on attacker
@@ -947,13 +1558,8 @@ public class GameManager : MonoBehaviour
                     {
                         string attUI = attackerSide.HasValue ? (uiManager != null ? uiManager.name : "(no UI)") : "(unknown)";
                         string tarUI = targetSide.HasValue ? (uiManager != null ? uiManager.name : "(no UI)") : "(unknown)";
-                        string attAnim = "(none)";
-                        string tarAnim = "(none)";
-                        if (animationController != null)
-                        {
-                            attAnim = attackerSide == PlayerUI.Side.Left ? (animationController.leftAnimator?.gameObject.name ?? "(no animator)") : (animationController.rightAnimator?.gameObject.name ?? "(no animator)");
-                            tarAnim = targetSide == PlayerUI.Side.Left ? (animationController.leftAnimator?.gameObject.name ?? "(no animator)") : (animationController.rightAnimator?.gameObject.name ?? "(no animator)");
-                        }
+                        string attAnim = GetFighterTransform(attackerSide ?? PlayerUI.Side.Left)?.name ?? "(none)";
+                        string tarAnim = GetFighterTransform(targetSide ?? PlayerUI.Side.Right)?.name ?? "(none)";
                         Debug.Log($"ARGUMENT_SELECTED DIAG: attackerSide={attackerSide} attackerUI={attUI} attackerAnim={attAnim} | targetSide={targetSide} targetUI={tarUI} targetAnim={tarAnim}");
                     }
                     catch { }
@@ -983,194 +1589,36 @@ public class GameManager : MonoBehaviour
                 break;
             case "DAMAGE_APPLIED":
                 {
+                    // ONE TURN = ONE STACK: this event is normally consumed by the turn stack, which
+                    // applies HP exactly once (ApplyTurnHpOnce) and routes the reaction
+                    // (RouteTurnDamageReaction). This case only runs when a DAMAGE_APPLIED arrives OUTSIDE
+                    // a turn (no turnId), so it must NOT write HP on its own -- it delegates to the SAME
+                    // guarded writer, keeping "mỗi turn chỉ trừ máu 1 lần khi bị hit" true in every path.
                     string targetId = payload.Value<string>("targetCharacterId");
-                    long damage = payload.Value<long?>("damageAtomic") ?? 0;
-                    long hpAfter = payload.Value<long?>("hpAfterAtomic") ?? 0;
                     string animationId = payload.Value<string>("animationId");
+                    long damage = payload.Value<long?>("damageAtomic") ?? 0;
+                    long hpAfter = payload.Value<long?>("hpAfterAtomic") ?? -1;
+
                     var side = SideFromCharacterId(targetId);
-
-                    if (side.HasValue)
+                    if (!side.HasValue)
                     {
-                        try
-                        {
-                            var uiObj = uiManager != null ? uiManager.name : "(no UI)";
-                            var animObj = animationController != null ? (side == PlayerUI.Side.Left ? (animationController.leftAnimator?.gameObject.name ?? "(no animator)") : (animationController.rightAnimator?.gameObject.name ?? "(no animator)")) : "(no animctrl)";
-                            Debug.Log($"HP_CHANGED DIAG: characterId={targetId} side={side} ui={uiObj} animator={animObj}");
-                        }
-                        catch { }
-                        try
-                        {
-                            var uiObj = uiManager != null ? uiManager.name : "(no UI)";
-                            var animObj = animationController != null ? (side == PlayerUI.Side.Left ? (animationController.leftAnimator?.gameObject.name ?? "(no animator)") : (animationController.rightAnimator?.gameObject.name ?? "(no animator)")) : "(no animctrl)";
-                            Debug.Log($"DAMAGE_APPLIED DIAG: targetId={targetId} side={side} ui={uiObj} animator={animObj}");
-                        }
-                        catch { }
-                        // Record any known hp values as candidate max so future displays can use a stable max.
-                        long hpBefore = payload.Value<long?>("hpBeforeAtomic") ?? 0;
-                        EnsureKnownMaxHp(targetId, hpBefore, hpAfter);
-                        // Resolve max HP: try local store, then latest snapshot, then fall back to hpBefore/hpAfter
-                        long maxHp = 0;
-                        if (!_characterMaxHp.TryGetValue(targetId, out maxHp) || maxHp == 0)
-                        {
-                            // try mapping from side key
-                            if (_characterNames.TryGetValue(targetId, out var mapped) && _characterMaxHp.TryGetValue(mapped, out var mm)) maxHp = mm;
-                        }
-                        if ((maxHp == 0 || maxHp < hpAfter) && _latestSnapshot?.characterMaxHpAtomic != null)
-                        {
-                            _latestSnapshot.characterMaxHpAtomic.TryGetValue(targetId, out maxHp);
-                            if (maxHp == 0 && _characterNames.TryGetValue("bot_a", out var aid) && _latestSnapshot.characterMaxHpAtomic.TryGetValue(aid, out var altA)) maxHp = altA;
-                        }
-                        // final fallback: use recorded hpBefore/hpAfter if no other max known
-                        if (maxHp == 0)
-                        {
-                            long hpBeforeVal = payload.Value<long?>("hpBeforeAtomic") ?? 0;
-                            long candidate = hpBeforeVal > 0 ? hpBeforeVal : hpAfter;
-                            if (candidate > 0) maxHp = candidate;
-                            // persist candidate as known max for next time
-                            if (maxHp > 0) _characterMaxHp[targetId] = maxHp;
-                        }
-
-                        // Update both slider and text display
-                        uiManager?.UpdateHealth(ToUISide(side.Value), hpAfter, maxHp);
-
-                        // Show damage popup
-                        if (damage > 0)
-                        {
-                            uiManager?.ShowDamage(ToUISide(side.Value), (int)damage);
-                        }
-
-                        // Play hit animation (or use provided animationId) then if HP reached zero play die after a short delay
-                        try
-                        {
-                            // When DAMAGE_APPLIED is received for a target, server-provided animationId may be the
-                            // attack id (from the actor). Map attack -> hit for the target so the visual shows a hit.
-                            // Prefer to reuse the variant previously chosen for this turn/actor/target if available
-                            string toPlay = "hit";
-                            int chosenVariant = 0;
-                            try
-                            {
-                                var actorId = payload.Value<string>("actorCharacterId");
-                                if (!string.IsNullOrEmpty(ev.turnId) && !string.IsNullOrEmpty(actorId) && !string.IsNullOrEmpty(targetId))
-                                {
-                                    string key = $"{ev.turnId}:{actorId}:{targetId}";
-                                    if (_matchedVariantMap.TryGetValue(key, out var v))
-                                    {
-                                        chosenVariant = v;
-                                    }
-                                }
-                            }
-                            catch { }
-
-                            if (!string.IsNullOrEmpty(animationId))
-                            {
-                                var lower = animationId.ToLowerInvariant();
-                                if (lower.Contains("attack"))
-                                {
-                                    // if we have a stored variant, construct hitN to match
-                                    if (chosenVariant > 0)
-                                    {
-                                        toPlay = $"hit{chosenVariant}";
-                                    }
-                                    else
-                                    {
-                                        toPlay = animationId.Replace("attack", "hit");
-                                    }
-                                }
-                                else
-                                {
-                                    // If payload already contained a hit id, use it. Otherwise default to 'hit'
-                                    toPlay = animationId;
-                                }
-                            }
-
-                            // If HP reached zero, play die immediately instead of a hit animation
-                            if (hpAfter == 0)
-                            {
-                                try
-                                {
-                                    // Ensure we only play die once per loser
-                                    if (!_loserSideForDieAnimation.HasValue || _loserSideForDieAnimation != side)
-                                    {
-                                        _loserSideForDieAnimation = side;
-                                        Debug.Log($"GameManager: DAMAGE_APPLIED -> HP is 0, playing KB_TopKO (die) on side={side}");
-                                        // Lethal hit: play the permanent death pose immediately.
-                                        // Works for BOTH light and heavy hits that drained the last HP:
-                                        // the character collapses into KB_TopKO and never gets up.
-                                        if (!bridgesTakePriority) animationController?.PlayAnimation(side.Value, "die", 0f);
-                                        GetBridgeForSide(side.Value)?.TakeFatalHit();
-                                    }
-                                }
-                                catch (Exception ex)
-                                {
-                                    Debug.LogWarning($"GameManager: failed to play die animation: {ex}");
-                                }
-                            }
-                            else
-                            {
-                                if (!bridgesTakePriority && !string.IsNullOrEmpty(toPlay))
-                                {
-                                    animationController?.PlayAnimation(side.Value, toPlay);
-                                }
-
-                                // Route the hit reaction to the optional bridge.
-                                // HitIndex mirrors the ATTACK's index (no randomisation): the variant chosen
-                                // in ARGUMENT_SELECTED is reused here so attackN pairs with hitN. Weight is
-                                // inferred from the BE animationId ("heavy" -> knockdown / KB_Idle_1).
-                                try
-                                {
-                                    var targetBridge = GetBridgeForSide(side.Value);
-                                    if (targetBridge != null)
-                                    {
-                                        // Heavy hits drive the knockdown flow; light hits stay inline.
-                                        bool isHeavy = !string.IsNullOrEmpty(animationId) &&
-                                                       animationId.ToLowerInvariant().Contains("heavy");
-                                        if (chosenVariant > 0)
-                                        {
-                                            // Authoritative pairing: hit follows the attack variant exactly.
-                                            targetBridge.TakeHitByAttackIndex(chosenVariant, isHeavy, animationId);
-                                        }
-                                        else
-                                        {
-                                            // No stored attack variant (e.g. missing turnId): fall back to
-                                            // string-based weight classification.
-                                            Debug.LogWarning($"GameManager: no matched attack variant for target {targetId} (turnId='{ev.turnId}'); falling back to animationId-based hit.");
-                                            targetBridge.TakeHitFromAnimationId(animationId);
-                                        }
-
-                                        // A heavy hit leaves the fighter knocked down. Nothing else in the
-                                        // flow calls Getup(), so without this the bridge sets IsKnockedDown=true
-                                        // and the controller parks the character in the knockdown idle forever:
-                                        // the getup animation never plays. Schedule the getup so the fighter
-                                        // stands back up and returns to Idle.
-                                        // (Lethal hits never reach here -- they are handled above via
-                                        // TakeFatalHit, which keeps the target down permanently in KB_TopKO.)
-                                        if (isHeavy && autoGetupAfterKnockdown)
-                                        {
-                                            StartCoroutine(PlayGetupAfterDelay(targetBridge, getupType, Mathf.Max(0f, getupDelay), payload.Value<string>("actorCharacterId")));
-                                        }
-                                    }
-                                }
-                                catch (Exception ex)
-                                {
-                                    Debug.LogWarning($"GameManager: bridge DAMAGE_APPLIED hit routing failed: {ex}");
-                                }
-
-                                // Step the attacker to the spot in front of the victim so the next
-                                // exchange lines up. Done after the hit reaction is issued so the move
-                                // and the animation read as one beat. Runs even when no bridge is wired.
-                                if (choreographAttackPositions)
-                                {
-                                    TryChoreographAttackPosition(payload.Value<string>("actorCharacterId"), targetId);
-                                }
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Debug.LogWarning($"GameManager: failed to play damage animation: {ex}");
-                        }
-
-                        Debug.Log($"DAMAGE_APPLIED {targetId}: -{damage} = {hpAfter}/{maxHp}");
+                        Debug.LogWarning($"Animation [GameManager] DAMAGE_APPLIED ignored: could not resolve '{targetId}' to a side.");
+                        break;
                     }
+
+                    // The single HP write (idempotent per turnId:target).
+                    ApplyTurnHpOnce(ev.turnId, targetId, hpAfter, damage, animationId);
+
+                    // Death pose / hit routing (no HP touched here).
+                    string exchangeKey = null;
+                    if (!string.IsNullOrEmpty(ev.turnId) && !string.IsNullOrEmpty(targetId))
+                    {
+                        var actorId = payload.Value<string>("actorCharacterId");
+                        if (!string.IsNullOrEmpty(actorId)) exchangeKey = $"{ev.turnId}:{actorId}:{targetId}";
+                    }
+                    RouteTurnDamageReaction(ev, side, side, exchangeKey, hpAfter);
+
+                    Debug.Log($"DAMAGE_APPLIED {targetId}: -{damage} = {hpAfter}");
                 }
                 break;
             case "HP_CHANGED":
@@ -1179,37 +1627,19 @@ public class GameManager : MonoBehaviour
                     long hpAfter = payload.Value<long?>("hpAfterAtomic") ?? 0;
                     var side = SideFromCharacterId(targetId);
 
+                    // HP_CHANGED is the BE's AUTHORITATIVE HP value for this character. It is routed
+                    // through the SAME single guarded writer as the turn stack (ApplyTurnHpOnce), so no
+                    // matter which path reaches here the bar is written AT MOST ONCE per (turnId:character).
                     if (side.HasValue)
                     {
-                        // Try to persist any known values as max for future updates
-                        EnsureKnownMaxHp(targetId, 0, hpAfter);
-
-                        long maxHp = 0;
-                        // Prefer locally cached max
-                        if (!_characterMaxHp.TryGetValue(targetId, out maxHp) || maxHp == 0)
-                        {
-                            // try snapshot
-                            if (_latestSnapshot?.characterMaxHpAtomic != null) _latestSnapshot.characterMaxHpAtomic.TryGetValue(targetId, out maxHp);
-                            if (maxHp == 0 && _characterNames.TryGetValue(targetId, out var mapped) && _latestSnapshot?.characterMaxHpAtomic != null) _latestSnapshot.characterMaxHpAtomic.TryGetValue(mapped, out maxHp);
-                        }
-                        // try local store again
-                        if (maxHp == 0) _characterMaxHp.TryGetValue(targetId, out maxHp);
-                        if (maxHp == 0 && _characterNames.TryGetValue("bot_a", out var aid)) _characterMaxHp.TryGetValue(aid, out maxHp);
-
-                        // fallback to hpAfter if still unknown, and persist it (so slider text doesn't show current/current)
-                        if (maxHp == 0)
-                        {
-                            maxHp = hpAfter;
-                            if (maxHp > 0) _characterMaxHp[targetId] = maxHp;
-                        }
-
-                        // Update both slider and text display
-                        uiManager?.UpdateHealth(ToUISide(side.Value), hpAfter, maxHp);
-
-                        Debug.Log($"HP_CHANGED {targetId}: {hpAfter}/{maxHp}");
+                        ApplyTurnHpOnce(ev.turnId, targetId, hpAfter, 0, null);
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"Animation [GameManager] HP_CHANGED ignored: could not resolve '{targetId}' to a side.");
                     }
 
-                    // Also update snapshot for future reference
+                    // Keep the snapshot in sync so later comparisons/repaints agree with the BE.
                     if (_latestSnapshot != null && _latestSnapshot.characterHpAtomic != null)
                     {
                         _latestSnapshot.characterHpAtomic[targetId] = hpAfter;
@@ -1256,26 +1686,21 @@ public class GameManager : MonoBehaviour
                         {
                             Debug.Log($"GameManager: _characterNames map: bot_a='{(_characterNames.TryGetValue("bot_a", out var _a) ? _a : "(none)")}', bot_b='{(_characterNames.TryGetValue("bot_b", out var _b) ? _b : "(none)")}'");
                             Debug.Log($"GameManager: _characterMaxHp keys: {string.Join(",", _characterMaxHp.Keys)}");
-                            if (animationController != null)
-                            {
-                                Debug.Log($"GameManager: AnimationController leftAnimator={(animationController.leftAnimator!=null?animationController.leftAnimator.gameObject.name:"(null)" )} rightAnimator={(animationController.rightAnimator!=null?animationController.rightAnimator.gameObject.name:"(null)")}");
-                            }
                         }
                         catch { }
                         // Restore normal speech behavior when declaring winner
                         _swapSpeechDuringMatch = false;
                         // Winner: show victory dialogue and play victory animation
                         uiManager?.SetDialogue(ToUISide(winnerSide.Value), "VICTORY!");
-                        if (!bridgesTakePriority) animationController?.PlayAnimation(winnerSide.Value, "victory");
+                        PlayAnimationForSide(winnerSide.Value, "victory", defaultCrossFade);
 
                         // Loser: play die animation (only once)
                         if (!_loserSideForDieAnimation.HasValue || _loserSideForDieAnimation != loserSide)
                         {
                             _loserSideForDieAnimation = loserSide;
-                            Debug.Log($"GameManager: Attempting to play die animation on loser side={loserSide}");
+                            Debug.Log($"Animation [GameManager] Attempting to play die animation on loser side={loserSide}");
                             if (loserSide.HasValue)
                             {
-                                if (!bridgesTakePriority) animationController?.PlayAnimation(loserSide.Value, "die", 0f);
                                 GetBridgeForSide(loserSide.Value)?.Die();
                             }
                         }
@@ -1296,104 +1721,78 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Steps the attacker to the attack spot in front of the victim. Resolves both fighters'
-    /// transforms and delegates the actual choreography to the CombatPositioningController.
-    /// Safe to call when positioning is not set up: it simply does nothing.
+    /// Routes a combat exchange through the CombatPositioningController's queue so the SEQUENCE is
+    /// guaranteed: attacker moves to the spot in front of the victim, THEN the attack/hit pair plays,
+    /// and only then does the next queued action run. When positioning is not set up (or choreography
+    /// is disabled) it degrades to playing the clips directly.
     /// </summary>
-    private void TryChoreographAttackPosition(string attackerCharacterId, string victimCharacterId)
+    private void RouteCombatAction(PlayerUI.Side attackerSide, PlayerUI.Side victimSide,
+                                   string attackerAnimationId, string hitAnimationId)
     {
         var pos = Positioning;
-        if (pos == null) return;
+        bool canChoreograph = choreographAttackPositions && pos != null &&
+                              pos.LeftFighter != null && pos.RightFighter != null;
 
-        PlayerUI.Side? attackerSide = SideFromCharacterId(attackerCharacterId);
-        PlayerUI.Side? victimSide = SideFromCharacterId(victimCharacterId);
-        if (!attackerSide.HasValue || !victimSide.HasValue) return;
+        if (canChoreograph)
+        {
+            // Keep the controller's fighter references in sync (in case the scene rebuilt them).
+            pos.SetFighters(GetFighterTransform(PlayerUI.Side.Left), GetFighterTransform(PlayerUI.Side.Right));
+            pos.EnqueueMoveThenAnimate(attackerSide, victimSide, attackerAnimationId, hitAnimationId);
+            return;
+        }
 
-        Transform attacker = GetFighterTransform(attackerSide.Value);
-        Transform victim = GetFighterTransform(victimSide.Value);
-        if (attacker == null || victim == null) return;
-
-        pos.MoveAttackerToSpot(attacker, victim);
+        // No positioning: play both clips back-to-back directly so the exchange still reads.
+        PlayAnimationForSide(attackerSide, attackerAnimationId, defaultCrossFade);
+        PlayAnimationForSide(victimSide, hitAnimationId, defaultCrossFade);
     }
 
     /// <summary>
-    /// Waits out the knockdown hold, then triggers the getup on the knocked-down fighter so it
-    /// stands back up and returns to Idle. Guarded against the fighter dying during the wait
-    /// (a lethal hit during the knockdown must stay down in KB_TopKO).
-    ///
-    /// On getup completion the attack spot is recomputed: standing up can change the victim's
-    /// facing, so a spot computed against the knockdown pose would be stale.
+    /// Schedules the getup on the knocked-down fighter through the SINGLE queue so it serializes
+    /// behind whatever is already playing. Two items are enqueued:
+    ///   1) a hold item that occupies the queue for <paramref name="delay"/> seconds (the knockdown
+    ///      beat), guarded so a fighter that died during the hold stays down;
+    ///   2) an animate item that triggers the getup and waits for it to finish.
+    /// Facing lock keeps the getup-facing correct automatically, so no spot recompute is needed.
     /// </summary>
-    private System.Collections.IEnumerator PlayGetupAfterDelay(CharacterAnimatorBridge bridge, int type, float delay, string attackerCharacterId)
+    private void ScheduleGetupThroughQueue(PlayerUI.Side side, CharacterAnimatorBridge bridge, int type, float delay)
     {
-        if (delay > 0f) yield return new WaitForSeconds(delay);
+        var pos = Positioning;
+        if (pos == null || bridge == null) return;
 
-        // The target may have died during the hold -> keep it down, no getup.
-        if (bridge == null || bridge.IsDead) yield break;
+        pos.SetFighters(GetFighterTransform(PlayerUI.Side.Left), GetFighterTransform(PlayerUI.Side.Right));
 
-        // Recompute the attack spot once the getup has actually been consumed by the controller
-        // (the victim's facing may have changed while standing up). Subscribed per getup and
-        // unsubscribed immediately after, so handlers never leak across turns.
-        PlayerUI.Side? victimSide = bridge.Animator != null ? SideOfBridge(bridge) : (PlayerUI.Side?)null;
-        Action onGetupDone = null;
-        if (choreographAttackPositions && victimSide.HasValue)
+        // 1) Knockdown hold: a no-op item that simply occupies the queue for `delay` seconds, and
+        //    bails early if the fighter died during the hold (IsDead -> predicate true -> advance).
+        if (delay > 0f)
         {
-            var victimSideValue = victimSide.Value;
-            onGetupDone = () =>
+            pos.EnqueueWork(
+                $"getup hold {side} {delay:0.00}s",
+                null,
+                () => bridge == null || bridge.IsDead,
+                delay);
+        }
+
+        // 2) Getup: triggers the getup clip. This stack does NOT complete until the fighter has
+        //    actually stood back up AND returned to the Idle state (IsIdleAndSettled), so the next
+        //    queued stack only starts once the getup has fully finished. That keeps hit/attack from
+        //    ever firing while the fighter is still mid-getup (which would be swallowed, since those
+        //    transitions are authored from Idle).
+        pos.EnqueueWork(
+            $"getup {side}",
+            () =>
             {
-                var pos = Positioning;
-                if (pos == null) return;
-
-                PlayerUI.Side? attackerSide = SideFromCharacterId(attackerCharacterId);
-                if (!attackerSide.HasValue) return;
-
-                Transform attacker = GetFighterTransform(attackerSide.Value);
-                Transform victim = GetFighterTransform(victimSideValue);
-                if (attacker == null || victim == null) return;
-
-                pos.RecomputeAfterGetup(attacker, victim);
-            };
-            bridge.GetupCompleted += onGetupDone;
-        }
-
-        try
-        {
-            bridge.Getup(type);
-        }
-        catch (Exception ex)
-        {
-            Debug.LogWarning($"GameManager: failed to play getup animation: {ex}");
-        }
-
-        // Wait until the bridge reports the getup finished (or it gave up retrying) before
-        // dropping the handler, so the recompute is not unsubscribed too early.
-        float waited = 0f;
-        while (bridge != null && !bridge.IsDead && bridge.IsGetupPending && waited < maxEventHoldSeconds)
-        {
-            waited += Time.deltaTime;
-            yield return null;
-        }
-
-        if (onGetupDone != null && bridge != null) bridge.GetupCompleted -= onGetupDone;
-    }
-
-    /// <summary>Maps a bridge back to the side it drives (for getup recompute wiring).</summary>
-    private PlayerUI.Side? SideOfBridge(CharacterAnimatorBridge bridge)
-    {
-        if (bridge == null) return null;
-        if (bridge == leftBridge) return PlayerUI.Side.Left;
-        if (bridge == rightBridge) return PlayerUI.Side.Right;
-        return null;
-    }
-
-    private System.Collections.IEnumerator PlayDieAfterDelay(PlayerUI.Side side, float delay)
-    {
-        if (delay > 0f) yield return new WaitForSeconds(delay);
-        try
-        {
-            animationController?.PlayAnimation(side, "die");
-        }
-        catch { }
+                if (bridge == null || bridge.IsDead) return;
+                try
+                {
+                    // Derive the getup direction from the heavy hit that knocked the fighter down
+                    // (hit 5/6 -> GetupType 1, hit 7 -> GetupType 2), instead of a fixed Inspector
+                    // value. GetupFromKnockdown() falls back to the default when nothing was recorded.
+                    bridge.GetupFromKnockdown();
+                }
+                catch (Exception ex) { Debug.LogWarning($"Animation [GameManager] failed to play getup animation: {ex}"); }
+            },
+            () => bridge == null || bridge.IsDead || bridge.IsFullyIdleNow,
+            maxEventHoldSeconds);
     }
 
     // Debug helper: print setup info to console
@@ -1404,12 +1803,9 @@ public class GameManager : MonoBehaviour
         Debug.Log($"UIManager: {(uiManager != null ? "✓" : "✗")}");
         Debug.Log($"Legacy PlayerUI: {(playerUI != null ? "✓" : "✗")}");
         Debug.Log($"RoundManager: {(roundManager != null ? "✓" : "✗")}");
-        Debug.Log($"AnimationController: {(animationController != null ? "✓" : "✗")}");
-        if (animationController != null)
-        {
-            Debug.Log($"  - LeftAnimator: {(animationController.leftAnimator != null ? "✓" : "✗")}");
-            Debug.Log($"  - RightAnimator: {(animationController.rightAnimator != null ? "✓" : "✗")}");
-        }
+        Debug.Log($"CombatPositioningController: {(Positioning != null ? "✓" : "✗")}");
+        Debug.Log($"  - LeftFighter: {(Positioning?.LeftFighter != null ? Positioning.LeftFighter.name : "(none)")}");
+        Debug.Log($"  - RightFighter: {(Positioning?.RightFighter != null ? Positioning.RightFighter.name : "(none)")}");
         Debug.Log($"WebSocketManager: {(WebSocketManager.Instance != null ? "✓" : "✗")}");
         Debug.Log($"Event queue: {(useSequentialEventQueue ? "ON" : "OFF")} (pending={PendingEventCount})");
     }
@@ -1432,20 +1828,14 @@ public class GameManager : MonoBehaviour
 
     public void PlaySingleAnimation(PlayerUI.Side side, string animationId, float crossFade = -1f)
     {
-        animationController?.PlayAnimation(side, animationId, crossFade);
+        PlayAnimationForSide(side, animationId, crossFade < 0f ? defaultCrossFade : crossFade);
     }
 
     public void PlayBothAnimations(string leftAnimationId, string rightAnimationId, float crossFade = -1f)
     {
-        animationController?.PlayBoth(leftAnimationId, rightAnimationId, crossFade);
-    }
-
-    AnimationController.AnimationPair GetRandomPreset()
-    {
-        if (animationController == null || animationController.presets == null || animationController.presets.Length == 0) return null;
-        var valid = new System.Collections.Generic.List<AnimationController.AnimationPair>();
-        foreach (var p in animationController.presets) { if (p == null) continue; if (string.IsNullOrEmpty(p.leftState) || string.IsNullOrEmpty(p.rightState)) continue; valid.Add(p); }
-        if (valid.Count == 0) return null; int idx = UnityEngine.Random.Range(0, valid.Count); return valid[idx];
+        float fade = crossFade < 0f ? defaultCrossFade : crossFade;
+        PlayAnimationForSide(PlayerUI.Side.Left, leftAnimationId, fade);
+        PlayAnimationForSide(PlayerUI.Side.Right, rightAnimationId, fade);
     }
 
     string ExtractEventName(string json)
@@ -1467,97 +1857,30 @@ public class GameManager : MonoBehaviour
     }
 
     // ==================================================================
-    // Sequential event queue (built-in)
+    // ==================================================================
+    // Event queue (delegated)
     // ------------------------------------------------------------------
-    // Applies incoming events strictly one at a time, holding the queue
-    // for the duration of the animation each event triggers, so a new
-    // event can never cut off an animation still mid-play.
+    // GameManager no longer runs its own queue. Every gameplay event is handed to the SINGLE queue
+    // owned by CombatPositioningController (see HandleMemeBattleEvent), which applies the event and
+    // waits out the animation it triggers, one at a time. The members below are thin views onto that
+    // one queue so existing debug/UI code keeps working.
     // ==================================================================
 
-    /// <summary>
-    /// One queued unit of work: an action, a safety duration, and an optional completion
-    /// predicate. The queue advances as soon as the predicate reports done, or when the
-    /// duration elapses (whichever comes first).
-    /// </summary>
-    private class EventWorkItem
-    {
-        public readonly string label;
-        public readonly Action action;
-        public readonly float duration;
-        public readonly Func<bool> isFinished;
+    /// <summary>Number of events/actions still waiting on the single queue.</summary>
+    public int PendingEventCount => Positioning != null ? Positioning.PendingCount : 0;
 
-        public EventWorkItem(string label, Action action, float duration, Func<bool> isFinished = null)
-        {
-            this.label = label;
-            this.action = action;
-            this.duration = Mathf.Max(0f, duration);
-            this.isFinished = isFinished;
-        }
-    }
+    /// <summary>True while the single queue is applying an action or has actions waiting.</summary>
+    public bool IsEventQueueBusy => Positioning != null && Positioning.IsBusy;
 
-    private readonly System.Collections.Generic.Queue<EventWorkItem> _eventQueue =
-        new System.Collections.Generic.Queue<EventWorkItem>();
-    private Coroutine _eventQueueRunner;
-    private EventWorkItem _eventQueueCurrent;
-
-    /// <summary>Number of events waiting to be applied (excludes the one executing).</summary>
-    public int PendingEventCount => _eventQueue.Count;
-
-    /// <summary>True while an event is being applied or events are waiting.</summary>
-    public bool IsEventQueueBusy => _eventQueueCurrent != null || _eventQueue.Count > 0;
-
-    /// <summary>Drops all pending events (the one currently executing still completes).</summary>
+    /// <summary>Drops all pending actions (the one currently executing still completes).</summary>
     public void ClearEventQueue()
     {
-        int n = _eventQueue.Count;
-        _eventQueue.Clear();
-        if (n > 0 && debugMode) Debug.Log($"GameManager: cleared {n} pending event(s).");
-    }
-
-    private void EnsureQueueRunning()
-    {
-        if (_eventQueueRunner == null) _eventQueueRunner = StartCoroutine(RunEventQueue());
-    }
-
-    private System.Collections.IEnumerator RunEventQueue()
-    {
-        while (_eventQueue.Count > 0)
+        var pos = Positioning;
+        if (pos != null)
         {
-            _eventQueueCurrent = _eventQueue.Dequeue();
-            if (debugMode) Debug.Log($"GameManager: [queue] apply '{_eventQueueCurrent.label}' (pending left {_eventQueue.Count})");
-
-            try
-            {
-                _eventQueueCurrent.action?.Invoke();
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError($"GameManager: event '{_eventQueueCurrent.label}' threw: {ex}");
-            }
-
-            // Hold until the animation finishes (precise predicate) OR the safety duration
-            // elapses, whichever comes first. A short grace frame lets the action's animation
-            // command take effect before we start polling the animator state.
-            yield return null;
-
-            float hold = Mathf.Min(_eventQueueCurrent.duration, Mathf.Max(0f, maxEventHoldSeconds));
-            float elapsed = 0f;
-            while (elapsed < hold)
-            {
-                if (_eventQueueCurrent.isFinished != null)
-                {
-                    bool done;
-                    try { done = _eventQueueCurrent.isFinished(); }
-                    catch { done = true; }
-                    if (done) break;
-                }
-                elapsed += Time.unscaledDeltaTime;
-                yield return null;
-            }
-
-            _eventQueueCurrent = null;
+            int n = pos.PendingCount;
+            pos.ClearQueue();
+            if (n > 0 && debugMode) Debug.Log($"GameManager: cleared {n} pending queued action(s).");
         }
-
-        _eventQueueRunner = null;
     }
 }
