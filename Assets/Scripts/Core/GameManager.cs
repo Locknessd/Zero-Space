@@ -1074,7 +1074,7 @@ public class GameManager : MonoBehaviour
             // 4) Death pose / hit routing that depends on the damage event.
             if (damageApplied != null)
             {
-                RouteTurnDamageReaction(damageApplied, victimSide, hpSide, exchangeKey, hpAfter);
+                RouteTurnDamageReaction(damageApplied, victimSide, hpSide, exchangeKey, hpAfter, hasExchange);
             }
 
             for (int i = 0; i < watched.Count; i++)
@@ -1175,7 +1175,8 @@ public class GameManager : MonoBehaviour
     /// for the turn happened in <see cref="ApplyTurnHpOnce"/>.
     /// </summary>
     private void RouteTurnDamageReaction(MemeBattleEvent damageApplied, PlayerUI.Side? victimSide,
-                                         PlayerUI.Side? hpSide, string exchangeKey, long hpAfter)
+                                         PlayerUI.Side? hpSide, string exchangeKey, long hpAfter,
+                                         bool hasExchange)
     {
         var payload = damageApplied?.payload;
         if (payload == null) return;
@@ -1185,43 +1186,54 @@ public class GameManager : MonoBehaviour
         var side = SideFromCharacterId(targetId);
         if (!side.HasValue) return;
 
-        // Lethal hit: play the permanent death pose, once.
-        if (hpAfter == 0)
+        // Is this hit HEAVY? The BE animationId carries the weight ("...heavy").
+        bool isHeavy = !string.IsNullOrEmpty(animationId) && animationId.ToLowerInvariant().Contains("heavy");
+
+        // LETHAL DEATH POSE -- LIGHT HITS ONLY, and ONLY when this turn has NO attack exchange.
+        //
+        // When the turn HAS an exchange, the victim's reaction clip is fired by the exchange's animate
+        // step via PlayAnimationForSide -- which already implements the rule we want:
+        //   * lethal LIGHT hit -> skip the light reaction, play the death pose;
+        //   * lethal HEAVY hit -> play the normal (knockdown) hit reaction, NO death pose.
+        // Forcing the death pose HERE as well would both double-trigger it and (because apply runs before
+        // the animate step) pre-empt the heavy hit reaction -- so we leave the exchange path alone.
+        //
+        // The no-exchange path (a DAMAGE_APPLIED with no ARGUMENT_SELECTED) has no clip of its own, so we
+        // resolve the reaction here: lethal light -> death pose; heavy -> (handled by WINNER_DECLARED later).
+        if (hasExchange)
+        {
+            // Exchange path: the clip + lethal rule were already applied by the exchange step. Nothing to
+            // do for the reaction here.
+            return;
+        }
+
+        if (hpAfter == 0 && !isHeavy)
         {
             if (!_loserSideForDieAnimation.HasValue || _loserSideForDieAnimation != side)
             {
                 _loserSideForDieAnimation = side;
-                if (debugMode) Debug.Log($"Animation [GameManager] lethal hit -> KB_TopKO (die) on side={side}");
+                if (debugMode) Debug.Log($"Animation [GameManager] lethal LIGHT hit (no exchange) -> KB_TopKO (die) on side={side}");
                 GetBridgeForSide(side.Value)?.TakeFatalHit();
             }
             return;
         }
 
-        // Non-lethal: the attack+hit pair already played in the exchange step of this SAME stack (the
-        // queue fired the hit reaction on the same frame as the attack). So we only need to schedule the
-        // getup for a knocked-down survivor. When the exchange chained the getup already
-        // (_exchangeGetupHandled) we do nothing -- a duplicate getup would replay the stand-up.
+        if (isHeavy)
+        {
+            if (debugMode) Debug.Log($"Animation [GameManager] heavy hit on {targetId} (hp={hpAfter}) with no exchange -> normal hit kept, no forced death pose.");
+            return;
+        }
+
+        // Non-lethal LIGHT with NO exchange: no hit clip of its own was fired, so schedule the getup for a
+        // knocked-down survivor directly.
         var targetBridge = GetBridgeForSide(side.Value);
         if (targetBridge == null) return;
 
-        bool isHeavy = !string.IsNullOrEmpty(animationId) && animationId.ToLowerInvariant().Contains("heavy");
         bool knockedDownNow = targetBridge.IsKnockedDown ||
                               (targetBridge.Animator != null && targetBridge.Animator.GetBool("IsKnockedDown"));
 
-        bool getupAlreadyChained = !string.IsNullOrEmpty(exchangeKey) && _exchangeGetupHandled.Contains(exchangeKey);
-        if (getupAlreadyChained)
-        {
-            if (debugMode) Debug.Log($"Animation [GameManager] DAMAGE_APPLIED {targetId}: getup already chained in '{exchangeKey}' -> not scheduling another.");
-            _exchangeGetupHandled.Remove(exchangeKey);
-        }
-
-        // Only schedule a getup when there was NO attack exchange in this turn (i.e. the exchange step
-        // did not already fire the hit + chained getup). When there was an exchange, everything is done.
-        if (string.IsNullOrEmpty(exchangeKey))
-        {
-            if (autoGetupAfterKnockdown && (isHeavy || knockedDownNow))
-                ScheduleGetupThroughQueue(side.Value, targetBridge, getupType, Mathf.Max(0f, getupDelay));
-        }
+        if (autoGetupAfterKnockdown && knockedDownNow)
+            ScheduleGetupThroughQueue(side.Value, targetBridge, getupType, Mathf.Max(0f, getupDelay));
     }
 
     /// <summary>
@@ -1609,14 +1621,16 @@ public class GameManager : MonoBehaviour
                     // The single HP write (idempotent per turnId:target).
                     ApplyTurnHpOnce(ev.turnId, targetId, hpAfter, damage, animationId);
 
-                    // Death pose / hit routing (no HP touched here).
+                    // Death pose / hit routing (no HP touched here). This is the NO-EXCHANGE path (a
+                    // DAMAGE_APPLIED with no ARGUMENT_SELECTED / already fired by its turn stack), so there
+                    // is no victim clip of its own -> hasExchange = false.
                     string exchangeKey = null;
                     if (!string.IsNullOrEmpty(ev.turnId) && !string.IsNullOrEmpty(targetId))
                     {
                         var actorId = payload.Value<string>("actorCharacterId");
                         if (!string.IsNullOrEmpty(actorId)) exchangeKey = $"{ev.turnId}:{actorId}:{targetId}";
                     }
-                    RouteTurnDamageReaction(ev, side, side, exchangeKey, hpAfter);
+                    RouteTurnDamageReaction(ev, side, side, exchangeKey, hpAfter, false);
 
                     Debug.Log($"DAMAGE_APPLIED {targetId}: -{damage} = {hpAfter}");
                 }
