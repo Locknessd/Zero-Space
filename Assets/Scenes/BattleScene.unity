@@ -48497,10 +48497,10 @@ MonoBehaviour:
   getupTypeParam: GetupType
   triggerGetupParam: TriggerGetup
   isDeadParam: IsDead
-  lightAttackIndices: 0100000003000000
-  heavyAttackIndices: 050000000600000007000000
-  lightHitIndices: 0100000003000000
-  heavyHitIndices: 050000000600000007000000
+  lightAttackIndices: 010000000300000000000000
+  heavyAttackIndices: 0500000006000000070000000200000008000000
+  lightHitIndices: 010000000300000000000000
+  heavyHitIndices: 0500000006000000070000000200000008000000
   hitEffect: {fileID: 1309743647}
   heavyHitEffectDelay: 1.25
   backGetupHitIndices: 0500000006000000
@@ -64589,6 +64589,7 @@ MonoBehaviour:
   getupSettleSeconds: 1.5
   getupAfterHitDelay: 1
   turnStackFlushDelay: 0.5
+  AnimationEndSafetyHoldSeconds: 20
 --- !u!1 &1097279629
 GameObject:
   m_ObjectHideFlags: 0
@@ -68471,7 +68472,10 @@ MonoBehaviour:
   groundResetDuration: 0.15
   attackSpotDistance: 2
   lightAttackSpotScale: 0.5
-  returnHomeAfterExchange: 1
+  attackSpotsRelativeToCentre: 1
+  sideLaneOffset: 0.8
+  desiredFighterDistance: 2.2
+  minFighterDistance: 0.7
   attackSpotOffset: {x: 0, y: 0, z: 0}
   moveDuration: 0.35
   moveEase:
@@ -68490,7 +68494,9 @@ MonoBehaviour:
   spacingScale: 1
   preExchangeSpacing: 0.25
   betweenActionsSpacing: 0.4
-  afterReturnHomeSpacing: 0.35
+  stanceReturnDuration: 0.3
+  enforceFighterSpacing: 1
+  resetStanceOnMatchStart: 0
   alwaysWaitFullClipLength: 1
   maxActionHold: 15
   maxHoldOvershoot: 8
@@ -114018,9 +114024,9 @@ MonoBehaviour:
   getupTypeParam: GetupType
   triggerGetupParam: TriggerGetup
   isDeadParam: IsDead
-  lightAttackIndices: 0100000003000000
+  lightAttackIndices: 010000000300000000000000
   heavyAttackIndices: 0500000006000000070000000200000008000000
-  lightHitIndices: 0100000003000000
+  lightHitIndices: 010000000300000000000000
   heavyHitIndices: 0500000006000000070000000200000008000000
   hitEffect: {fileID: 301162335}
   heavyHitEffectDelay: 1.25
