@@ -40,7 +40,7 @@ public class AnimationEndAction : StateMachineBehaviour
         if (bridge != null) bridge.NotifyAnimationStateEntered(stateInfo.shortNameHash);
 
         if (verboseLogging)
-            Debug.Log($"Animation [AnimationEndAction] state ENTER hash={stateInfo.shortNameHash} on '{animator?.name}'", animator);
+            AnimLogChecker.Log("END-ACTION", $"state ENTER hash={stateInfo.shortNameHash} on '{animator?.name}'");
     }
 
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -49,6 +49,6 @@ public class AnimationEndAction : StateMachineBehaviour
         if (bridge != null) bridge.NotifyAnimationStateExited(stateInfo.shortNameHash);
 
         if (verboseLogging)
-            Debug.Log($"Animation [AnimationEndAction] state EXIT hash={stateInfo.shortNameHash} on '{animator?.name}'", animator);
+            AnimLogChecker.Log("END-ACTION", $"state EXIT hash={stateInfo.shortNameHash} on '{animator?.name}'");
     }
 }

@@ -8624,17 +8624,17 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 147223670}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: -0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 111907821}
   m_Father: {fileID: 1312906889}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
-  m_AnchorMin: {x: 0, y: 0.12}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 194.46, y: 20.08}
-  m_SizeDelta: {x: 72.92, y: 40.15}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 20, y: -150}
+  m_SizeDelta: {x: 312.91998, y: 124.15}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &147223672
 MonoBehaviour:
@@ -18024,7 +18024,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
   m_UseReflectionProbes: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -18331,9 +18331,29 @@ MonoBehaviour:
   attackFocusZoomIn: 0.5
   focusSmoothTime: 0.18
   maxAttackFocusSeconds: 8
+  attackOrbitDegrees: 35
+  attackOrbitDistance: -2.2
+  attackOrbitPitch: 12
+  attackOrbitHeight: 0.35
+  attackOrbitBlendTime: 0.18
+  rotateViewDuringAttack: 1
+  useDynamicShotAngles: 1
+  minSecondsBetweenAngleChanges: 0.4
+  avoidRepeatingLastAngle: 1
+  shotAngles: []
+  shotAngleBlendTime: 0.12
+  attackFromBehind: 1
+  behindStartBlend: 0.95
+  behindOrbitSweep: 40
+  behindHeight: 0.9
+  behindDistance: -0.6
+  behindBlendTime: 0.18
+  behindSweepDuration: 0.55
+  behindSweepDolly: -0.5
   minAttackFocusSeconds: 0.5
   releaseFocusWhenAttackerIdle: 1
   smoothTime: 0.08
+  shotEntrySmoothScale: 0.2
   zoomSmoothTime: 0.12
   clampHorizontal: 1
   minStageX: -12
@@ -35958,6 +35978,7 @@ MonoBehaviour:
   fallbackAnimationDuration: 0.8
   animationDurationPadding: 0.05
   maxAnimationWait: 5
+  swallowedTriggerGrace: 0.75
 --- !u!95 &621995464
 Animator:
   serializedVersion: 7
@@ -43379,6 +43400,7 @@ MonoBehaviour:
   fallbackAnimationDuration: 0.8
   animationDurationPadding: 0.05
   maxAnimationWait: 5
+  swallowedTriggerGrace: 0.75
 --- !u!1 &759614557
 GameObject:
   m_ObjectHideFlags: 0
@@ -48522,6 +48544,7 @@ MonoBehaviour:
   fallbackAnimationDuration: 0.8
   animationDurationPadding: 0.05
   maxAnimationWait: 5
+  swallowedTriggerGrace: 0.75
 --- !u!95 &840873218
 Animator:
   serializedVersion: 7
@@ -60248,10 +60271,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 48e06044aac78f16185b91fa955fc334,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1312906889}
-    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 48e06044aac78f16185b91fa955fc334,
-        type: 3}
-      insertIndex: -1
       addedObject: {fileID: 1309743645}
     - targetCorrespondingSourceObject: {fileID: 6502182839619065283, guid: 48e06044aac78f16185b91fa955fc334,
         type: 3}
@@ -64588,7 +64607,7 @@ MonoBehaviour:
   debugMode: 1
   getupSettleSeconds: 1.5
   getupAfterHitDelay: 1
-  turnStackFlushDelay: 0.5
+  logLatencyDiagnostics: 1
   AnimationEndSafetyHoldSeconds: 20
 --- !u!1 &1097279629
 GameObject:
@@ -68470,7 +68489,7 @@ MonoBehaviour:
   lockRotationRuntime: 1
   faceEachOther: 1
   groundResetDuration: 0.15
-  attackSpotDistance: 2
+  attackSpotDistance: 2.5
   lightAttackSpotScale: 0.5
   attackSpotsRelativeToCentre: 1
   sideLaneOffset: 0.8
@@ -68501,6 +68520,7 @@ MonoBehaviour:
   maxActionHold: 15
   maxHoldOvershoot: 8
   verboseLogging: 1
+  minClipCompletionFloor: 0.15
 --- !u!1 &1147941332
 GameObject:
   m_ObjectHideFlags: 0
@@ -78564,9 +78584,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1312906889}
-  - component: {fileID: 1312906892}
-  - component: {fileID: 1312906891}
-  - component: {fileID: 1312906890}
   m_Layer: 0
   m_Name: SpeechBubble_TrumpVictim
   m_TagString: Untagged
@@ -78581,84 +78598,20 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1312906888}
-  m_LocalRotation: {x: -0, y: -0.588294, z: -0, w: 0.80864716}
-  m_LocalPosition: {x: 0, y: 0, z: -0.1}
-  m_LocalScale: {x: -0.004999998, y: 0.005, z: 0.0049999985}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 147223671}
   - {fileID: 1908485238}
-  m_Father: {fileID: 1739160256}
-  m_LocalEulerAnglesHint: {x: 0, y: -72.1, z: 0}
+  m_Father: {fileID: 1413771723}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.5, y: 1.8}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 240, y: 95}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1312906890
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1312906888}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.GraphicRaycaster
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
---- !u!114 &1312906891
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1312906888}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
-  m_UiScaleMode: 0
-  m_ReferencePixelsPerUnit: 100
-  m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
-  m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
-  m_PhysicalUnit: 3
-  m_FallbackScreenDPI: 96
-  m_DefaultSpriteDPI: 96
-  m_DynamicPixelsPerUnit: 4
-  m_PresetInfoIsWorld: 1
---- !u!223 &1312906892
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1312906888}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 330585545}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
-  m_UseReflectionProbes: 0
-  m_AdditionalShaderChannelsFlag: 25
-  m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
 --- !u!1 &1313682514
 GameObject:
   m_ObjectHideFlags: 0
@@ -83153,6 +83106,7 @@ RectTransform:
   m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1312906889}
   - {fileID: 1075669711}
   - {fileID: 1536424799}
   - {fileID: 1657981787}
@@ -83762,9 +83716,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1430686226}
-  - component: {fileID: 1430686229}
-  - component: {fileID: 1430686228}
-  - component: {fileID: 1430686227}
   m_Layer: 0
   m_Name: SpeechBubble_TrumpVictim
   m_TagString: Untagged
@@ -83779,84 +83730,20 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1430686225}
-  m_LocalRotation: {x: 0.0000014603139, y: 0.70710826, z: -0.0000032186508, w: 0.7071054}
-  m_LocalPosition: {x: 0, y: 0, z: -0.6}
-  m_LocalScale: {x: 0.0049999976, y: 0.005, z: 0.004999998}
+  m_LocalRotation: {x: 0.0000033085275, y: 0.0000020265577, z: -0.0000012433319, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1589913387}
   - {fileID: 649286515}
-  m_Father: {fileID: 1193290447}
+  m_Father: {fileID: 1510270480}
   m_LocalEulerAnglesHint: {x: 1.501, y: 90.453, z: 6.537}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.5, y: 1.8}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 240, y: 95}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1430686227
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1430686225}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.GraphicRaycaster
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
---- !u!114 &1430686228
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1430686225}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
-  m_UiScaleMode: 0
-  m_ReferencePixelsPerUnit: 100
-  m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
-  m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
-  m_PhysicalUnit: 3
-  m_FallbackScreenDPI: 96
-  m_DefaultSpriteDPI: 96
-  m_DynamicPixelsPerUnit: 4
-  m_PresetInfoIsWorld: 1
---- !u!223 &1430686229
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1430686225}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 330585545}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
-  m_UseReflectionProbes: 0
-  m_AdditionalShaderChannelsFlag: 25
-  m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
 --- !u!1 &1432868773
 GameObject:
   m_ObjectHideFlags: 0
@@ -87821,6 +87708,7 @@ RectTransform:
   m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1430686226}
   - {fileID: 1823942367}
   - {fileID: 2102233286}
   - {fileID: 424264539}
@@ -88959,10 +88847,6 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 400136, guid: b0db79c58a2aa3747a484750f5a19d9a,
-        type: 3}
-      insertIndex: 0
-      addedObject: {fileID: 1430686226}
     - targetCorrespondingSourceObject: {fileID: 400136, guid: b0db79c58a2aa3747a484750f5a19d9a,
         type: 3}
       insertIndex: -1
@@ -92100,18 +91984,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1589913386}
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: -0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 80632610}
   m_Father: {fileID: 1430686226}
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
-  m_AnchorMin: {x: 0, y: 0.12}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 194.46, y: 20.08}
-  m_SizeDelta: {x: 72.92, y: 40.15}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -220, y: -150}
+  m_SizeDelta: {x: 312.91998, y: 124.15}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1589913388
 MonoBehaviour:
@@ -101091,6 +100975,7 @@ MonoBehaviour:
   fallbackAnimationDuration: 0.8
   animationDurationPadding: 0.05
   maxAnimationWait: 5
+  swallowedTriggerGrace: 0.75
 --- !u!1 &1734020275
 GameObject:
   m_ObjectHideFlags: 0
@@ -114049,6 +113934,7 @@ MonoBehaviour:
   fallbackAnimationDuration: 0.8
   animationDurationPadding: 0.05
   maxAnimationWait: 5
+  swallowedTriggerGrace: 0.75
 --- !u!95 &1956277322
 Animator:
   serializedVersion: 7
@@ -125590,6 +125476,7 @@ MonoBehaviour:
   fallbackAnimationDuration: 0.8
   animationDurationPadding: 0.05
   maxAnimationWait: 5
+  swallowedTriggerGrace: 0.75
 --- !u!1 &2133665910
 GameObject:
   m_ObjectHideFlags: 0

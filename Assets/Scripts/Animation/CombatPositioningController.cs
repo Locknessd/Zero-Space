@@ -28,18 +28,31 @@ using UnityEngine;
 /// - Bring each model back to its ground height once a clip ends (never leave it floating/sunk).
 /// - Provide the attack spot (a point in front of the victim) and step the attacker to it, driving
 ///   the animator "Speed" float so the model RUNS there and stops on arrival.
+/// - Keep a MINIMUM GAP between the two fighters and keep the pair symmetric around the fixed battle
+///   centre (RepositionToFightStance), WITHOUT teleporting anyone through the other.
 /// - Own and run the single event queue that serializes event application, moves and playback.
 ///
 /// RUNTIME LOCKS (enforced every frame in LateUpdate, after all animation writes):
 ///   - Z: pinned to the captured fighting line, so a clip can never drift the model forward/backward.
 ///   - Rotation: pinned to the captured facing (yaw), so a clip can never spin/tilt the model while
 ///     it plays. The facing correction between turns updates the locked yaw (ApplyFacingAfterAnim).
-/// X is never locked (step-move axis + lateral nudge). Y is never locked (jump / flying clips).
+/// X is left untouched (step-move axis). Y is NEVER written while a clip plays (jump / flying clips must
+/// be free to lift the model); the model is put back on its captured ground height ONCE the clip has
+/// finished, in the post-animation correction (SnapYToGround).
+///
+/// STANCE (never cross through each other):
+/// Attack spots and walk-in steps can never drag a fighter PAST its opponent, and a step that would
+/// cross the other model is automatically re-routed onto the fighter's OWN side of the arena. Because
+/// a step is an interpolated move over several frames, the two models can never swap places or pass
+/// through one another.
 ///
 /// POST-ANIM CORRECTION (computed ONCE, after an animation finishes -> queue step 4):
 ///   - Facing: yaw is turned toward the opponent, pitch/roll cleared (ApplyFacingAfterAnim).
 ///   - Ground: Y is eased back to the captured height (SnapYToGround), because airborne clips must be
 ///     free to lift the model while they play and only get grounded once they end.
+///   - Stance: the pair ONLY gaps out when they overlap. When they are apart, both fighters keep the
+///     side and the ground they ended the animation on -- nobody is dragged back through the other
+///     one to a stored home position.
 ///
 /// ANIMATION AUTHORITY: CharacterAnimatorBridge only. This component is self-contained and does not
 /// own playback. Playback is delegated through a delegate supplied by the owner (GameManager), which
@@ -88,23 +101,32 @@ public class CombatPositioningController : MonoBehaviour
     [Header("Ground / Facing Lock")]
     [Tooltip("Lock each fighter's Z every frame so they stay on the same fighting line and can never drift forward/backward.")]
     [SerializeField] private bool lockDepthZ = true;
-    [Tooltip("Reset each fighter's Y to its captured ground height AFTER an animation finishes (not every frame), so jump / flying clips can lift the model freely while playing.")]
+    [Tooltip("Bring each fighter's Y back to its captured ground height once a clip has FINISHED (queue step 4). While a clip plays Y is never touched, so a jump / flying clip can lift the model freely; this is what puts it back on the floor afterwards.")]
     [SerializeField] private bool resetGroundYAfterAnim = true;
+    [Tooltip("Seconds to ease a fighter's Y back down to the ground after a clip ends. 0 = snap instantly.")]
+    [SerializeField] private float groundResetDuration = 0.15f;
     [Tooltip("Lock each fighter's rotation every frame (at runtime) while a clip plays, so an animation can never spin/tilt the model off its captured facing.")]
     [SerializeField] private bool lockRotationRuntime = true;
     [Tooltip("Force both fighters to face EACH OTHER (yaw only, pitch/roll cleared) when correcting between turns so clips cannot leave a model facing the wrong way.")]
     [SerializeField] private bool faceEachOther = true;
-    [Tooltip("Seconds to ease a fighter's Y back down to the ground after a clip ends. 0 = snap instantly.")]
-    [SerializeField] private float groundResetDuration = 0.15f;
 
     [Header("Attack Spot")]
-    [Tooltip("Distance in front of the victim (along the victim's forward axis) where the attacker should stand to land the next hit.")]
-    [SerializeField] private float attackSpotDistance = 0.9f;
+    [Tooltip("Distance from the battle centre, along the fighter's OWN lane, where the attacker stands to land the next hit. The two fighters therefore stand 2x this apart. Keep this GREATER than minFighterDistance or the clamp will cancel it out.\n\nNOTE: this field is intentionally re-asserted in Awake from the constant below, so a stale value left in the SCENE cannot override it.")]
+    [SerializeField] private float attackSpotDistance = DefaultAttackSpotDistance;
     [Tooltip("Distance scale used for a LIGHT attack so the two fighters stand closer together. 0.5 = the attacker stops at half of attackSpotDistance. Heavy attacks always use the full distance.")]
     [Range(0.05f, 1f)]
-    [SerializeField] private float lightAttackSpotScale = 0.5f;
-    [Tooltip("After an exchange that moved someone, walk BOTH fighters back to their match-start positions so they stay symmetric around the fixed battle centre before the next turn.")]
-    [SerializeField] private bool returnHomeAfterExchange = true;
+    [SerializeField] private float lightAttackSpotScale = DefaultLightAttackSpotScale;
+    [Tooltip("The attack spot is measured FROM THE BATTLE CENTRE (a point on the fighting line), per SIDE, instead of along the victim's forward axis. This is what makes a fighter that already ran round the back of its opponent step BACK to its own side instead of staying behind it. Turn OFF to restore the old victim-forward behaviour.")]
+    [SerializeField] private bool attackSpotsRelativeToCentre = true;
+    [Tooltip("Side-lane offset (X only) applied per SIDE, so each fighter keeps a lane of its own: the LEFT fighter aims at (centre - offset) and the RIGHT fighter at (centre + offset). This is what stops a fighter from ending up on the wrong side after an attack, and it makes the walk-back to a strayed fighter readable instead of a slide through its opponent. 0 = both aim exactly at the centre.")]
+    [Range(0f, 2f)]
+    [SerializeField] private float sideLaneOffset = 0.8f;
+    [Tooltip("The STANDARD gap the two fighters are held at between exchanges (world units). After every exchange BOTH fighters are eased back to exactly this distance apart, symmetric around the fixed battle centre, so the pair always resets to a consistent spacing. This is what actually maintains the distance -- minFighterDistance is only the hard floor.")]
+    [Range(0.2f, 6f)]
+    [SerializeField] private float desiredFighterDistance = 2.2f;
+    [Tooltip("Hard floor (world units) between the two fighters. Steps and attack spots that would break it are clamped, so the models can NEVER overlap or cross. Should be smaller than desiredFighterDistance.")]
+    [Range(0f, 3f)]
+    [SerializeField] private float minFighterDistance = 0.7f;
     [Tooltip("Extra world-space offset applied on top of the computed spot (X = lateral nudge, Y = height, Z = depth). Usually left at zero.")]
     [SerializeField] private Vector3 attackSpotOffset = Vector3.zero;
 
@@ -136,17 +158,21 @@ public class CombatPositioningController : MonoBehaviour
     [Range(0.1f, 5f)]
     [SerializeField] private float spacingScale = 1f;
     [Tooltip("Extra pause inserted BEFORE an exchange fires its clips, so the step-in fully settles first.")]
-    [SerializeField] private float preExchangeSpacing = 0.25f;
+    [SerializeField] private float preExchangeSpacing = 0.1f;
     [Tooltip("Extra pause added AFTER a clip finishes and before the next queued item starts. Keeps consecutive animations from blending into each other.")]
-    [SerializeField] private float betweenActionsSpacing = 0.4f;
-    [Tooltip("Extra pause after the fighters have returned home, before the next turn's exchange begins.")]
-    [SerializeField] private float afterReturnHomeSpacing = 0.35f;
+    [SerializeField] private float betweenActionsSpacing = 0.15f;
+    [Tooltip("Only used when the walk-back on match start is enabled: seconds the fighters take to walk to their starting stance. Also the duration of the automatic re-space after each exchange.")]
+    [SerializeField] private float stanceReturnDuration = 0.3f;
+    [Tooltip("When true, the two fighters are eased back to the standard gap (desiredFighterDistance) after EVERY exchange. This is what maintains a consistent spacing between the bots. Turn OFF to only ever gap them out when they physically overlap.")]
+    [SerializeField] private bool enforceFighterSpacing = true;
+    [Tooltip("When true, the fighters walk back to their WAITING STANCE (the configured side lanes) at the START of a match only, so both sides are placed symmetrically once. Leave this OFF if the scene already places the fighters where they should stand -- otherwise they visibly shift right on match start.")]
+    [SerializeField] private bool resetStanceOnMatchStart = false;
     [Tooltip("When true, the queue ALWAYS waits the full estimated clip length instead of advancing as soon as the animator reports the clip done. Slower but the most stable (no early cut-offs).")]
     [SerializeField] private bool alwaysWaitFullClipLength = true;
 
     [Header("Queue")]
-    [Tooltip("Safety cap (seconds) a single queued action may hold the queue before force-advancing.")]
-    [SerializeField] private float maxActionHold = 15f;
+    [Tooltip("Safety cap (seconds) a single queued action may hold the queue before force-advancing. Keep this ABOVE the longest real clip plus its waits (the heavy hits run ~6s), but not so high that a stuck predicate costs the whole value: every second here is a second of dead air when something goes wrong.")]
+    [SerializeField] private float maxActionHold = 6f;
     [Tooltip("Extra seconds past the minimum hold that the post-attack hold will wait for the victim's hit clip to end. Must exceed the longest hit reaction (the heavy hits here are ~6s), otherwise the getup fires while the victim is still on the ground. A DEAD victim short-circuits this anyway.")]
     [SerializeField] private float maxHoldOvershoot = 8f;
 
@@ -155,28 +181,41 @@ public class CombatPositioningController : MonoBehaviour
     [SerializeField] private bool verboseLogging = true;
 
     // ------------------------------------------------------------------
+    // Attack-spot distances: SINGLE SOURCE OF TRUTH
+    // ------------------------------------------------------------------
+    // These are constants, and Awake re-asserts them onto the serialized fields every run.
+    //
+    // WHY: the serialized fields are still shown in the Inspector, but a value stored in the SCENE wins
+    // over the code default. That silently broke the light/heavy spacing: the code said 1.1 and 0.75,
+    // yet the trace reported "distance=1, scale=0.5", i.e. a light attack closed to HALF the heavy
+    // distance instead of three quarters, and the absolute distances were wrong too. Re-asserting here
+    // means the numbers below are the only place the spacing is defined.
+    private const float DefaultAttackSpotDistance = 1.1f;
+    private const float DefaultLightAttackSpotScale = 0.75f;
+
+    // ------------------------------------------------------------------
     // Logging
     // ------------------------------------------------------------------
-    // Every log emitted by this controller starts with "Animation" so the whole animation pipeline
-    // can be filtered in the console with a single search string.
-    private const string LogTag = "Animation";
+    // Every log emitted by this controller is routed through AnimLogChecker, so the whole animation
+    // pipeline shares ONE filterable tag: "[AnimLogChecker]". Gather the full trace in the console by
+    // filtering for that single string, then send it on as-is.
 
-    /// <summary>Logs an animation message prefixed with the shared "Animation" tag.</summary>
+    /// <summary>Logs an animation message through the shared AnimLogChecker flag.</summary>
     private void Alog(string message)
     {
-        Debug.Log($"{LogTag} [Positioning] {message}", this);
+        AnimLogChecker.Log("Positioning", message);
     }
 
-    /// <summary>Logs an animation WARNING prefixed with the shared "Animation" tag.</summary>
+    /// <summary>Logs an animation WARNING through the shared AnimLogChecker flag.</summary>
     private void AlogWarn(string message)
     {
-        Debug.LogWarning($"{LogTag} [Positioning] {message}", this);
+        AnimLogChecker.LogWarning("Positioning", message);
     }
 
-    /// <summary>Logs an animation ERROR prefixed with the shared "Animation" tag.</summary>
+    /// <summary>Logs an animation ERROR (never filtered out -- errors are always shown).</summary>
     private void AlogError(string message)
     {
-        Debug.LogError($"{LogTag} [Positioning] {message}", this);
+        Debug.LogError($"{AnimLogChecker.Tag}[Positioning] {message}", this);
     }
 
     // ------------------------------------------------------------------
@@ -230,11 +269,22 @@ public class CombatPositioningController : MonoBehaviour
 
         /// <summary>Optional precise completion predicate; the queue advances as soon as it returns true.</summary>
         public System.Func<bool> isFinished;
+
+        /// <summary>Time.unscaledTime when this item was enqueued, used by the LATENCY diagnostics to
+        /// report how long the item waited before it actually started running.</summary>
+        public float enqueuedAt;
     }
 
     private readonly Queue<QueuedAction> _queue = new Queue<QueuedAction>();
     private Coroutine _queueRunner;
     private bool _isRunningAction;
+
+    /// <summary>
+    /// Duration of the most recent PlayPairAndWait, in seconds. PlayPairAndWait is a separate coroutine,
+    /// so it cannot add to the caller's running total directly; it stores the value here and the queue
+    /// picks it up straight after the yield. Diagnostics only.
+    /// </summary>
+    private float LastClipWaitSeconds;
 
     // ---- Per-turn barrier ---------------------------------------------------------------------------
     // The queue runs ONE item at a time and each item holds the queue until its exchange is fully
@@ -280,6 +330,16 @@ public class CombatPositioningController : MonoBehaviour
     private Vector3 _homeLeftPos;
     private Vector3 _homeRightPos;
 
+    // Which side of the arena each fighter currently stands on, judged against the FIXED battle centre.
+    // Refreshed once per turn (CaptureStanceSides) and used to route every step onto the fighter's OWN
+    // side, so an attack can never drag a model through its opponent to the other side of the arena.
+    private bool _stanceSidesKnown;
+    private bool _leftOnLeftSide = true;
+    private bool _rightOnRightSide = true;
+
+    // True while the fighters are being walked into their waiting stance (match start).
+    private bool _stanceResetRunning;
+
     /// <summary>World-space midpoint between the two fighters as captured at match start (fixed).</summary>
     public Vector3 BattleCenter => _homeCaptured
         ? (_homeLeftPos + _homeRightPos) * 0.5f
@@ -313,6 +373,18 @@ public class CombatPositioningController : MonoBehaviour
     /// the model has left Walk/Run and returned to Idle before firing the attack trigger.
     /// </summary>
     public LocomotionSettledDelegate LocomotionSettledHandler { get; set; }
+
+    /// <summary>
+    /// STRONGER companion to <see cref="LocomotionSettledHandler"/>: reports whether the side's animator
+    /// is LITERALLY sitting in a standing Idle state, i.e. a state the Animator Controller will accept an
+    /// attack / hit trigger FROM. The controller authors those transitions only from Idle, so this is the
+    /// real precondition for firing; the locomotion check only approximates it.
+    ///
+    /// When wired, this takes priority and a trigger is only fired once it reports true (bounded by
+    /// maxMoveSettleWait). When null, the queue falls back to the locomotion check, preserving the old
+    /// behaviour.
+    /// </summary>
+    public LocomotionSettledDelegate AttackerIdleReadyHandler { get; set; }
 
     /// <summary>
     /// Animation-finished hook supplied by the owner (GameManager). Polled while waiting out a clip so
@@ -366,6 +438,52 @@ public class CombatPositioningController : MonoBehaviour
         catch { return false; }
     }
 
+    /// <summary>
+    /// Fast "can the queue move on?" test for the post-animation waits (steps 4b / 4c).
+    ///
+    /// WHY THIS EXISTS: <see cref="BothFightersIdleSettled"/> maps to the bridge's
+    /// IsFullyIdleNow, which demands that the animator is LITERALLY sitting in the Idle state. That is
+    /// stricter than the end-of-clip event: AnimationEndAction can have already reported the hit/attack
+    /// state EXITING while the animator is still in a knockdown pose, a getup, or merely a transition
+    /// frame on its way back to Idle. During those frames IsFullyIdleNow stays false, so the post-
+    /// animation waits kept spinning out their whole 8s cap even though the clip had genuinely ended --
+    /// which is the "the end event fired but the turn still drags" symptom.
+    ///
+    /// This check therefore also accepts the AUTHORITATIVE end-of-clip signal for BOTH sides: once each
+    /// side that was animated has reported its state exiting, nothing is playing any more and the queue
+    /// may advance. A DEAD fighter is excluded, because a lethal hit parks in a looping KO pose that
+    /// never reports clip-finished and whose body must not be repositioned.
+    /// </summary>
+    private bool BothFightersSettledFast()
+    {
+        // A DEAD fighter's body stays where it fell and its KO pose never reports clip-finished, so it is
+        // SKIPPED rather than treated as "not settled". Previously ANY dead fighter made this return false
+        // unconditionally, which meant the post-animation waits (re-spacing, camera release) ran to their
+        // full cap on a lethal hit -- measured as "waited 8.052s (cap=8.05s)" on the KO turn.
+        //
+        // The caller already avoids REPOSITIONING a dead body (it checks IsSideDead before moving anyone);
+        // this function only answers "may the queue advance?", and a corpse must not hold it back.
+        bool leftDead = IsSideDead(PlayerUI.Side.Left);
+        bool rightDead = IsSideDead(PlayerUI.Side.Right);
+
+        // Both dead: there is nothing left to animate.
+        if (leftDead && rightDead) return true;
+
+        // The strict check covers the normal case (animators genuinely back in Idle). A dead side is
+        // ignored by it, because it can never reach Idle.
+        if (BothFightersIdleSettled()) return true;
+
+        // Otherwise accept the precise end-of-clip event, skipping the dead side for the same reason.
+        if (SideAnimationEndSignalledHandler == null) return false;
+        try
+        {
+            bool leftOk = leftDead || SideAnimationEndSignalledHandler(PlayerUI.Side.Left);
+            bool rightOk = rightDead || SideAnimationEndSignalledHandler(PlayerUI.Side.Right);
+            return leftOk && rightOk;
+        }
+        catch { return false; }
+    }
+
     /// <summary>True when the side's watched action clip is still playing (falls back to "not finished").</summary>
     private bool IsSideActionPlaying(PlayerUI.Side side)
     {
@@ -414,6 +532,12 @@ public class CombatPositioningController : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+
+        // Re-assert the attack-spot spacing from the constants above, so a stale value left in the SCENE
+        // cannot override the code default (see the constants for why this matters).
+        attackSpotDistance = DefaultAttackSpotDistance;
+        lightAttackSpotScale = DefaultLightAttackSpotScale;
+
         ResolveFighterTransforms();
         if (moveEase == null || moveEase.length == 0)
         {
@@ -531,6 +655,13 @@ public class CombatPositioningController : MonoBehaviour
 
             if (verboseLogging)
                 Alog($"Captured FIXED battle centre = {BattleCenter} (left={_homeLeftPos}, right={_homeRightPos}).");
+
+            // The scene placement defines the two side lanes, so the fighters keep the ground the scene
+            // gave them (they are never shifted to a computed stance unless that is explicitly asked for).
+            _stanceSidesKnown = false;
+
+            if (resetStanceOnMatchStart && !_stanceResetRunning)
+                StartCoroutine(ResetToWaitingStanceAtMatchStart());
         }
     }
 
@@ -545,7 +676,10 @@ public class CombatPositioningController : MonoBehaviour
     /// - Z is pinned to the captured fighting line, so a clip can never drift the model forward/back.
     /// - Rotation is pinned to the captured facing, so a clip can never spin/tilt the model while it
     ///   plays (the facing correction between turns is applied separately, in ApplyFacingAfterAnim).
-    /// X and Y are left untouched (X = step move, Y = jump / flying clips).
+    /// X is left untouched (X = step move). Y is NEVER written while a clip plays -- not by this lock and
+    /// not anywhere else in the controller -- so a jump / flying clip is free to lift the model. The ONLY
+    /// thing that ever touches Y is SnapYToGround, and that runs exclusively AFTER a clip has finished
+    /// (queue step 4), so the model is always put back on its ground once the animation is over.
     /// </summary>
     private void ApplyRuntimeLock(Transform fighter, float lockedZ, float lockedYaw)
     {
@@ -553,6 +687,9 @@ public class CombatPositioningController : MonoBehaviour
 
         Vector3 pos = fighter.position;
         float z = lockDepthZ ? lockedZ : pos.z;
+
+        // Y is passed through VERBATIM: this lock owns Z and rotation only. Whether the model is airborne
+        // is decided entirely by the clip; the re-grounding happens in the post-animation correction.
         fighter.position = new Vector3(pos.x, pos.y, z);
 
         if (lockRotationRuntime)
@@ -567,6 +704,31 @@ public class CombatPositioningController : MonoBehaviour
         if (!_groundCaptured) return;
         ApplyRuntimeLock(leftFighter, _leftLockedZ, _leftLockedYaw);
         ApplyRuntimeLock(rightFighter, _rightLockedZ, _rightLockedYaw);
+    }
+
+    /// <summary>
+    /// Re-aims a fighter at its opponent RIGHT NOW (yaw only, pitch/roll cleared) and refreshes the
+    /// runtime yaw lock so LateUpdate keeps this new facing.
+    ///
+    /// This MUST be called after any reposition (the step-in move) and BEFORE the attack clip is
+    /// fired. Otherwise the model attacks while still facing the direction it had before the move --
+    /// the "attack animation plays before the fighter is in position" symptom.
+    /// </summary>
+    private void FaceOpponentNow(Transform fighter, Transform opponent)
+    {
+        if (fighter == null || opponent == null) return;
+
+        Vector3 dir = opponent.position - fighter.position;
+        dir.y = 0f;
+        if (dir.sqrMagnitude < 0.0001f) return; // degenerate: leave the facing alone
+        float yaw = Quaternion.LookRotation(dir.normalized, Vector3.up).eulerAngles.y;
+
+        if (faceEachOther)
+            fighter.rotation = Quaternion.Euler(0f, yaw, 0f);
+
+        // Refresh the lock so LateUpdate does not snap the model back to the stale yaw.
+        if (fighter == leftFighter) _leftLockedYaw = yaw;
+        else if (fighter == rightFighter) _rightLockedYaw = yaw;
     }
 
     /// <summary>
@@ -609,9 +771,10 @@ public class CombatPositioningController : MonoBehaviour
 
         float startY = fighter.position.y;
         float elapsed = 0f;
+        // UNSCALED: choreography pacing, not gameplay simulation -- see MoveFighterTo for why.
         while (elapsed < groundResetDuration)
         {
-            elapsed += Time.deltaTime;
+            elapsed += Time.unscaledDeltaTime;
             float t = Mathf.Clamp01(elapsed / groundResetDuration);
             if (fighter == null) yield break;
             fighter.position = new Vector3(fighter.position.x, Mathf.Lerp(startY, groundY, t), fighter.position.z);
@@ -640,37 +803,217 @@ public class CombatPositioningController : MonoBehaviour
     // ------------------------------------------------------------------
 
     /// <summary>
-    /// Computes the attack spot in front of the victim, without moving anyone.
-    /// Returns zero when no victim is supplied.
+    /// True when the given side is the LEFT side of the arena. "Left" is resolved from the character
+    /// bridge order when available, otherwise from the inspector-assigned transform.
+    /// </summary>
+    public static bool IsLeftSide(PlayerUI.Side side)
+    {
+        return side == PlayerUI.Side.Left;
+    }
+
+    /// <summary>
+    /// Refreshes which side of the battle centre each fighter stands on. Called ONCE per turn, BEFORE
+    /// the attacker steps in, so every step of that turn is routed onto the fighter's own side. A
+    /// fighter that ended the previous turn on the wrong side is routed home instead of through its
+    /// opponent.
+    /// </summary>
+    private void CaptureStanceSides()
+    {
+        if (leftFighter == null || rightFighter == null) return;
+
+        Vector3 centre = BattleCenter;
+        if (!_homeCaptured)
+        {
+            // No fixed centre yet (fighters not wired at match start): fall back to the live midpoint.
+            centre = (leftFighter.position + rightFighter.position) * 0.5f;
+        }
+
+        _leftOnLeftSide = leftFighter.position.x <= centre.x;
+        _rightOnRightSide = rightFighter.position.x >= centre.x;
+        _stanceSidesKnown = true;
+
+        if (verboseLogging)
+            Alog($"Stance sides: left={( _leftOnLeftSide ? "LEFT" : "RIGHT" )}, right={( _rightOnRightSide ? "RIGHT" : "LEFT" )} (centre x={centre.x:0.###}).");
+    }
+
+    /// <summary>
+    /// The point this SIDE should stand on for a given attack distance.
+    ///
+    /// The spot is measured FROM THE VICTIM along the attacker's own approach direction, so the distance
+    /// that matters -- how far the attacker ends up from the fighter it is hitting -- is exactly the
+    /// configured attack distance. This is what makes a LIGHT attack land closer than a HEAVY one.
+    ///
+    /// WHY IT IS NOT MEASURED FROM THE BATTLE CENTRE ANY MORE: anchoring to the fixed centre placed the
+    /// attacker at a CONSTANT world position while the victim kept moving. The resulting gap was therefore
+    /// |centre ± distance - victim.x|, which drifted with wherever the victim happened to stand. The trace
+    /// showed the same light attack producing gaps of 0.70, 1.925 and 2.115, and a heavy producing 2.2,
+    /// 2.358 and 2.642 -- the configured distance was never what the player actually saw.
+    ///
+    /// The centre is still used as a FALLBACK when no victim is available, and the caller's
+    /// ClampToOwnSide still guarantees the attacker can never be placed past its opponent.
+    /// </summary>
+    private Vector3 ComputeSideSpot(PlayerUI.Side side, float distance, Transform attacker, Transform victim)
+    {
+        // Preferred: a point `distance` from the VICTIM, on the attacker's own side of it. This is the
+        // only formulation that guarantees the requested gap.
+        if (victim != null)
+        {
+            float sign = IsLeftSide(side) ? -1f : 1f;
+
+            // Approach along the arena's X axis (the fighting line), so the attacker stops at a precise
+            // horizontal distance from the victim regardless of which way the models are facing.
+            Vector3 spot = victim.position + new Vector3(sign * distance, 0f, 0f);
+
+            spot.y = attacker != null ? attacker.position.y : spot.y;
+            spot += new Vector3(attackSpotOffset.x, 0f, attackSpotOffset.z);
+            return spot;
+        }
+
+        // Fallback: no victim known yet, so fall back to the fixed centre lane.
+        if (!_homeCaptured) return Vector3.zero;
+
+        float fallbackSign = IsLeftSide(side) ? -1f : 1f;
+        Vector3 fallbackSpot = BattleCenter + new Vector3(fallbackSign * distance, 0f, 0f);
+        fallbackSpot.y = attacker != null ? attacker.position.y : fallbackSpot.y;
+        fallbackSpot += new Vector3(attackSpotOffset.x, 0f, attackSpotOffset.z);
+        return fallbackSpot;
+    }
+
+    /// <summary>
+    /// Clamps <paramref name="target" /> (X only) so the fighter keeps its OWN side of the battle centre
+    /// and a minimum gap from its opponent. This is the guarantee that a step can never carry a model
+    /// THROUGH the other one: the target is pushed back onto the fighter's own side before it moves.
+    ///
+    /// WHICH SIDE is decided from the FIXED BATTLE CENTRE, not from the fighter's current position.
+    /// Using the live position made the result depend on where the fighter happened to be standing when
+    /// the step was computed: a fighter that had not yet walked back from the previous exchange was
+    /// judged to be on the OTHER side, so the same attack produced a different final gap from one turn
+    /// to the next (observed: light attacks landing at 1.40 then 2.10 units from the victim). The battle
+    /// centre is captured once at match start and never moves, so the clamp is now consistent.
+    /// </summary>
+    private Vector3 ClampToOwnSide(Transform fighter, Transform opponent, Vector3 target)
+    {
+        if (fighter == null || opponent == null) return target;
+
+        float opponentX = opponent.position.x;
+        float minGap = Mathf.Max(0f, minFighterDistance);
+
+        // Prefer the FIXED centre when it is known: the side is a property of the fighter's LANE, not of
+        // its momentary position. Fall back to the opponent comparison only before the centre exists.
+        bool onLeftOfOpponent;
+        if (_homeCaptured)
+        {
+            float centreX = BattleCenter.x;
+            // Which lane does this fighter BELONG to? Resolve it from the side it was assigned, so the
+            // clamp cannot flip just because the model is currently standing across the centre.
+            bool isLeftFighter = fighter == leftFighter;
+            onLeftOfOpponent = isLeftFighter ? true : false;
+
+            // If the fighter is not one of the two known roots (edge case), fall back to the centre.
+            if (fighter != leftFighter && fighter != rightFighter)
+                onLeftOfOpponent = fighter.position.x <= centreX;
+        }
+        else
+        {
+            onLeftOfOpponent = fighter.position.x <= opponentX;
+        }
+
+        float x = target.x;
+        x = onLeftOfOpponent
+            ? Mathf.Min(x, opponentX - minGap)   // stay on the left of the opponent
+            : Mathf.Max(x, opponentX + minGap);  // stay on the right of the opponent
+        target.x = x;
+        return target;
+    }
+
+    /// <summary>
+    /// Computes the attack spot for the attacker on <paramref name="attackerSide" />, without moving
+    /// anyone. The spot sits on the fighting line, on the attacker's OWN side, at
+    /// <see cref="attackSpotDistance" /> scaled by <paramref name="distanceScale" /> from the battle
+    /// centre (or in front of the victim when centre-relative spots are disabled).
+    /// Returns zero when the victim is not supplied.
     /// </summary>
     /// <param name="distanceScale">
     /// Multiplier applied to <see cref="attackSpotDistance"/>. 1 = the configured distance; 0.5 = the
     /// attacker stops halfway in (used for light attacks so the two fighters stand closer together).
     /// </param>
-    public Vector3 ComputeAttackSpot(Transform victim, float distanceScale = 1f)
+    public Vector3 ComputeAttackSpot(PlayerUI.Side attackerSide, Transform attacker, Transform victim,
+                                     float distanceScale = 1f)
     {
-        if (victim == null) return Vector3.zero;
-
-        // "In front of the victim" = along the victim's forward axis. The victim faces its
-        // opponent (facing lock keeps it that way), so this lands the attacker on the victim's front.
-        Vector3 forward = victim.forward;
-        forward.y = 0f;                 // keep the step on the ground plane
-        if (forward.sqrMagnitude < 0.0001f) forward = Vector3.forward;
-        forward.Normalize();
+        if (attacker == null || victim == null) return Vector3.zero;
 
         float distance = attackSpotDistance * Mathf.Max(0f, distanceScale);
-        Vector3 spot = victim.position + forward * distance;
 
-        // Keep the ground height of the victim so fighters never sink or float.
-        spot.y = victim.position.y + attackSpotOffset.y;
-        spot += new Vector3(attackSpotOffset.x, 0f, attackSpotOffset.z);
+        Vector3 spot;
+        if (attackSpotsRelativeToCentre)
+        {
+            // Spots are anchored to the FIXED battle centre, so a fighter that strayed behind its
+            // opponent walks BACK to its own side instead of staying behind it.
+            spot = ComputeSideSpot(attackerSide, distance, attacker, victim);
+            if (spot == Vector3.zero)
+            {
+                // No centre captured yet: fall back to the victim-relative spot below.
+                spot = SpotInFrontOfVictim(attacker, victim, distance);
+            }
+        }
+        else
+        {
+            // Legacy behaviour: stand in front of the victim, along the victim's forward axis.
+            spot = SpotInFrontOfVictim(attacker, victim, distance);
+        }
+
+        // NEVER cross the opponent: the spot is clamped onto the attacker's own side with a minimum gap.
+        spot = ClampToOwnSide(attacker, victim, spot);
+        spot.y = attacker.position.y + attackSpotOffset.y;
 
         _currentAttackSpot = spot;
         _hasAttackSpot = true;
 
         if (verboseLogging)
-            Alog($"Attack spot for victim '{victim.name}' = {spot} (distance={distance:0.###}, scale={distanceScale:0.###})");
+            Alog($"Attack spot for {attackerSide} attacker '{attacker.name}' = {spot} " +
+                 $"(distance={distance:0.###}, scale={distanceScale:0.###}, relativeToCentre={attackSpotsRelativeToCentre})");
 
+        // DIAGNOSTIC: report the CONFIGURED values alongside the computed spot. The distance above is
+        // attackSpotDistance * distanceScale, so if a light attack reports a distance that does not equal
+        // attackSpotDistance * lightAttackSpotScale, one of these fields has been overridden by a value
+        // stored in the SCENE (the Inspector copy wins over the code default).
+        Alog($"LATENCY [SPOT-CONFIG] {attackerSide}: attackSpotDistance={attackSpotDistance:0.###}, " +
+             $"lightAttackSpotScale={lightAttackSpotScale:0.###} (light target distance would be " +
+             $"{attackSpotDistance * lightAttackSpotScale:0.###}), desiredFighterDistance={desiredFighterDistance:0.###}, " +
+             $"minFighterDistance={minFighterDistance:0.###}, sideLaneOffset={sideLaneOffset:0.###}, " +
+             $"scaleUsed={distanceScale:0.###}, distanceUsed={distance:0.###}.");
+
+        // DIAGNOSTIC: the ACTUAL gap this spot produces between the two fighters. This is what the player
+        // sees, and it is what the light/heavy difference should be judged on -- not the nominal distance.
+        // With the spot anchored to the victim it should now equal the requested `distance` exactly; if it
+        // does not, ClampToOwnSide pushed it back (usually because the requested distance is below
+        // minFighterDistance, or the attacker's lane is on the wrong side of the victim).
+        float resultingGap = Mathf.Abs(spot.x - victim.position.x);
+        Alog($"LATENCY [SPOT-GAP] {attackerSide}: spot.x={spot.x:0.###}, victim.x={victim.position.x:0.###}, " +
+             $"resulting gap={resultingGap:0.###} (requested {distance:0.###}).");
+
+        if (Mathf.Abs(resultingGap - distance) > 0.02f)
+        {
+            AlogWarn($"LATENCY [SPOT-GAP-CLAMPED] {attackerSide}: the spot was clamped -- requested {distance:0.###} " +
+                     $"from the victim but the final gap is {resultingGap:0.###}. Check that the requested distance " +
+                     $"is ABOVE minFighterDistance ({minFighterDistance:0.###}) and that the attacker's lane is on " +
+                     $"its own side of the victim.");
+        }
+
+        return spot;
+    }
+
+    /// <summary>Legacy spot: a point in front of the victim, along the victim's forward axis.</summary>
+    private Vector3 SpotInFrontOfVictim(Transform attacker, Transform victim, float distance)
+    {
+        Vector3 forward = victim.forward;
+        forward.y = 0f;                 // keep the step on the ground plane
+        if (forward.sqrMagnitude < 0.0001f) forward = Vector3.forward;
+        forward.Normalize();
+
+        Vector3 spot = victim.position + forward * distance;
+        spot.y = attacker != null ? attacker.position.y : victim.position.y;
+        spot += new Vector3(attackSpotOffset.x, 0f, attackSpotOffset.z);
         return spot;
     }
 
@@ -709,7 +1052,7 @@ public class CombatPositioningController : MonoBehaviour
             yield break;
         }
 
-        Vector3 spot = ComputeAttackSpot(victim, distanceScale);
+        Vector3 spot = ComputeAttackSpot(attackerSide, attacker, victim, distanceScale);
 
         // Drive the run locomotion while stepping, then stop (speed 0) on arrival. This is what makes
         // the model actually RUN to the spot instead of sliding there in idle.
@@ -717,114 +1060,279 @@ public class CombatPositioningController : MonoBehaviour
 
         yield return MoveFighterTo(attackerSide, attacker, spot);
 
+        // --- ARRIVED: square up BEFORE the attack clip fires ---------------------------------------
+        //
+        // The attack clip must play from the position the fighter just stepped to AND facing the
+        // victim. Without this the model plays its attack while still pointing wherever it was
+        // aiming before the move (and the runtime yaw lock in LateUpdate would keep it that way),
+        // which reads as "the attack animation starts before the fighter is in position".
+        FaceOpponentNow(attacker, victim);
+        FaceOpponentNow(victim, attacker);
+
+        // Let the animator apply the new facing for one frame before the clip is triggered, so the
+        // attack does not start from the pre-turn pose.
+        yield return null;
+
         // Remember where the attacker actually stands so the return-home move can be verified.
         _currentAttackSpot = spot;
 
         if (verboseLogging)
-            Alog($"'{attacker.name}' stepped to attack spot {spot} (Speed=0).");
+            Alog($"'{attacker.name}' stepped to attack spot {spot} and squared up (Speed=0).");
     }
 
     /// <summary>
-    /// Walks a fighter back to the position it occupied at match start, i.e. restores the original
-    /// spacing after a close-in light attack. Returns a coroutine so the queue can wait for it.
-    /// No-op when the home position was never captured.
+    /// Walks a fighter back onto its OWN side of the arena (its side lane), used to un-stack the two
+    /// models after an exchange. The target is clamped so the fighter always stops on the side it
+    /// currently occupies relative to its opponent -- it never crosses over. Returns a coroutine so the
+    /// queue can wait for it.
     /// </summary>
-    public IEnumerator ReturnFighterHome(PlayerUI.Side side, Transform fighter)
+    public IEnumerator StepFighterToOwnSide(PlayerUI.Side side, Transform fighter, Transform opponent)
     {
-        if (fighter == null || !_homeCaptured) yield break;
+        if (fighter == null || opponent == null) yield break;
 
-        Vector3 home = side == PlayerUI.Side.Left ? _homeLeftPos : _homeRightPos;
+        // Re-read the side the fighter is on RIGHT NOW, so the walk-back always heads to the side the
+        // fighter already occupies and never sweeps it across its opponent.
+        float opponentX = opponent.position.x;
+        bool onLeftOfOpponent = fighter.position.x <= opponentX;
+        float minGap = Mathf.Max(0f, minFighterDistance);
 
-        // Keep the fighter on the arena Z line / ground height; only X/Y travel is meaningful here.
-        home.z = fighter.position.z;
+        Vector3 target = ComputeSideSpot(side, sideLaneOffset, fighter, null);
+        if (target == Vector3.zero)
+        {
+            // No fixed battle centre: fall back to a plain gap-keeping nudge on the current side.
+            target = fighter.position;
+            target.x = onLeftOfOpponent ? opponentX - minGap : opponentX + minGap;
+        }
+        else
+        {
+            // The side lane is a MINIMUM: never pull the fighter closer than the hard floor, otherwise
+            // a small sideLaneOffset would stack the two models on top of each other.
+            target.x = onLeftOfOpponent
+                ? Mathf.Min(target.x, opponentX - minGap)
+                : Mathf.Max(target.x, opponentX + minGap);
+        }
+
+        // Keep the fighter on the arena Z line / ground height; only X travel is meaningful here.
+        target.z = fighter.position.z;
+
+        // Never cross the opponent on the way back.
+        target.x = onLeftOfOpponent
+            ? Mathf.Min(target.x, opponentX - minGap)
+            : Mathf.Max(target.x, opponentX + minGap);
 
         if (verboseLogging)
-            Alog($"returning '{fighter.name}' home to {home}.");
+            Alog($"walking '{fighter.name}' back to its own side {target} (opponent x={opponentX:0.###}).");
 
         SetMoveSpeed(side, moveSpeedValue);
-        yield return MoveFighterTo(side, fighter, home);
+        yield return MoveFighterTo(side, fighter, target, stanceReturnDuration);
 
         if (verboseLogging)
-            Alog($"'{fighter.name}' returned home {home} (Speed=0).");
+            Alog($"'{fighter.name}' back on its own side {target} (Speed=0).");
     }
 
     /// <summary>
-    /// Walks BOTH fighters back to their match-start positions AT THE SAME TIME, so the pair stays
-    /// symmetric around the fixed <see cref="BattleCenter"/> before the next turn. Returns a coroutine
-    /// the queue waits for. No-op when the home positions were never captured.
+    /// Puts the two fighters back at the STANDARD spacing between exchanges.
+    ///
+    /// This is what actually MAINTAINS the distance between the bots. It eases BOTH fighters to their
+    /// side lanes (each at half the standard gap from the fixed battle centre) at the same time, so the
+    /// pair is always re-centred and re-spaced symmetrically before the next turn -- instead of slowly
+    /// drifting together exchange after exchange until the models overlap.
+    ///
+    /// Two guarantees, both needed:
+    ///   * the standard gap (<see cref="desiredFighterDistance" />) when spacing enforcement is on, and
+    ///   * the hard floor (<see cref="minFighterDistance" />) always.
+    ///
+    /// Nobody is ever moved THROUGH the other model: each target is clamped onto the fighter's own side
+    /// of its opponent (ClampToOwnSide), and the travel is interpolated over several frames.
+    ///
+    /// Returns a coroutine the queue waits for; it completes in a single frame when the fighters are
+    /// already at the right spacing.
     /// </summary>
-    public IEnumerator ResetBothFightersHome()
+    public IEnumerator RepositionToFightStance()
     {
-        if (!_homeCaptured) yield break;
-
         Transform left = leftFighter;
         Transform right = rightFighter;
-        if (left == null && right == null) yield break;
+        if (left == null || right == null) yield break;
 
-        Vector3 leftHome = _homeLeftPos;
-        Vector3 rightHome = _homeRightPos;
+        float minGap = Mathf.Max(0f, minFighterDistance);
+        float desiredGap = Mathf.Max(minGap, desiredFighterDistance);
+        float gap = Mathf.Abs(right.position.x - left.position.x);
 
-        // Keep each fighter on the arena Z line / ground height; only X travel is meaningful here.
-        if (left != null) leftHome.z = left.position.z;
-        if (right != null) rightHome.z = right.position.z;
+        Vector3 leftTarget;
+        Vector3 rightTarget;
 
-        Vector3 leftStart = left != null ? left.position : Vector3.zero;
-        Vector3 rightStart = right != null ? right.position : Vector3.zero;
+        if (_homeCaptured)
+        {
+            // Preferred: aim each fighter at its own lane, measured from the FIXED battle centre. This
+            // both restores the spacing AND re-centres the pair, so they cannot drift off one side.
+            float half = desiredGap * 0.5f;
+            leftTarget = ComputeSideSpot(PlayerUI.Side.Left, half, left, null);
+            rightTarget = ComputeSideSpot(PlayerUI.Side.Right, half, right, null);
+        }
+        else
+        {
+            // No fixed centre (fighters not wired at match start): space them out around their midpoint.
+            float midX = (left.position.x + right.position.x) * 0.5f;
+            float half = desiredGap * 0.5f;
+            leftTarget = left.position; leftTarget.x = midX - half;
+            rightTarget = right.position; rightTarget.x = midX + half;
+        }
+
+        // NEVER cross the opponent, and always respect the hard floor.
+        leftTarget = ClampToOwnSide(left, right, leftTarget);
+        rightTarget = ClampToOwnSide(right, left, rightTarget);
+
+        leftTarget.z = left.position.z;
+        rightTarget.z = right.position.z;
+
+        // Already at the right spacing -> nothing to do (no animation, no wait).
+        bool leftOk = Mathf.Abs(left.position.x - leftTarget.x) <= 0.02f;
+        bool rightOk = Mathf.Abs(right.position.x - rightTarget.x) <= 0.02f;
+        if (leftOk && rightOk) yield break;
+
+        // The floor is enforced even when the standard-gap pass is disabled.
+        if (!enforceFighterSpacing && gap >= minGap) yield break;
 
         if (verboseLogging)
-            Alog($"returning BOTH fighters home (left->{leftHome}, right->{rightHome}).");
+            Alog($"re-spacing fighters: gap={gap:0.###} -> {desiredGap:0.###} (left->{leftTarget}, right->{rightTarget}).");
 
-        // Drive the run locomotion for both while they travel back.
         SetMoveSpeed(PlayerUI.Side.Left, moveSpeedValue);
         SetMoveSpeed(PlayerUI.Side.Right, moveSpeedValue);
 
-        float duration = Mathf.Max(0.01f, moveDuration);
+        Vector3 leftStart = left.position;
+        Vector3 rightStart = right.position;
+
+        float duration = Mathf.Max(0.01f, stanceReturnDuration);
         float elapsed = 0f;
 
+        // UNSCALED: choreography pacing, not gameplay simulation -- see MoveFighterTo for why.
         while (elapsed < duration)
         {
-            elapsed += Time.deltaTime;
+            elapsed += Time.unscaledDeltaTime;
             float t = Mathf.Clamp01(elapsed / duration);
             float eased = moveEase.Evaluate(t);
 
-            if (left != null) left.position = Vector3.Lerp(leftStart, leftHome, eased);
-            if (right != null) right.position = Vector3.Lerp(rightStart, rightHome, eased);
+            if (left != null) left.position = Vector3.Lerp(leftStart, leftTarget, eased);
+            if (right != null) right.position = Vector3.Lerp(rightStart, rightTarget, eased);
 
             yield return null;
         }
 
-        // Land exactly on the home positions.
-        if (left != null) left.position = leftHome;
-        if (right != null) right.position = rightHome;
+        if (left != null) left.position = leftTarget;
+        if (right != null) right.position = rightTarget;
 
         SetMoveSpeed(PlayerUI.Side.Left, 0f);
         SetMoveSpeed(PlayerUI.Side.Right, 0f);
 
         if (verboseLogging)
-            Alog("both fighters returned home (Speed=0).");
+            Alog($"fighters re-spaced to {Mathf.Abs(right.position.x - left.position.x):0.###} (Speed=0).");
+    }
+
+    /// <summary>
+    /// Walks BOTH fighters to their waiting stance (the configured side lanes) AT THE SAME TIME. Only
+    /// used at match start when <see cref="resetStanceOnMatchStart"/> is enabled; otherwise the fighters
+    /// keep the placement the scene gave them.
+    /// </summary>
+    public IEnumerator ResetBothFightersToStance()
+    {
+        Transform left = leftFighter;
+        Transform right = rightFighter;
+        if (left == null || right == null) yield break;
+
+        Vector3 leftTarget = ComputeSideSpot(PlayerUI.Side.Left, desiredFighterDistance * 0.5f, left, null);
+        Vector3 rightTarget = ComputeSideSpot(PlayerUI.Side.Right, desiredFighterDistance * 0.5f, right, null);
+        if (leftTarget == Vector3.zero || rightTarget == Vector3.zero) yield break;
+
+        leftTarget.z = left.position.z;
+        rightTarget.z = right.position.z;
+
+        Vector3 leftStart = left.position;
+        Vector3 rightStart = right.position;
+
+        if (verboseLogging)
+            Alog($"walking BOTH fighters to their waiting stance (left->{leftTarget}, right->{rightTarget}).");
+
+        SetMoveSpeed(PlayerUI.Side.Left, moveSpeedValue);
+        SetMoveSpeed(PlayerUI.Side.Right, moveSpeedValue);
+
+        float duration = Mathf.Max(0.01f, stanceReturnDuration);
+        float elapsed = 0f;
+
+        // UNSCALED: choreography pacing, not gameplay simulation -- see MoveFighterTo for why.
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            float eased = moveEase.Evaluate(t);
+
+            if (left != null) left.position = Vector3.Lerp(leftStart, leftTarget, eased);
+            if (right != null) right.position = Vector3.Lerp(rightStart, rightTarget, eased);
+
+            yield return null;
+        }
+
+        if (left != null) left.position = leftTarget;
+        if (right != null) right.position = rightTarget;
+
+        SetMoveSpeed(PlayerUI.Side.Left, 0f);
+        SetMoveSpeed(PlayerUI.Side.Right, 0f);
+
+        if (verboseLogging)
+            Alog("both fighters in their waiting stance (Speed=0).");
+    }
+
+    /// <summary>
+    /// Match-start helper: walks the pair into the waiting stance ONCE, the first time both fighters are
+    /// known. Guarded so it only ever runs a single time per match.
+    /// </summary>
+    private IEnumerator ResetToWaitingStanceAtMatchStart()
+    {
+        _stanceResetRunning = true;
+        yield return ResetBothFightersToStance();
+        _stanceSidesKnown = false; // the walk may have changed who is where; re-read on the next turn
+        _stanceResetRunning = false;
     }
 
     /// <summary>
     /// Eases a fighter to <paramref name="target" /> using the configured move ease, driving the run
-    /// locomotion while it travels. Shared by the step-in and the return-home move.
+    /// locomotion while it travels. Shared by the step-in, the gap-out and the stance walk.
     /// </summary>
-    private IEnumerator MoveFighterTo(PlayerUI.Side side, Transform fighter, Vector3 target)
+    private IEnumerator MoveFighterTo(PlayerUI.Side side, Transform fighter, Vector3 target,
+                                      float overrideDuration = -1f)
     {
         if (fighter == null) { SetMoveSpeed(side, 0f); yield break; }
 
         Vector3 startPos = fighter.position;
-        float duration = Mathf.Max(0.01f, moveDuration);
+        float duration = Mathf.Max(0.01f, overrideDuration > 0f ? overrideDuration : moveDuration);
         float elapsed = 0f;
+        float wallStart = Time.unscaledTime;
+        int frames = 0;
 
+        // UNSCALED: this is choreography pacing, not gameplay simulation. Driving it with Time.deltaTime
+        // meant a slow-motion effect (Time.timeScale = 0.2 from the template's CamSlowMotionDelay) stretched
+        // a 0.35s step into ~1.75s of real time, and every wait in this controller with it. Pacing must
+        // stay constant so the queue advances at a predictable rate regardless of the game's time scale.
         while (elapsed < duration)
         {
-            elapsed += Time.deltaTime;
+            elapsed += Time.unscaledDeltaTime;
             float t = Mathf.Clamp01(elapsed / duration);
             float eased = moveEase.Evaluate(t);
 
             if (fighter == null) { SetMoveSpeed(side, 0f); yield break; } // destroyed mid-step
             fighter.position = Vector3.Lerp(startPos, target, eased);
+            frames++;
             yield return null;
+        }
+
+        // DIAGNOSTIC: with unscaled timing this should now always be close to `duration`. If it is still
+        // far larger, the frame rate itself is the problem (a step advances one frame at a time).
+        float wall = Time.unscaledTime - wallStart;
+        if (wall > duration * 2f + 0.2f)
+        {
+            AlogWarn($"LATENCY [STEP-MOVE-SLOW] {side}: the {duration:0.000}s move took {wall:0.000}s of wall " +
+                     $"time over {frames} frames (timeScale={Time.timeScale:0.###}, " +
+                     $"unscaledDeltaTime={Time.unscaledDeltaTime:0.0000}s). A very low frame rate stretches " +
+                     $"every frame-by-frame wait in this controller.");
         }
 
         if (fighter == null) { SetMoveSpeed(side, 0f); yield break; }
@@ -900,6 +1408,7 @@ public class CombatPositioningController : MonoBehaviour
         if (cap <= 0f) yield break;
 
         float elapsed = 0f;
+        float startTime = Time.unscaledTime;
         while (elapsed < cap)
         {
             bool attackerDone = IsSideFinished(attackerSide, hasAttacker);
@@ -910,10 +1419,46 @@ public class CombatPositioningController : MonoBehaviour
             // nothing is being watched).
             bool attackerSettled = !hasAttacker || attackerDone;
             bool victimSettled = !hasVictim || victimDone;
-            if (attackerSettled && victimSettled && elapsed >= floor) break;
+            if (attackerSettled && victimSettled && elapsed >= floor)
+            {
+                // DIAGNOSTIC: this is the single most useful latency number for the animation step. If it
+                // is close to the real clip length, the end signal is doing its job. If it sits at the cap
+                // instead, the end signal never arrived and the wait ran out its safety bound -- which is
+                // what drags a whole turn out.
+                Alog($"LATENCY [CLIP-WAIT] attacker={attackerSide} '{attackerAnimationId}', " +
+                     $"victim={victimSide} '{victimAnimationId}': finished after {Time.unscaledTime - startTime:0.000}s " +
+                     $"(floor={floor:0.00}s, cap={cap:0.00}s, endSignal={SideAnimationEndSignalledHandler != null}).");
+                LastClipWaitSeconds = Time.unscaledTime - startTime;
+                break;
+            }
+
+            // STUCK-CLIP GUARD: a side that was asked to animate but whose animator NEVER entered an
+            // action state means the trigger was swallowed -- no clip is playing, so no end-of-clip event
+            // will EVER arrive and the wait would run out its whole safety cap (measured: exactly the
+            // 15s maxActionHold, which is what made a turn drag). Once the floor has passed and neither
+            // side is actually animating anything, there is nothing left to wait for, so advance.
+            if (elapsed >= floor && !AnySideActivelyAnimating(attackerSide, hasAttacker,
+                                                              victimSide, hasVictim))
+            {
+                Alog($"LATENCY [CLIP-WAIT-NO-CLIP] attacker={attackerSide} '{attackerAnimationId}', " +
+                     $"victim={victimSide} '{victimAnimationId}': neither side is actually playing a clip after " +
+                     $"{Time.unscaledTime - startTime:0.000}s -- advancing without waiting for the {cap:0.00}s cap. " +
+                     $"The animation trigger was most likely swallowed.");
+                LastClipWaitSeconds = Time.unscaledTime - startTime;
+                break;
+            }
 
             elapsed += Time.unscaledDeltaTime;
             yield return null;
+        }
+
+        // Reached here without breaking -> the cap expired while a side still reported "not finished".
+        // That is the failure mode behind a turn that runs far longer than its clip.
+        if (elapsed >= cap)
+        {
+            AlogWarn($"LATENCY [CLIP-WAIT-TIMEOUT] attacker={attackerSide} '{attackerAnimationId}', " +
+                     $"victim={victimSide} '{victimAnimationId}': hit the {cap:0.00}s safety cap without both " +
+                     $"sides reporting finished. The end-of-clip event is NOT arriving for at least one side.");
         }
     }
 
@@ -937,6 +1482,36 @@ public class CombatPositioningController : MonoBehaviour
         if (AnimationFinishedHandler == null) return true; // no precise source -> rely on the duration cap
         try { return AnimationFinishedHandler(side); }
         catch { return true; }
+    }
+
+    [Tooltip("Anti-false-positive window (seconds) for the precise completion predicate: the predicate must report finished AND at least this much time must have passed, so a one-frame stale 'finished' cannot skip a clip. Keep it SMALL -- it is a guard, not a pacing value. It must never be derived from maxHold, or it becomes a floor equal to the safety cap and every item waits out its full bound.")]
+    [SerializeField] private float minClipCompletionFloor = 0.15f;
+
+    /// <summary>
+    /// True when at least one of the sides we asked to animate is ACTUALLY playing an action clip.
+    ///
+    /// Used by the stuck-clip guard in <see cref="PlayPairAndWait"/>: when an animation trigger is
+    /// swallowed (the controller only authors attack/hit transitions from Idle, so firing mid-blend can
+    /// drop the trigger) no clip ever runs, so no end-of-clip event can arrive and the wait would sit
+    /// out its entire safety cap. This check lets the queue notice that nothing is playing and move on.
+    ///
+    /// Uses the NON-MUTATING <see cref="SideActionPlayingHandler"/>, so polling it here does not consume
+    /// the watch state. When that hook is not wired it returns true, i.e. the guard is disabled and the
+    /// old cap-only behaviour is preserved.
+    /// </summary>
+    private bool AnySideActivelyAnimating(PlayerUI.Side attackerSide, bool hasAttacker,
+                                          PlayerUI.Side victimSide, bool hasVictim)
+    {
+        if (SideActionPlayingHandler == null) return true;
+
+        try
+        {
+            if (hasAttacker && SideActionPlayingHandler(attackerSide)) return true;
+            if (hasVictim && SideActionPlayingHandler(victimSide)) return true;
+        }
+        catch { return true; }
+
+        return false;
     }
 
     /// <summary>
@@ -1011,6 +1586,7 @@ public class CombatPositioningController : MonoBehaviour
             maxHold = maxHold,
             isFinished = isFinished,
             turnId = turnId,
+            enqueuedAt = Time.unscaledTime,
         });
 
         if (verboseLogging)
@@ -1088,6 +1664,7 @@ public class CombatPositioningController : MonoBehaviour
             afterAnimationHold = afterAnimationHold,
             afterAnimationSettle = afterAnimationSettle,
             turnId = turnId,
+            enqueuedAt = Time.unscaledTime,
         });
 
         if (verboseLogging)
@@ -1144,6 +1721,27 @@ public class CombatPositioningController : MonoBehaviour
         return Mathf.Max(0f, seconds) * Mathf.Max(0f, spacingScale);
     }
 
+    /// <summary>
+    /// Waits a fixed amount of REAL time, ignoring Time.timeScale.
+    ///
+    /// WHY: this queue is CHOREOGRAPHY, not gameplay simulation. Waiting with WaitForSeconds ties every
+    /// spacing pause to the game's time scale, so a slow-motion effect (the template's CamSlowMotionDelay
+    /// sets Time.timeScale = 0.2) stretched every pause fivefold -- a 0.4s breath became 2s of real time,
+    /// on top of the clips themselves. Pacing must stay constant so a turn takes a predictable amount of
+    /// wall-clock time no matter what the game does with its time scale.
+    /// </summary>
+    private IEnumerator WaitUnscaled(float seconds)
+    {
+        if (seconds <= 0f) yield break;
+
+        float elapsed = 0f;
+        while (elapsed < seconds)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+    }
+
     /// <summary>Drops everything still waiting. The in-flight action finishes normally.</summary>
     public void ClearQueue()
     {
@@ -1189,6 +1787,36 @@ public class CombatPositioningController : MonoBehaviour
         {
             var action = _queue.Dequeue();
             _isRunningAction = true;
+
+            // ---- LATENCY: queue time (candidate C) --------------------------------------------------
+            // How long this item waited in the queue before it actually started running, and (at the end
+            // of the item) how long the whole choreography took. Together these separate "the queue is
+            // backed up" from "one exchange simply takes this long to animate".
+            float itemStartTime = Time.unscaledTime;
+            float queuedAt = action.enqueuedAt;
+            // Running total of every wait this item performs that we instrument individually. Compared
+            // against the item's full runtime at the end (see the SUMMARY line), it shows whether any
+            // significant cost is still hiding in an uninstrumented yield.
+            float measuredWaitTotal = 0f;
+            if (queuedAt > 0f)
+            {
+                Alog($"LATENCY [QUEUE-START] '{action.label}'" +
+                     (string.IsNullOrEmpty(action.turnId) ? "" : $" [turn={action.turnId}]") +
+                     $": waited {itemStartTime - queuedAt:0.000}s in the queue before starting.");
+            }
+
+            // ---- TIME-SCALE GUARD ------------------------------------------------------------------
+            // The queue paces itself in REAL time (Time.unscaledDeltaTime) so a slow-motion effect can no
+            // longer stretch a turn. This check reports a non-default time scale anyway, because it still
+            // affects the ANIMATION CLIPS: at timeScale 0.2 a 6s heavy hit plays for 30s of wall clock, and
+            // the clip-end waits would then legitimately hold the queue that long. If a turn is slow and
+            // this warning appears, the cause is the time scale, not the queue.
+            if (Time.timeScale < 0.99f)
+            {
+                AlogWarn($"LATENCY [TIMESCALE] '{action.label}': Time.timeScale={Time.timeScale:0.###} while the " +
+                         $"queue runs. Pacing is unscaled so the queue itself is unaffected, but animation clips " +
+                         $"play {1f / Mathf.Max(0.01f, Time.timeScale):0.#}x slower, which will hold the clip waits.");
+            }
 
             // ---- PER-TURN BARRIER (dequeue-time) --------------------------------------------------
             // Reject a STALE item: one whose turn has already finished. This is the backstop against an
@@ -1240,8 +1868,21 @@ public class CombatPositioningController : MonoBehaviour
             //    move and animation below act on the freshly-applied state.
             if (action.apply != null)
             {
+                float applyStart = Time.unscaledTime;
                 try { action.apply(); }
                 catch (System.Exception ex) { AlogError($"action '{action.label}' apply threw: {ex}"); }
+
+                // DIAGNOSTIC: brackets the apply step. This is the only code between QUEUE-START and the
+                // step-in, so if the step-in reports a large "into the item" value while its OWN duration
+                // is small, the time was spent here (or in the idle/locomotion gate below).
+                float applyTook = Time.unscaledTime - applyStart;
+                measuredWaitTotal += applyTook;
+                if (applyTook > 0.1f)
+                    AlogWarn($"LATENCY [APPLY-SLOW] '{action.label}': the apply step took {applyTook:0.000}s " +
+                             $"({Time.unscaledTime - itemStartTime:0.000}s into the item).");
+                else
+                    Alog($"LATENCY [APPLY-DONE] '{action.label}': apply took {applyTook:0.000}s " +
+                         $"({Time.unscaledTime - itemStartTime:0.000}s into the item).");
             }
 
             // 1) MOVE the attacker to the spot in front of the victim (if this item moves anyone).
@@ -1251,29 +1892,90 @@ public class CombatPositioningController : MonoBehaviour
                 Transform victim = GetFighter(action.victimSide);
                 if (attacker != null && victim != null)
                 {
+                    // Re-read which side of the arena each fighter is on BEFORE the step, so the step is
+                    // routed onto the attacker's OWN side. A fighter that ended the previous turn on the
+                    // wrong side is therefore walked back home instead of further through its opponent.
+                    CaptureStanceSides();
+
                     // A LIGHT attack closes to a fraction of the normal distance so the two fighters end
                     // up closer together before the swing; heavy attacks keep the full distance.
                     float distanceScale = DistanceScaleForAnimation(action.attackerAnimationId);
+
+                    // The step itself: move to the spot, then square up (face the opponent) so the clip
+                    // below plays from the correct position AND heading.
+                    float stepStart = Time.unscaledTime;
                     yield return StepAttackerToSpot(action.attackerSide, attacker, victim, distanceScale);
+                    measuredWaitTotal += Time.unscaledTime - stepStart;
+                    Alog($"LATENCY [STEP-MOVE] '{action.label}': {Time.unscaledTime - itemStartTime:0.000}s into the item " +
+                         $"(the step-in itself took {Time.unscaledTime - stepStart:0.000}s).");
+
+                    // HARD GATE: do not fire the attack until the move has genuinely finished. The
+                    // attacker must be AT the spot (and the animator settled) before the clip starts.
+                    // MoveFighterTo lands exactly on the target, but the animator needs a frame to
+                    // pick up the new pose/facing; without this gate the attack can begin from the
+                    // previous pose, which is exactly the reported bug.
+                    float waitForArrival = 0f;
+                    while (attacker != null &&
+                           Vector3.Distance(attacker.position, _currentAttackSpot) > 0.01f &&
+                           waitForArrival < maxMoveSettleWait)
+                    {
+                        waitForArrival += Time.unscaledDeltaTime;
+                        yield return null;
+                    }
+
+                    if (verboseLogging)
+                        Alog($"attacker in position after {waitForArrival:0.00}s -> firing attack.");
                 }
 
                 // Settle before firing the attack. The shipped controller authors attack/hit/getup
                 // transitions ONLY from the Idle state, so firing while the model is still in Walk
-                // (Speed just driven to 0) swallows the trigger. Wait the settle delay, then poll the
-                // animator until it reports it has left the locomotion blend (with a safety timeout).
+                // (Speed just driven to 0) swallows the trigger -- and a swallowed trigger means no clip
+                // runs, no end-of-clip event arrives, and the queue sits out its whole 15s safety cap.
+                //
+                // We therefore wait for the STRONGEST available condition, in order of preference:
+                //   1. the bridge reporting it is LITERALLY in a standing Idle state (the real
+                //      requirement of the Animator Controller), when that hook is wired;
+                //   2. otherwise the locomotion-settled hook (weaker, kept for compatibility).
+                // Both are bounded by maxMoveSettleWait so a stuck animator cannot hang the queue.
                 if (driveMoveSpeed)
                 {
-                    if (moveSettleDelay > 0f) yield return new WaitForSeconds(moveSettleDelay);
+                    float settleStart = Time.unscaledTime;
+                    if (moveSettleDelay > 0f) yield return WaitUnscaled(moveSettleDelay);
                     else yield return null;
 
                     float waited = 0f;
-                    while (LocomotionSettledHandler != null &&
-                           !LocomotionSettledHandler(action.attackerSide) &&
-                           waited < maxMoveSettleWait)
+                    while (waited < maxMoveSettleWait)
                     {
-                        waited += Time.deltaTime;
+                        bool ready;
+                        if (AttackerIdleReadyHandler != null)
+                        {
+                            // Authoritative: the animator is actually sitting in Idle, so the controller
+                            // will accept the attack trigger.
+                            try { ready = AttackerIdleReadyHandler(action.attackerSide); }
+                            catch { ready = true; }
+                        }
+                        else if (LocomotionSettledHandler != null)
+                        {
+                            try { ready = LocomotionSettledHandler(action.attackerSide); }
+                            catch { ready = true; }
+                        }
+                        else
+                        {
+                            ready = true;
+                        }
+
+                        if (ready) break;
+
+                        waited += Time.unscaledDeltaTime;
                         yield return null;
                     }
+
+                    // DIAGNOSTIC: the idle/locomotion settle gate. This polls until the animator is in a
+                    // state the controller accepts a trigger from; if it never gets there it runs to
+                    // maxMoveSettleWait and the attack is likely to be refused by the bridge.
+                    measuredWaitTotal += Time.unscaledTime - settleStart;
+                    Alog($"LATENCY [STEP-SETTLE] '{action.label}': {Time.unscaledTime - itemStartTime:0.000}s into the item " +
+                         $"(settle gate took {Time.unscaledTime - settleStart:0.000}s, polled {waited:0.000}s of max {maxMoveSettleWait:0.00}s).");
                 }
             }
 
@@ -1283,7 +1985,8 @@ public class CombatPositioningController : MonoBehaviour
                 // SPACING: let the step-in fully settle before the clips fire, so the attack is never
                 // triggered mid-blend (which can swallow the trigger or start the clip from a snap pose).
                 float preGap = ScaleSpacing(preExchangeSpacing);
-                if (preGap > 0f) yield return new WaitForSeconds(preGap);
+                if (preGap > 0f) yield return WaitUnscaled(preGap);
+                Alog($"LATENCY [STEP-ANIM] '{action.label}': {Time.unscaledTime - itemStartTime:0.000}s into the item at the start of the clip pair.");
 
                 // The clips are about to start: this is the moment the health bar must drop, so the
                 // damage lands exactly with the swing (not during the step-in, not after the clip).
@@ -1292,12 +1995,26 @@ public class CombatPositioningController : MonoBehaviour
 
                 yield return PlayPairAndWait(action.attackerSide, action.attackerAnimationId,
                                              action.victimSide, action.victimAnimationId, action.crossFade);
+                measuredWaitTotal += LastClipWaitSeconds;
+                Alog($"LATENCY [STEP-PAIR-DONE] '{action.label}': {Time.unscaledTime - itemStartTime:0.000}s into the item after the clip pair.");
 
                 // SPACING: a breath between this exchange and whatever comes next, so two clips never
                 // read as one continuous motion.
                 float postGap = ScaleSpacing(betweenActionsSpacing);
-                if (postGap > 0f) yield return new WaitForSeconds(postGap);
+                if (postGap > 0f) yield return WaitUnscaled(postGap);
+                measuredWaitTotal += postGap;
+                Alog($"LATENCY [STEP-POSTGAP] '{action.label}': {Time.unscaledTime - itemStartTime:0.000}s into the item " +
+                     $"(postGap={postGap:0.000}s, spacingScale={spacingScale:0.###}).");
             }
+
+            // DIAGNOSTIC: closes the gap between the clip pair and the post-animation chain. If the item
+            // jumps a long way between STEP-POSTGAP and this line, the cost is in the 2b chain below.
+            Alog($"LATENCY [PRE-CHAIN] '{action.label}': {Time.unscaledTime - itemStartTime:0.000}s into the item " +
+                 $"(hasChainedGetup={action.afterAnimation != null}).");
+
+            // DIAGNOSTIC: every branch of the 2b chain is bracketed, so the gap between PRE-CHAIN and
+            // CORRECTION-ENTER can be attributed to one specific wait instead of being guessed at.
+            float chainStart = Time.unscaledTime;
 
             // 2b) POST-ANIMATION CHAIN: e.g. a getup that must run right after a knockout exchange.
             //     Doing it HERE (instead of in a later DAMAGE_APPLIED item) guarantees the victim is
@@ -1342,12 +2059,27 @@ public class CombatPositioningController : MonoBehaviour
 
                 if (verboseLogging)
                     Alog($"running post-animation action after '{action.label}' (held {afterElapsed:0.00}s, minHold {minHold:0.00}s).");
+                // DIAGNOSTIC: how long this post-animation hold actually cost, and which condition ended
+                // it. 'hit-cap' means the victim never reported its hit clip finished, so the hold ran to
+                // the ceiling -- a direct contributor to a slow turn.
+                measuredWaitTotal += afterElapsed;
+                Alog($"LATENCY [POST-ANIM-HOLD] '{action.label}': held {afterElapsed:0.000}s " +
+                     $"(minHold={minHold:0.00}s, cap={cap:0.00}s, victimStillPlaying={victimWasAnimated && IsSideActionPlaying(action.victimSide)}).");
                 try { action.afterAnimation(); }
                 catch (System.Exception ex) { AlogError($"post-animation action for '{action.label}' threw: {ex}"); }
 
                 // Phase 2: let the chained clip (getup) actually play out before the queue advances.
+                float chainedStart = Time.unscaledTime;
                 yield return WaitForChainedClip(action.victimSide, action.afterAnimationSettle);
+                measuredWaitTotal += Time.unscaledTime - chainedStart;
+                Alog($"LATENCY [CHAINED-CLIP] '{action.label}': waiting for the chained getup clip took " +
+                     $"{Time.unscaledTime - chainedStart:0.000}s ({Time.unscaledTime - itemStartTime:0.000}s into the item).");
             }
+
+            // DIAGNOSTIC: closes the 2b chain. A large value here, with the branches above each reporting
+            // a small cost, points at the idle fast-path / predicate wait rather than a specific hold.
+            Alog($"LATENCY [CHAIN-DONE] '{action.label}': 2b chain took {Time.unscaledTime - chainStart:0.000}s " +
+                 $"({Time.unscaledTime - itemStartTime:0.000}s into the item).");
 
             // 2c) IDLE FAST-PATH: if both fighters are already standing idle and settled (the exchange
             //     is visibly over), skip the remaining waits and let the next queued stack run right
@@ -1381,12 +2113,21 @@ public class CombatPositioningController : MonoBehaviour
                     waited += Time.unscaledDeltaTime;
                     yield return null;
                 }
+                Alog($"LATENCY [PREDICATE-WAIT] '{action.label}': no predicate, waited the estimated hold {waited:0.000}s.");
             }
             else
             {
                 // Precise completion drives the advance; the cap only guards against a stuck predicate.
-                // Give it a small floor so a one-frame "finished" reading cannot skip the clip entirely.
-                float floor = Mathf.Min(Mathf.Max(0f, action.maxHold), safetyCap);
+                //
+                // FLOOR: a SMALL anti-false-positive window, NOT the item's maxHold. It previously read
+                // action.maxHold, which for these items is the animation safety hold (20s) clamped to the
+                // cap -- so the floor came out EQUAL to the cap and the loop could not exit before the full
+                // safety bound even when the predicate reported finished on the first frame. That is the
+                // exact "waited the full 15.00s safety cap ... floor was 15.00s" line in the trace.
+                //
+                // It only needs to stop a one-frame stale "finished" from skipping the clip, so it is a
+                // short fixed beat. The predicate is authoritative; the cap stays the safety bound.
+                float floor = Mathf.Min(minClipCompletionFloor, safetyCap);
                 float elapsed = 0f;
                 while (elapsed < safetyCap)
                 {
@@ -1396,10 +2137,27 @@ public class CombatPositioningController : MonoBehaviour
                     if (done && elapsed >= floor) break;
 
                     // Idle fast-path: nothing is animating any more -> do not sit out the floor/cap.
-                    if (elapsed >= floor && BothFightersIdleSettled()) break;
+                    if (elapsed >= floor && BothFightersSettledFast()) break;
 
                     elapsed += Time.unscaledDeltaTime;
                     yield return null;
+                }
+
+                // DIAGNOSTIC: this is the wait that was hiding the missing time. 'hit the cap' means the
+                // item's precise predicate never reported finished, so the queue sat out the full safety
+                // bound -- exactly the multi-second stall seen between PRE-CHAIN and CORRECTION-ENTER.
+                // Logged through Alog (not AlogWarn) so it is never missed in a plain trace filter.
+                if (elapsed >= safetyCap)
+                {
+                    Alog($"LATENCY [PREDICATE-TIMEOUT] '{action.label}': the completion predicate never " +
+                         $"reported finished; waited the full {safetyCap:0.00}s safety cap " +
+                         $"({Time.unscaledTime - itemStartTime:0.000}s into the item). " +
+                         $"floor was {floor:0.00}s.");
+                }
+                else
+                {
+                    Alog($"LATENCY [PREDICATE-WAIT] '{action.label}': predicate reported finished after {elapsed:0.000}s " +
+                         $"(floor={floor:0.00}s, cap={safetyCap:0.00}s).");
                 }
             }
 
@@ -1418,12 +2176,22 @@ public class CombatPositioningController : MonoBehaviour
                 Transform left = GetFighter(PlayerUI.Side.Left);
                 Transform right = GetFighter(PlayerUI.Side.Right);
 
+                // DIAGNOSTIC: timestamp entering the correction block, so the gap between the clip wait
+                // and this point can be measured. This is where the unexplained time was hiding.
+                    float correctionStart = Time.unscaledTime;
+                    if (itemStartTime > 0f)
+                        Alog($"LATENCY [CORRECTION-ENTER] '{action.label}': {correctionStart - itemStartTime:0.000}s into the item.");
+
                 // Facing: re-aim each fighter at the other (only matters after a clip that rotated it).
                 ApplyFacingAfterAnim(left, right);
                 ApplyFacingAfterAnim(right, left);
 
                 // Ground: ease each fighter's Y back to its captured height. Skipped entirely when the
                 // fighter is already grounded, so an idle fighter does not pay the ease duration.
+                //
+                // This is the ONLY place the controller ever writes Y. While a clip played, Y was left
+                // untouched so a jump / flying clip could lift the model; now that the clip is over the
+                // model is put back on its ground.
                 if (resetGroundYAfterAnim)
                 {
                     if (left != null && !IsAtGroundY(left, GroundYForSide(PlayerUI.Side.Left)))
@@ -1434,46 +2202,71 @@ public class CombatPositioningController : MonoBehaviour
 
                 if (verboseLogging)
                     Alog($"Post-anim correction done after '{action.label}' (Y regrounded).");
+
+                measuredWaitTotal += Time.unscaledTime - correctionStart;
+                Alog($"LATENCY [CORRECTION-DONE] '{action.label}': correction block took {Time.unscaledTime - correctionStart:0.000}s " +
+                     $"(total {Time.unscaledTime - itemStartTime:0.000}s into the item).");
             }
 
-            // 4b) RESET TO HOME: after any exchange that MOVED someone, walk BOTH fighters back to the
-            //     positions they held at match start. That restores the original spacing and keeps them
-            //     symmetric around the fixed <see cref="BattleCenter"/> before the next turn begins --
-            //     instead of leaving whoever closed in (a light attack) bunched up against the opponent.
+            // 4b) KEEP THE FIGHTERS APART: the ONLY automatic repositioning after an exchange. It moves
+            //     NOBODY when the fighters are already apart -- so a fighter that ended the exchange on
+            //     the other side of the arena STAYS on that side instead of being dragged back through
+            //     its opponent. When they DO overlap, each is nudged a small, clamped amount onto its own
+            //     side (never past the other model).
             //
-            //     WAIT FIRST: the walk-home must NOT start while a fighter is still mid-animation. With a
+            //     WAIT FIRST: the gap-out must NOT start while a fighter is still mid-animation. With a
             //     heavy hit the victim is knocked down and gets up AFTER the attacker's clip ended, so
-            //     walking home straight away dragged a still-down fighter across the stage. We therefore
-            //     wait until BOTH fighters are genuinely back in Idle, then walk home.
-            if (action.playAnimation && action.moveAttacker && returnHomeAfterExchange)
+            //     moving straight away dragged a still-down fighter across the stage. We therefore wait
+            //     until BOTH fighters are genuinely back in Idle.
+            if (action.playAnimation && action.moveAttacker)
             {
                 bool anyDead = IsSideDead(PlayerUI.Side.Left) || IsSideDead(PlayerUI.Side.Right);
 
+                // A dead fighter keeps its body where it fell, but the SURVIVOR still has to be spaced
+                // correctly -- otherwise the next turn's step-in starts from an overlapping pair.
                 if (!anyDead)
                 {
-                    float settleForHome = 0f;
-                    float settleForHomeCap = Mathf.Max(0f, maxHoldOvershoot + postAnimationSettleDelay);
-                    while (settleForHome < settleForHomeCap)
+                    float settleForStance = 0f;
+                    float settleForStanceCap = Mathf.Max(0f, maxHoldOvershoot + postAnimationSettleDelay);
+                    while (settleForStance < settleForStanceCap)
                     {
-                        if (BothFightersIdleSettled()) break;
+                        // BothFightersSettledFast also accepts the authoritative end-of-clip event, so
+                        // the wait ends the moment the clips are over instead of spinning until the
+                        // animator is literally back in Idle (which cost the full cap on every heavy hit).
+                        //
+                        // It ALSO now treats a DEAD fighter as settled, which matters here: on a lethal
+                        // hit the corpse parks in a looping KO pose that never reports clip-finished, so
+                        // without that exemption this wait ran to its full 8.05s cap (the observed
+                        // "waited 8.052s (cap=8.05s)" on the KO turn).
+                        if (BothFightersSettledFast()) break;
 
-                        settleForHome += Time.unscaledDeltaTime;
+                        // A fighter that DIED during this wait must release it immediately: its KO pose
+                        // never settles, and the HP write can land a frame before the bridge's dead flag
+                        // updates, so `anyDead` above may still have been false when the loop started.
+                        if (IsSideDead(PlayerUI.Side.Left) || IsSideDead(PlayerUI.Side.Right)) break;
+
+                        settleForStance += Time.unscaledDeltaTime;
                         yield return null;
                     }
 
                     if (verboseLogging)
-                        Alog($"waiting {settleForHome:0.00}s for both fighters to settle before walking home after '{action.label}'.");
+                        Alog($"waiting {settleForStance:0.00}s for both fighters to settle before re-spacing after '{action.label}'.");
 
-                    yield return ResetBothFightersHome();
+                    // DIAGNOSTIC: the settle wait before re-spacing. Close to 0 means the end signal
+                    // released it immediately; a large value means the fighters were still mid-clip.
+                    measuredWaitTotal += settleForStance;
+                    Alog($"LATENCY [RESPACE-WAIT] '{action.label}': waited {settleForStance:0.000}s " +
+                         $"(cap={settleForStanceCap:0.00}s) before re-spacing.");
 
-                    // SPACING: let the walk-home settle before the next turn's step-in begins, so the two
-                    // moves do not read as one continuous run.
-                    float homeGap = ScaleSpacing(afterReturnHomeSpacing);
-                    if (homeGap > 0f) yield return new WaitForSeconds(homeGap);
+                    // Restores the standard gap AND re-centres the pair. A single frame when already OK.
+                    float respaceStart = Time.unscaledTime;
+                    yield return RepositionToFightStance();
+                    measuredWaitTotal += Time.unscaledTime - respaceStart;
+                    Alog($"LATENCY [RESPACE-RUN] '{action.label}': RepositionToFightStance took {Time.unscaledTime - respaceStart:0.000}s.");
                 }
                 else if (verboseLogging)
                 {
-                    Alog($"walk-home SKIPPED after '{action.label}': a fighter is dead (no reposition of the body).");
+                    Alog($"re-spacing SKIPPED after '{action.label}': a fighter is dead (no reposition of the body).");
                 }
             }
 
@@ -1498,7 +2291,14 @@ public class CombatPositioningController : MonoBehaviour
                     float focusReleaseCap = Mathf.Max(0f, maxHoldOvershoot + postAnimationSettleDelay);
                     while (focusReleaseWaited < focusReleaseCap)
                     {
-                        if (BothFightersIdleSettled()) break;
+                        // Same fast test as the re-spacing wait above: the end-of-clip event releases the
+                        // camera shot immediately, instead of holding the attack framing for the whole cap
+                        // while the animator merely transitions back to Idle.
+                        if (BothFightersSettledFast()) break;
+
+                        // Same death escape as the re-spacing wait: a fighter that died during this wait
+                        // never settles, so release the shot instead of spinning out the cap.
+                        if (IsSideDead(PlayerUI.Side.Left) || IsSideDead(PlayerUI.Side.Right)) break;
 
                         focusReleaseWaited += Time.unscaledDeltaTime;
                         yield return null;
@@ -1506,6 +2306,12 @@ public class CombatPositioningController : MonoBehaviour
 
                     if (verboseLogging)
                         Alog($"releasing camera attack shot after '{action.label}' (waited {focusReleaseWaited:0.00}s for both fighters to settle).");
+
+                    // DIAGNOSTIC: the camera-release wait. This runs AFTER the re-spacing wait, so a large
+                    // value here is time added on top of everything else in the item.
+                    measuredWaitTotal += focusReleaseWaited;
+                    Alog($"LATENCY [CAM-RELEASE-WAIT] '{action.label}': waited {focusReleaseWaited:0.000}s " +
+                         $"(cap={focusReleaseCap:0.00}s) to release the attack shot.");
 
                     try { AttackFinishedHandler?.Invoke(); }
                     catch (System.Exception ex) { AlogWarn($"attack-finished handler threw: {ex}"); }
@@ -1516,6 +2322,23 @@ public class CombatPositioningController : MonoBehaviour
                 }
             }
 
+            // ---- LATENCY: total time this item held the queue (candidate C) ------------------------
+            // From the moment the item started running to here. Large values mean the CHOREOGRAPHY itself
+            // (move + clip + post-anim waits + spacing) is the cost -- not the backend, not the flush.
+            Alog($"LATENCY [QUEUE-DONE] '{action.label}'" +
+                 (string.IsNullOrEmpty(action.turnId) ? "" : $" [turn={action.turnId}]") +
+                 $": ran for {Time.unscaledTime - itemStartTime:0.000}s" +
+                 (queuedAt > 0f ? $", {Time.unscaledTime - queuedAt:0.000}s end-to-end from enqueue." : "."));
+
+            // ---- LATENCY: UNACCOUNTED TIME SUMMARY ---------------------------------------------
+            // Reports how much of the item's total runtime is NOT explained by the waits we measure
+            // individually. A large unaccounted value points at a yield we have not instrumented yet, so
+            // this line is what decides whether the search is finished.
+            float measured = measuredWaitTotal;
+            float total = Time.unscaledTime - itemStartTime;
+            Alog($"LATENCY [SUMMARY] '{action.label}': total={total:0.000}s, measured={measured:0.000}s, " +
+                 $"UNACCOUNTED={Mathf.Max(0f, total - measured):0.000}s.");
+
             // Settle pause before the next item runs. This is now applied UNCONDITIONALLY (scaled by the
             // master spacing) whenever a clip played: the old code skipped it exactly when both fighters
             // were idle -- i.e. after every normal exchange -- which is why animations ran back-to-back
@@ -1523,12 +2346,14 @@ public class CombatPositioningController : MonoBehaviour
             if (action.playAnimation)
             {
                 float settle = ScaleSpacing(postAnimationSettleDelay + betweenActionsSpacing);
-                if (settle > 0f) yield return new WaitForSeconds(settle);
+                if (settle > 0f) yield return WaitUnscaled(settle);
             }
             else
             {
                 float idleSettle = ScaleSpacing(postAnimationSettleDelay);
-                if (idleSettle > 0f && !BothFightersIdleSettled()) yield return new WaitForSeconds(idleSettle);
+                // No clip played on this item, so there is nothing to cut short: the fast test is safe
+                // here and skips the pause as soon as the end-of-clip event confirms both sides are done.
+                if (idleSettle > 0f && !BothFightersSettledFast()) yield return WaitUnscaled(idleSettle);
             }
 
             // ---- TURN COMPLETION (on drain) ------------------------------------------------------

@@ -136,12 +136,54 @@ public class GameManager : MonoBehaviour
     private string _bufferedTurnId;
     private readonly System.Collections.Generic.List<MemeBattleEvent> _bufferedTurnEvents = new System.Collections.Generic.List<MemeBattleEvent>();
 
-    [Tooltip("Seconds to wait after the LAST buffered event of a turn before flushing it as one stack, when no following TURN_STARTED arrives (safety for the final turn of a match).")]
-    public float turnStackFlushDelay = 0.5f;
+    // SAFETY FLUSH DELAY. This is intentionally NOT a serialized field.
+    //
+    // It used to be a public field, which meant a value already stored in the SCENE kept overriding any
+    // change made in code: the default was lowered to 0.15s here, yet the trace still showed
+    // "waited 0.502s to flush (idle timeout)" because the Inspector copy still held the old 0.5.
+    // Making it a constant removes that trap -- there is now exactly one place this number lives.
+    //
+    // It only has to cover the gap until the NEXT turn's first event arrives (the real turn boundary),
+    // so it is a small safety net, not a pacing value.
+    private const float TurnStackFlushDelay = 0.15f;
 
     // Wall-clock (Time.unscaledTime) deadline after which the buffered turn is force-flushed.
     private float _turnFlushDeadline;
     private bool _turnFlushScheduled;
+
+    // ------------------------------------------------------------------
+    // LATENCY DIAGNOSTICS (temporary instrumentation)
+    // ------------------------------------------------------------------
+    // Purpose: decide WHERE a slow turn actually loses its time. There are three candidates and the
+    // log below measures each one separately so they can be told apart:
+    //
+    //   A) BACKEND GAP  -- the real wall-clock time between one turn's LAST event and the next turn's
+    //                      FIRST event. If this is large, the backend is simply slow to send and no
+    //                      amount of client tuning will help.
+    //   B) FLUSH DELAY  -- the time this client waits after buffering a turn before it hands it to the
+    //                      queue. Driven by turnStackFlushDelay (and by the "turn changed" boundary).
+    //   C) QUEUE TIME   -- how long the queue actually holds the item: the whole move + animate + wait
+    //                      sequence. This is the client's own animation choreography.
+    //
+    // Every line is routed through AnimLogChecker, so the WHOLE trace (backend gap + flush + queue +
+    // animation) shares one filterable tag: "[AnimLogChecker]".
+    [Header("Latency Diagnostics")]
+    [Tooltip("Log per-turn latency timing through AnimLogChecker so backend lag can be told apart from client processing. Turn off once the timing is understood.")]
+    public bool logLatencyDiagnostics = true;
+
+    // Timestamps for the measurement above.
+    private float _lastEventArrivalTime = -1f;   // when ANY meme_battle_event last arrived from the socket
+    private float _turnFirstEventTime = -1f;      // first event of the turn currently being buffered
+    private float _turnLastEventTime = -1f;       // last event of the turn currently being buffered
+    private float _prevTurnLastEventTime = -1f;   // last event of the PREVIOUS turn (for the backend gap)
+    private int _latencyTurnCount;
+
+    /// <summary>Logs a latency line through the shared AnimLogChecker flag.</summary>
+    private void Llog(string message)
+    {
+        if (!logLatencyDiagnostics) return;
+        AnimLogChecker.Log("LATENCY", message);
+    }
 
     // Helper: ensure we have a sensible recorded max HP for a given character id
     private void EnsureKnownMaxHp(string characterId, long hpBefore = 0, long hpAfter = 0)
@@ -208,6 +250,11 @@ public class GameManager : MonoBehaviour
         pos.PlayAnimationHandler = PlayAnimationForSide;
         pos.MoveSpeedHandler = DriveMoveSpeed;
         pos.LocomotionSettledHandler = IsLocomotionSettled;
+        // STRONGER settle check: the controller only accepts attack/hit triggers from a standing Idle
+        // state, so the queue must wait for that exact condition before firing. Firing into a
+        // Walk->Idle blend swallowed the trigger, and a swallowed trigger meant no clip ran and no
+        // end-of-clip event arrived -- the queue then waited out its full safety cap.
+        pos.AttackerIdleReadyHandler = IsSideReadyToReceiveTrigger;
         pos.AnimationFinishedHandler = IsSideAnimationFinished;
         pos.SideActionPlayingHandler = IsSideActionPlaying;
         pos.SideIdleSettledHandler = IsSideIdleSettled;
@@ -252,6 +299,25 @@ public class GameManager : MonoBehaviour
         var bridge = GetBridgeForSide(side);
         if (bridge == null) return true;
         try { return bridge.IsAnimationFinished(); }
+        catch { return true; }
+    }
+
+    /// <summary>
+    /// True when the side's animator is LITERALLY sitting in a standing Idle state, i.e. a state the
+    /// Animator Controller will accept an attack / hit trigger FROM.
+    ///
+    /// Used as the positioning controller's AttackerIdleReadyHandler: the queue polls this before firing
+    /// an attack, because the controller authors attack/hit/getup transitions ONLY from Idle. Firing while
+    /// the model was still blending out of Walk/Run silently dropped the trigger, no clip ran, no
+    /// end-of-clip event arrived, and the queue then sat out its whole 15s safety cap.
+    ///
+    /// Returns true when no bridge is wired, so the flow is never blocked by a missing bridge.
+    /// </summary>
+    private bool IsSideReadyToReceiveTrigger(PlayerUI.Side side)
+    {
+        var bridge = GetBridgeForSide(side);
+        if (bridge == null) return true;
+        try { return bridge.IsLiterallyInIdleState; }
         catch { return true; }
     }
 
@@ -367,10 +433,20 @@ public class GameManager : MonoBehaviour
                 // attack happens inside the queued move+animate item (after the move).
                 int index = bridge.AttackFromAnimationId(animationId);
                 _lastAttackVariant = index; // used to pair the victim's hit in the same exchange
-                if (index > 0 && !string.IsNullOrEmpty(_pendingExchangeKey))
+
+                // index == 0 means the bridge REFUSED the fire (e.g. the animator was not in a standing
+                // Idle state, so the controller would have swallowed the trigger). Recording a variant or
+                // letting the queue wait for a clip would then stall the whole turn, so this is reported
+                // loudly and nothing is stored.
+                if (index == 0)
+                {
+                    AnimLogChecker.LogWarning("GM", $"attack '{animationId}' on {side} was REFUSED by the bridge " +
+                        $"(not in a standing Idle state). No variant recorded; no clip is playing for this exchange.");
+                }
+                else if (!string.IsNullOrEmpty(_pendingExchangeKey))
                 {
                     _matchedVariantMap[_pendingExchangeKey] = index;
-                    if (debugMode) Debug.Log($"Animation [GameManager] matched variant {index} stored for {_pendingExchangeKey}");
+                    if (debugMode) AnimLogChecker.Log("GM", $"matched variant {index} stored for {_pendingExchangeKey}");
                 }
             }
             else if (lower.Contains("hit"))
@@ -387,7 +463,7 @@ public class GameManager : MonoBehaviour
                 // knockdown is the whole point of the animation, so it must not be replaced.
                 if (!isHeavyHit && IsVictimLethalForCurrentExchange(side))
                 {
-                    if (debugMode) Debug.Log($"Animation [GameManager] lethal LIGHT hit on {side}: skipping hit reaction, playing KB_TopKO.");
+                    if (debugMode) AnimLogChecker.Log("GM", $"lethal LIGHT hit on {side}: skipping hit reaction, playing KB_TopKO.");
                     _loserSideForDieAnimation = side;
                     bridge.TakeFatalHit();
                 }
@@ -505,6 +581,50 @@ public class GameManager : MonoBehaviour
     private CharacterAnimatorBridge GetBridgeForSide(PlayerUI.Side side)
     {
         return side == PlayerUI.Side.Left ? leftBridge : rightBridge;
+    }
+
+    /// <summary>
+    /// Fills in leftBridge / rightBridge when they were not assigned in the Inspector.
+    ///
+    /// WHY: <see cref="SideAnimationEndIsWired"/> reads these fields to decide whether the clip's real
+    /// end event is authoritative. If they are still null on the first turn, the whole turn falls back to
+    /// timing-based waits and can hold the queue for the full safety cap -- which is exactly the
+    /// "the end event fired but the turn still drags" case. Resolving them here (once, before the first
+    /// stack is built) removes that first-turn penalty.
+    ///
+    /// The fighters are matched by world X, matching how the rest of the pipeline tells left from right.
+    /// </summary>
+    private void EnsureBridgesResolved()
+    {
+        if (leftBridge != null && rightBridge != null) return;
+
+#if UNITY_2023_1_OR_NEWER
+        var bridges = UnityEngine.Object.FindObjectsByType<CharacterAnimatorBridge>(FindObjectsSortMode.None);
+#else
+        var bridges = UnityEngine.Object.FindObjectsOfType<CharacterAnimatorBridge>();
+#endif
+
+        CharacterAnimatorBridge left = null, right = null;
+        foreach (var b in bridges)
+        {
+            if (b == null || b.Animator == null) continue;
+            if (left == null) { left = b; continue; }
+            if (b.Animator.transform.position.x < left.Animator.transform.position.x)
+            {
+                right = left;
+                left = b;
+            }
+            else
+            {
+                right = b;
+            }
+        }
+
+        if (leftBridge == null) leftBridge = left;
+        if (rightBridge == null) rightBridge = right;
+
+        if (debugMode && (left != null || right != null))
+            AnimLogChecker.Log("GM", $"bridges resolved: left='{left?.name}', right='{right?.name}'.");
     }
 
     // Lazily resolve the positioning controller so older scenes without an explicit reference work.
@@ -926,6 +1046,13 @@ public class GameManager : MonoBehaviour
     {
         if (ev == null) return;
 
+        // ---- LATENCY: record arrival ------------------------------------------------------------
+        // Stamp every event as it lands from the socket. The gap between the previous turn's LAST event
+        // and this turn's FIRST event is the BACKEND GAP (candidate A): pure network/server time that no
+        // client change can improve.
+        float now = Time.unscaledTime;
+        _lastEventArrivalTime = now;
+
         // WINNER_DECLARED / match-level events are NOT part of a turn's stack: flush whatever turn is
         // pending first so the result only plays after the last turn has fully resolved, then queue the
         // result event on its own.
@@ -944,13 +1071,31 @@ public class GameManager : MonoBehaviour
             FlushBufferedTurn($"turn changed to {ev.turnId}");
         }
 
+        // First event of a new turn: start the per-turn stopwatch and report the backend gap.
+        if (string.IsNullOrEmpty(_bufferedTurnId) || _bufferedTurnId != ev.turnId)
+        {
+            _turnFirstEventTime = now;
+
+            if (_prevTurnLastEventTime >= 0f)
+            {
+                float backendGap = now - _prevTurnLastEventTime;
+                Llog($"[BE-GAP] turn '{ev.turnId}' first event arrived {backendGap:0.000}s after the " +
+                     $"previous turn's last event ({ev.eventType}).");
+            }
+            else
+            {
+                Llog($"[BE-GAP] turn '{ev.turnId}' first event ({ev.eventType}) -- no previous turn to compare.");
+            }
+        }
+
         // Buffer this event into the current turn.
         _bufferedTurnId = ev.turnId;
         _bufferedTurnEvents.Add(ev);
+        _turnLastEventTime = now;
 
         // (Re)arm the safety flush: if no further event of this turn arrives, flush it after the delay.
         _turnFlushScheduled = true;
-        _turnFlushDeadline = Time.unscaledTime + Mathf.Max(0.05f, turnStackFlushDelay);
+        _turnFlushDeadline = Time.unscaledTime + TurnStackFlushDelay;
     }
 
     /// <summary>
@@ -972,8 +1117,28 @@ public class GameManager : MonoBehaviour
         _bufferedTurnEvents.Clear();
         _turnFlushScheduled = false;
 
+        // ---- LATENCY: flush delay (candidate B) -------------------------------------------------
+        // Time spent buffering this turn before it was handed to the queue. If this is large, the delay
+        // is OUR OWN turnStackFlushDelay / turn-boundary waiting, not the backend and not the animation.
+        float now = Time.unscaledTime;
+        if (_turnFirstEventTime >= 0f)
+        {
+            float bufferSpan = _turnLastEventTime - _turnFirstEventTime;   // how long the turn streamed in
+            float flushWait = now - _turnLastEventTime;                    // waited AFTER the last event
+            float totalFromFirst = now - _turnFirstEventTime;
+
+            _latencyTurnCount++;
+            Llog($"[FLUSH] turn '{turnId}' #{_latencyTurnCount}: {events.Count} events, " +
+                 $"streamed over {bufferSpan:0.000}s, then waited {flushWait:0.000}s to flush " +
+                 $"({reason}); total {totalFromFirst:0.000}s from first event to queue.");
+        }
+
+        _prevTurnLastEventTime = _turnLastEventTime;
+        _turnFirstEventTime = -1f;
+        _turnLastEventTime = -1f;
+
         if (debugMode)
-            Debug.Log($"[TurnStack] flushing turn '{turnId}' ({events.Count} events) -> {reason}");
+            AnimLogChecker.Log("TURN", $"flushing turn '{turnId}' ({events.Count} events) -> {reason}");
 
         EnqueueTurnStack(turnId, events);
     }
@@ -1085,12 +1250,33 @@ public class GameManager : MonoBehaviour
             ? (Func<bool>)null
             : () => AllBridgesFinished(watched);
 
-        float duration = hasExchange ? Mathf.Max(EstimateAnimationWait(argumentSelected), EstimateAnimationWait(damageApplied)) : 0f;
+        // SAFETY BOUND ONLY.
+        //
+        // When AnimationEndAction is wired (the normal setup) the clip's real end event is the
+        // AUTHORITATIVE signal: the queue advances the moment it fires, and this duration is only the
+        // upper bound that guards against a bridge that never reports finished. It must therefore NOT be
+        // used as a minimum hold -- and EstimateAnimationWait cannot produce a trustworthy number here
+        // anyway: it reads the animator's CURRENT state right after the trigger was fired, before the
+        // transition has been evaluated, so it usually measures the previous clip (or nothing at all).
+        //
+        // A tiny fixed safety bound is used instead, and 0 when there is nothing to wait for.
+        float duration = finished == null ? 0f : AnimationEndSafetyHoldSeconds;
+
+        // Wire the hooks BEFORE reporting whether the end event is available, so the log reflects the
+        // state the queue will actually run with. Previously this ran first and reported 'False' on the
+        // very first turn simply because the bridges had not been resolved yet -- which made the trace
+        // look like the end signal was missing when it was in fact wired a few lines later.
+        WirePositioningHandlers();
+        EnsureBridgesResolved();
+
+        if (debugMode)
+            AnimLogChecker.Log("GM", $"turn '{turnId}' stack: watched={watched.Count}, " +
+                      $"safetyHold={duration:0.00}s (end-event driven: {SideAnimationEndIsWired()}, " +
+                      $"leftBridge={(leftBridge != null)}, rightBridge={(rightBridge != null)}).");
 
         if (!useSequentialEventQueue || pos == null)
         {
             // Legacy / no-queue fallback: apply the whole turn immediately, in order.
-            WirePositioningHandlers();
             try { apply(); } catch (Exception ex) { Debug.LogWarning($"GameManager: turn stack apply failed: {ex}"); }
             return;
         }
@@ -1116,7 +1302,7 @@ public class GameManager : MonoBehaviour
                                   (exchangeKey != null && _lethalExchangeKeys.Contains(exchangeKey));
                     if (lethal)
                     {
-                        if (debugMode) Debug.Log($"Animation [GameManager] chained getup suppressed: lethal hit on {victimSide}.");
+                        if (debugMode) AnimLogChecker.Log("GM", $"chained getup suppressed: lethal hit on {victimSide}.");
                         return;
                     }
                     try { knockedBridge.GetupFromKnockdown(); }
@@ -1155,7 +1341,7 @@ public class GameManager : MonoBehaviour
         string hpKey = !string.IsNullOrEmpty(turnId) ? $"{turnId}:{targetId}" : null;
         if (!string.IsNullOrEmpty(hpKey) && !_hpChangedAppliedKeys.Add(hpKey))
         {
-            if (debugMode) Debug.Log($"Animation [GameManager] turn HP for {targetId} ignored: '{hpKey}' already applied.");
+            if (debugMode) AnimLogChecker.Log("GM", $"turn HP for {targetId} ignored: '{hpKey}' already applied.");
             return;
         }
 
@@ -1166,7 +1352,7 @@ public class GameManager : MonoBehaviour
         if (damage > 0) uiManager?.ShowDamage(ToUISide(side.Value), (int)damage);
 
         if (debugMode)
-            Debug.Log($"Animation [GameManager] turn HP applied ONCE for {targetId}: -{damage} = {hpAfter}");
+            AnimLogChecker.Log("GM", $"turn HP applied ONCE for {targetId}: -{damage} = {hpAfter}");
     }
 
     /// <summary>
@@ -1212,7 +1398,7 @@ public class GameManager : MonoBehaviour
             if (!_loserSideForDieAnimation.HasValue || _loserSideForDieAnimation != side)
             {
                 _loserSideForDieAnimation = side;
-                if (debugMode) Debug.Log($"Animation [GameManager] lethal LIGHT hit (no exchange) -> KB_TopKO (die) on side={side}");
+                if (debugMode) AnimLogChecker.Log("GM", $"lethal LIGHT hit (no exchange) -> KB_TopKO (die) on side={side}");
                 GetBridgeForSide(side.Value)?.TakeFatalHit();
             }
             return;
@@ -1220,7 +1406,7 @@ public class GameManager : MonoBehaviour
 
         if (isHeavy)
         {
-            if (debugMode) Debug.Log($"Animation [GameManager] heavy hit on {targetId} (hp={hpAfter}) with no exchange -> normal hit kept, no forced death pose.");
+            if (debugMode) AnimLogChecker.Log("GM", $"heavy hit on {targetId} (hp={hpAfter}) with no exchange -> normal hit kept, no forced death pose.");
             return;
         }
 
@@ -1249,7 +1435,8 @@ public class GameManager : MonoBehaviour
                 watched[i]?.BeginWatchCurrentAnimation();
         };
         Func<bool> finished = watched.Count == 0 ? (Func<bool>)null : () => AllBridgesFinished(watched);
-        float duration = EstimateEventDuration(ev);
+        // SAFETY BOUND ONLY -- the clip's real end event drives the advance (see EnqueueTurnStack).
+        float duration = finished == null ? 0f : AnimationEndSafetyHoldSeconds;
 
         var pos = Positioning;
         if (!useSequentialEventQueue || pos == null)
@@ -1310,6 +1497,22 @@ public class GameManager : MonoBehaviour
             if (!b.IsAnimationFinished()) return false;
         }
         return true;
+    }
+
+    /// <summary>
+    /// Fixed safety upper bound (seconds) used when the clip's real end event drives the queue.
+    /// Only ever reached if a bridge FAILS to report its animation finished.
+    /// </summary>
+    public float AnimationEndSafetyHoldSeconds = 20f;
+
+    /// <summary>
+    /// True when at least one bridge exposes the AnimationEndAction signal. When it does, the clip's
+    /// real end event is authoritative and no duration estimate is needed at all.
+    /// </summary>
+    private bool SideAnimationEndIsWired()
+    {
+        return (leftBridge != null && leftBridge.HasAnimationEndSignalSupported) ||
+               (rightBridge != null && rightBridge.HasAnimationEndSignalSupported);
     }
 
     /// <summary>
@@ -1516,8 +1719,7 @@ public class GameManager : MonoBehaviour
                     {
                         // Default behaviour: attacker plays the attack animation, target plays the hit animation.
                         string hitAnimationId = animationId.Replace("attack", "hit");
-                        Debug.Log($"Animation ✅ [ARGUMENT_SELECTED] Playing MATCHED: attacker {attackerSide} plays '{animationId}' → target {targetSide} plays '{hitAnimationId}'");
-
+                        AnimLogChecker.Log("ARGUMENT", $"Playing MATCHED: attacker {attackerSide} plays '{animationId}' -> target {targetSide} plays '{hitAnimationId}'");
                         // NOTE: neither the move nor the attack/hit playback is issued here.
                         //   - HandleMemeBattleEvent composes the single queue item (move first, then the
                         //     attack/hit pair) so the attacker steps into position BEFORE the clip plays.
@@ -1529,9 +1731,20 @@ public class GameManager : MonoBehaviour
                         // Hold the camera on the ATTACKER for the whole attack; it eases back to the
                         // midpoint between the fighters when the exchange ends (see the queue item's
                         // completion below). This is the persistent attack shot, not a short bias.
+                        //
+                        // The ATTACKER TRANSFORM is passed in (not just the side) because the camera builds
+                        // its behind-the-back framing from the attacker's own facing. Without the transform
+                        // it can only fall back to a fixed world side, which is what put the camera in
+                        // FRONT of the character instead of behind it.
                         try
                         {
-                            MortalKombatCamera.Instance?.BeginAttackFocus(attackerSide.Value);
+                            Transform attackerT = Positioning?.GetFighter(attackerSide.Value);
+
+                            if (attackerT != null)
+                                MortalKombatCamera.Instance?.OnCharacterAttack(attackerT);
+                            else
+                                MortalKombatCamera.Instance?.BeginAttackFocus(attackerSide.Value);
+
                             MortalKombatCamera.Instance?.TriggerImpactShake();
                         }
                         catch { }
@@ -1712,7 +1925,7 @@ public class GameManager : MonoBehaviour
                         if (!_loserSideForDieAnimation.HasValue || _loserSideForDieAnimation != loserSide)
                         {
                             _loserSideForDieAnimation = loserSide;
-                            Debug.Log($"Animation [GameManager] Attempting to play die animation on loser side={loserSide}");
+                            AnimLogChecker.Log("GM", $"Attempting to play die animation on loser side={loserSide}");
                             if (loserSide.HasValue)
                             {
                                 GetBridgeForSide(loserSide.Value)?.Die();

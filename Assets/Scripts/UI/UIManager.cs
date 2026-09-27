@@ -87,12 +87,6 @@ public class MemeBattleUI : MonoBehaviour
     [Tooltip("Verbose UI logging (debug only).")]
     public bool verboseLogging = false;
 
-    [Header("Speech Bubble Billboard")]
-    [Tooltip("Make the world-space speech bubbles (and meme result popups) always FACE the camera, so the text stays readable while the camera orbits in 3D.")]
-    public bool billboardSpeechBubbles = true;
-    [Tooltip("Extra yaw (degrees) applied after facing the camera. 0 = look straight at it; 180 flips the text if it reads backwards.")]
-    public float bubbleYawOffset = 0f;
-
     // ------------------------------------------------------------------
     // Runtime state
     // ------------------------------------------------------------------
@@ -133,73 +127,6 @@ public class MemeBattleUI : MonoBehaviour
     private void Update()
     {
         UpdateTimer();
-        UpdateSpeechBubbleBillboards();
-    }
-
-    /// <summary>
-    /// Makes each fighter's world-space speech bubble (and meme result popup) FACE the main camera.
-    /// The bubbles live on world-space canvases above the characters, so once the camera orbits in 3D
-    /// they would otherwise be seen edge-on / mirrored. Rotating them to match the camera keeps the
-    /// text readable from any angle.
-    /// </summary>
-    private void UpdateSpeechBubbleBillboards()
-    {
-        if (!billboardSpeechBubbles) return;
-
-        Camera cam = Camera.main;
-        if (cam == null) return;
-
-        // NOTE: speechBubbleText is intentionally NOT billboarded -- it is kept at rotation 0 as
-        // authored in the scene. Only the meme-result popup is turned, because that one is a separate
-        // world-space element that reads mirrored / edge-on while the camera orbits.
-        BillboardTowardCamera(left != null ? left.memeResultObject : null, cam);
-        BillboardTowardCamera(right != null ? right.memeResultObject : null, cam);
-    }
-
-    /// <summary>
-    /// Same facing correction applied to a whole GameObject's transform (used for the meme-result
-    /// popup). No-op when the object or camera is missing.
-    /// </summary>
-    private void BillboardTowardCamera(GameObject target, Camera cam)
-    {
-        if (target == null || cam == null) return;
-        BillboardTowardCamera(target.transform, cam);
-    }
-
-    /// <summary>
-    /// Rotates the transform owning <paramref name="text"/> so it FACES the camera (its forward axis
-    /// points from the bubble toward the camera), plus the configured yaw offset.
-    ///
-    /// NOTE ON THE MATH: this must be LookRotation(cameraPos - bubblePos), NOT a copy of the camera's
-    /// rotation. Copying the camera rotation points the canvas' forward AWAY from the camera, which
-    /// makes a world-space Canvas render its text MIRRORED ("-200" appeared as "002-").
-    /// No-op when the text or camera is missing.
-    /// </summary>
-    private void BillboardTowardCamera(Text text, Camera cam)
-    {
-        if (text == null || cam == null) return;
-        BillboardTowardCamera(text.transform, cam);
-    }
-
-    /// <summary>
-    /// Core facing correction: aims <paramref name="t"/>'s forward axis at the camera so its front face
-    /// (and therefore its text) is readable from the current camera angle. Shared by the speech bubble
-    /// and the meme-result popup.
-    /// </summary>
-    private void BillboardTowardCamera(Transform t, Camera cam)
-    {
-        if (t == null || cam == null) return;
-
-        // Direction from the bubble TO the camera. A world-space canvas shows its front face toward its
-        // own forward axis, so aiming that axis at the camera is what keeps the text readable.
-        Vector3 toCamera = cam.transform.position - t.position;
-        toCamera.y = 0f; // keep the bubble upright; only yaw is adjusted
-        if (toCamera.sqrMagnitude < 0.0001f) return; // degenerate: camera exactly above/below
-        Quaternion facing = Quaternion.LookRotation(toCamera.normalized, Vector3.up);
-        t.rotation = facing * Quaternion.Euler(0f, bubbleYawOffset, 0f);
-
-        // NOTE: the bubble follows its TARGET every frame elsewhere, so we only touch rotation here --
-        // changing position here would fight that follow logic.
     }
 
     // ------------------------------------------------------------------

@@ -34,6 +34,7 @@ public class PlayerCombat : MonoBehaviour, IDamagable<DamageObject> {
 	public bool invulnerableDuringJump = false; //check if the player can be hit during a jump
 	public float hitRecoveryTime = .4f; //the time it takes to recover from a hit
 	public float hitThreshold = .2f; //the time before we can get hit again
+	public float healthUiDelay = 0.5f; //the delay before the health UI is updated after a hit
 	public float hitKnockBackForce = 1.5f; //the knockback force when we get hit
 	public float GroundAttackDistance = 1.5f; //the distance from an enemy at which a ground attack can be preformed
 	public int knockdownHitCount = 3; //the number of times the player can be hit before being knocked down
@@ -504,13 +505,9 @@ public class PlayerCombat : MonoBehaviour, IDamagable<DamageObject> {
 			//show hit effect
 			animator.ShowHitEffect ();
 
-			//substract health
-			HealthSystem healthSystem = GetComponent<HealthSystem>();
-			if (healthSystem != null) {
-				healthSystem.SubstractHealth (d.damage);
-				if (healthSystem.CurrentHp == 0)
-					return;
-			}
+			//substract health (delayed so the health UI updates after the hit animation starts)
+			StartCoroutine(SubstractHealthDelayed(d.damage, d));
+
 
 			//check for knockdown
 			if ((hitKnockDownCount >= knockdownHitCount || !IsGrounded() || d.knockDown) && playerState.currentState != UNITSTATE.KNOCKDOWN) {
@@ -680,6 +677,19 @@ public class PlayerCombat : MonoBehaviour, IDamagable<DamageObject> {
 	}
 
 	#endregion
+
+	//substract health after a short delay, so the hit animation plays before the health UI updates
+	public IEnumerator SubstractHealthDelayed(int damage, DamageObject d) {
+		yield return new WaitForSeconds(healthUiDelay);
+
+		HealthSystem healthSystem = GetComponent<HealthSystem>();
+		if (healthSystem == null) yield break;
+
+		healthSystem.SubstractHealth(damage);
+
+		//health reached 0
+		if (healthSystem.CurrentHp == 0) yield break;
+	}
 
 	//returns true if the closest enemy is in a knockdowngrounded state
 	bool NearbyEnemyDown(){
