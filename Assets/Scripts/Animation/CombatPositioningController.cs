@@ -111,20 +111,26 @@ public class CombatPositioningController : MonoBehaviour
     [SerializeField] private bool faceEachOther = true;
 
     [Header("Attack Spot")]
-    [Tooltip("Distance from the battle centre, along the fighter's OWN lane, where the attacker stands to land the next hit. The two fighters therefore stand 2x this apart. Keep this GREATER than minFighterDistance or the clamp will cancel it out.\n\nNOTE: this field is intentionally re-asserted in Awake from the constant below, so a stale value left in the SCENE cannot override it.")]
-    [SerializeField] private float attackSpotDistance = DefaultAttackSpotDistance;
-    [Tooltip("Distance scale used for a LIGHT attack so the two fighters stand closer together. 0.5 = the attacker stops at half of attackSpotDistance. Heavy attacks always use the full distance.")]
+    [Tooltip("HEAVY attack spot distance (world units from the enemy). The attacker stands this far from the victim for a heavy swing.\n\nTHIS IS ALSO THE RESTING DISTANCE: after every exchange both fighters are moved back out ONCE, to the HEAVY distance, so the pair always resets to this same spacing. Configure it LARGER than the light distance below -- that difference is what makes a light attack take an extra short step IN before it swings.")]
+    [Range(0.1f, 6f)]
+    [SerializeField] private float attackSpotDistanceHeavy = DefaultAttackSpotDistanceHeavy;
+    [Tooltip("LIGHT attack spot distance (world units from the enemy). The attacker stands this far from the victim for a light swing -- closer than the heavy distance.\n\nTHE STEP-IN: because the pair rests at attackSpotDistanceHeavy, a light attack starts the exchange FARTHER out than its own spot, so the attacker walks the difference in (heavy minus light) before the clip fires. That walk is the only extra movement a light attack makes; the return is the single re-spacing move shared by both weights.")]
+    [Range(0.1f, 6f)]
+    [SerializeField] private float attackSpotDistanceLight = DefaultAttackSpotDistanceLight;
+    [Tooltip("DEPRECATED / kept only so old scenes load. It is no longer used for anything: the spot distance now comes straight from attackSpotDistanceHeavy / attackSpotDistanceLight. Overwritten on Awake.")]
     [Range(0.05f, 1f)]
     [SerializeField] private float lightAttackSpotScale = DefaultLightAttackSpotScale;
+    [Tooltip("MOVE-IN ONLY FOR THE SWING.\n\nOFF (default): the attacker NEVER steps OUT to a wider spot to attack. It only closes in when it is farther than the attack spot (e.g. after a re-spacing), and once the clip finishes the queue restores the standard gap EXACTLY ONCE. This is what stops the old 'pushed far out, then pulled back in' two-step.\n\nON: legacy behaviour -- the attacker always walks to the computed spot, even when that spot is FARTHER away than where it already stands.")]
+    [SerializeField] private bool stepOutToAttackSpot = false;
     [Tooltip("The attack spot is measured FROM THE BATTLE CENTRE (a point on the fighting line), per SIDE, instead of along the victim's forward axis. This is what makes a fighter that already ran round the back of its opponent step BACK to its own side instead of staying behind it. Turn OFF to restore the old victim-forward behaviour.")]
     [SerializeField] private bool attackSpotsRelativeToCentre = true;
     [Tooltip("Side-lane offset (X only) applied per SIDE, so each fighter keeps a lane of its own: the LEFT fighter aims at (centre - offset) and the RIGHT fighter at (centre + offset). This is what stops a fighter from ending up on the wrong side after an attack, and it makes the walk-back to a strayed fighter readable instead of a slide through its opponent. 0 = both aim exactly at the centre.")]
     [Range(0f, 2f)]
     [SerializeField] private float sideLaneOffset = 0.8f;
-    [Tooltip("The STANDARD gap the two fighters are held at between exchanges (world units). After every exchange BOTH fighters are eased back to exactly this distance apart, symmetric around the fixed battle centre, so the pair always resets to a consistent spacing. This is what actually maintains the distance -- minFighterDistance is only the hard floor.")]
+    [Tooltip("The STANDARD gap the two fighters are held at between exchanges (world units). After every exchange BOTH fighters are moved back out exactly ONCE, to the distance below.\n\nNOTE: this value is IGNORED at runtime -- the standard gap is always attackSpotDistanceHeavy, so the resting spacing and the heavy attack spot are the same number by construction. Kept only so old scenes load.")]
     [Range(0.2f, 6f)]
     [SerializeField] private float desiredFighterDistance = 2.2f;
-    [Tooltip("Hard floor (world units) between the two fighters. Steps and attack spots that would break it are clamped, so the models can NEVER overlap or cross. Should be smaller than desiredFighterDistance.")]
+    [Tooltip("Hard floor (world units) between the two fighters. Steps and attack spots that would break it are clamped, so the models can NEVER overlap or cross. Should be smaller than BOTH attack spot distances.")]
     [Range(0f, 3f)]
     [SerializeField] private float minFighterDistance = 0.7f;
     [Tooltip("Extra world-space offset applied on top of the computed spot (X = lateral nudge, Y = height, Z = depth). Usually left at zero.")]
@@ -133,6 +139,8 @@ public class CombatPositioningController : MonoBehaviour
     [Header("Movement")]
     [Tooltip("Seconds the attacker takes to step to the attack spot.")]
     [SerializeField] private float moveDuration = 0.35f;
+    [Tooltip("Seconds the post-animation return to the standard gap takes. Kept short on purpose: this is the ONE reposition that runs after the clip finishes, so it should read as a settle rather than a second walk.")]
+    [SerializeField] private float respaceDuration = 0.2f;
     [Tooltip("Easing curve for the step. Defaults to a smooth ease-in-out when left empty.")]
     [SerializeField] private AnimationCurve moveEase;
     [Tooltip("Drive the animator 'Speed' float while stepping (1 = run) so the run animation plays during the move and stops (0) on arrival.")]
@@ -163,7 +171,7 @@ public class CombatPositioningController : MonoBehaviour
     [SerializeField] private float betweenActionsSpacing = 0.15f;
     [Tooltip("Only used when the walk-back on match start is enabled: seconds the fighters take to walk to their starting stance. Also the duration of the automatic re-space after each exchange.")]
     [SerializeField] private float stanceReturnDuration = 0.3f;
-    [Tooltip("When true, the two fighters are eased back to the standard gap (desiredFighterDistance) after EVERY exchange. This is what maintains a consistent spacing between the bots. Turn OFF to only ever gap them out when they physically overlap.")]
+    [Tooltip("When true, the two fighters are moved back out to the standard gap (attackSpotDistanceHeavy, the heavy attack spot) after EVERY exchange. This is what maintains a consistent spacing between the bots. Turn OFF to only ever gap them out when they physically overlap.")]
     [SerializeField] private bool enforceFighterSpacing = true;
     [Tooltip("When true, the fighters walk back to their WAITING STANCE (the configured side lanes) at the START of a match only, so both sides are placed symmetrically once. Leave this OFF if the scene already places the fighters where they should stand -- otherwise they visibly shift right on match start.")]
     [SerializeField] private bool resetStanceOnMatchStart = false;
@@ -190,8 +198,18 @@ public class CombatPositioningController : MonoBehaviour
     // yet the trace reported "distance=1, scale=0.5", i.e. a light attack closed to HALF the heavy
     // distance instead of three quarters, and the absolute distances were wrong too. Re-asserting here
     // means the numbers below are the only place the spacing is defined.
-    private const float DefaultAttackSpotDistance = 1.1f;
+    // NOTE: the attack-spot distances are deliberately re-asserted in Awake from the constants below, so
+    // a stale value left in the SCENE cannot override them.
+    private const float DefaultAttackSpotDistanceHeavy = 2.2f;
+    private const float DefaultAttackSpotDistanceLight = 1.5f;
+    // Unused since the two distances above replaced it; kept so the serialized field still has a value.
     private const float DefaultLightAttackSpotScale = 0.75f;
+
+    // Move-in pacing. moveDuration is the close-in step BEFORE the clip; respaceDuration is the SINGLE
+    // return to the standard gap AFTER the clip. Both are deliberately short so the sequence reads as
+    // "close in -> hit -> settle back" instead of two full walks per exchange.
+    private const float DefaultMoveDuration = 0.22f;
+    private const float DefaultRespaceDuration = 0.2f;
 
     // ------------------------------------------------------------------
     // Logging
@@ -314,8 +332,15 @@ public class CombatPositioningController : MonoBehaviour
     private bool _hasAttackSpot;
 
     // Lock state: the Z (fighting line) each fighter is pinned to every frame, and the ground Y each
-    // fighter returns to once a clip finishes. Captured on the first assignment.
+    // fighter returns to once a clip finishes.
+    //
+    // EACH SIDE IS CAPTURED EXACTLY ONCE (see CaptureGroundLock). The per-side flags are what make that
+    // once-only: without them, the capture ran again on every SetFighters() call -- i.e. every turn and
+    // every queued event -- and re-read the LIVE position.y, so an animated crouch/step pose became the
+    // new "ground" and the fighter slowly sank into the floor.
     private bool _groundCaptured;
+    private bool _leftGroundCaptured;
+    private bool _rightGroundCaptured;
     private float _leftGroundY;
     private float _rightGroundY;
     private float _leftLockedZ;
@@ -535,8 +560,16 @@ public class CombatPositioningController : MonoBehaviour
 
         // Re-assert the attack-spot spacing from the constants above, so a stale value left in the SCENE
         // cannot override the code default (see the constants for why this matters).
-        attackSpotDistance = DefaultAttackSpotDistance;
-        lightAttackSpotScale = DefaultLightAttackSpotScale;
+        attackSpotDistanceHeavy = DefaultAttackSpotDistanceHeavy;
+        attackSpotDistanceLight = DefaultAttackSpotDistanceLight;
+        lightAttackSpotScale = DefaultLightAttackSpotScale;   // unused, kept so old scenes load
+
+        // Same trap as the two above: these are the ONLY places the move-in policy and its pacing live.
+        // A stale scene value used to keep the old "always step to the spot" behaviour alive even after
+        // the code was changed, which is exactly the bug being fixed here.
+        stepOutToAttackSpot = false;
+        moveDuration = DefaultMoveDuration;
+        respaceDuration = DefaultRespaceDuration;
 
         ResolveFighterTransforms();
         if (moveEase == null || moveEase.length == 0)
@@ -624,25 +657,40 @@ public class CombatPositioningController : MonoBehaviour
     // ------------------------------------------------------------------
 
     /// <summary>
-    /// Records the ground Y each fighter should be pinned to. Called on the first frame a fighter is
-    /// available, and again whenever the fighters are (re)assigned, so the lock always reflects the
-    /// placement the scene intended rather than a drifting mid-clip pose.
+    /// Records the ground Y / Z / yaw each fighter should be pinned to.
+    ///
+    /// CALLED ONLY ONCE PER FIGHTER. The capture is a BOOTSTRAP of the scene's intended placement, so
+    /// it must happen while the model is in its neutral pose -- NOT on every SetFighters() call.
+    ///
+    /// THE BUG THIS FIXES ("fighters slowly sink into the floor after several animations"):
+    /// SetFighters() is called by GameManager on EVERY turn and EVERY queued event, and it used to call
+    /// this method unconditionally. Each call re-read the fighter's LIVE position.y -- which, mid-clip,
+    /// is the animated Y (a crouch / step / hit pose that sits lower than the ground) -- and stored THAT
+    /// as the new ground height. SyncYToGround then dutifully lowered the model to it. Every animation
+    /// shaved a little more off the height, so over a match the fighter visibly sank through the floor.
+    ///
+    /// The ground is now captured ONCE per fighter and never overwritten by an animated pose. Use
+    /// <see cref="RebaseGroundLock"/> explicitly if a legitimate re-placement really is needed.
     /// </summary>
     private void CaptureGroundLock()
     {
-        if (leftFighter != null)
+        // Capture the LEFT fighter's ground only while it is still unknown.
+        if (leftFighter != null && !_leftGroundCaptured)
         {
             _leftGroundY = leftFighter.position.y;
             _leftLockedZ = leftFighter.position.z;
             _leftLockedYaw = leftFighter.eulerAngles.y;
+            _leftGroundCaptured = true;
         }
-        if (rightFighter != null)
+        // Same for the RIGHT fighter.
+        if (rightFighter != null && !_rightGroundCaptured)
         {
             _rightGroundY = rightFighter.position.y;
             _rightLockedZ = rightFighter.position.z;
             _rightLockedYaw = rightFighter.eulerAngles.y;
+            _rightGroundCaptured = true;
         }
-        _groundCaptured = leftFighter != null || rightFighter != null;
+        _groundCaptured = _leftGroundCaptured || _rightGroundCaptured;
 
         // Capture the FIXED home positions exactly once, the first time both fighters are known (match
         // start). Later re-captures of the ground/Z lock must NOT move the home midpoint, otherwise the
@@ -665,10 +713,26 @@ public class CombatPositioningController : MonoBehaviour
         }
     }
 
-    /// <summary>Re-captures the Z / ground-height lock at the fighters' CURRENT pose (e.g. after a legitimate reposition).</summary>
+    /// <summary>
+    /// FORCE a re-capture of the ground/Z/facing lock at the fighters' CURRENT pose.
+    ///
+    /// DELIBERATELY EXPLICIT: this is the ONLY way to move the ground reference after it has been
+    /// captured, and it reads the LIVE pose (so it must be called when the models are standing in their
+    /// intended neutral position, never mid-clip).
+    ///
+    /// It exists for a genuine re-placement (a respawn, a new round, a scene that moved the fighters),
+    /// NOT for routine use: the automatic path no longer re-captures, precisely because a capture taken
+    /// while a clip was playing baked the animated Y in as the ground and made the fighters sink.
+    /// </summary>
     public void RebaseGroundLock()
     {
+        // Clear the once-only flags, then re-capture from the current (assumed neutral) pose.
+        _leftGroundCaptured = false;
+        _rightGroundCaptured = false;
         CaptureGroundLock();
+
+        if (verboseLogging)
+            Alog($"RebaseGroundLock(): ground re-captured (leftY={_leftGroundY:0.###}, rightY={_rightGroundY:0.###}).");
     }
 
     /// <summary>
@@ -864,7 +928,7 @@ public class CombatPositioningController : MonoBehaviour
             // horizontal distance from the victim regardless of which way the models are facing.
             Vector3 spot = victim.position + new Vector3(sign * distance, 0f, 0f);
 
-            spot.y = attacker != null ? attacker.position.y : spot.y;
+            spot.y = GroundYForSide(side) + attackSpotOffset.y;
             spot += new Vector3(attackSpotOffset.x, 0f, attackSpotOffset.z);
             return spot;
         }
@@ -874,7 +938,7 @@ public class CombatPositioningController : MonoBehaviour
 
         float fallbackSign = IsLeftSide(side) ? -1f : 1f;
         Vector3 fallbackSpot = BattleCenter + new Vector3(fallbackSign * distance, 0f, 0f);
-        fallbackSpot.y = attacker != null ? attacker.position.y : fallbackSpot.y;
+        fallbackSpot.y = GroundYForSide(side) + attackSpotOffset.y;
         fallbackSpot += new Vector3(attackSpotOffset.x, 0f, attackSpotOffset.z);
         return fallbackSpot;
     }
@@ -929,20 +993,21 @@ public class CombatPositioningController : MonoBehaviour
     /// <summary>
     /// Computes the attack spot for the attacker on <paramref name="attackerSide" />, without moving
     /// anyone. The spot sits on the fighting line, on the attacker's OWN side, at
-    /// <see cref="attackSpotDistance" /> scaled by <paramref name="distanceScale" /> from the battle
-    /// centre (or in front of the victim when centre-relative spots are disabled).
+    /// <see cref="attackSpotDistanceHeavy" /> (heavy attacks) or <see cref="attackSpotDistanceLight" />
+    /// (light attacks) from the VICTIM.
     /// Returns zero when the victim is not supplied.
     /// </summary>
     /// <param name="distanceScale">
-    /// Multiplier applied to <see cref="attackSpotDistance"/>. 1 = the configured distance; 0.5 = the
-    /// attacker stops halfway in (used for light attacks so the two fighters stand closer together).
+    /// SELECTS which of the two distances to use, it does not scale one: below 1 (what a light attack
+    /// passes) selects <see cref="attackSpotDistanceLight" />, anything else selects
+    /// <see cref="attackSpotDistanceHeavy" />.
     /// </param>
     public Vector3 ComputeAttackSpot(PlayerUI.Side attackerSide, Transform attacker, Transform victim,
                                      float distanceScale = 1f)
     {
         if (attacker == null || victim == null) return Vector3.zero;
 
-        float distance = attackSpotDistance * Mathf.Max(0f, distanceScale);
+        float distance = Mathf.Max(0f, SpotDistanceForScale(distanceScale));
 
         Vector3 spot;
         if (attackSpotsRelativeToCentre)
@@ -962,9 +1027,14 @@ public class CombatPositioningController : MonoBehaviour
             spot = SpotInFrontOfVictim(attacker, victim, distance);
         }
 
-        // NEVER cross the opponent: the spot is clamped onto the attacker's own side with a minimum gap.
-        spot = ClampToOwnSide(attacker, victim, spot);
-        spot.y = attacker.position.y + attackSpotOffset.y;
+            // Y MUST COME FROM THE CAPTURED GROUND, NEVER FROM THE LIVE POSE.
+            //
+            // Reading attacker.position.y here meant the spot inherited whatever Y the current clip had
+            // put the model at (a crouch / lunge / hit pose), and that Y then travelled with the spot
+            // into MoveFighterTo -- which writes the whole Vector3. So a move could actively push the
+            // fighter OFF the ground plane, on top of the drift the capture bug already caused.
+            // The attacker's captured GROUND height is the only correct source for a step target.
+            spot.y = GroundYForSide(attackerSide) + attackSpotOffset.y;
 
         _currentAttackSpot = spot;
         _hasAttackSpot = true;
@@ -973,15 +1043,14 @@ public class CombatPositioningController : MonoBehaviour
             Alog($"Attack spot for {attackerSide} attacker '{attacker.name}' = {spot} " +
                  $"(distance={distance:0.###}, scale={distanceScale:0.###}, relativeToCentre={attackSpotsRelativeToCentre})");
 
-        // DIAGNOSTIC: report the CONFIGURED values alongside the computed spot. The distance above is
-        // attackSpotDistance * distanceScale, so if a light attack reports a distance that does not equal
-        // attackSpotDistance * lightAttackSpotScale, one of these fields has been overridden by a value
-        // stored in the SCENE (the Inspector copy wins over the code default).
-        Alog($"LATENCY [SPOT-CONFIG] {attackerSide}: attackSpotDistance={attackSpotDistance:0.###}, " +
-             $"lightAttackSpotScale={lightAttackSpotScale:0.###} (light target distance would be " +
-             $"{attackSpotDistance * lightAttackSpotScale:0.###}), desiredFighterDistance={desiredFighterDistance:0.###}, " +
-             $"minFighterDistance={minFighterDistance:0.###}, sideLaneOffset={sideLaneOffset:0.###}, " +
-             $"scaleUsed={distanceScale:0.###}, distanceUsed={distance:0.###}.");
+        // DIAGNOSTIC: report the CONFIGURED values alongside the computed spot. The two spot distances are
+        // independent fields now, so if the resulting gap does not equal the one this attack selected,
+        // something has overridden it (the Inspector copy of a serialized field wins over the code default).
+        Alog($"LATENCY [SPOT-CONFIG] {attackerSide}: attackSpotDistanceHeavy={attackSpotDistanceHeavy:0.###}, " +
+             $"attackSpotDistanceLight={attackSpotDistanceLight:0.###}, selected distance={distance:0.###} " +
+             $"(distanceScale={distanceScale:0.###}), " +
+             $"desiredFighterDistance={desiredFighterDistance:0.###} (runtime uses the heavy distance), " +
+             $"minFighterDistance={minFighterDistance:0.###}, sideLaneOffset={sideLaneOffset:0.###}.");
 
         // DIAGNOSTIC: the ACTUAL gap this spot produces between the two fighters. This is what the player
         // sees, and it is what the light/heavy difference should be judged on -- not the nominal distance.
@@ -1012,19 +1081,43 @@ public class CombatPositioningController : MonoBehaviour
         forward.Normalize();
 
         Vector3 spot = victim.position + forward * distance;
-        spot.y = attacker != null ? attacker.position.y : victim.position.y;
+
+        // Y comes from the VICTIM'S CAPTURED GROUND, not from the live pose of either fighter. The old
+        // `attacker.position.y` read dragged an animated (crouching / airborne) height into the step
+        // target, which the move then wrote onto the fighter. The victim's side tells us which captured
+        // ground applies, since this legacy path has no side argument of its own.
+        float groundY = victim == rightFighter
+            ? GroundYForSide(PlayerUI.Side.Right)
+            : GroundYForSide(PlayerUI.Side.Left);
+        spot.y = groundY + attackSpotOffset.y;
+
         spot += new Vector3(attackSpotOffset.x, 0f, attackSpotOffset.z);
         return spot;
     }
 
     /// <summary>
-    /// Distance scale to use for an attacker animation id. A LIGHT attack closes to
-    /// <see cref="lightAttackSpotScale"/> of the normal distance; everything else uses the full distance.
+    /// Distance scale to use for an attacker animation id. A LIGHT attack returns a value below 1 so
+    /// <see cref="ComputeAttackSpot" /> selects <see cref="attackSpotDistanceLight" />; everything else
+    /// returns 1, which selects <see cref="attackSpotDistanceHeavy" />.
     /// </summary>
     public float DistanceScaleForAnimation(string attackerAnimationId)
     {
-        if (IsLightAnimation(attackerAnimationId)) return lightAttackSpotScale;
+        if (IsLightAnimation(attackerAnimationId)) return LightDistanceScale;
         return 1f;
+    }
+
+    // The scale values are now only a SELECTOR for which of the two spot distances applies: anything
+    // below 1 means "light", 1 means "heavy". The actual distances are configured independently.
+    private const float LightDistanceScale = 0.5f;
+
+    /// <summary>
+    /// Resolves the SELECTED spot distance from a distance scale. Below 1 = the light distance,
+    /// otherwise the heavy one. Kept as a single place so <see cref="ComputeAttackSpot" /> and the
+    /// diagnostics can never disagree about which distance was used.
+    /// </summary>
+    private float SpotDistanceForScale(float distanceScale)
+    {
+        return distanceScale < 1f ? attackSpotDistanceLight : attackSpotDistanceHeavy;
     }
 
     /// <summary>True when the given animation id is a LIGHT attack (the ones that close in and retreat).</summary>
@@ -1040,8 +1133,9 @@ public class CombatPositioningController : MonoBehaviour
     /// </summary>
     /// <param name="attackerSide">Side of the attacker (used to drive its animator Speed while moving).</param>
     /// <param name="distanceScale">
-    /// Multiplier on <see cref="attackSpotDistance"/>. A light attack passes
-    /// <see cref="lightAttackSpotScale"/> so the attacker stops closer to the victim.
+    /// SELECTS the spot distance: a light attack passes a value below 1 and walks in to
+    /// <see cref="attackSpotDistanceLight" />; anything else walks in to
+    /// <see cref="attackSpotDistanceHeavy" />.
     /// </param>
     public IEnumerator StepAttackerToSpot(PlayerUI.Side attackerSide, Transform attacker, Transform victim,
                                           float distanceScale = 1f)
@@ -1053,6 +1147,51 @@ public class CombatPositioningController : MonoBehaviour
         }
 
         Vector3 spot = ComputeAttackSpot(attackerSide, attacker, victim, distanceScale);
+
+        // --- MOVE-IN ONLY FOR THE SWING -------------------------------------------------------------
+        //
+        // THE GAP PROBLEM THIS FIXES: the attacker used to be dragged to the computed spot
+        // UNCONDITIONALLY. When the spot is FARTHER than where the attacker already stands (which is what
+        // happens whenever the pair rests wider than the selected spot) the model visibly stepped
+        // BACKWARDS, away from its opponent, and the queue then dragged it home again: the old "pushed far
+        // out, then pulled back in" two-step.
+        //
+        // THE INTENDED FLOW (see the two spot distances in the Inspector):
+        //   * The pair RESTS at attackSpotDistanceHeavy after every exchange (the single return move).
+        //   * A HEAVY attack therefore needs NO step-in at all -- it is already at its spot.
+        //   * A LIGHT attack's spot is CLOSER, so it is farther out than its spot and genuinely walks the
+        //     difference (heavy minus light) IN before the clip fires.
+        //
+        // So the rule below is exactly what that flow needs: travel only to CLOSE distance, never to open
+        // it. Staying put when already at (or nearer than) the spot is what makes the heavy attack a
+        // zero-step swing and leaves the light attack's walk as the only extra movement.
+        //
+        // Set stepOutToAttackSpot to true to restore the old "always walk to the spot" behaviour.
+        if (!stepOutToAttackSpot)
+        {
+            float currentGap = Mathf.Abs(attacker.position.x - victim.position.x);
+            float spotGap = Mathf.Abs(spot.x - victim.position.x);
+
+            if (currentGap <= spotGap + 0.02f)
+            {
+                // Already at (or closer than) the attack spot: NO move at all, so nothing can push the
+                // attacker out. Just square up so the clip plays from the correct heading.
+                FaceOpponentNow(attacker, victim);
+                FaceOpponentNow(victim, attacker);
+                yield return null;
+
+                _currentAttackSpot = attacker.position;
+
+                if (verboseLogging)
+                    Alog($"'{attacker.name}' stays at its current spot (gap={currentGap:0.###} <= target " +
+                         $"{spotGap:0.###}) -- no step-out before the swing.");
+                yield break;
+            }
+
+            if (verboseLogging)
+                Alog($"'{attacker.name}' closes in for the swing: gap {currentGap:0.###} -> {spotGap:0.###} " +
+                     $"(target = {(distanceScale < 1f ? "LIGHT" : "HEAVY")} spot).");
+        }
 
         // Drive the run locomotion while stepping, then stop (speed 0) on arrival. This is what makes
         // the model actually RUN to the spot instead of sliding there in idle.
@@ -1125,21 +1264,27 @@ public class CombatPositioningController : MonoBehaviour
 
         SetMoveSpeed(side, moveSpeedValue);
         yield return MoveFighterTo(side, fighter, target, stanceReturnDuration);
-
-        if (verboseLogging)
-            Alog($"'{fighter.name}' back on its own side {target} (Speed=0).");
     }
 
     /// <summary>
-    /// Puts the two fighters back at the STANDARD spacing between exchanges.
+    /// Puts the two fighters back at the STANDARD spacing between exchanges: this is the ONE return
+    /// move that runs after a clip finishes.
     ///
-    /// This is what actually MAINTAINS the distance between the bots. It eases BOTH fighters to their
-    /// side lanes (each at half the standard gap from the fixed battle centre) at the same time, so the
-    /// pair is always re-centred and re-spaced symmetrically before the next turn -- instead of slowly
-    /// drifting together exchange after exchange until the models overlap.
+    /// THE STANDARD GAP IS THE HEAVY ATTACK SPOT (<see cref="attackSpotDistanceHeavy" />). Making the
+    /// resting distance and the heavy spot the SAME number by construction is what gives the intended
+    /// sequence:
+    ///   * a HEAVY attack is already standing on its spot, so it needs no step-in at all;
+    ///   * a LIGHT attack's spot is closer, so it walks the difference IN before swinging.
+    ///
+    /// If the resting gap were a separate value, the heavy attack would have to step out or in first and
+    /// the two weights would not be comparable.
+    ///
+    /// It eases BOTH fighters to their side lanes (each at half the standard gap from the fixed battle
+    /// centre) at the same time, so the pair is always re-centred and re-spaced symmetrically before the
+    /// next turn -- instead of slowly drifting together exchange after exchange until the models overlap.
     ///
     /// Two guarantees, both needed:
-    ///   * the standard gap (<see cref="desiredFighterDistance" />) when spacing enforcement is on, and
+    ///   * the standard gap (the heavy distance) when spacing enforcement is on, and
     ///   * the hard floor (<see cref="minFighterDistance" />) always.
     ///
     /// Nobody is ever moved THROUGH the other model: each target is clamped onto the fighter's own side
@@ -1155,7 +1300,10 @@ public class CombatPositioningController : MonoBehaviour
         if (left == null || right == null) yield break;
 
         float minGap = Mathf.Max(0f, minFighterDistance);
-        float desiredGap = Mathf.Max(minGap, desiredFighterDistance);
+        // THE standard gap: the heavy attack spot. desiredFighterDistance is intentionally NOT used -- it
+        // is a legacy field, and letting it win here would put the resting gap out of step with the heavy
+        // spot, which is exactly what would reintroduce a step-in for a heavy attack.
+        float desiredGap = Mathf.Max(minGap, attackSpotDistanceHeavy);
         float gap = Mathf.Abs(right.position.x - left.position.x);
 
         Vector3 leftTarget;
@@ -1202,7 +1350,10 @@ public class CombatPositioningController : MonoBehaviour
         Vector3 leftStart = left.position;
         Vector3 rightStart = right.position;
 
-        float duration = Mathf.Max(0.01f, stanceReturnDuration);
+        // respaceDuration, NOT stanceReturnDuration: this is the ONE return to the standard gap that runs
+        // after the clip, so it is kept short. stanceReturnDuration stays reserved for the match-start
+        // stance walk (which is allowed to read as a walk).
+        float duration = Mathf.Max(0.01f, respaceDuration);
         float elapsed = 0f;
 
         // UNSCALED: choreography pacing, not gameplay simulation -- see MoveFighterTo for why.
@@ -1212,14 +1363,30 @@ public class CombatPositioningController : MonoBehaviour
             float t = Mathf.Clamp01(elapsed / duration);
             float eased = moveEase.Evaluate(t);
 
-            if (left != null) left.position = Vector3.Lerp(leftStart, leftTarget, eased);
-            if (right != null) right.position = Vector3.Lerp(rightStart, rightTarget, eased);
+            if (left != null)
+            {
+                Vector3 pL = Vector3.Lerp(leftStart, leftTarget, eased);
+                pL.y = left.position.y;   // Y is never touched by a re-spacing pass
+                left.position = pL;
+            }
+            if (right != null)
+            {
+                Vector3 pR = Vector3.Lerp(rightStart, rightTarget, eased);
+                pR.y = right.position.y;  // Y is never touched by a re-spacing pass
+                right.position = pR;
+            }
 
             yield return null;
         }
 
-        if (left != null) left.position = leftTarget;
-        if (right != null) right.position = rightTarget;
+        if (left != null)
+        {
+            Vector3 lf = leftTarget; lf.y = left.position.y; left.position = lf;
+        }
+        if (right != null)
+        {
+            Vector3 rf = rightTarget; rf.y = right.position.y; right.position = rf;
+        }
 
         SetMoveSpeed(PlayerUI.Side.Left, 0f);
         SetMoveSpeed(PlayerUI.Side.Right, 0f);
@@ -1239,8 +1406,8 @@ public class CombatPositioningController : MonoBehaviour
         Transform right = rightFighter;
         if (left == null || right == null) yield break;
 
-        Vector3 leftTarget = ComputeSideSpot(PlayerUI.Side.Left, desiredFighterDistance * 0.5f, left, null);
-        Vector3 rightTarget = ComputeSideSpot(PlayerUI.Side.Right, desiredFighterDistance * 0.5f, right, null);
+        Vector3 leftTarget = ComputeSideSpot(PlayerUI.Side.Left, attackSpotDistanceHeavy * 0.5f, left, null);
+        Vector3 rightTarget = ComputeSideSpot(PlayerUI.Side.Right, attackSpotDistanceHeavy * 0.5f, right, null);
         if (leftTarget == Vector3.zero || rightTarget == Vector3.zero) yield break;
 
         leftTarget.z = left.position.z;
@@ -1265,14 +1432,30 @@ public class CombatPositioningController : MonoBehaviour
             float t = Mathf.Clamp01(elapsed / duration);
             float eased = moveEase.Evaluate(t);
 
-            if (left != null) left.position = Vector3.Lerp(leftStart, leftTarget, eased);
-            if (right != null) right.position = Vector3.Lerp(rightStart, rightTarget, eased);
+            if (left != null)
+            {
+                Vector3 pL = Vector3.Lerp(leftStart, leftTarget, eased);
+                pL.y = left.position.y;   // Y is never touched by a re-spacing pass
+                left.position = pL;
+            }
+            if (right != null)
+            {
+                Vector3 pR = Vector3.Lerp(rightStart, rightTarget, eased);
+                pR.y = right.position.y;  // Y is never touched by a re-spacing pass
+                right.position = pR;
+            }
 
             yield return null;
         }
 
-        if (left != null) left.position = leftTarget;
-        if (right != null) right.position = rightTarget;
+        if (left != null)
+        {
+            Vector3 lf = leftTarget; lf.y = left.position.y; left.position = lf;
+        }
+        if (right != null)
+        {
+            Vector3 rf = rightTarget; rf.y = right.position.y; right.position = rf;
+        }
 
         SetMoveSpeed(PlayerUI.Side.Left, 0f);
         SetMoveSpeed(PlayerUI.Side.Right, 0f);
@@ -1308,6 +1491,17 @@ public class CombatPositioningController : MonoBehaviour
         float wallStart = Time.unscaledTime;
         int frames = 0;
 
+        // THE MOVE OWNS X AND Z ONLY -- NEVER Y.
+        //
+        // A step is horizontal travel along the fighting line; the model's HEIGHT is not this method's
+        // business. Writing the interpolated Vector3 wholesale meant the target's Y (and, worse, any
+        // Y the Lerp passed through) was stamped onto the fighter DURING the move -- so the controller
+        // touched Y while a clip was playing, which is exactly what must not happen.
+        //
+        // Y is therefore carried through VERBATIM from the fighter's own live value, frame by frame, so
+        // an airborne clip keeps rising throughout the step and only SnapYToGround (after the clip ends)
+        // ever moves it. The target's Y is ignored entirely.
+        //
         // UNSCALED: this is choreography pacing, not gameplay simulation. Driving it with Time.deltaTime
         // meant a slow-motion effect (Time.timeScale = 0.2 from the template's CamSlowMotionDelay) stretched
         // a 0.35s step into ~1.75s of real time, and every wait in this controller with it. Pacing must
@@ -1319,7 +1513,11 @@ public class CombatPositioningController : MonoBehaviour
             float eased = moveEase.Evaluate(t);
 
             if (fighter == null) { SetMoveSpeed(side, 0f); yield break; } // destroyed mid-step
-            fighter.position = Vector3.Lerp(startPos, target, eased);
+
+            // X and Z travel to the target; Y stays exactly where the clip has put it.
+            Vector3 step = Vector3.Lerp(startPos, target, eased);
+            step.y = fighter.position.y;
+            fighter.position = step;
             frames++;
             yield return null;
         }
@@ -1337,8 +1535,13 @@ public class CombatPositioningController : MonoBehaviour
 
         if (fighter == null) { SetMoveSpeed(side, 0f); yield break; }
 
-        // Land exactly on the target so the next attack is pixel-accurate. Y is re-pinned by LateUpdate.
-        fighter.position = target;
+        // Land exactly on the target X/Z so the next attack is pixel-accurate. Y is carried over from
+        // the fighter itself (see the loop above): the move never sets height. The stale comment here
+        // used to claim "Y is re-pinned by LateUpdate", but LateUpdate only pins Z and rotation -- so
+        // writing target.y here really did move the fighter vertically, mid-clip.
+        Vector3 landed = target;
+        landed.y = fighter.position.y;
+        fighter.position = landed;
 
         // Arrived -> stop running. The animator Speed returns to 0 so the model settles into idle.
         SetMoveSpeed(side, 0f);
@@ -1897,8 +2100,8 @@ public class CombatPositioningController : MonoBehaviour
                     // wrong side is therefore walked back home instead of further through its opponent.
                     CaptureStanceSides();
 
-                    // A LIGHT attack closes to a fraction of the normal distance so the two fighters end
-                    // up closer together before the swing; heavy attacks keep the full distance.
+                    // A LIGHT attack walks in to attackSpotDistanceLight; a HEAVY one targets
+                    // attackSpotDistanceHeavy (which is also the resting gap, so it does not move).
                     float distanceScale = DistanceScaleForAnimation(action.attackerAnimationId);
 
                     // The step itself: move to the spot, then square up (face the opponent) so the clip
@@ -2258,11 +2461,14 @@ public class CombatPositioningController : MonoBehaviour
                     Alog($"LATENCY [RESPACE-WAIT] '{action.label}': waited {settleForStance:0.000}s " +
                          $"(cap={settleForStanceCap:0.00}s) before re-spacing.");
 
-                    // Restores the standard gap AND re-centres the pair. A single frame when already OK.
+                    // Restores the standard gap AND re-centres the pair. This is the ONE reposition that
+                    // runs after the clip, so the exchange reads as "close in -> hit -> settle back"
+                    // rather than two separate walks. A single frame when already at the right spacing.
                     float respaceStart = Time.unscaledTime;
                     yield return RepositionToFightStance();
                     measuredWaitTotal += Time.unscaledTime - respaceStart;
-                    Alog($"LATENCY [RESPACE-RUN] '{action.label}': RepositionToFightStance took {Time.unscaledTime - respaceStart:0.000}s.");
+                    Alog($"LATENCY [RESPACE-RUN] '{action.label}': RepositionToFightStance took {Time.unscaledTime - respaceStart:0.000}s " +
+                         $"(duration={respaceDuration:0.###}s).");
                 }
                 else if (verboseLogging)
                 {

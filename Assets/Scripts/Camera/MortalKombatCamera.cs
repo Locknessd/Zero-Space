@@ -117,31 +117,39 @@ public class MortalKombatCamera : MonoBehaviour
     [Tooltip("Safety valve: an attack shot is force-released after this many seconds even if the 'attack finished' callback never arrives (an interrupted turn would otherwise leave the camera stuck on one side).")]
     public float maxAttackFocusSeconds = 8f;
 
+    [Header("Attack Shot (simple zoom-in only)")]
+    [Tooltip("When true the attack shot is a PLAIN ZOOM-IN: the camera stays on exactly the same axis it uses between turns (same yaw / pitch / height / side) and only moves a little closer while the attack plays, then eases straight back to where it was. No orbit, no rotation, no swinging round behind the attacker.\n\nThis is the default. Turn it OFF only if you want the old cinematic orbit / over-the-shoulder behaviour back -- that shot then needs the parameters in the two sections below to be re-enabled too.")]
+    public bool attackZoomOnly = true;
+
+    [Tooltip("How much CLOSER the camera moves while an attack is playing, in world units. This is the whole attack shot: a small value (0.4-0.8) reads as a subtle push-in.")]
+    [Range(0f, 6f)]
+    public float attackZoomIn = 0.8f;
+
     [Header("Cinematic Attack Shot (orbit / rotate around the attacker)")]
-    [Tooltip("How much the camera swings AROUND the attacker during an attack shot, in degrees. 0 = the attack shot only zooms/leans. A moderate value (25-40) frames the attacker quickly; very wide sweeps take too long to land and read as the camera lagging behind the action.")]
+    [Tooltip("How much the camera swings AROUND the attacker during an attack shot, in degrees. 0 = the attack shot only zooms/leans. A moderate value (25-40) frames the attacker quickly; very wide sweeps take too long to land and read as the camera lagging behind the action.\n\nZEROED by default because attackZoomOnly is on: an orbit would rotate the view away from the neutral framing, which the plain zoom-in deliberately avoids.")]
     [Range(0f, 120f)]
-    public float attackOrbitDegrees = 35f;
+    public float attackOrbitDegrees = 0f;
 
-    [Tooltip("Extra camera distance during an attack shot. NEGATIVE = punch IN toward the attacker (the usual cinematic close-up); POSITIVE = pull out for a wider 'showcase' shot. More negative = tighter close-up.")]
-    public float attackOrbitDistance = -2.2f;
+    [Tooltip("Extra camera distance during an attack shot. NEGATIVE = punch IN toward the attacker (the usual cinematic close-up); POSITIVE = pull out for a wider 'showcase' shot. More negative = tighter close-up.\n\nZEROED by default because attackZoomOnly is on and attackZoomIn owns the push-in; keeping both would zoom in twice.")]
+    public float attackOrbitDistance = 0f;
 
-    [Tooltip("Extra downward pitch (degrees) applied during an attack shot, so the camera drops toward an over-the-shoulder angle. 0 = keep the neutral pitch. Used as the default when the dynamic shot angle below is OFF.")]
+    [Tooltip("Extra downward pitch (degrees) applied during an attack shot, so the camera drops toward an over-the-shoulder angle. 0 = keep the neutral pitch. Used as the default when the dynamic shot angle below is OFF.\n\nZEROED by default: the plain zoom-in keeps the neutral pitch so the shot does not change angle.")]
     [Range(-30f, 40f)]
-    public float attackOrbitPitch = 12f;
+    public float attackOrbitPitch = 0f;
 
-    [Tooltip("Camera height offset added to the focal point during an attack shot, so the shot lifts slightly off the ground.")]
-    public float attackOrbitHeight = 0.35f;
+    [Tooltip("Camera height offset added to the focal point during an attack shot, so the shot lifts slightly off the ground.\n\nZEROED by default: the plain zoom-in keeps the camera at its neutral height.")]
+    public float attackOrbitHeight = 0f;
 
     [Tooltip("Seconds for the camera to swing into the attack orbit. Lower = snappier cut, higher = a slow cinematic glide. Keep this SHORT so the shot is framed before the attack clip reaches its impact frame.")]
     [Range(0.05f, 1.5f)]
     public float attackOrbitBlendTime = 0.18f;
 
-    [Tooltip("When true the attack shot also ROTATES the view (Quaternion.Slerp) toward the attacker, instead of only sliding the look-at point. Turn OFF for a flat side-view game.")]
-    public bool rotateViewDuringAttack = true;
+    [Tooltip("When true the attack shot also ROTATES the view (Quaternion.Slerp) toward the attacker, instead of only sliding the look-at point.\n\nOFF by default: the attack shot must keep the SAME view axis and just zoom, which means the camera's aim never turns during an attack.")]
+    public bool rotateViewDuringAttack = false;
 
     [Header("Dynamic Shot Angles (varied high / low / diagonal attack angles)")]
-    [Tooltip("When true the attack shot PICKS a shot angle at random from the list below (high diagonal, low diagonal, over-the-shoulder, ...) instead of always using the same pitch. This is what makes the camera feel flexible: each attack can be framed from a different height/angle. Turn OFF to always use attackOrbitPitch.")]
-    public bool useDynamicShotAngles = true;
+    [Tooltip("When true the attack shot PICKS a shot angle at random from the list below (high diagonal, low diagonal, over-the-shoulder, ...) instead of always using the same pitch. This is what makes the camera feel flexible: each attack can be framed from a different height/angle. Turn OFF to always use attackOrbitPitch.\n\nOFF by default: with attackZoomOnly on, every attack must keep the SAME angle and only change distance.")]
+    public bool useDynamicShotAngles = false;
 
     [Tooltip("Extra seconds the SAME angle is kept before the camera is allowed to roll a new one, so consecutive attacks do not flicker between angles. Set to 0 to re-roll on every attack. Keep it short so each attack can get its own framing.")]
     [Range(0f, 10f)]
@@ -181,8 +189,8 @@ public class MortalKombatCamera : MonoBehaviour
     public float shotAngleBlendTime = 0.12f;
 
     [Header("Behind-The-Back Attack Shot (camera follows the attacker's facing)")]
-    [Tooltip("When true, the attack shot is built from the ATTACKER'S OWN FACING instead of a fixed world-side angle: the camera swings round BEHIND the attacker (over-the-shoulder, looking at its back) and then orbits around it. This is what stops the camera from always standing in front of the character.")]
-    public bool attackFromBehind = true;
+    [Tooltip("When true, the attack shot is built from the ATTACKER'S OWN FACING instead of a fixed world-side angle: the camera swings round BEHIND the attacker (over-the-shoulder, looking at its back) and then orbits around it. This is what stops the camera from always standing in front of the character.\n\nOFF by default: the camera must NOT travel round behind the attacker. Attack shots are a plain zoom-in on the neutral axis.")]
+    public bool attackFromBehind = false;
 
     [Tooltip("How far the camera sits BEHIND the attacker, as a fraction of the shot distance, when the attack shot starts. 1 = exactly behind (looking at the attacker's back), 0 = at the attacker's side. Values around 0.75-1 read as a proper over-the-shoulder shot.")]
     [Range(0f, 1f)]
@@ -326,6 +334,25 @@ public class MortalKombatCamera : MonoBehaviour
         {
             viewSide = viewSide == ViewSide.PositiveZ ? ViewSide.NegativeZ : ViewSide.PositiveZ;
         }
+
+        // PLAIN ZOOM-IN ATTACK SHOT: re-asserted from code (there is no "constant" form for a bool).
+        //
+        // The attack shot must be "same camera axis, slightly closer" and NOTHING else. Every parameter
+        // that would swing the camera round behind the attacker, rotate the view, or vary the shot angle
+        // is forced OFF here, because a value stored in the SCENE wins over a code default and would
+        // otherwise keep the old cinematic shot alive no matter what the field defaults say -- the exact
+        // trap that has already bitten the spacing and move-duration values elsewhere in this project.
+        attackZoomOnly = true;
+        attackFromBehind = false;
+        rotateViewDuringAttack = false;
+        useDynamicShotAngles = false;
+        attackOrbitDegrees = 0f;
+        attackOrbitDistance = 0f;
+        attackOrbitPitch = 0f;
+        attackOrbitHeight = 0f;
+        // The attack shot must not slide the camera sideways either: it stays put and only zooms.
+        lateralOffsetLeftAttacker = 0f;
+        lateralOffsetRightAttacker = 0f;
 
         // Fill in the default shot-angle pool when the Inspector list is empty, so the camera has a
         // varied set of cinematic angles (high diagonal from above, low hero shot from below, over the
@@ -596,6 +623,19 @@ public class MortalKombatCamera : MonoBehaviour
 
         // Smoothly blend the persistent attack shot in/out so the cut is never abrupt.
         bool attackShotHeld = (focusAttackerDuringAttack && (_attackFocusSide.HasValue || _hasUnmappedAttackFocus));
+
+        // PLAIN ZOOM-IN ONLY (attackZoomOnly).
+        //
+        // The attack shot must be a simple push-in on the SAME axis the camera already uses between
+        // turns -- no view rotation, no orbit, no swing round behind the attacker. Everything that would
+        // move the camera sideways or change its angle is therefore hard-disabled here, in ONE place, so a
+        // value left over in the SCENE cannot quietly re-enable it. Only _attackFocusBlend (the zoom
+        // driver below) and the attack-focus state machine keep running; the orbit, shot-angle and
+        // behind-the-back blends are all driven to 0 and stay there, which makes every attack shot end by
+        // easing straight back to exactly the neutral framing.
+        bool cinematicShotEnabled = !attackZoomOnly;
+        bool shotBlendTarget = attackShotHeld && cinematicShotEnabled;
+
         float targetBlend = attackShotHeld ? 1f : 0f;
         if (deltaTime > 0f)
         {
@@ -613,26 +653,37 @@ public class MortalKombatCamera : MonoBehaviour
         // attacker (swing angle + extra zoom + view rotation), so the camera eases into a real cinematic
         // arc instead of just leaning sideways. Driven by the same 'attack shot held' flag so an unmapped
         // attacker (no side) still gets the orbit.
+        //
+        // DISABLED under attackZoomOnly (see above): the blend is driven to 0 so no orbit yaw / pitch /
+        // height is ever applied.
+        float orbitTargetBlend = shotBlendTarget ? 1f : 0f;
         if (deltaTime > 0f)
         {
-            _attackOrbitBlend = Mathf.SmoothDamp(_attackOrbitBlend, targetBlend,
+            _attackOrbitBlend = Mathf.SmoothDamp(_attackOrbitBlend, orbitTargetBlend,
                                                  ref _attackOrbitVelocity, attackOrbitBlendTime,
                                                  Mathf.Infinity, deltaTime);
         }
         else
         {
-            _attackOrbitBlend = targetBlend;
+            _attackOrbitBlend = orbitTargetBlend;
         }
 
         // DYNAMIC SHOT ANGLE: roll a new cinematic angle when a shot STARTS (rising edge of the blend),
         // then ease the pitch / yaw / distance of that angle in and out. This is what gives the camera its
         // varied framing: one attack comes in high and diagonal from above, the next rises from below.
-        UpdateShotAngle(attackShotHeld, deltaTime);
+        //
+        // Fed the CINEMATIC flag, not the raw 'shot held' flag: under attackZoomOnly this eases the
+        // applied pitch / yaw / distance to zero and keeps them there, so no angle is ever rolled and the
+        // camera's angle stays exactly as it is between turns.
+        UpdateShotAngle(shotBlendTarget, deltaTime);
 
         // BEHIND-THE-BACK blend + moving sweep. The blend brings the camera round behind the attacker;
         // the sweep then keeps it travelling around the attacker's back for behindSweepDuration, so the
         // shot rotates and dollies instead of parking in one static position.
-        UpdateBehindShot(attackShotHeld, deltaTime);
+        //
+        // Also fed the CINEMATIC flag, so under attackZoomOnly the behind blend stays at 0 and the camera
+        // never travels round behind the attacker.
+        UpdateBehindShot(shotBlendTarget, deltaTime);
     }
 
     /// <summary>
@@ -831,8 +882,16 @@ public class MortalKombatCamera : MonoBehaviour
         // camera IN toward the attacker, a positive one widens out. Scaled by the orbit blend so the
         // push-in/out glides with the rest of the shot. The rolled shot angle adds its own per-shot
         // distance on top, so 'high diagonal' and 'low hero' shots can each sit at a different range.
+        //
+        // Under attackZoomOnly the orbit blend and the shot-angle extras are both held at 0, so these two
+        // lines contribute nothing and attackZoomIn above owns the entire push-in.
         targetDist = Mathf.Max(minDistance, targetDist + attackOrbitDistance * _attackOrbitBlend);
         targetDist = Mathf.Max(minDistance, targetDist + _shotAngleDistance);
+
+        // THE attack shot under attackZoomOnly: the ONLY thing an attack changes is the DISTANCE. The
+        // camera stays on the exact axis it uses between turns (same yaw / pitch / height / side) and just
+        // moves a little closer while the attack plays, then eases straight back out when it ends.
+        targetDist = Mathf.Max(minDistance, targetDist - attackZoomIn * _attackFocusBlend);
 
         if (deltaTime > 0f)
         {
@@ -915,11 +974,15 @@ public class MortalKombatCamera : MonoBehaviour
         // LATERAL SWING: the side offset follows WHO is attacking -- right attacker swings the camera to
         // -3, left attacker swings to +3, and back to the neutral offset when nobody is attacking.
         //
-        // FADED OUT during the behind-the-back shot: a hard sideways offset would shove the camera off the
-        // attacker's back and back toward the front, which is exactly the framing we are moving away from.
-        // The lateral swing therefore only applies to the neutral part of the blend.
+        // DISABLED under attackZoomOnly: a sideways slide would change the camera's position, not just its
+        // distance, and the attack shot must be a pure zoom. The swing is forced to 0 for the whole shot,
+        // so the camera keeps the neutral offset from the first frame to the last.
+        //
+        // (It was also already faded out during the behind-the-back shot: a hard sideways offset would
+        // shove the camera off the attacker's back and back toward the front, which is exactly the framing
+        // that shot was moving away from.)
         float targetLateral = lateralOffset;
-        if (_attackFocusSide.HasValue && _attackFocusBlend > 0.001f)
+        if (!attackZoomOnly && _attackFocusSide.HasValue && _attackFocusBlend > 0.001f)
         {
             float sideOffset = _attackFocusSide.Value == PlayerUI.Side.Right
                 ? lateralOffsetRightAttacker

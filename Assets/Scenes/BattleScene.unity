@@ -16796,7 +16796,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100004, guid: 5b52f1ff89b4dc94087ad66d49be9d6b, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 5b52f1ff89b4dc94087ad66d49be9d6b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -18311,8 +18311,8 @@ MonoBehaviour:
   targetLeft: {fileID: 1956277323}
   targetRight: {fileID: 840873219}
   autoFindTargets: 1
-  midpointOffset: {x: 0, y: 1.85, z: 0}
-  pitchAngle: 0
+  midpointOffset: {x: 0, y: 1.55, z: 0}
+  pitchAngle: -12.5
   viewSide: 0
   yawAngle: 0
   lateralOffset: 0
@@ -18331,6 +18331,8 @@ MonoBehaviour:
   attackFocusZoomIn: 0.5
   focusSmoothTime: 0.18
   maxAttackFocusSeconds: 8
+  attackZoomOnly: 1
+  attackZoomIn: 0.8
   attackOrbitDegrees: 35
   attackOrbitDistance: -2.2
   attackOrbitPitch: 12
@@ -31145,8 +31147,6 @@ MonoBehaviour:
   resultText: {fileID: 0}
   defaultInitialMaxHpAtomic: 1000
   verboseLogging: 0
-  billboardSpeechBubbles: 1
-  bubbleYawOffset: 0
 --- !u!1 &548366190
 GameObject:
   m_ObjectHideFlags: 0
@@ -31669,6 +31669,7 @@ GameObject:
   - component: {fileID: 555174329}
   - component: {fileID: 555174331}
   - component: {fileID: 555174330}
+  - component: {fileID: 555174332}
   m_Layer: 11
   m_Name: Asphalt (2)
   m_TagString: Untagged
@@ -31748,6 +31749,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 555174328}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &555174332
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 555174328}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.99999994, y: 1.0000002, z: 6.123235e-17}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &555203291
 GameObject:
   m_ObjectHideFlags: 0
@@ -35962,6 +35984,7 @@ MonoBehaviour:
   backGetupHitIndices: 0500000006000000
   frontGetupHitIndices: 07000000
   defaultGetupType: 1
+  disableDeathAnimation: 1
   validateParametersOnAwake: 1
   knockdownBlocksActions: 0
   attackCooldown: 0.05
@@ -43384,6 +43407,7 @@ MonoBehaviour:
   backGetupHitIndices: 0500000006000000
   frontGetupHitIndices: 07000000
   defaultGetupType: 1
+  disableDeathAnimation: 1
   validateParametersOnAwake: 1
   knockdownBlocksActions: 0
   attackCooldown: 0.05
@@ -48528,6 +48552,7 @@ MonoBehaviour:
   backGetupHitIndices: 0500000006000000
   frontGetupHitIndices: 07000000
   defaultGetupType: 1
+  disableDeathAnimation: 1
   validateParametersOnAwake: 1
   knockdownBlocksActions: 0
   attackCooldown: 0.05
@@ -68486,17 +68511,20 @@ MonoBehaviour:
   rightFighter: {fileID: 840873219}
   lockDepthZ: 1
   resetGroundYAfterAnim: 1
+  groundResetDuration: 0.15
   lockRotationRuntime: 1
   faceEachOther: 1
-  groundResetDuration: 0.15
-  attackSpotDistance: 2.5
+  attackSpotDistanceHeavy: 1.5
+  attackSpotDistanceLight: 0.5
   lightAttackSpotScale: 0.5
+  stepOutToAttackSpot: 0
   attackSpotsRelativeToCentre: 1
   sideLaneOffset: 0.8
   desiredFighterDistance: 2.2
   minFighterDistance: 0.7
   attackSpotOffset: {x: 0, y: 0, z: 0}
   moveDuration: 0.35
+  respaceDuration: 0.2
   moveEase:
     serializedVersion: 2
     m_Curve: []
@@ -81812,6 +81840,7 @@ GameObject:
   - component: {fileID: 1388458839}
   - component: {fileID: 1388458841}
   - component: {fileID: 1388458840}
+  - component: {fileID: 1388458842}
   m_Layer: 11
   m_Name: Asphalt
   m_TagString: Untagged
@@ -81891,6 +81920,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1388458838}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &1388458842
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1388458838}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000005, y: 1.0000002, z: 0.0000015685118}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1388535379
 GameObject:
   m_ObjectHideFlags: 0
@@ -85642,7 +85692,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100004, guid: 5b52f1ff89b4dc94087ad66d49be9d6b, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 5b52f1ff89b4dc94087ad66d49be9d6b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -100959,6 +101009,7 @@ MonoBehaviour:
   backGetupHitIndices: 0500000006000000
   frontGetupHitIndices: 07000000
   defaultGetupType: 1
+  disableDeathAnimation: 1
   validateParametersOnAwake: 1
   knockdownBlocksActions: 0
   attackCooldown: 0.05
@@ -113918,6 +113969,7 @@ MonoBehaviour:
   backGetupHitIndices: 0500000006000000
   frontGetupHitIndices: 07000000
   defaultGetupType: 1
+  disableDeathAnimation: 1
   validateParametersOnAwake: 1
   knockdownBlocksActions: 0
   attackCooldown: 0.05
@@ -120954,6 +121006,7 @@ GameObject:
   - component: {fileID: 2069149978}
   - component: {fileID: 2069149980}
   - component: {fileID: 2069149979}
+  - component: {fileID: 2069149981}
   m_Layer: 11
   m_Name: Asphalt (1)
   m_TagString: Untagged
@@ -121033,6 +121086,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2069149977}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &2069149981
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2069149977}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1.0000002, z: 6.123235e-17}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2069903118
 GameObject:
   m_ObjectHideFlags: 0
@@ -123834,6 +123908,7 @@ GameObject:
   - component: {fileID: 2112826078}
   - component: {fileID: 2112826080}
   - component: {fileID: 2112826079}
+  - component: {fileID: 2112826081}
   m_Layer: 11
   m_Name: Asphalt
   m_TagString: Untagged
@@ -123913,6 +123988,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2112826077}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &2112826081
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2112826077}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000005, y: 1.0000002, z: 0.0000015691751}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2113551905
 GameObject:
   m_ObjectHideFlags: 0
@@ -125460,6 +125556,7 @@ MonoBehaviour:
   backGetupHitIndices: 0500000006000000
   frontGetupHitIndices: 07000000
   defaultGetupType: 1
+  disableDeathAnimation: 1
   validateParametersOnAwake: 1
   knockdownBlocksActions: 0
   attackCooldown: 0.05

@@ -425,6 +425,43 @@ public class GameManager : MonoBehaviour
         string lower = animationId.ToLowerInvariant();
         try
         {
+            // VICTORY (and any other CELEBRATION clip) MUST BE MATCHED FIRST, AND MUST MATCH EXACTLY.
+            //
+            // It used to have no branch of its own, so "victory" fell through the whole if/else chain to
+            // the final `else` and was routed to TakeHitFromAnimationId -- i.e. the WINNER played a HIT
+            // REACTION on the celebration call. That is the observed "anim chạy khá linh tinh" at match
+            // end, and it also polluted the bridge's action state (BeginAction + end-signal bookkeeping)
+            // while the match was ending.
+            //
+            // IMPORTANT -- WHY THE MATCH IS NARROW: an earlier attempt used `Contains("win")`, which is
+            // far too greedy. It also swallows unrelated ids that merely happen to contain those letters,
+            // so a real hit/attack id could be silently diverted into this branch and never play. The
+            // match is therefore restricted to the actual celebration tokens.
+            //
+            // This branch touches NO hit / attack / getup / knockdown parameter: it plays the clip by its
+            // own trigger name when the controller declares one, and otherwise does nothing at all.
+            bool isCelebration =
+                lower == "victory" || lower.EndsWith("_victory") || lower.EndsWith("victory") ||
+                lower.Contains("celebrat");
+
+            if (isCelebration)
+            {
+                if (bridge.PlayNamedClip(animationId))
+                {
+                    if (debugMode) AnimLogChecker.Log("GM", $"celebration clip '{animationId}' played on {side}.");
+                }
+                else if (debugMode)
+                {
+                    AnimLogChecker.Log("GM", $"celebration '{animationId}' on {side}: controller has no such trigger; " +
+                        $"no clip played (deliberately NOT routed to a hit reaction).");
+                }
+
+                // NO BeginWatchCurrentAnimation() below: nothing was triggered, so there is no clip to
+                // watch. Watching a non-existent clip is what made the queue poll a phantom state and
+                // spin on "SWALLOWED" for the rest of the wait.
+                return 0f;
+            }
+
             if (lower.Contains("attack"))
             {
                 // Fires the attack and returns the variant applied (paired below). Record it under the pending
@@ -453,17 +490,31 @@ public class GameManager : MonoBehaviour
             {
                 bool isHeavyHit = lower.Contains("heavy");
 
-                // LETHAL GUARD -- LIGHT HITS ONLY.
+                // LETHAL GUARD -- LIGHT HITS, ONLY WHILE THE DEATH ANIMATION EXISTS.
                 //
-                // A light hit that drains the last HP skips its hit reaction and collapses straight into
-                // the death pose (the tiny light reaction would otherwise play and the collapse only
-                // happened afterwards, reading as a delayed death).
+                // The original rule: a light hit that drains the last HP SKIPS its hit reaction and
+                // collapses straight into the death pose (KB_TopKO), because the tiny light reaction would
+                // otherwise play and the collapse only happened afterwards, reading as a delayed death.
                 //
-                // A HEAVY hit ALWAYS plays its normal hit reaction, even when it is lethal -- the heavy
-                // knockdown is the whole point of the animation, so it must not be replaced.
-                if (!isHeavyHit && IsVictimLethalForCurrentExchange(side))
+                // That rule is only valid when the death pose actually EXISTS to replace the reaction.
+                // With the death animation disabled (bridge.DisableDeathAnimation), TakeFatalHit plays
+                // NOTHING -- so skipping the reaction as well left the fighter playing NO clip at all on
+                // the killing blow (the reported "losing the match runs no hit animation"), while the
+                // attacker's attack carried on with no reaction from its opponent.
+                //
+                // The reaction is therefore only skipped when the victim's bridge will really play a
+                // death pose. Otherwise the NORMAL hit reaction plays: the fighter takes the killing blow
+                // visibly and then simply stays down (death still blocks every later action, so it never
+                // gets up).
+                //
+                // A HEAVY hit ALWAYS plays its normal hit reaction, lethal or not -- the heavy knockdown
+                // is the whole point of the animation, so it is never replaced.
+                bool deathPoseWillPlay = bridge != null && !bridge.DisableDeathAnimation;
+                bool lethalNow = IsVictimLethalForCurrentExchange(side);
+
+                if (!isHeavyHit && deathPoseWillPlay && lethalNow)
                 {
-                    if (debugMode) AnimLogChecker.Log("GM", $"lethal LIGHT hit on {side}: skipping hit reaction, playing KB_TopKO.");
+                    if (debugMode) AnimLogChecker.Log("GM", $"lethal LIGHT hit on {side}: skipping hit reaction, playing KB_TopKO (death animation is ON).");
                     _loserSideForDieAnimation = side;
                     bridge.TakeFatalHit();
                 }
@@ -481,16 +532,47 @@ public class GameManager : MonoBehaviour
                     {
                         bridge.TakeHitFromAnimationId(animationId);
                     }
+
+                    // THE KILLING BLOW STILL KILLS. Mark the fighter dead AFTER the reaction above, so it
+                    // stays down for the rest of the match and never gets up. The order matters: TakeHit
+                    // refuses once the bridge is dead ("Death has highest priority"), so marking it first
+                    // would suppress the very reaction we just fired.
+                    //
+                    // This runs for ANY lethal hit, light or heavy. A dead fighter must never get up, and
+                    // the ONLY reliable way to guarantee that is to have the bridge actually BE dead before
+                    // any getup decision is taken -- relying on `lethalNow` alone would miss anything that
+                    // re-derives lethality later (see ScheduleGetupThroughQueue / the chained getup).
+                    if (lethalNow)
+                    {
+                        if (debugMode)
+                            AnimLogChecker.Log("GM", $"lethal {(isHeavyHit ? "HEAVY" : "LIGHT")} hit on {side}: " +
+                                $"hit reaction played, then marked dead (no getup afterwards).");
+                        _loserSideForDieAnimation = side;
+                        bridge.TakeFatalHit();
+                    }
                 }
             }
             else if (lower.Contains("getup") || lower.Contains("standup"))
             {
                 // Route through GetupFromKnockdown so the same getup direction policy applies here too
                 // (currently forced to type 1 so a fighter can never get stuck in a hit pose).
-                bridge.GetupFromKnockdown();
+                //
+                // NOT for a DEAD fighter: a "getup"/"standup" animation id must never revive one, so the
+                // request is dropped here (the bridge refuses it as well -- this is the second, independent
+                // guard, because this path comes straight from the backend's animation id).
+                if (bridge.IsDead)
+                {
+                    if (debugMode) AnimLogChecker.Log("GM", $"getup animation '{animationId}' ignored on {side}: the fighter is dead.");
+                }
+                else
+                {
+                    bridge.GetupFromKnockdown();
+                }
             }
             else if (lower.Contains("die") || lower.Contains("ko"))
             {
+                // Death with no animation: TakeFatalHit only marks the fighter dead (it plays no
+                // clip when the bridge has disableDeathAnimation on) and blocks every later action.
                 bridge.TakeFatalHit();
             }
             else
@@ -1298,17 +1380,33 @@ public class GameManager : MonoBehaviour
                 if (!string.IsNullOrEmpty(exchangeKey)) _exchangeGetupHandled.Add(exchangeKey);
                 afterExchange = () =>
                 {
+                    // DOUBLE LETHAL CHECK -- this closure runs AFTER the attack+hit clips have played,
+                    // so it is the LAST chance to stop a corpse from standing up.
+                    //
+                    // `knockedBridge.IsDead` is the authoritative test, because a lethal hit marks the
+                    // bridge dead in the exchange's own animate step (PlayAnimationForSide calls
+                    // TakeFatalHit right after the hit reaction). By the time this runs the flag MUST be
+                    // set, so this check alone catches every lethal case.
+                    //
+                    // The `_lethalExchangeKeys` test is kept as a second, independent signal: it is set
+                    // from the turn's hpAfter == 0, so it still fires if the dead flag somehow has not
+                    // landed yet (e.g. the bridge was re-resolved).
                     bool lethal = knockedBridge == null || knockedBridge.IsDead ||
                                   (exchangeKey != null && _lethalExchangeKeys.Contains(exchangeKey));
                     if (lethal)
                     {
-                        if (debugMode) AnimLogChecker.Log("GM", $"chained getup suppressed: lethal hit on {victimSide}.");
+                        if (debugMode) AnimLogChecker.Log("GM", $"chained getup suppressed: lethal hit on {victimSide} " +
+                            $"(isDead={knockedBridge?.IsDead}, lethalKey={exchangeKey != null && _lethalExchangeKeys.Contains(exchangeKey)}).");
                         return;
                     }
                     try { knockedBridge.GetupFromKnockdown(); }
                     catch (Exception ex) { Debug.LogWarning($"Animation [GameManager] chained getup failed: {ex}"); }
                 };
                 afterHold = Mathf.Max(0f, getupAfterHitDelay) + Mathf.Max(0f, getupDelay);
+            }
+            else if (isHeavyExchange && lethalThisTurn && debugMode)
+            {
+                AnimLogChecker.Log("GM", $"no chained getup for this heavy exchange: hpAfter={hpAfter} (lethal turn).");
             }
 
             pos.EnqueueMoveThenAnimate($"TURN {turnId}", apply, attackerSide.Value, victimSide.Value,
@@ -1415,6 +1513,14 @@ public class GameManager : MonoBehaviour
         var targetBridge = GetBridgeForSide(side.Value);
         if (targetBridge == null) return;
 
+        // A DEAD fighter must never get up. Losing the last HP on a heavy hit reaches this path with no
+        // exchange, and without this check it would stand straight back up after the killing blow.
+        if (targetBridge.IsDead)
+        {
+            if (debugMode) AnimLogChecker.Log("GM", $"no getup for {targetId}: the fighter is dead.");
+            return;
+        }
+
         bool knockedDownNow = targetBridge.IsKnockedDown ||
                               (targetBridge.Animator != null && targetBridge.Animator.GetBool("IsKnockedDown"));
 
@@ -1471,9 +1577,11 @@ public class GameManager : MonoBehaviour
             case "WINNER_DECLARED":
             {
                 AddBridge(list, ev.payload.Value<string>("winnerCharacterId"));
-                // The loser plays the death pose; consider both fighters so the queue waits it out.
-                AddBridge(list, _characterNames.TryGetValue("bot_a", out var a) ? a : "bot_a");
-                AddBridge(list, _characterNames.TryGetValue("bot_b", out var b) ? b : "bot_b");
+                // The loser is the one that dies. It is deliberately NOT added to `watched`: with the
+                // death animation disabled nothing is played for it, so waiting on its "clip" would
+                // only make the winner's victory animation outlast the event for no reason. (When the
+                // death animation IS enabled the bridge reports finished immediately for a dead fighter
+                // anyway, so the wait is a no-op either way.)
                 break;
             }
         }
@@ -1917,18 +2025,36 @@ public class GameManager : MonoBehaviour
                         catch { }
                         // Restore normal speech behavior when declaring winner
                         _swapSpeechDuringMatch = false;
-                        // Winner: show victory dialogue and play victory animation
+
+                        // A FIGHTER THAT DIED IS ALREADY SETTLED -- do not start a celebration on the
+                        // winner that will be cut off, and never touch the LOSER through an animation path
+                        // here. The loser was marked dead by the lethal exchange itself; calling Die()
+                        // again is a harmless no-op, and re-driving any clip on it is now refused at the
+                        // bridge. Both calls below are therefore written to be side-effect free when the
+                        // state is already correct.
+                        //
+                        // Winner: show victory dialogue, then request the celebration clip. The request
+                        // goes through PlayAnimationForSide, whose celebration branch plays the clip ONLY
+                        // when the controller declares a matching trigger and NEVER routes it to a hit.
                         uiManager?.SetDialogue(ToUISide(winnerSide.Value), "VICTORY!");
                         PlayAnimationForSide(winnerSide.Value, "victory", defaultCrossFade);
 
-                        // Loser: play die animation (only once)
+                        // Loser: ensure it is down (no-op when the lethal hit already killed it).
                         if (!_loserSideForDieAnimation.HasValue || _loserSideForDieAnimation != loserSide)
                         {
                             _loserSideForDieAnimation = loserSide;
-                            AnimLogChecker.Log("GM", $"Attempting to play die animation on loser side={loserSide}");
                             if (loserSide.HasValue)
                             {
-                                GetBridgeForSide(loserSide.Value)?.Die();
+                                var loserBridge = GetBridgeForSide(loserSide.Value);
+                                if (loserBridge != null && !loserBridge.IsDead)
+                                {
+                                    AnimLogChecker.Log("GM", $"WINNER_DECLARED: loser side={loserSide} was not marked dead by its turn; marking it now.");
+                                    loserBridge.Die();
+                                }
+                                else
+                                {
+                                    AnimLogChecker.Log("GM", $"WINNER_DECLARED: loser side={loserSide} is already dead; left untouched.");
+                                }
                             }
                         }
                     }
@@ -1986,6 +2112,15 @@ public class GameManager : MonoBehaviour
         var pos = Positioning;
         if (pos == null || bridge == null) return;
 
+        // A DEAD fighter must never get up. Checked HERE, at schedule time, so nothing is even enqueued:
+        // a getup item for a corpse would otherwise sit in the queue, hold it, and then run its (harmless
+        // but pointless) work while the fighter is meant to be down for good.
+        if (bridge.IsDead)
+        {
+            if (debugMode) AnimLogChecker.Log("GM", $"getup for {side} not scheduled: the fighter is dead (it must stay down).");
+            return;
+        }
+
         pos.SetFighters(GetFighterTransform(PlayerUI.Side.Left), GetFighterTransform(PlayerUI.Side.Right));
 
         // 1) Knockdown hold: a no-op item that simply occupies the queue for `delay` seconds, and
@@ -2008,7 +2143,16 @@ public class GameManager : MonoBehaviour
             $"getup {side}",
             () =>
             {
-                if (bridge == null || bridge.IsDead) return;
+                // A DEAD fighter must never get up. Re-checked HERE, at the moment the queued item runs:
+                // between scheduling this getup and running it the victim may have taken the killing
+                // blow (the chained getup is enqueued from the turn stack, and a later event can mark the
+                // fighter dead first). Without this second check the fighter stands back up on 0 HP.
+                if (bridge == null || bridge.IsDead)
+                {
+                    if (debugMode && bridge != null)
+                        AnimLogChecker.Log("GM", $"getup for {side} skipped at run time: the fighter died before it ran.");
+                    return;
+                }
                 try
                 {
                     // Derive the getup direction from the heavy hit that knocked the fighter down

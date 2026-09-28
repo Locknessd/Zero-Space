@@ -126,6 +126,10 @@ public class CharacterAnimatorBridge : MonoBehaviour
     [Tooltip("GetupType used when no knockdown-hit rule matches. 1 = Back (Combo_Getup01), 2 = Front (Combo_Getup02).")]
     [SerializeField] private int defaultGetupType = 1;
 
+    [Header("Death")]
+    [Tooltip("When true, a fighter that reaches 0 HP just STOPS: it plays no death animation at all (no KB_TopKO / per-clip 'die') and simply stays on the floor, never getting up. Death still blocks every later action (attack / hit / move / getup), so the fighter is inert for the rest of the match.")]
+    [SerializeField] private bool disableDeathAnimation = true;
+
     [Header("Safety / Tuning")]
     [Tooltip("When true, verifying that every expected parameter exists on Awake and warn if not.")]
     [SerializeField] private bool validateParametersOnAwake = true;
@@ -602,17 +606,24 @@ public class CharacterAnimatorBridge : MonoBehaviour
         }
 
         // IDLE-SOURCE GATE: the Animator Controller authors the attack transitions ONLY from Idle, so
-        // firing while the model is still blending out of Walk/Run (or mid-transition) drops the trigger
-        // and no attack clip ever runs. When that happened the queue had no end-of-clip event to wait for
-        // and sat out its whole 15s safety cap -- which is exactly the slow turn we traced. Refusing the
-        // fire here is far better than firing into the void: the caller keeps its state and can retry.
+        // firing while the model is still blending out of Walk/Run (or mid-transition) can drop the
+        // trigger and no attack clip ever runs -- which used to make the queue sit out its whole safety
+        // cap waiting for an end-of-clip event that would never come.
+        //
+        // The gate is therefore reported but NOT enforced: the trigger is always fired. Refusing cost more
+        // than it saved -- the caller had already committed to the attack (the exchange's MOVE and its
+        // variant bookkeeping are done by this point), so a refusal silently lost the whole swing, and on
+        // a lethal hit it could lose the killing blow entirely. The per-frame soft gates are the safety
+        // net instead: IsActionPlaying()/IsAnimationFinished() treat a trigger that never produced a state
+        // change as a parked pose once swallowedTriggerGrace has passed, so a genuinely swallowed trigger
+        // no longer holds the queue.
         if (!IsLiterallyInIdleState)
         {
-            AlogWarn($"Attack({index}) REFUSED: animator is not in a standing Idle state " +
-                     $"(state='{DescribeCurrentState()}', inTransition={SafeIsInTransition()}). " +
-                     $"The controller only accepts attack transitions from Idle, so firing now would " +
-                     $"swallow the trigger.");
-            return false;
+            if (verboseLogging)
+                Alog($"Attack({index}): animator is not in a standing Idle state " +
+                     $"(state='{DescribeCurrentState()}', inTransition={SafeIsInTransition()}). Firing anyway so " +
+                     $"the attack is never lost -- the controller ignores the trigger when it has no transition " +
+                     $"from the current state.");
         }
 
         _lastAttackTime = Time.time;
@@ -676,6 +687,34 @@ public class CharacterAnimatorBridge : MonoBehaviour
     public void Attack(AttackType attack)
     {
         Attack((int)attack);
+    }
+
+    /// <summary>
+    /// Plays a clip by its own TRIGGER NAME (e.g. "victory"), without touching ANY of the hit /
+    /// attack / getup / knockdown parameters.
+    ///
+    /// WHY THIS EXISTS: celebration clips such as "victory" are not part of the fight graph. Before
+    /// this existed, an unrecognised animation id fell through GameManager's if/else chain to
+    /// TakeHitFromAnimationId -- so asking for the victory clip made the WINNER play a HIT REACTION,
+    /// which is the observed "anim chạy khá linh tinh" at match end. It also polluted the bridge's
+    /// action state (BeginAction / end-signal bookkeeping) while the match was ending.
+    ///
+    /// Harmless when the controller does not declare that trigger: it reports false and changes nothing.
+    /// </summary>
+    /// <returns>TRUE when a Trigger with that name exists on this controller and was fired.</returns>
+    public bool PlayNamedClip(string clipName)
+    {
+        EnsureParametersResolved();
+        if (string.IsNullOrEmpty(clipName)) return false;
+
+        if (!FireTriggerByName(clipName))
+        {
+            if (verboseLogging) Alog($"PlayNamedClip('{clipName}'): no Trigger with that name on this controller.");
+            return false;
+        }
+
+        if (verboseLogging) Alog($"PlayNamedClip('{clipName}') fired (no hit/attack parameters touched).");
+        return true;
     }
 
     /// <summary>
@@ -778,8 +817,9 @@ public class CharacterAnimatorBridge : MonoBehaviour
     /// </summary>
     /// <param name="hitIndex">Maps to HitIndex (e.g. 1, 3, 5, 6, 7).</param>
     /// <param name="isHeavy">True for heavy/knockdown hits, false for light inline reactions.</param>
-    /// <returns>TRUE when the trigger was actually fired, FALSE when it was refused (dead, invalid index,
-    /// or not in a standing Idle state). Callers that must not lose the reaction should retry on false.</returns>
+    /// <returns>TRUE when the trigger was fired, FALSE only when it could not be fired at all (the
+    /// fighter is already dead, or the index is not in the expected pool). It no longer reports false
+    /// merely because the animator was mid-transition: see the Idle-source gate note above.</returns>
     public bool TakeHit(int hitIndex, bool isHeavy)
     {
         EnsureParametersResolved();
@@ -799,13 +839,23 @@ public class CharacterAnimatorBridge : MonoBehaviour
         // attacks). Firing while the model is still blending out of Walk/Run, or mid-transition, drops
         // the trigger -- and then no hit clip plays, so no end-of-clip event ever arrives and the queue
         // waits out its full safety cap. Refusing here keeps the caller's state intact.
+        //
+        // THE ONE EXCEPTION IS THE KILLING BLOW. The victim's transition back to Idle is only driven by
+        // AnimationEndAction, which reports a state EXIT -- on the last hit of a match that exit can land
+        // a frame or two AFTER this call, so the animator still reports the previous pose here and the
+        // gate refuses the reaction. The result was the reported "0 HP runs no hit animation": the losing
+        // side simply stood in its old pose while the attacker swung, so the killing blow read as nothing.
+        //
+        // A hit reaction is never dropped because of this gate any more. Firing it always produces a
+        // visible reaction; if the controller really has no transition from the current state the trigger
+        // is inert and costs nothing, whereas refusing guarantees the hit is never seen.
         if (!IsLiterallyInIdleState)
         {
-            AlogWarn($"TakeHit({hitIndex}, heavy={isHeavy}) REFUSED: animator is not in a standing Idle state " +
-                     $"(state='{DescribeCurrentState()}', inTransition={SafeIsInTransition()}). " +
-                     $"The controller only accepts hit transitions from Idle, so firing now would " +
-                     $"swallow the trigger.");
-            return false;
+            if (verboseLogging)
+                Alog($"TakeHit({hitIndex}, heavy={isHeavy}): animator is not in a standing Idle state " +
+                     $"(state='{DescribeCurrentState()}', inTransition={SafeIsInTransition()}). Firing anyway so the " +
+                     $"hit reaction is never lost -- the controller simply ignores the trigger when it has no " +
+                     $"transition from the current state.");
         }
 
         // Force locomotion to a stop first: the controller authors hit transitions only from Idle,
@@ -963,7 +1013,20 @@ public class CharacterAnimatorBridge : MonoBehaviour
     public void Getup(int type)
     {
         EnsureParametersResolved();
-        if (_isDead) return;
+
+        // A DEAD fighter must never stand up. This is the LAST line of defence for the "0 HP still
+        // gets up" bug: whatever path asked for the getup (the chained post-animation getup, the
+        // queued getup item, a backend 'getup' animation id), the request dies here.
+        //
+        // Note this is a LIVE check, not a cached one -- _isDead is set the moment the killing blow
+        // lands (Die() is called right after the lethal hit reaction), so a getup requested before
+        // that can still be refused when it actually runs.
+        if (_isDead)
+        {
+            if (verboseLogging)
+                Alog($"Getup(type={type}) REFUSED: the fighter is dead and must stay down.");
+            return;
+        }
 
         // The getup owns the end signal from now on.
         BeginAction();
@@ -1285,12 +1348,31 @@ public class CharacterAnimatorBridge : MonoBehaviour
         _isDead = true;
         _isKnockedDown = false;
 
-        // Clear residual one-shots so nothing re-fires during the death pose.
+        // A pending getup must die with the fighter: otherwise Update() would keep re-firing
+        // TriggerGetup and the "dead" character would stand back up a moment later.
+        _getupPending = false;
+        _sawGetupState = false;
+        _getupCallCount = 0;
+
+        // Clear residual one-shots so nothing re-fires while the fighter is down.
         if (_hasTriggerAttack) animator.ResetTrigger(_triggerAttackHash);
         if (_hasTriggerHit) animator.ResetTrigger(_triggerHitHash);
         if (_hasTriggerGetup) animator.ResetTrigger(_triggerGetupHash);
         if (_hasIsKnockedDown) animator.SetBool(_isKnockedDownHash, false);
         if (_hasSpeed) animator.SetFloat(_speedHash, 0f);
+
+        // NO DEATH ANIMATION MODE (disableDeathAnimation).
+        //
+        // The fighter simply STOPS here: no IsDead bool, no per-clip 'die' trigger, so the animator
+        // is never told to play KB_TopKO / the die clip. The character keeps whatever pose it was in
+        // when the last HP drained -- which is the hit / knockdown reaction the lethal blow just
+        // started -- and, because _isDead is true, Getup()/Attack()/TakeHit()/Move() all refuse from
+        // now on, so it never stands up again for the rest of the match.
+        if (disableDeathAnimation)
+        {
+            if (verboseLogging) Alog("Die() -> death animation DISABLED: fighter stops in place (no KB_TopKO), never gets up.");
+            return;
+        }
 
         // PER-CLIP mode: the controller declares 'die' as a Bool (or Trigger) rather than IsDead.
         if (_usePerClipTriggers)
@@ -1325,6 +1407,8 @@ public class CharacterAnimatorBridge : MonoBehaviour
             // Play(true) restarts the system even when it is already emitting (a heavy combo can land
             // several hits while one burst is still alive), and re-enables the GameObject if a previous
             // stop disabled it.
+            if(hitEffect.gameObject.activeSelf == false)
+            hitEffect.gameObject.SetActive(true);
             hitEffect.Play(true);
 
             if (verboseLogging)
@@ -1379,6 +1463,16 @@ public class CharacterAnimatorBridge : MonoBehaviour
 
     public bool IsDead => _isDead;
     public bool IsKnockedDown => _isKnockedDown;
+
+    /// <summary>
+    /// True when this fighter plays NO death animation: on a lethal hit it keeps whatever pose it was in
+    /// and simply never acts again (see the field's tooltip).
+    ///
+    /// Exposed so callers can tell the two death modes apart. GameManager uses it to decide whether a
+    /// lethal LIGHT hit may skip the victim's hit reaction: skipping it is only safe when a death pose
+    /// actually exists to take its place, otherwise the killing blow would play no clip at all.
+    /// </summary>
+    public bool DisableDeathAnimation => disableDeathAnimation;
 
     /// <summary>
     /// True while a getup request is still waiting to be consumed by the controller. The bridge
