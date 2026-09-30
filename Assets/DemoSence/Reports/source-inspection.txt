@@ -1,0 +1,395 @@
+ROOT Frank_Damage@Damage_Critical_2Handed position=(-15.43, 0.00, -3.55) scale=(1.00, 1.00, 1.00)
+ ANIMATOR Frank_Damage@Damage_Critical_2Handed avatar= human=False rootMotion=False controller=Assets/Selected/Frank_Damages/Asset/Animations/Damages_Critical_Set/Critical_2Handed.controller
+  CLIP Damage_Critical_2Handed length=5.833344 human=False loop=False events=0 path=Assets/Selected/Frank_Damages/Asset/Animations/Damages_Critical_Set/Damage_Critical_2Handed.anim
+ RENDER Cloak SkinnedMeshRenderer materials=Body_Parts:Universal Render Pipeline/Lit bones=Bone007,Bone008,spine_03,Bone001,Bone002,Bone009,Bone003,Bone010,Bone004,Bone011,Bone005
+ RENDER Frank_Mesh_Unity SkinnedMeshRenderer materials=Frank_Unity:Universal Render Pipeline/Lit bones=head,pelvis,upperarm_r,upperarm_l,spine_01,spine_02,spine_03,upperarm_twist_01_l,upperarm_twist_01_r,clavicle_l,clavicle_r,thigh_l,thigh_r,thigh_twist_01_l,calf_r,calf_l,foot_r,foot_l,ball_l,ball_r,lowerarm_l,hand_l,thumb_01_l,pinky_01_l,ring_01_l,middle_01_l,index_01_l,index_02_l,thumb_02_l,middle_02_l,pinky_02_l,pinky_03_l,ring_02_l,index_03_l,thumb_03_l,middle_03_l,ring_03_l,lowerarm_r,neck_01,thigh_twist_01_r,hand_r,thumb_02_r,thumb_03_r,thumb_01_r,ring_02_r,pinky_03_r,middle_01_r,middle_02_r,middle_03_r,ring_01_r,index_03_r,index_02_r,ring_03_r,pinky_01_r,pinky_02_r,index_01_r
+ RENDER SK_Blade_HeavyAXE SkinnedMeshRenderer materials=M_Blade_GreatBlade:Universal Render Pipeline/Lit bones=R_Weapon_Bone
+ COMPONENTS Animator=1,SkinnedMeshRenderer=3
+ROOT Frank_Damage@Damage_Critical_Assassin position=(-9.69, 0.00, -3.55) scale=(1.00, 1.00, 1.00)
+ ANIMATOR Frank_Damage@Damage_Critical_Assassin avatar= human=False rootMotion=False controller=Assets/Selected/Frank_Damages/Asset/Animations/Damages_Critical_Set/Critical_Assassin.controller
+  CLIP Damage_Critical_Assassin length=5.833344 human=False loop=False events=0 path=Assets/Selected/Frank_Damages/Asset/Animations/Damages_Critical_Set/Damage_Critical_Assassin.anim
+ RENDER Cape SkinnedMeshRenderer materials=Body_Parts:Universal Render Pipeline/Lit bones=Muffler01,spine_03,clavicle_l,Muffler02,root,clavicle_r,Muffler03,Muffler04,Muffler05,Muffler06,Muffler07
+ RENDER Frank_Mesh_Unity SkinnedMeshRenderer materials=Body:Universal Render Pipeline/Lit bones=head,pelvis,upperarm_r,upperarm_l,spine_01,spine_02,spine_03,upperarm_twist_01_l,upperarm_twist_01_r,clavicle_l,clavicle_r,thigh_l,thigh_r,thigh_twist_01_l,calf_r,calf_l,foot_r,foot_l,ball_l,ball_r,lowerarm_l,hand_l,thumb_01_l,pinky_01_l,ring_01_l,middle_01_l,index_01_l,index_02_l,thumb_02_l,middle_02_l,pinky_02_l,pinky_03_l,ring_02_l,index_03_l,thumb_03_l,middle_03_l,ring_03_l,lowerarm_r,neck_01,thigh_twist_01_r,hand_r,thumb_02_r,thumb_03_r,thumb_01_r,ring_02_r,pinky_03_r,middle_01_r,middle_02_r,middle_03_r,ring_01_r,index_03_r,index_02_r,ring_03_r,pinky_01_r,pinky_02_r,index_01_r
+ RENDER Sword SkinnedMeshRenderer materials=Sowrd:Universal Render Pipeline/Lit,Blade:Universal Render Pipeline/Lit bones=Sword_R_Bone
+ COMPONENTS Animator=1,SkinnedMeshRenderer=3
+ROOT Frank_Damage@Damage_Critical_Dual position=(-2.93, 0.00, -3.55) scale=(1.00, 1.00, 1.00)
+ ANIMATOR Frank_Damage@Damage_Critical_Dual avatar=Frank_Damage@Damage_Critical_DualAvatar (UnityEngine.Avatar) human=False rootMotion=False controller=Assets/Selected/Frank_Damages/Asset/Animations/Damages_Critical_Set/Critical_Dual.controller
+  CLIP Damage_Critical_Dual length=7.333344 human=False loop=False events=0 path=Assets/Selected/Frank_Damages/Asset/Animations/Damages_Critical_Set/Damage_Critical_Dual.anim
+ RENDER Cloak SkinnedMeshRenderer materials=Body_Parts:Universal Render Pipeline/Lit bones=Bone007,Bone008,spine_03,Bone001,Bone002,Bone009,Bone003,Bone010,Bone004,Bone011,Bone005
+ RENDER Frank_Mesh_Unity SkinnedMeshRenderer materials=Frank_Unity:Universal Render Pipeline/Lit bones=head,pelvis,upperarm_r,upperarm_l,spine_01,spine_02,spine_03,upperarm_twist_01_l,upperarm_twist_01_r,clavicle_l,clavicle_r,thigh_l,thigh_r,thigh_twist_01_l,calf_r,calf_l,foot_r,foot_l,ball_l,ball_r,lowerarm_l,hand_l,thumb_01_l,pinky_01_l,ring_01_l,middle_01_l,index_01_l,index_02_l,thumb_02_l,middle_02_l,pinky_02_l,pinky_03_l,ring_02_l,index_03_l,thumb_03_l,middle_03_l,ring_03_l,lowerarm_r,neck_01,thigh_twist_01_r,hand_r,thumb_02_r,thumb_03_r,thumb_01_r,ring_02_r,pinky_03_r,middle_01_r,middle_02_r,middle_03_r,ring_01_r,index_03_r,index_02_r,ring_03_r,pinky_01_r,pinky_02_r,index_01_r
+ RENDER Sword_L SkinnedMeshRenderer materials=Sowrd:Universal Render Pipeline/Lit bones=Sword_L_Bone
+ RENDER Sword_R SkinnedMeshRenderer materials=Sowrd:Universal Render Pipeline/Lit bones=Sword_R_Bone,Convertable_Sword01,Convertable_Sword02,Convertable_Sword03,Convertable_Sword04,Convertable_Sword06,Convertable_Sword05,Convertable_Sword07,Convertable_Sword08
+ COMPONENTS Animator=1,SkinnedMeshRenderer=4
+ROOT Frank_Damage@Damage_Critical_GreatSword position=(3.78, 0.00, -3.55) scale=(1.00, 1.00, 1.00)
+ ANIMATOR Frank_Damage@Damage_Critical_GreatSword avatar=Frank_Damage@Damage_Critical_GreatSwordAvatar (UnityEngine.Avatar) human=False rootMotion=False controller=Assets/Selected/Frank_Damages/Asset/Animations/Damages_Critical_Set/Critical_GreatSword.controller
+  CLIP Damage_Critical_GreatSword length=6 human=False loop=False events=0 path=Assets/Selected/Frank_Damages/Asset/Animations/Damages_Critical_Set/Damage_Critical_GreatSword.anim
+ RENDER Frank_Mesh_Unity SkinnedMeshRenderer materials=SG_Frank_Damages_GreatSword_Body:Universal Render Pipeline/Lit bones=head,pelvis,upperarm_r,upperarm_l,spine_01,spine_02,spine_03,upperarm_twist_01_l,upperarm_twist_01_r,clavicle_l,clavicle_r,thigh_l,thigh_r,thigh_twist_01_l,calf_r,calf_l,foot_r,foot_l,ball_l,ball_r,lowerarm_l,hand_l,thumb_01_l,pinky_01_l,ring_01_l,middle_01_l,index_01_l,index_02_l,thumb_02_l,middle_02_l,pinky_02_l,pinky_03_l,ring_02_l,index_03_l,thumb_03_l,middle_03_l,ring_03_l,lowerarm_r,neck_01,thigh_twist_01_r,hand_r,thumb_02_r,thumb_03_r,thumb_01_r,ring_02_r,pinky_03_r,middle_01_r,middle_02_r,middle_03_r,ring_01_r,index_03_r,index_02_r,ring_03_r,pinky_01_r,pinky_02_r,index_01_r
+ RENDER Frank_RPGSpear_Cape SkinnedMeshRenderer materials=SG_Frank_Damages_GreatSword_body_Border:Universal Render Pipeline/Lit bones=Bone011,Bone010,Bone009,Bone018,Bone017,Bone016,Bone003,Bone004,Bone002,Bone008,Bone015,Cape_Root,Bone001,Bone012,Bone005,Bone019,Bone006,Bone007,clavicle_r,clavicle_l
+ RENDER Greatsword_weapon_Equip SkinnedMeshRenderer materials=SG_Frank_Damages_GreatSword_Blade:Universal Render Pipeline/Lit bones=GreatSword_Root
+ COMPONENTS Animator=1,SkinnedMeshRenderer=3
+ROOT Frank_Damage@Damage_Critical_Katana position=(9.82, 0.00, -3.55) scale=(1.00, 1.00, 1.00)
+ ANIMATOR Frank_Damage@Damage_Critical_Katana avatar=Frank_Damage@Damage_Critical_KatanaAvatar (UnityEngine.Avatar) human=False rootMotion=False controller=Assets/Selected/Frank_Damages/Asset/Animations/Damages_Critical_Set/Critical_Katana.controller
+  CLIP Damage_Critical_Katana length=6 human=False loop=False events=0 path=Assets/Selected/Frank_Damages/Asset/Animations/Damages_Critical_Set/Damage_Critical_Katana.anim
+ ANIMATOR Frank_Mesh_Unity avatar= human=False rootMotion=False controller=Assets/Selected/Frank_Damages/Asset/Animations/Damages_Critical_Set/Frank_Mesh_Unity.controller
+  CLIP Damage_Critical_Katana length=6 human=False loop=False events=0 path=Assets/Selected/Frank_Damages/Asset/Animations/Damages_Critical_Set/Damage_Critical_Katana.anim
+ RENDER Frank_Mesh_Unity SkinnedMeshRenderer materials=SG_Frank_Damages_Katana_Body:Universal Render Pipeline/Lit bones=head,pelvis,upperarm_r,upperarm_l,spine_01,spine_02,spine_03,upperarm_twist_01_l,upperarm_twist_01_r,clavicle_l,clavicle_r,thigh_l,thigh_r,thigh_twist_01_l,calf_r,calf_l,foot_r,foot_l,ball_l,ball_r,lowerarm_l,hand_l,thumb_01_l,pinky_01_l,ring_01_l,middle_01_l,index_01_l,index_02_l,thumb_02_l,middle_02_l,pinky_02_l,pinky_03_l,ring_02_l,index_03_l,thumb_03_l,middle_03_l,ring_03_l,lowerarm_r,neck_01,thigh_twist_01_r,hand_r,thumb_02_r,thumb_03_r,thumb_01_r,ring_02_r,pinky_03_r,middle_01_r,middle_02_r,middle_03_r,ring_01_r,index_03_r,index_02_r,ring_03_r,pinky_01_r,pinky_02_r,index_01_r
+ RENDER Mesh_Pants SkinnedMeshRenderer materials=SG_Frank_Damages_Katana_Body_Pants:Universal Render Pipeline/Lit bones=pelvis,thigh_l,calf_l,foot_l,thigh_r,calf_r,foot_r
+ RENDER Sword_Case_Mesh SkinnedMeshRenderer materials=SG_Frank_Damages_Katana_Sword:Universal Render Pipeline/Lit bones=Sword_Case
+ RENDER Sword_Dummy SkinnedMeshRenderer materials=SG_Frank_Damages_Katana_Sword:Universal Render Pipeline/Lit,SG_Frank_Damages_Katana_Blade:Universal Render Pipeline/Lit bones=Weapon_Sword_Dummy
+ RENDER Sword_Mesh SkinnedMeshRenderer materials=SG_Frank_Damages_Katana_Sword:Universal Render Pipeline/Lit,SG_Frank_Damages_Katana_Blade:Universal Render Pipeline/Lit bones=Weapon_Sword,Weapon_Blade
+ COMPONENTS Animator=2,SkinnedMeshRenderer=5
+ROOT Frank_Damage@Damage_Critical_Spear position=(15.14, 0.00, -3.55) scale=(1.00, 1.00, 1.00)
+ ANIMATOR Frank_Damage@Damage_Critical_Spear avatar=Frank_Damage@Damage_Critical_SpearAvatar (UnityEngine.Avatar) human=False rootMotion=False controller=Assets/Selected/Frank_Damages/Asset/Animations/Damages_Critical_Set/Critical_Spear.controller
+  CLIP Damage_Critical_Spear length=6.833344 human=False loop=False events=0 path=Assets/Selected/Frank_Damages/Asset/Animations/Damages_Critical_Set/Damage_Critical_Spear.anim
+ RENDER Frank_Mesh_Unity SkinnedMeshRenderer materials=SG_Frank_Damages_Spear_Body:Universal Render Pipeline/Lit bones=head,pelvis,upperarm_r,upperarm_l,spine_01,spine_02,spine_03,upperarm_twist_01_l,upperarm_twist_01_r,clavicle_l,clavicle_r,thigh_l,thigh_r,thigh_twist_01_l,calf_r,calf_l,foot_r,foot_l,ball_l,ball_r,lowerarm_l,hand_l,thumb_01_l,pinky_01_l,ring_01_l,middle_01_l,index_01_l,index_02_l,thumb_02_l,middle_02_l,pinky_02_l,pinky_03_l,ring_02_l,index_03_l,thumb_03_l,middle_03_l,ring_03_l,lowerarm_r,neck_01,thigh_twist_01_r,hand_r,thumb_02_r,thumb_03_r,thumb_01_r,ring_02_r,pinky_03_r,middle_01_r,middle_02_r,middle_03_r,ring_01_r,index_03_r,index_02_r,ring_03_r,pinky_01_r,pinky_02_r,index_01_r
+ RENDER Weapon_Spear SkinnedMeshRenderer materials=SG_Frank_Damages_Spear_Spear:Universal Render Pipeline/Lit,SG_Frank_Damages_Spear_Blade:Universal Render Pipeline/Lit bones=Spear_Root,Spear_Bone01,Spear_Bone02
+ COMPONENTS Animator=1,SkinnedMeshRenderer=2
+ROOT Frank_Damage@Damage_Critical_Warrior position=(20.61, 0.00, -3.55) scale=(1.00, 1.00, 1.00)
+ ANIMATOR Frank_Damage@Damage_Critical_Warrior avatar=Frank_Damage@Damage_Critical_WarriorAvatar (UnityEngine.Avatar) human=False rootMotion=False controller=Assets/Selected/Frank_Damages/Asset/Animations/Damages_Critical_Set/Critical_Warrior.controller
+  CLIP Damage_Critical_Warrior length=5.833344 human=False loop=False events=0 path=Assets/Selected/Frank_Damages/Asset/Animations/Damages_Critical_Set/Damage_Critical_Warrior.anim
+ RENDER Cloak SkinnedMeshRenderer materials=SG_Frank_Damages_Warrior_Body_Parts:Universal Render Pipeline/Lit bones=Bone008,Bone007,spine_03,Bone001,Bone002,Bone009,Bone003,Bone010,Bone004,Bone011,Bone005
+ RENDER Frank_Mesh_Unity SkinnedMeshRenderer materials=SG_Frank_Damages_Warrior_Body:Universal Render Pipeline/Lit bones=head,pelvis,upperarm_r,upperarm_l,spine_01,spine_02,spine_03,upperarm_twist_01_l,upperarm_twist_01_r,clavicle_l,clavicle_r,thigh_l,thigh_r,thigh_twist_01_l,calf_r,calf_l,foot_r,foot_l,ball_l,ball_r,lowerarm_l,hand_l,thumb_01_l,pinky_01_l,ring_01_l,middle_01_l,index_01_l,index_02_l,thumb_02_l,middle_02_l,pinky_02_l,pinky_03_l,ring_02_l,index_03_l,thumb_03_l,middle_03_l,ring_03_l,lowerarm_r,neck_01,thigh_twist_01_r,hand_r,thumb_02_r,thumb_03_r,thumb_01_r,ring_02_r,pinky_03_r,middle_01_r,middle_02_r,middle_03_r,ring_01_r,index_03_r,index_02_r,ring_03_r,pinky_01_r,pinky_02_r,index_01_r
+ RENDER Shield SkinnedMeshRenderer materials=SG_Frank_Damages_Warrior_Shield:Universal Render Pipeline/Lit bones=Bone055,Bone051,Bone059,Bone056,Bone060,Shield_Root,Bone023,Bone039,Bone033,Bone041,Bone049,Bone053,Bone054,Bone038,Bone028,Bone057,Bone040,Bone058,Bone044,Bone050,Bone045,Bone029,Bone034,Bone024,Bone052
+ RENDER Sword_R SkinnedMeshRenderer materials=SG_Frank_Damages_Warrior_Sword:Universal Render Pipeline/Lit bones=Sword_R_Bone,Convertable_Sword01,Convertable_Sword02,Convertable_Sword03,Convertable_Sword04,Convertable_Sword06,Convertable_Sword05,Convertable_Sword07,Convertable_Sword08
+ COMPONENTS Animator=1,SkinnedMeshRenderer=4
+ROOT Directional Light position=(0.00, 3.00, 0.00) scale=(1.00, 1.00, 1.00)
+ ANIMATOR Directional Light avatar= human=False rootMotion=False controller=
+ COMPONENTS Light=1,Animator=1
+ROOT Plane position=(0.00, 0.00, 0.00) scale=(8.00, 1.00, 8.00)
+ RENDER  MeshRenderer materials=Floor:Universal Render Pipeline/Lit
+ COMPONENTS MeshFilter=1,MeshRenderer=1,MeshCollider=1
+ROOT Main Camera position=(3.76, 2.43, 2.10) scale=(1.00, 1.00, 1.00)
+ COMPONENTS Camera=1,AudioListener=1
+ROOT Frank_Damage_2Handed_Hit position=(-15.43, 0.00, -2.32) scale=(1.00, 1.00, 1.00)
+ ANIMATOR Frank_Damage_2Handed_Hit avatar=Frank_Damage_FS3_SkinAvatar (UnityEngine.Avatar) human=False rootMotion=False controller=Assets/Selected/Frank_Damages/Asset/Animations/Damages_Critical_Set/Critical_2Handed_Hit.controller
+  CLIP Damage_Critical_2Handed_Hit length=5.833332 human=True loop=False events=0 path=Assets/Selected/Frank_Damages/Asset/Animations/Damages_Critical_Set/Damage_Critical_2Handed_Hit.anim
+ RENDER Frank_Fighting3_Body_LOD SkinnedMeshRenderer materials=Body_Part:Universal Render Pipeline/Lit,Body_Glove:Universal Render Pipeline/Lit,Frank_Shoe:Universal Render Pipeline/Lit,Body:Universal Render Pipeline/Lit,Body Face:Universal Render Pipeline/Lit,Lower_Texture:Universal Render Pipeline/2D/Mesh2D-Lit-Default,Upper_Texture:Universal Render Pipeline/Lit bones=upperarm_l,spine_01,spine_02,pelvis,upperarm_r,spine_03,clavicle_l,clavicle_r,ball_l,thigh_twist_01_l,thigh_l,calf_l,foot_l,ball_r,thigh_twist_01_r,thigh_r,calf_r,foot_r,lowerarm_l,lowerarm_r,hand_l,ring_01_l,index_01_l,index_02_l,index_03_l,middle_03_l,middle_02_l,middle_01_l,ring_02_l,ring_03_l,pinky_01_l,pinky_03_l,pinky_02_l,thumb_03_l,thumb_02_l,thumb_01_l,hand_r,ring_01_r,thumb_03_r,thumb_02_r,thumb_01_r,index_01_r,index_02_r,index_03_r,middle_03_r,middle_02_r,middle_01_r,ring_02_r,ring_03_r,pinky_01_r,pinky_03_r,pinky_02_r,neck_01,head
+ COMPONENTS Animator=1,SkinnedMeshRenderer=1
+ROOT Frank_Damage_Katana_Hit position=(9.82, 0.00, -1.80) scale=(1.00, 1.00, 1.00)
+ ANIMATOR Frank_Damage_Katana_Hit avatar=Frank_Damage_FS3_SkinAvatar (UnityEngine.Avatar) human=False rootMotion=False controller=Assets/Selected/Frank_Damages/Asset/Animations/Damages_Critical_Set/Critical_Katana_Hit.controller
+  CLIP Damage_Critical_Katana_Hit length=6.000002 human=True loop=False events=0 path=Assets/Selected/Frank_Damages/Asset/Animations/Damages_Critical_Set/Damage_Critical_Katana_Hit.anim
+ RENDER Frank_Fighting3_Body_LOD SkinnedMeshRenderer materials=Body_Part:Universal Render Pipeline/Lit,Body_Glove:Universal Render Pipeline/Lit,Frank_Shoe:Universal Render Pipeline/Lit,Body:Universal Render Pipeline/Lit,Body Face:Universal Render Pipeline/Lit,Lower_Texture:Universal Render Pipeline/2D/Mesh2D-Lit-Default,Upper_Texture:Universal Render Pipeline/Lit bones=upperarm_l,spine_01,spine_02,pelvis,upperarm_r,spine_03,clavicle_l,clavicle_r,ball_l,thigh_twist_01_l,thigh_l,calf_l,foot_l,ball_r,thigh_twist_01_r,thigh_r,calf_r,foot_r,lowerarm_l,lowerarm_r,hand_l,ring_01_l,index_01_l,index_02_l,index_03_l,middle_03_l,middle_02_l,middle_01_l,ring_02_l,ring_03_l,pinky_01_l,pinky_03_l,pinky_02_l,thumb_03_l,thumb_02_l,thumb_01_l,hand_r,ring_01_r,thumb_03_r,thumb_02_r,thumb_01_r,index_01_r,index_02_r,index_03_r,middle_03_r,middle_02_r,middle_01_r,ring_02_r,ring_03_r,pinky_01_r,pinky_03_r,pinky_02_r,neck_01,head
+ COMPONENTS Animator=1,SkinnedMeshRenderer=1
+ROOT Frank_Damage_Spear_Hit position=(15.14, 0.00, -0.44) scale=(1.00, 1.00, 1.00)
+ ANIMATOR Frank_Damage_Spear_Hit avatar=Frank_Damage_FS3_SkinAvatar (UnityEngine.Avatar) human=False rootMotion=False controller=Assets/Selected/Frank_Damages/Asset/Animations/Damages_Critical_Set/Critical_Spear_Hit.controller
+  CLIP Damage_Critical_Spear_Hit length=6.833332 human=True loop=False events=0 path=Assets/Selected/Frank_Damages/Asset/Animations/Damages_Critical_Set/Damage_Critical_Spear_Hit.anim
+ RENDER Frank_Fighting3_Body_LOD SkinnedMeshRenderer materials=Body_Part:Universal Render Pipeline/Lit,Body_Glove:Universal Render Pipeline/Lit,Frank_Shoe:Universal Render Pipeline/Lit,Body:Universal Render Pipeline/Lit,Body Face:Universal Render Pipeline/Lit,Lower_Texture:Universal Render Pipeline/2D/Mesh2D-Lit-Default,Upper_Texture:Universal Render Pipeline/Lit bones=upperarm_l,spine_01,spine_02,pelvis,upperarm_r,spine_03,clavicle_l,clavicle_r,ball_l,thigh_twist_01_l,thigh_l,calf_l,foot_l,ball_r,thigh_twist_01_r,thigh_r,calf_r,foot_r,lowerarm_l,lowerarm_r,hand_l,ring_01_l,index_01_l,index_02_l,index_03_l,middle_03_l,middle_02_l,middle_01_l,ring_02_l,ring_03_l,pinky_01_l,pinky_03_l,pinky_02_l,thumb_03_l,thumb_02_l,thumb_01_l,hand_r,ring_01_r,thumb_03_r,thumb_02_r,thumb_01_r,index_01_r,index_02_r,index_03_r,middle_03_r,middle_02_r,middle_01_r,ring_02_r,ring_03_r,pinky_01_r,pinky_03_r,pinky_02_r,neck_01,head
+ COMPONENTS Animator=1,SkinnedMeshRenderer=1
+ROOT Frank_Damage_GreatSword_Hit position=(3.78, 0.00, -1.46) scale=(1.00, 1.00, 1.00)
+ ANIMATOR Frank_Damage_GreatSword_Hit avatar=Frank_Damage_FS3_SkinAvatar (UnityEngine.Avatar) human=False rootMotion=False controller=Assets/Selected/Frank_Damages/Asset/Animations/Damages_Critical_Set/Critical_GreatSword_Hit.controller
+  CLIP Damage_Critical_GreatSword_Hit length=6 human=True loop=False events=0 path=Assets/Selected/Frank_Damages/Asset/Animations/Damages_Critical_Set/Damage_Critical_GreatSword_Hit.anim
+ RENDER Frank_Fighting3_Body_LOD SkinnedMeshRenderer materials=Body_Part:Universal Render Pipeline/Lit,Body_Glove:Universal Render Pipeline/Lit,Frank_Shoe:Universal Render Pipeline/Lit,Body:Universal Render Pipeline/Lit,Body Face:Universal Render Pipeline/Lit,Lower_Texture:Universal Render Pipeline/2D/Mesh2D-Lit-Default,Upper_Texture:Universal Render Pipeline/Lit bones=upperarm_l,spine_01,spine_02,pelvis,upperarm_r,spine_03,clavicle_l,clavicle_r,ball_l,thigh_twist_01_l,thigh_l,calf_l,foot_l,ball_r,thigh_twist_01_r,thigh_r,calf_r,foot_r,lowerarm_l,lowerarm_r,hand_l,ring_01_l,index_01_l,index_02_l,index_03_l,middle_03_l,middle_02_l,middle_01_l,ring_02_l,ring_03_l,pinky_01_l,pinky_03_l,pinky_02_l,thumb_03_l,thumb_02_l,thumb_01_l,hand_r,ring_01_r,thumb_03_r,thumb_02_r,thumb_01_r,index_01_r,index_02_r,index_03_r,middle_03_r,middle_02_r,middle_01_r,ring_02_r,ring_03_r,pinky_01_r,pinky_03_r,pinky_02_r,neck_01,head
+ COMPONENTS Animator=1,SkinnedMeshRenderer=1
+ROOT Frank_Damage_Assassin_Hit position=(-9.69, 0.00, -1.41) scale=(1.00, 1.00, 1.00)
+ ANIMATOR Frank_Damage_Assassin_Hit avatar=Frank_Damage_FS3_SkinAvatar (UnityEngine.Avatar) human=False rootMotion=False controller=Assets/Selected/Frank_Damages/Asset/Animations/Damages_Critical_Set/Critical_Assassin_Hit.controller
+  CLIP Damage_Critical_Assassin_Hit length=5.833333 human=True loop=False events=0 path=Assets/Selected/Frank_Damages/Asset/Animations/Damages_Critical_Set/Damage_Critical_Assassin_Hit.anim
+ RENDER Frank_Fighting3_Body_LOD SkinnedMeshRenderer materials=Body_Part:Universal Render Pipeline/Lit,Body_Glove:Universal Render Pipeline/Lit,Frank_Shoe:Universal Render Pipeline/Lit,Body:Universal Render Pipeline/Lit,Body Face:Universal Render Pipeline/Lit,Lower_Texture:Universal Render Pipeline/2D/Mesh2D-Lit-Default,Upper_Texture:Universal Render Pipeline/Lit bones=upperarm_l,spine_01,spine_02,pelvis,upperarm_r,spine_03,clavicle_l,clavicle_r,ball_l,thigh_twist_01_l,thigh_l,calf_l,foot_l,ball_r,thigh_twist_01_r,thigh_r,calf_r,foot_r,lowerarm_l,lowerarm_r,hand_l,ring_01_l,index_01_l,index_02_l,index_03_l,middle_03_l,middle_02_l,middle_01_l,ring_02_l,ring_03_l,pinky_01_l,pinky_03_l,pinky_02_l,thumb_03_l,thumb_02_l,thumb_01_l,hand_r,ring_01_r,thumb_03_r,thumb_02_r,thumb_01_r,index_01_r,index_02_r,index_03_r,middle_03_r,middle_02_r,middle_01_r,ring_02_r,ring_03_r,pinky_01_r,pinky_03_r,pinky_02_r,neck_01,head
+ COMPONENTS Animator=1,SkinnedMeshRenderer=1
+ROOT Frank_Damage_Dual_Hit position=(-2.93, 0.00, -1.44) scale=(1.00, 1.00, 1.00)
+ ANIMATOR Frank_Damage_Dual_Hit avatar=Frank_Damage_FS3_SkinAvatar (UnityEngine.Avatar) human=False rootMotion=False controller=Assets/Selected/Frank_Damages/Asset/Animations/Damages_Critical_Set/Critical_Dual_Hit.controller
+  CLIP Damage_Critical_Dual_Hit length=7.333334 human=True loop=False events=0 path=Assets/Selected/Frank_Damages/Asset/Animations/Damages_Critical_Set/Damage_Critical_Dual_Hit.anim
+ RENDER Frank_Fighting3_Body_LOD SkinnedMeshRenderer materials=Body_Part:Universal Render Pipeline/Lit,Body_Glove:Universal Render Pipeline/Lit,Frank_Shoe:Universal Render Pipeline/Lit,Body:Universal Render Pipeline/Lit,Body Face:Universal Render Pipeline/Lit,Lower_Texture:Universal Render Pipeline/2D/Mesh2D-Lit-Default,Upper_Texture:Universal Render Pipeline/Lit bones=upperarm_l,spine_01,spine_02,pelvis,upperarm_r,spine_03,clavicle_l,clavicle_r,ball_l,thigh_twist_01_l,thigh_l,calf_l,foot_l,ball_r,thigh_twist_01_r,thigh_r,calf_r,foot_r,lowerarm_l,lowerarm_r,hand_l,ring_01_l,index_01_l,index_02_l,index_03_l,middle_03_l,middle_02_l,middle_01_l,ring_02_l,ring_03_l,pinky_01_l,pinky_03_l,pinky_02_l,thumb_03_l,thumb_02_l,thumb_01_l,hand_r,ring_01_r,thumb_03_r,thumb_02_r,thumb_01_r,index_01_r,index_02_r,index_03_r,middle_03_r,middle_02_r,middle_01_r,ring_02_r,ring_03_r,pinky_01_r,pinky_03_r,pinky_02_r,neck_01,head
+ COMPONENTS Animator=1,SkinnedMeshRenderer=1
+ROOT Frank_Damage_Warrior_Hit position=(20.61, 0.00, -1.48) scale=(1.00, 1.00, 1.00)
+ ANIMATOR Frank_Damage_Warrior_Hit avatar=Frank_Damage_FS3_SkinAvatar (UnityEngine.Avatar) human=False rootMotion=False controller=Assets/Selected/Frank_Damages/Asset/Animations/Damages_Critical_Set/Critical_Warrior_Hit.controller
+  CLIP Damage_Critical_Warrior_Hit length=5.833334 human=True loop=False events=0 path=Assets/Selected/Frank_Damages/Asset/Animations/Damages_Critical_Set/Damage_Critical_Warrior_Hit.anim
+ RENDER Frank_Fighting3_Body_LOD SkinnedMeshRenderer materials=Body_Part:Universal Render Pipeline/Lit,Body_Glove:Universal Render Pipeline/Lit,Frank_Shoe:Universal Render Pipeline/Lit,Body:Universal Render Pipeline/Lit,Body Face:Universal Render Pipeline/Lit,Lower_Texture:Universal Render Pipeline/2D/Mesh2D-Lit-Default,Upper_Texture:Universal Render Pipeline/Lit bones=upperarm_l,spine_01,spine_02,pelvis,upperarm_r,spine_03,clavicle_l,clavicle_r,ball_l,thigh_twist_01_l,thigh_l,calf_l,foot_l,ball_r,thigh_twist_01_r,thigh_r,calf_r,foot_r,lowerarm_l,lowerarm_r,hand_l,ring_01_l,index_01_l,index_02_l,index_03_l,middle_03_l,middle_02_l,middle_01_l,ring_02_l,ring_03_l,pinky_01_l,pinky_03_l,pinky_02_l,thumb_03_l,thumb_02_l,thumb_01_l,hand_r,ring_01_r,thumb_03_r,thumb_02_r,thumb_01_r,index_01_r,index_02_r,index_03_r,middle_03_r,middle_02_r,middle_01_r,ring_02_r,ring_03_r,pinky_01_r,pinky_03_r,pinky_02_r,neck_01,head
+ COMPONENTS Animator=1,SkinnedMeshRenderer=1
+ROOT Directional Light (1) position=(-2.55, 4.06, -1.15) scale=(1.00, 1.00, 1.00)
+ ANIMATOR Directional Light (1) avatar= human=False rootMotion=False controller=
+ COMPONENTS Light=1,Animator=1
+MODEL Assets/Mankeys_sushishop/FBX/Mankey.FBX
+  pos=(0.00, 0.00, 0.00) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ Base HumanLLegPlatform pos=(-0.22, -0.02, 0.14) rot=(0.00, 270.00, 270.00) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis pos=(0.00, 1.14, -0.10) rot=(0.00, 270.00, 270.20) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanLLeg1 pos=(0.00, 0.00, 0.17) rot=(356.39, 177.75, 351.53) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanLLeg1/Base HumanLLeg2 pos=(-0.52, 0.00, 0.00) rot=(3.31, 0.26, 13.65) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanLLeg1/Base HumanLLeg2/Base HumanLLegAnkle pos=(-0.51, 0.00, 0.00) rot=(0.50, 2.45, 271.13) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanLLeg1/Base HumanLLeg2/Base HumanLLegAnkle/Base HumanLLegDigit11 pos=(-0.40, 0.04, 0.00) rot=(359.33, 353.80, 10.23) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanLLeg1/Base HumanLLeg2/Base HumanLLegAnkle/Base HumanLLegDigit11/Base HumanLLegDigit12 pos=(-0.08, 0.00, 0.00) rot=(1.75, 5.99, 358.81) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanLLegUpVectorNode pos=(0.61, 0.41, 0.21) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanRLeg1 pos=(0.00, 0.00, -0.17) rot=(3.83, 182.25, 351.52) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanRLeg1/Base HumanRLeg2 pos=(-0.52, 0.00, 0.00) rot=(356.69, 359.74, 13.65) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanRLeg1/Base HumanRLeg2/Base HumanRLegAnkle pos=(-0.51, 0.00, 0.00) rot=(359.26, 357.58, 271.15) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanRLeg1/Base HumanRLeg2/Base HumanRLegAnkle/Base HumanRLegDigit11 pos=(-0.40, 0.04, 0.00) rot=(0.67, 6.21, 10.22) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanRLeg1/Base HumanRLeg2/Base HumanRLegAnkle/Base HumanRLegDigit11/Base HumanRLegDigit12 pos=(-0.08, 0.00, 0.00) rot=(358.25, 354.01, 358.81) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanRLegUpVectorNode pos=(0.61, 0.41, -0.21) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1 pos=(-0.07, 0.00, 0.00) rot=(0.00, 0.00, 5.91) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2 pos=(-0.18, 0.00, 0.00) rot=(0.00, 0.00, 353.28) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3 pos=(-0.16, 0.00, 0.00) rot=(0.00, 0.00, 358.03) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4 pos=(-0.17, 0.00, 0.00) rot=(0.00, 0.00, 6.99) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage pos=(-0.23, 0.00, 0.00) rot=(0.00, 0.00, 355.58) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanLCollarbone pos=(0.04, 0.14, 0.04) rot=(355.04, 78.91, 20.18) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanLCollarbone/Base HumanLUpperarm pos=(-0.30, 0.00, 0.00) rot=(5.88, 10.14, 343.81) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanLCollarbone/Base HumanLUpperarm/Base HumanLForearm pos=(-0.40, 0.00, 0.00) rot=(358.49, 0.23, 355.12) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanLCollarbone/Base HumanLUpperarm/Base HumanLForearm/Base HumanLPalm pos=(-0.37, 0.00, 0.00) rot=(281.45, 274.94, 85.11) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanLCollarbone/Base HumanLUpperarm/Base HumanLForearm/Base HumanLPalm/Base HumanLDigit11 pos=(-0.08, -0.02, 0.07) rot=(359.73, 74.02, 358.22) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanLCollarbone/Base HumanLUpperarm/Base HumanLForearm/Base HumanLPalm/Base HumanLDigit11/Base HumanLDigit12 pos=(-0.06, 0.00, 0.00) rot=(359.97, 358.34, 359.45) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanLCollarbone/Base HumanLUpperarm/Base HumanLForearm/Base HumanLPalm/Base HumanLDigit11/Base HumanLDigit12/Base HumanLDigit13 pos=(-0.06, 0.00, 0.00) rot=(359.93, 359.53, 0.73) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanLCollarbone/Base HumanLUpperarm/Base HumanLForearm/Base HumanLPalm/Base HumanLDigit21 pos=(-0.18, 0.00, 0.07) rot=(0.01, 21.59, 4.74) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanLCollarbone/Base HumanLUpperarm/Base HumanLForearm/Base HumanLPalm/Base HumanLDigit21/Base HumanLDigit22 pos=(-0.09, 0.00, 0.00) rot=(359.86, 358.42, 5.26) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanLCollarbone/Base HumanLUpperarm/Base HumanLForearm/Base HumanLPalm/Base HumanLDigit21/Base HumanLDigit22/Base HumanLDigit23 pos=(-0.08, 0.00, 0.00) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanLCollarbone/Base HumanLUpperarm/Base HumanLForearm/Base HumanLPalm/Base HumanLDigit31 pos=(-0.20, -0.01, 0.00) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanLCollarbone/Base HumanLUpperarm/Base HumanLForearm/Base HumanLPalm/Base HumanLDigit31/Base HumanLDigit32 pos=(-0.08, 0.00, 0.00) rot=(0.07, 359.35, 11.61) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanLCollarbone/Base HumanLUpperarm/Base HumanLForearm/Base HumanLPalm/Base HumanLDigit31/Base HumanLDigit32/Base HumanLDigit33 pos=(-0.08, 0.00, 0.00) rot=(0.07, 0.65, 358.39) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanLCollarbone/Base HumanLUpperarm/Base HumanLForearm/Base HumanLPalm/Base HumanLDigit41 pos=(-0.18, -0.01, -0.09) rot=(0.00, 350.00, 0.00) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanLCollarbone/Base HumanLUpperarm/Base HumanLForearm/Base HumanLPalm/Base HumanLDigit41/Base HumanLDigit42 pos=(-0.08, 0.00, 0.00) rot=(358.27, 354.85, 9.85) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanLCollarbone/Base HumanLUpperarm/Base HumanLForearm/Base HumanLPalm/Base HumanLDigit41/Base HumanLDigit42/Base HumanLDigit43 pos=(-0.08, 0.00, 0.00) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanLUpVectorNode pos=(0.11, -0.45, 0.73) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanNeck1 pos=(0.00, 0.00, 0.00) rot=(0.00, 0.00, 3.14) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanNeck1/Base HumanNeck2 pos=(-0.11, 0.00, 0.00) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanNeck1/Base HumanNeck2/Base HumanHead pos=(-0.11, 0.00, 0.00) rot=(0.00, 0.00, 356.86) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanNeck1/Base HumanNeck2/Base HumanHead/Base HumanHeadBone001 pos=(0.13, 0.27, 0.00) rot=(0.00, 0.00, 280.00) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanNeck1/Base HumanNeck2/Base HumanHead/Base HumanHeadBone002 pos=(-0.06, 0.33, 0.00) rot=(0.00, 0.00, 265.00) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanNeck1/Base HumanNeck2/Base HumanHead/Base HumanHeadBone003 pos=(-0.07, -0.02, 0.32) rot=(0.00, 90.00, 40.00) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanNeck1/Base HumanNeck2/Base HumanHead/Base HumanHeadBone004 pos=(-0.07, -0.02, -0.32) rot=(0.00, 90.00, 145.00) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanNeck1/Base HumanNeck2/Base HumanHead/Base HumanHeadBone005 pos=(-0.32, 0.31, 0.10) rot=(349.65, 78.01, 31.75) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanNeck1/Base HumanNeck2/Base HumanHead/Base HumanHeadBone006 pos=(-0.31, 0.30, -0.11) rot=(12.24, 283.74, 25.94) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanNeck1/Base HumanNeck2/Base HumanHead/Eyelid_down_der pos=(-0.16, 0.25, -0.20) rot=(359.80, 270.00, 180.00) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanNeck1/Base HumanNeck2/Base HumanHead/Eyelid_down_left pos=(-0.16, 0.25, 0.20) rot=(359.80, 270.00, 180.00) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanNeck1/Base HumanNeck2/Base HumanHead/Eyelid_up_der pos=(-0.22, 0.26, -0.20) rot=(359.80, 270.00, 180.00) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanNeck1/Base HumanNeck2/Base HumanHead/Eyelid_up_left pos=(-0.22, 0.26, 0.20) rot=(359.80, 270.00, 180.00) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanNeck1/Base HumanNeck2/Base HumanHead/Mahgnkey003 pos=(2.16, 0.15, 0.00) rot=(0.00, 270.00, 180.00) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanNeck1/Base HumanNeck2/Base HumanHead/Mahgnkey004 pos=(2.16, 0.15, 2.24) rot=(0.00, 270.00, 180.00) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanNeck1/Base HumanNeck2/Base HumanHead/Mahgnkey005 pos=(2.16, 0.15, 2.85) rot=(0.00, 270.00, 180.00) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanNeck1/Base HumanNeck2/Base HumanHead/Monkey_eyes pos=(-0.18, 0.25, -0.19) rot=(3.64, 270.79, 282.22) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanNeck1/Base HumanNeck2/Base HumanHead/Object001 pos=(-0.18, 0.25, 0.19) rot=(359.68, 270.13, 248.03) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanRArmCollarbone pos=(0.04, 0.14, -0.04) rot=(4.96, 281.09, 20.18) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanRArmCollarbone/Base HumanRArmUpperarm pos=(-0.30, 0.00, 0.00) rot=(354.12, 349.86, 343.81) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanRArmCollarbone/Base HumanRArmUpperarm/Base HumanRArmForearm pos=(-0.40, 0.00, 0.00) rot=(1.51, 359.77, 355.12) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanRArmCollarbone/Base HumanRArmUpperarm/Base HumanRArmForearm/Base HumanRArmPalm pos=(-0.37, 0.00, 0.00) rot=(78.55, 85.07, 85.11) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanRArmCollarbone/Base HumanRArmUpperarm/Base HumanRArmForearm/Base HumanRArmPalm/Base HumanRArmDigit11 pos=(-0.08, -0.02, -0.07) rot=(0.27, 285.98, 358.22) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanRArmCollarbone/Base HumanRArmUpperarm/Base HumanRArmForearm/Base HumanRArmPalm/Base HumanRArmDigit11/Base HumanRArmDigit12 pos=(-0.06, 0.00, 0.00) rot=(0.03, 1.66, 359.45) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanRArmCollarbone/Base HumanRArmUpperarm/Base HumanRArmForearm/Base HumanRArmPalm/Base HumanRArmDigit11/Base HumanRArmDigit12/Base HumanRArmDigit13 pos=(-0.06, 0.00, 0.00) rot=(0.07, 0.47, 0.73) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanRArmCollarbone/Base HumanRArmUpperarm/Base HumanRArmForearm/Base HumanRArmPalm/Base HumanRArmDigit21 pos=(-0.18, 0.00, -0.07) rot=(359.99, 338.41, 4.74) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanRArmCollarbone/Base HumanRArmUpperarm/Base HumanRArmForearm/Base HumanRArmPalm/Base HumanRArmDigit21/Base HumanRArmDigit22 pos=(-0.09, 0.00, 0.00) rot=(0.14, 1.58, 5.26) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanRArmCollarbone/Base HumanRArmUpperarm/Base HumanRArmForearm/Base HumanRArmPalm/Base HumanRArmDigit21/Base HumanRArmDigit22/Base HumanRArmDigit23 pos=(-0.08, 0.00, 0.00) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanRArmCollarbone/Base HumanRArmUpperarm/Base HumanRArmForearm/Base HumanRArmPalm/Base HumanRArmDigit31 pos=(-0.20, -0.01, 0.00) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanRArmCollarbone/Base HumanRArmUpperarm/Base HumanRArmForearm/Base HumanRArmPalm/Base HumanRArmDigit31/Base HumanRArmDigit32 pos=(-0.08, 0.00, 0.00) rot=(359.93, 0.65, 11.61) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanRArmCollarbone/Base HumanRArmUpperarm/Base HumanRArmForearm/Base HumanRArmPalm/Base HumanRArmDigit31/Base HumanRArmDigit32/Base HumanRArmDigit33 pos=(-0.08, 0.00, 0.00) rot=(359.93, 359.35, 358.39) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanRArmCollarbone/Base HumanRArmUpperarm/Base HumanRArmForearm/Base HumanRArmPalm/Base HumanRArmDigit41 pos=(-0.18, -0.01, 0.09) rot=(0.00, 10.00, 0.00) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanRArmCollarbone/Base HumanRArmUpperarm/Base HumanRArmForearm/Base HumanRArmPalm/Base HumanRArmDigit41/Base HumanRArmDigit42 pos=(-0.08, 0.00, 0.00) rot=(1.73, 5.15, 9.85) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanRArmCollarbone/Base HumanRArmUpperarm/Base HumanRArmForearm/Base HumanRArmPalm/Base HumanRArmDigit41/Base HumanRArmDigit42/Base HumanRArmDigit43 pos=(-0.08, 0.00, 0.00) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanRArmCollarbone/Base HumanRArmUpperarm/Base HumanRArmForearm/Base HumanRArmPalm/D_coconut pos=(-0.12, -0.14, -0.01) rot=(273.44, 158.86, 11.94) scale=(1.00, 1.00, 1.00)
+ Base HumanPelvis/Base HumanSpine1/Base HumanSpine2/Base HumanSpine3/Base HumanSpine4/Base HumanRibcage/Base HumanRArmUpVectorNode pos=(0.11, -0.45, -0.73) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ Base HumanRLegPlatform pos=(0.22, -0.02, 0.14) rot=(0.00, 270.00, 270.00) scale=(1.00, 1.00, 1.00)
+ Mahgnkey pos=(0.00, 0.00, 0.00) rot=(270.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ Mankey_RIG01 pos=(0.00, 0.00, 0.00) rot=(0.00, 270.00, 270.00) scale=(1.00, 1.00, 1.00)
+ Monkey_eye_l pos=(-1.43, 2.32, 3.19) rot=(305.92, 200.99, 203.91) scale=(1.00, 1.00, 1.00)
+ Monkey_eye_r pos=(0.90, 2.56, 3.38) rot=(305.92, 200.99, 203.91) scale=(1.00, 1.00, 1.00)
+ AVATAR MankeyAvatar (UnityEngine.Avatar) valid=True human=True
+MODEL Assets/pepe/source/pepFBX@Taunt.fbx
+  pos=(0.00, 0.00, 0.00) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips pos=(-0.01, 7.82, 0.11) rot=(351.03, 46.19, 0.25) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:LeftUpLeg pos=(-1.19, -0.52, -0.02) rot=(328.68, 349.38, 161.01) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:LeftUpLeg/mixamorig:LeftLeg pos=(0.00, 4.22, 0.00) rot=(288.85, 5.65, 356.60) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:LeftUpLeg/mixamorig:LeftLeg/mixamorig:LeftFoot pos=(0.00, 3.56, 0.00) rot=(86.71, 78.47, 90.10) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:LeftUpLeg/mixamorig:LeftLeg/mixamorig:LeftFoot/mixamorig:LeftToeBase pos=(0.00, 2.06, 0.00) rot=(29.92, 5.96, 0.19) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:LeftUpLeg/mixamorig:LeftLeg/mixamorig:LeftFoot/mixamorig:LeftToeBase/mixamorig:LeftToe_End pos=(0.00, 0.84, 0.00) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:RightUpLeg pos=(1.19, -0.52, -0.01) rot=(345.27, 7.87, 198.88) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:RightUpLeg/mixamorig:RightLeg pos=(0.00, 4.21, 0.00) rot=(296.90, 18.77, 351.63) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:RightUpLeg/mixamorig:RightLeg/mixamorig:RightFoot pos=(0.00, 3.56, 0.00) rot=(73.44, 219.74, 206.51) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:RightUpLeg/mixamorig:RightLeg/mixamorig:RightFoot/mixamorig:RightToeBase pos=(0.00, 2.08, 0.00) rot=(28.79, 354.61, 359.99) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:RightUpLeg/mixamorig:RightLeg/mixamorig:RightFoot/mixamorig:RightToeBase/mixamorig:RightToe_End pos=(0.00, 0.83, 0.00) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine pos=(0.00, 0.94, -0.06) rot=(18.41, 356.93, 0.75) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1 pos=(0.00, 1.10, 0.00) rot=(0.60, 359.42, 1.23) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2 pos=(0.00, 1.25, 0.00) rot=(0.60, 359.46, 1.25) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder pos=(-0.66, 1.27, -0.01) rot=(80.42, 116.17, 198.53) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm pos=(0.00, 1.37, 0.00) rot=(41.36, 54.05, 359.67) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm pos=(0.00, 2.87, 0.00) rot=(2.63, 355.63, 250.63) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand pos=(0.00, 3.17, 0.00) rot=(353.38, 4.44, 354.85) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandIndex1 pos=(0.26, 0.90, 0.01) rot=(83.42, 87.82, 94.27) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandIndex1/mixamorig:LeftHandIndex2 pos=(-0.01, 0.36, 0.00) rot=(67.65, 14.62, 21.24) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandIndex1/mixamorig:LeftHandIndex2/mixamorig:LeftHandIndex3 pos=(0.00, 0.32, 0.00) rot=(21.16, 0.45, 3.25) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandIndex1/mixamorig:LeftHandIndex2/mixamorig:LeftHandIndex3/mixamorig:LeftHandIndex4 pos=(0.00, 0.28, 0.00) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandMiddle1 pos=(0.02, 0.93, -0.02) rot=(83.42, 75.31, 82.47) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandMiddle1/mixamorig:LeftHandMiddle2 pos=(0.00, 0.36, 0.00) rot=(81.10, 50.07, 57.18) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandMiddle1/mixamorig:LeftHandMiddle2/mixamorig:LeftHandMiddle3 pos=(0.00, 0.32, 0.00) rot=(32.50, 1.36, 4.79) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandMiddle1/mixamorig:LeftHandMiddle2/mixamorig:LeftHandMiddle3/mixamorig:LeftHandMiddle4 pos=(0.00, 0.27, 0.00) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandRing1 pos=(-0.28, 0.91, 0.00) rot=(79.52, 133.20, 141.26) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandRing1/mixamorig:LeftHandRing2 pos=(0.00, 0.33, 0.00) rot=(73.88, 20.05, 26.52) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandRing1/mixamorig:LeftHandRing2/mixamorig:LeftHandRing3 pos=(0.00, 0.30, 0.00) rot=(40.26, 2.36, 6.32) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandRing1/mixamorig:LeftHandRing2/mixamorig:LeftHandRing3/mixamorig:LeftHandRing4 pos=(0.00, 0.25, 0.00) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandThumb1 pos=(0.22, 0.26, 0.09) rot=(22.50, 3.67, 337.27) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandThumb1/mixamorig:LeftHandThumb2 pos=(0.06, 0.28, 0.00) rot=(355.54, 6.79, 30.74) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandThumb1/mixamorig:LeftHandThumb2/mixamorig:LeftHandThumb3 pos=(0.04, 0.36, 0.00) rot=(356.10, 13.93, 13.51) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/mixamorig:LeftHandThumb1/mixamorig:LeftHandThumb2/mixamorig:LeftHandThumb3/mixamorig:LeftHandThumb4 pos=(-0.10, 0.34, 0.00) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:Neck pos=(0.00, 1.41, 0.00) rot=(16.70, 356.16, 2.54) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:Neck/mixamorig:Head pos=(0.00, 0.22, 0.07) rot=(356.54, 338.14, 9.21) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:Neck/mixamorig:Head/mixamorig:HeadTop_End pos=(0.00, 3.16, 0.97) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder pos=(0.66, 1.27, -0.01) rot=(73.19, 218.02, 151.95) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm pos=(0.00, 1.37, 0.00) rot=(52.67, 352.14, 55.35) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm pos=(0.00, 2.87, 0.00) rot=(2.75, 4.50, 108.95) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand pos=(0.00, 3.17, 0.00) rot=(358.74, 8.42, 1.43) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandIndex1 pos=(-0.27, 0.93, 0.00) rot=(78.38, 329.77, 327.80) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandIndex1/mixamorig:RightHandIndex2 pos=(0.00, 0.35, 0.00) rot=(79.06, 323.08, 316.24) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandIndex1/mixamorig:RightHandIndex2/mixamorig:RightHandIndex3 pos=(0.00, 0.33, 0.00) rot=(31.72, 359.01, 355.68) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandIndex1/mixamorig:RightHandIndex2/mixamorig:RightHandIndex3/mixamorig:RightHandIndex4 pos=(0.00, 0.26, 0.00) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandMiddle1 pos=(0.00, 0.97, -0.02) rot=(82.81, 286.87, 281.30) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandMiddle1/mixamorig:RightHandMiddle2 pos=(0.00, 0.35, 0.00) rot=(82.39, 263.65, 256.56) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandMiddle1/mixamorig:RightHandMiddle2/mixamorig:RightHandMiddle3 pos=(0.00, 0.33, 0.00) rot=(37.59, 358.12, 354.09) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandMiddle1/mixamorig:RightHandMiddle2/mixamorig:RightHandMiddle3/mixamorig:RightHandMiddle4 pos=(0.00, 0.29, 0.00) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandRing1 pos=(0.27, 0.94, 0.00) rot=(80.68, 237.33, 229.89) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandRing1/mixamorig:RightHandRing2 pos=(0.00, 0.33, 0.00) rot=(83.23, 278.40, 271.52) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandRing1/mixamorig:RightHandRing2/mixamorig:RightHandRing3 pos=(0.00, 0.30, 0.00) rot=(37.68, 358.06, 354.60) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandRing1/mixamorig:RightHandRing2/mixamorig:RightHandRing3/mixamorig:RightHandRing4 pos=(0.00, 0.27, 0.00) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandThumb1 pos=(-0.23, 0.28, 0.09) rot=(16.38, 18.46, 11.66) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandThumb1/mixamorig:RightHandThumb2 pos=(-0.06, 0.30, 0.00) rot=(358.94, 349.67, 351.55) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandThumb1/mixamorig:RightHandThumb2/mixamorig:RightHandThumb3 pos=(-0.03, 0.37, 0.00) rot=(352.45, 358.69, 352.00) scale=(1.00, 1.00, 1.00)
+ mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/mixamorig:RightHandThumb1/mixamorig:RightHandThumb2/mixamorig:RightHandThumb3/mixamorig:RightHandThumb4 pos=(0.09, 0.32, 0.00) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ Plane pos=(0.00, 0.00, 0.00) rot=(270.02, 0.00, 0.00) scale=(100.00, 100.00, 100.00)
+ AVATAR pepFBX@TauntAvatar (UnityEngine.Avatar) valid=True human=True
+MODEL Assets/Selected/Frank_Damages/Asset/Meshes/Frank_Damage_FS3_Skin.FBX
+  pos=(0.00, 0.00, 0.00) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ Frank_Fighting3_Body_LOD pos=(0.00, 0.00, 0.00) rot=(270.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ root pos=(0.00, 0.00, -0.01) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ root/ik_foot_root pos=(0.00, 0.00, 0.00) rot=(270.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ root/ik_foot_root/ik_foot_l pos=(-0.17, 0.07, 0.13) rot=(2.61, 90.88, 0.73) scale=(1.00, 1.00, 1.00)
+ root/ik_foot_root/ik_foot_r pos=(0.17, 0.07, 0.13) rot=(357.39, 89.12, 180.73) scale=(1.00, 1.00, 1.00)
+ root/ik_hand_root pos=(0.00, 0.00, 0.00) rot=(270.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ root/ik_hand_root/ik_hand_gun pos=(0.57, -0.01, 1.12) rot=(63.41, 300.09, 261.16) scale=(1.00, 1.00, 1.00)
+ root/ik_hand_root/ik_hand_gun/ik_hand_l pos=(-0.78, -0.70, 0.44) rot=(28.41, 217.25, 106.18) scale=(1.00, 1.00, 1.00)
+ root/ik_hand_root/ik_hand_gun/ik_hand_r pos=(0.00, 0.00, 0.00) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ root/pelvis pos=(0.00, 0.97, 0.00) rot=(0.00, 90.00, 270.21) scale=(1.00, 1.00, 1.00)
+ root/pelvis/Main_Camera pos=(0.06, -3.63, 1.84) rot=(53.53, 359.23, 91.86) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01 pos=(-0.11, -0.01, 0.00) rot=(0.00, 0.00, 7.15) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02 pos=(-0.19, 0.04, 0.00) rot=(0.00, 0.00, 345.94) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03 pos=(-0.13, 0.00, 0.00) rot=(0.00, 0.00, 357.22) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l pos=(-0.12, -0.03, -0.04) rot=(5.04, 261.26, 332.36) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l pos=(-0.16, 0.00, 0.00) rot=(18.38, 322.79, 13.61) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l pos=(-0.30, 0.00, 0.00) rot=(351.64, 7.17, 30.16) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l pos=(-0.27, 0.00, 0.00) rot=(283.67, 355.80, 1.74) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/index_01_l pos=(-0.12, 0.02, -0.02) rot=(15.00, 356.83, 333.55) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/index_01_l/index_02_l pos=(-0.04, 0.00, 0.00) rot=(1.41, 0.19, 348.01) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/index_01_l/index_02_l/index_03_l pos=(-0.03, 0.00, 0.00) rot=(1.29, 359.20, 9.50) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/middle_01_l pos=(-0.12, 0.01, 0.01) rot=(4.49, 5.75, 337.28) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/middle_01_l/middle_02_l pos=(-0.05, 0.00, 0.00) rot=(357.78, 359.32, 347.71) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/middle_01_l/middle_02_l/middle_03_l pos=(-0.04, 0.00, 0.00) rot=(359.59, 4.44, 15.35) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/pinky_01_l pos=(-0.10, 0.02, 0.05) rot=(348.74, 24.02, 340.56) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/pinky_01_l/pinky_02_l pos=(-0.04, 0.00, 0.00) rot=(1.30, 1.08, 348.79) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/pinky_01_l/pinky_02_l/pinky_03_l pos=(-0.03, 0.00, 0.00) rot=(0.38, 356.12, 358.96) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/ring_01_l pos=(-0.11, 0.02, 0.03) rot=(351.88, 15.38, 336.91) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/ring_01_l/ring_02_l pos=(-0.04, 0.00, 0.00) rot=(0.68, 1.56, 346.69) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/ring_01_l/ring_02_l/ring_03_l pos=(-0.03, 0.00, 0.00) rot=(0.32, 357.01, 12.88) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/thumb_01_l pos=(-0.05, 0.02, -0.03) rot=(65.67, 260.13, 298.01) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/thumb_01_l/thumb_02_l pos=(-0.04, 0.00, 0.00) rot=(359.00, 350.09, 345.07) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/thumb_01_l/thumb_02_l/thumb_03_l pos=(-0.04, 0.00, 0.00) rot=(2.46, 0.05, 12.40) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/lowerarm_twist_01_l pos=(-0.14, 0.00, 0.00) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/upperarm_twist_01_l pos=(-0.01, 0.00, 0.00) rot=(345.34, 0.07, 0.00) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r pos=(-0.12, -0.03, 0.04) rot=(354.96, 98.74, 152.36) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r pos=(0.16, 0.00, 0.00) rot=(18.38, 322.79, 13.61) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r pos=(0.30, 0.00, 0.00) rot=(351.64, 7.17, 30.16) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r pos=(0.27, 0.00, 0.00) rot=(283.67, 355.80, 1.74) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/index_01_r pos=(0.12, -0.02, 0.02) rot=(15.00, 356.83, 333.55) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/index_01_r/index_02_r pos=(0.04, 0.00, 0.00) rot=(1.41, 0.19, 348.01) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/index_01_r/index_02_r/index_03_r pos=(0.03, 0.00, 0.00) rot=(1.29, 359.20, 9.50) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/middle_01_r pos=(0.12, -0.01, -0.01) rot=(4.49, 5.75, 337.28) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/middle_01_r/middle_02_r pos=(0.05, 0.00, 0.00) rot=(357.78, 359.32, 347.71) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/middle_01_r/middle_02_r/middle_03_r pos=(0.04, 0.00, 0.00) rot=(359.59, 4.44, 15.35) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/pinky_01_r pos=(0.10, -0.02, -0.05) rot=(348.74, 24.02, 340.56) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/pinky_01_r/pinky_02_r pos=(0.04, 0.00, 0.00) rot=(1.30, 1.08, 348.79) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/pinky_01_r/pinky_02_r/pinky_03_r pos=(0.03, 0.00, 0.00) rot=(0.38, 356.12, 358.96) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/ring_01_r pos=(0.11, -0.02, -0.03) rot=(351.88, 15.38, 336.91) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/ring_01_r/ring_02_r pos=(0.04, 0.00, 0.00) rot=(0.68, 1.56, 346.69) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/ring_01_r/ring_02_r/ring_03_r pos=(0.03, 0.00, 0.00) rot=(0.32, 357.01, 12.88) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/thumb_01_r pos=(0.05, -0.02, 0.03) rot=(65.67, 260.13, 298.01) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/thumb_01_r/thumb_02_r pos=(0.04, 0.00, 0.00) rot=(359.00, 350.09, 345.07) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/thumb_01_r/thumb_02_r/thumb_03_r pos=(0.04, 0.00, 0.00) rot=(2.46, 0.05, 12.40) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/lowerarm_twist_01_r pos=(0.14, 0.00, 0.00) rot=(346.49, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/upperarm_twist_01_r pos=(0.01, 0.00, 0.00) rot=(325.39, 0.07, 0.00) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/neck_01 pos=(-0.17, 0.00, 0.00) rot=(0.00, 0.00, 19.42) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/neck_01/head pos=(-0.09, 0.00, 0.00) rot=(0.00, 0.00, 348.74) scale=(1.00, 1.00, 1.00)
+ root/pelvis/thigh_l pos=(0.01, -0.01, -0.09) rot=(8.37, 7.26, 1.52) scale=(1.00, 1.00, 1.00)
+ root/pelvis/thigh_l/calf_l pos=(0.43, 0.00, 0.00) rot=(354.55, 357.47, 7.65) scale=(1.00, 1.00, 1.00)
+ root/pelvis/thigh_l/calf_l/calf_twist_01_l pos=(0.20, 0.00, 0.00) rot=(0.32, 0.22, 0.87) scale=(1.00, 1.00, 1.00)
+ root/pelvis/thigh_l/calf_l/foot_l pos=(0.40, 0.00, 0.00) rot=(359.07, 356.39, 351.96) scale=(1.00, 1.00, 1.00)
+ root/pelvis/thigh_l/calf_l/foot_l/ball_l pos=(0.10, -0.17, 0.00) rot=(0.01, 0.00, 91.88) scale=(1.00, 1.00, 1.00)
+ root/pelvis/thigh_l/thigh_twist_01_l pos=(0.22, 0.00, 0.00) rot=(354.98, 359.99, 0.07) scale=(1.00, 1.00, 1.00)
+ root/pelvis/thigh_r pos=(0.01, -0.01, 0.09) rot=(351.63, 352.74, 181.52) scale=(1.00, 1.00, 1.00)
+ root/pelvis/thigh_r/calf_r pos=(-0.43, 0.00, 0.00) rot=(354.55, 357.47, 7.65) scale=(1.00, 1.00, 1.00)
+ root/pelvis/thigh_r/calf_r/calf_twist_01_r pos=(-0.20, 0.00, 0.00) rot=(0.32, 0.22, 0.87) scale=(1.00, 1.00, 1.00)
+ root/pelvis/thigh_r/calf_r/foot_r pos=(-0.40, 0.00, 0.00) rot=(359.07, 356.39, 351.96) scale=(1.00, 1.00, 1.00)
+ root/pelvis/thigh_r/calf_r/foot_r/ball_r pos=(-0.10, 0.17, 0.00) rot=(0.01, 0.00, 91.88) scale=(1.00, 1.00, 1.00)
+ root/pelvis/thigh_r/thigh_twist_01_r pos=(-0.22, 0.00, 0.00) rot=(354.98, 359.99, 0.07) scale=(1.00, 1.00, 1.00)
+ AVATAR Frank_Damage_FS3_SkinAvatar (UnityEngine.Avatar) valid=True human=False
+MODEL Assets/Selected/Frank_Damages/Asset/Meshes/Frank_Damage@Damage_Critical_Spear.FBX
+  pos=(0.00, 0.00, 0.00) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ Frank_Mesh_Unity pos=(0.00, 0.00, 0.00) rot=(270.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ root pos=(0.00, 0.00, -0.01) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ root/ik_foot_root pos=(0.00, 0.00, 0.00) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ root/ik_foot_root/ik_foot_l pos=(-0.21, 0.14, 0.47) rot=(11.51, 108.56, 268.39) scale=(1.00, 1.00, 1.00)
+ root/ik_foot_root/ik_foot_r pos=(0.33, 0.16, -0.50) rot=(342.96, 169.55, 98.65) scale=(1.00, 1.00, 1.00)
+ root/ik_hand_root pos=(0.00, 0.00, 0.00) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ root/ik_hand_root/ik_hand_gun pos=(-0.08, 0.91, -0.38) rot=(9.72, 145.66, 338.23) scale=(1.00, 1.00, 1.00)
+ root/ik_hand_root/ik_hand_gun/ik_hand_l pos=(-0.51, -0.48, -0.80) rot=(349.28, 134.71, 177.03) scale=(1.00, 1.00, 1.00)
+ root/ik_hand_root/ik_hand_gun/ik_hand_r pos=(0.00, 0.00, 0.00) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ root/pelvis pos=(0.00, 0.62, 0.01) rot=(348.21, 179.62, 273.65) scale=(1.00, 1.00, 1.00)
+ root/pelvis/Main_Camera pos=(-1.24, -4.37, -4.58) rot=(54.78, 191.16, 276.72) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01 pos=(-0.11, -0.01, 0.01) rot=(0.20, 356.54, 15.17) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02 pos=(-0.19, 0.04, 0.00) rot=(1.49, 356.59, 10.83) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03 pos=(-0.13, 0.00, 0.00) rot=(2.43, 356.61, 23.09) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/B_Weapon_Back_Dum pos=(-0.06, 0.08, 0.00) rot=(354.11, 120.05, 89.48) scale=(0.00, 0.00, 0.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l pos=(-0.12, -0.03, -0.04) rot=(4.13, 259.49, 332.48) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l pos=(-0.16, 0.00, 0.00) rot=(331.08, 316.25, 16.77) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l pos=(-0.30, 0.00, 0.00) rot=(346.14, 11.23, 64.25) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l pos=(-0.27, 0.00, 0.00) rot=(282.06, 60.85, 345.69) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/index_01_l pos=(-0.12, 0.02, -0.02) rot=(8.18, 8.28, 8.24) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/index_01_l/index_02_l pos=(-0.04, 0.00, 0.00) rot=(1.11, 359.79, 335.33) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/index_01_l/index_02_l/index_03_l pos=(-0.03, 0.00, 0.00) rot=(357.76, 359.32, 330.70) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/L_Hand_Weapon pos=(-0.09, 0.05, 0.02) rot=(351.70, 213.19, 277.02) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/middle_01_l pos=(-0.12, 0.01, 0.01) rot=(356.57, 13.27, 0.91) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/middle_01_l/middle_02_l pos=(-0.05, 0.00, 0.00) rot=(349.14, 0.67, 309.88) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/middle_01_l/middle_02_l/middle_03_l pos=(-0.04, 0.00, 0.00) rot=(2.02, 1.14, 309.45) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/pinky_01_l pos=(-0.10, 0.02, 0.05) rot=(357.02, 18.35, 322.54) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/pinky_01_l/pinky_02_l pos=(-0.04, 0.00, 0.00) rot=(0.31, 359.52, 274.66) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/pinky_01_l/pinky_02_l/pinky_03_l pos=(-0.03, 0.00, 0.00) rot=(354.71, 358.72, 276.41) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/ring_01_l pos=(-0.11, 0.02, 0.03) rot=(355.94, 16.29, 347.50) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/ring_01_l/ring_02_l pos=(-0.04, 0.00, 0.00) rot=(0.16, 0.47, 282.06) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/ring_01_l/ring_02_l/ring_03_l pos=(-0.04, 0.00, 0.00) rot=(358.08, 359.12, 282.01) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/thumb_01_l pos=(-0.05, 0.02, -0.03) rot=(44.57, 273.15, 316.47) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/thumb_01_l/thumb_02_l pos=(-0.04, 0.00, 0.00) rot=(1.45, 0.05, 334.68) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/hand_l/thumb_01_l/thumb_02_l/thumb_03_l pos=(-0.04, 0.00, 0.00) rot=(358.71, 359.34, 327.77) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/lowerarm_l/lowerarm_twist_01_l pos=(-0.14, 0.00, 0.00) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_l/upperarm_l/upperarm_twist_01_l pos=(-0.01, 0.00, 0.00) rot=(345.34, 0.07, 0.00) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r pos=(-0.12, -0.03, 0.04) rot=(357.51, 99.83, 138.55) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r pos=(0.16, 0.00, 0.00) rot=(17.21, 293.63, 21.02) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r pos=(0.30, 0.00, 0.00) rot=(350.62, 8.36, 37.83) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r pos=(0.27, 0.00, 0.00) rot=(323.33, 115.32, 246.93) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/index_01_r pos=(0.12, -0.02, 0.02) rot=(354.48, 12.28, 331.70) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/index_01_r/index_02_r pos=(0.04, 0.00, 0.00) rot=(359.34, 359.11, 284.86) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/index_01_r/index_02_r/index_03_r pos=(0.03, 0.00, 0.00) rot=(357.42, 359.39, 316.70) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/middle_01_r pos=(0.12, -0.01, -0.01) rot=(350.09, 21.26, 299.07) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/middle_01_r/middle_02_r pos=(0.05, 0.00, 0.00) rot=(356.26, 16.10, 281.14) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/middle_01_r/middle_02_r/middle_03_r pos=(0.04, 0.00, 0.00) rot=(2.02, 1.14, 318.95) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/pinky_01_r pos=(0.10, -0.02, -0.05) rot=(357.88, 29.45, 284.36) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/pinky_01_r/pinky_02_r pos=(0.04, 0.00, 0.00) rot=(0.74, 359.77, 293.15) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/pinky_01_r/pinky_02_r/pinky_03_r pos=(0.03, 0.00, 0.00) rot=(355.25, 357.43, 296.98) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/R_Hand_Weapon pos=(0.11, -0.05, -0.01) rot=(5.68, 36.54, 83.46) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/R_Hand_Weapon/Spear_Root pos=(0.00, 0.00, 0.00) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/R_Hand_Weapon/Spear_Root/R_Slash_FX_Bone pos=(0.00, 0.00, 0.07) rot=(0.00, 270.00, 0.00) scale=(0.01, 0.01, 0.01)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/R_Hand_Weapon/Spear_Root/Spear_Bone01 pos=(0.00, 0.00, 0.02) rot=(0.00, 90.00, 0.00) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/R_Hand_Weapon/Spear_Root/Spear_Bone01/Spear_Bone02 pos=(-0.66, 0.00, 0.00) rot=(0.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/ring_01_r pos=(0.12, -0.02, -0.03) rot=(348.55, 32.86, 280.95) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/ring_01_r/ring_02_r pos=(0.04, 0.00, 0.00) rot=(0.22, 0.51, 286.06) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/ring_01_r/ring_02_r/ring_03_r pos=(0.04, 0.00, 0.00) rot=(358.18, 358.97, 292.51) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/thumb_01_r pos=(0.05, -0.02, 0.03) rot=(64.29, 289.08, 314.41) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/thumb_01_r/thumb_02_r pos=(0.04, 0.00, 0.00) rot=(1.22, 0.79, 5.69) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/hand_r/thumb_01_r/thumb_02_r/thumb_03_r pos=(0.04, 0.00, 0.00) rot=(358.71, 359.34, 7.77) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/lowerarm_r/lowerarm_twist_01_r pos=(0.14, 0.00, 0.00) rot=(321.03, 0.03, 359.38) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/clavicle_r/upperarm_r/upperarm_twist_01_r pos=(0.01, 0.00, 0.00) rot=(325.39, 0.07, 0.00) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/neck_01 pos=(-0.17, 0.00, 0.00) rot=(51.98, 348.94, 26.79) scale=(1.00, 1.00, 1.00)
+ root/pelvis/spine_01/spine_02/spine_03/neck_01/head pos=(-0.09, 0.00, 0.00) rot=(3.78, 339.51, 333.92) scale=(1.00, 1.00, 1.00)
+ root/pelvis/thigh_l pos=(0.01, 0.00, -0.09) rot=(48.67, 64.95, 343.42) scale=(1.00, 1.00, 1.00)
+ root/pelvis/thigh_l/calf_l pos=(0.43, 0.00, 0.00) rot=(354.15, 0.46, 81.69) scale=(1.00, 1.00, 1.00)
+ root/pelvis/thigh_l/calf_l/calf_twist_01_l pos=(0.20, 0.00, 0.00) rot=(1.56, 0.23, 0.85) scale=(1.00, 1.00, 1.00)
+ root/pelvis/thigh_l/calf_l/foot_l pos=(0.40, 0.00, 0.00) rot=(1.64, 328.69, 340.14) scale=(1.00, 1.00, 1.00)
+ root/pelvis/thigh_l/calf_l/foot_l/ball_l pos=(0.10, -0.17, 0.00) rot=(352.97, 349.19, 94.06) scale=(1.00, 1.00, 1.00)
+ root/pelvis/thigh_l/thigh_twist_01_l pos=(0.22, 0.00, 0.00) rot=(354.98, 359.99, 0.07) scale=(1.00, 1.00, 1.00)
+ root/pelvis/thigh_r pos=(0.01, 0.00, 0.09) rot=(4.77, 328.47, 120.83) scale=(1.00, 1.00, 1.00)
+ root/pelvis/thigh_r/calf_r pos=(-0.43, 0.00, 0.00) rot=(354.67, 359.68, 60.11) scale=(1.00, 1.00, 1.00)
+ root/pelvis/thigh_r/calf_r/calf_twist_01_r pos=(-0.20, 0.00, 0.00) rot=(359.11, 0.22, 0.90) scale=(1.00, 1.00, 1.00)
+ root/pelvis/thigh_r/calf_r/foot_r pos=(-0.40, 0.00, 0.00) rot=(357.26, 330.53, 357.76) scale=(1.00, 1.00, 1.00)
+ root/pelvis/thigh_r/calf_r/foot_r/ball_r pos=(-0.11, 0.17, 0.00) rot=(333.96, 347.85, 82.92) scale=(1.00, 1.00, 1.00)
+ root/pelvis/thigh_r/thigh_twist_01_r pos=(-0.22, 0.00, 0.00) rot=(354.98, 359.99, 0.07) scale=(1.00, 1.00, 1.00)
+ Weapon_Spear pos=(0.00, 0.00, 0.00) rot=(270.00, 0.00, 0.00) scale=(1.00, 1.00, 1.00)
+ AVATAR Frank_Damage@Damage_Critical_SpearAvatar (UnityEngine.Avatar) valid=True human=False
