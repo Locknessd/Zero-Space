@@ -422,8 +422,15 @@ namespace FrankRetarget.Editor
             var tester=UnityEngine.Object.FindObjectsByType<FrankCombinationTester>(FindObjectsInactive.Include).FirstOrDefault();
             if(!tester || !tester.greatSwordLibrary || tester.greatSwordLibrary.pairs == null || tester.greatSwordLibrary.pairs.Length != 4)
                 throw new InvalidOperationException("GreatSword execution scene/library is not configured with four pairs.");
-            if(!tester.greatSword || !tester.greatSwordWeapon)
-                throw new InvalidOperationException("GreatSword execution mode or Execution_Sample sword is not enabled.");
+            if(!tester.greatSwordWeapon)
+                throw new InvalidOperationException("Execution_Sample sword is not enabled.");
+            // Validation must be independent of the UI's saved default tab. The
+            // demo opens on the standard Frank weapons library, while this check
+            // explicitly selects the dedicated execution route it is measuring.
+            tester.greatSword=true;
+            tester.gunSword=false;
+            tester.unarmed=false;
+            tester.Configure();
 
             var evidence = new StringBuilder();
             evidence.AppendLine("GreatSword Execution_Sample validation");

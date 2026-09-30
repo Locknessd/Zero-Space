@@ -18,6 +18,11 @@ namespace FrankRetarget.Editor
             string path=Output+"/Sets/"+character+"/"+(attack?"Hit":"Being Hit")+"/"+weapon+".prefab";
             var root=Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(path));
             var bridge=root.GetComponent<FrankPoseRetarget>();bridge.enabled=false;
+            // Standard Frank source clips are Generic transform clips. A Humanoid avatar
+            // on this preview Animator makes Unity ignore those transform bindings, so
+            // keep the explicit source avatar only for HumanPoseHandler and leave the
+            // playback Animator avatar-free.
+            if(bridge.driver)bridge.driver.avatar=null;
             var target=bridge.character;
             // Receiver clips also support a held weapon. Calibrate fingers against the same
             // persistent target, without forcing a grasp for an unarmed reaction.

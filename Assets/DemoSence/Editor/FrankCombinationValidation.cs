@@ -27,12 +27,9 @@ namespace FrankRetarget.Editor
                     tester.gunSword=false;tester.unarmed=false;tester.greatSword=false;tester.pepeAttacks=role==1;tester.motion=motion;tester.attackerWeapon=weapon;tester.receiverWeapon=receiverWeapon;tester.Configure();
                     if(tester.mankey.character!=mankeyModel||tester.pepe.character!=pepeModel)throw new Exception("Visible character was replaced.");
                     if(scene.GetRootGameObjects().SelectMany(g=>g.GetComponentsInChildren<FrankTestActor>(true)).Count()!=2)throw new Exception("Expected exactly two characters.");
-                    // Motion 3 now routes to the dedicated Execution_Sample
-                    // library; its authored clip names are execution labels,
-                    // so the legacy *_Hit naming check applies only to the
-                    // remaining Frank weapon-library motions.
-                    if(!tester.greatSword && (tester.Attacker.clip.name.Contains("_Hit")||!tester.Receiver.clip.name.Contains("_Hit")))throw new Exception("Roles reversed.");
-                    if(!tester.greatSword && motion==7&&!tester.Receiver.clip.name.EndsWith("Hit2"))throw new Exception("Alternate take missing.");
+                    if(tester.Attacker.clip==null||tester.Receiver.clip==null)throw new Exception("Selected Frank motion did not bind both clips.");
+                    if(tester.Attacker.clip.name.Contains("_Hit")||!tester.Receiver.clip.name.Contains("_Hit"))throw new Exception("Roles reversed.");
+                    if(motion==7&&!tester.Receiver.clip.name.EndsWith("Hit2"))throw new Exception("Alternate take missing.");
                     foreach(var actor in new[]{tester.Attacker,tester.Receiver})
                     {
                         // The calibrated source skeleton owns one Animator (the
