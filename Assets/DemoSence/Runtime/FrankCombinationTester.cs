@@ -93,7 +93,28 @@ namespace FrankRetarget
             Receiver.Configure(index,false,motion==7,receiverWeapon==0?null:weapons[receiverWeapon-1],receiverWeapon-1);
             time=0;Evaluate();FrameCamera();
         }
+        bool LegacyMotionAvailable(int index)
+        {
+            var attacker=Attacker;var receiver=Receiver;
+            return attacker&&receiver&&index>=0&&index<MotionNames.Length-1&&
+                attacker.attackDrivers!=null&&index<attacker.attackDrivers.Length&&attacker.attackDrivers[index]&&
+                receiver.reactionDrivers!=null&&index<receiver.reactionDrivers.Length&&receiver.reactionDrivers[index];
+        }
+        int FirstLegacyMotion()
+        {
+            for(int i=0;i<MotionNames.Length-1;i++)if(LegacyMotionAvailable(i))return i;
+            return 0;
+        }
         public void SelectLibrary(bool bareHands){gunSword=false;greatSword=false;unarmed=bareHands;selectionScroll=Vector2.zero;Configure();}
+        public void SelectFrankWeapons()
+        {
+            // Motion 3 is the retired legacy GreatSword slot. The button is
+            // a request for the standard Frank library, so select its first
+            // valid authored pair instead of immediately redirecting to the
+            // separate Execution_Sample tab.
+            if(!LegacyMotionAvailable(Mathf.Min(motion,MotionNames.Length-2)))motion=FirstLegacyMotion();
+            SelectLibrary(false);
+        }
         public void SelectCombos(){gunSword=true;greatSword=false;unarmed=false;selectionScroll=Vector2.zero;Configure();}
         public void SelectGreatSword(){gunSword=false;unarmed=false;greatSword=true;selectionScroll=Vector2.zero;Configure();}
         public void SwapRoles(){pepeAttacks=!pepeAttacks;Configure();}
@@ -172,7 +193,7 @@ namespace FrankRetarget
             GUILayout.Label(Attacker.characterName+" hits "+Receiver.characterName,label);
             if(GUILayout.Button("⇄  Swap character roles",button))SwapRoles();
             GUILayout.BeginHorizontal();
-            if(GUILayout.Button("Frank weapons",!unarmed&&!gunSword&&!greatSword?selected:button))SelectLibrary(false);
+            if(GUILayout.Button("Frank weapons",!unarmed&&!gunSword&&!greatSword?selected:button))SelectFrankWeapons();
             if(unarmedLibrary && GUILayout.Button("Vol10 · bare hands",unarmed&&!gunSword?selected:button))SelectLibrary(true);
             GUILayout.EndHorizontal();
             if(comboLibrary && GUILayout.Button("Gun + sword · combos",gunSword?selected:button))SelectCombos();
