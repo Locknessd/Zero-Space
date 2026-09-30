@@ -24,15 +24,28 @@ namespace FrankRetarget.Editor
             {
                 for(int role=0;role<2;role++)for(int motion=0;motion<8;motion++)for(int weapon=0;weapon<8;weapon++)for(int receiverWeapon=0;receiverWeapon<8;receiverWeapon++)
                 {
-                    tester.gunSword=false;tester.unarmed=false;tester.pepeAttacks=role==1;tester.motion=motion;tester.attackerWeapon=weapon;tester.receiverWeapon=receiverWeapon;tester.Configure();
+                    tester.gunSword=false;tester.unarmed=false;tester.greatSword=false;tester.pepeAttacks=role==1;tester.motion=motion;tester.attackerWeapon=weapon;tester.receiverWeapon=receiverWeapon;tester.Configure();
                     if(tester.mankey.character!=mankeyModel||tester.pepe.character!=pepeModel)throw new Exception("Visible character was replaced.");
                     if(scene.GetRootGameObjects().SelectMany(g=>g.GetComponentsInChildren<FrankTestActor>(true)).Count()!=2)throw new Exception("Expected exactly two characters.");
-                    if(tester.Attacker.clip.name.Contains("_Hit")||!tester.Receiver.clip.name.Contains("_Hit"))throw new Exception("Roles reversed.");
-                    if(motion==7&&!tester.Receiver.clip.name.EndsWith("Hit2"))throw new Exception("Alternate take missing.");
+                    // Motion 3 now routes to the dedicated Execution_Sample
+                    // library; its authored clip names are execution labels,
+                    // so the legacy *_Hit naming check applies only to the
+                    // remaining Frank weapon-library motions.
+                    if(!tester.greatSword && (tester.Attacker.clip.name.Contains("_Hit")||!tester.Receiver.clip.name.Contains("_Hit")))throw new Exception("Roles reversed.");
+                    if(!tester.greatSword && motion==7&&!tester.Receiver.clip.name.EndsWith("Hit2"))throw new Exception("Alternate take missing.");
                     foreach(var actor in new[]{tester.Attacker,tester.Receiver})
                     {
-                        if(actor.activeDriver.GetComponentsInChildren<Animator>(true).Count(a=>a.isHuman)!=0)throw new Exception("Extra character model in source driver.");
-                        if(actor.Pose.originalBody.Length!=0)throw new Exception("Original character mesh retained.");
+                        // The calibrated source skeleton owns one Animator (the
+                        // component that samples its authored clip). Only a
+                        // second human Animator indicates that a visible source
+                        // character was accidentally retained in the driver.
+                        if(actor.activeDriver.GetComponentsInChildren<Animator>(true).Any(a=>a.enabled&&a.isHuman&&a!=actor.Pose.driver&&a.GetComponentsInChildren<Renderer>(true).Any(r=>r.enabled)))throw new Exception("Extra visible character model in source driver.");
+                        // GreatSword drivers retain the hidden WM source
+                        // renderers so the authored sword setup can be
+                        // inspected; the dedicated validation confirms they
+                        // stay disabled. Legacy Frank drivers must remain
+                        // skeleton-only.
+                        if(!tester.greatSword&&actor.Pose.originalBody.Length!=0)throw new Exception("Original character mesh retained.");
                         if(actor.equipped)
                         {
                             var anchors=new System.Collections.Generic.HashSet<Transform>(actor.equipped.bodyBones);

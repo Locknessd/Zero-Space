@@ -79,11 +79,27 @@ namespace FrankRetarget
                 // Execution_Sample parents GreatSword_01 to the authored IK hand
                 // socket. Keep that socket and its local identity transform instead
                 // of rebuilding the sword mesh around a different hand convention.
-                var socket=pose.driver.transform.GetComponentsInChildren<Transform>(true)
-                    .FirstOrDefault(t=>t.name=="ik_hand_r");
-                if(!socket)socket=pose.driver.transform;
+                // The sample scene parents the sword to the authored
+                // ik_hand_root/ik_hand_gun/ik_hand_r chain. Resolve that
+                // chain first; the name-only fallback keeps older generated
+                // drivers compatible without guessing a different hand.
+                var socket=pose.driver.transform.Find("ik_hand_root/ik_hand_gun/ik_hand_r");
+                if(!socket)
+                    foreach(var handRoot in pose.driver.transform.GetComponentsInChildren<Transform>(true).Where(t=>t.name=="ik_hand_root"))
+                    {
+                        socket=handRoot.Find("ik_hand_gun/ik_hand_r");
+                        if(socket)break;
+                    }
+                if(!socket)socket=pose.driver.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t=>t.name=="ik_hand_r");
+                if(!socket)
+                {
+                    Debug.LogError("GreatSword Execution_Sample driver has no authored ik_hand_r socket.");
+                    socket=pose.driver.transform;
+                }
                 var sword=Instantiate(weaponPrefab,socket,false);
                 sword.name="GreatSword_01 (Execution Sample)";
+                sword.transform.SetLocalPositionAndRotation(Vector3.zero,Quaternion.identity);
+                sword.transform.localScale=Vector3.one;
                 foreach(var renderer in sword.GetComponentsInChildren<Renderer>(true))
                 {
                     renderer.enabled=true;
