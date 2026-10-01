@@ -2342,6 +2342,7 @@ GameObject:
   m_Component:
   - component: {fileID: 860642743}
   - component: {fileID: 860642742}
+  - component: {fileID: 860642744}
   m_Layer: 0
   m_Name: Animation and weapon tester
   m_TagString: Untagged
@@ -2388,6 +2389,7 @@ MonoBehaviour:
   - {x: 0, y: 1, z: 0, w: 0}
   - {x: 0, y: 1, z: 0, w: 0}
   demoCamera: {fileID: 1576618133}
+  cinematicCamera: {fileID: 860642744}
   unarmedLibrary: {fileID: 11400000, guid: 52d2ead7f70c97fff9cd5cc444541206, type: 2}
   comboLibrary: {fileID: 11400000, guid: 2fdca4303a3f85a1088fa56820e55f52, type: 2}
   greatSwordLibrary: {fileID: 11400000, guid: dee907be1208f5b35ba3d626e1746b38, type: 2}
@@ -2407,7 +2409,25 @@ MonoBehaviour:
   paused: 0
   loop: 1
   speed: 1
-  time: 1.2500001
+  time: 0
+--- !u!114 &860642744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 860642741}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e81fe230c1a744088db532eae62f6440, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::FrankRetarget.FrankCinematicCamera
+  tester: {fileID: 860642742}
+  library: {fileID: 11400000, guid: f77c705fb6e379e0d81c25775cc8d973, type: 2}
+  cinematic: 1
+  viewportMargin: 0.07
+  transitionDuration: 0.65
+  minimumHeight: 0.3
 --- !u!4 &860642743
 Transform:
   m_ObjectHideFlags: 0
@@ -4021,7 +4041,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 8, y: 1, z: 8}
+  m_LocalScale: {x: 200, y: 1, z: 200}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -4399,10 +4419,10 @@ Camera:
     y: 0
     width: 0.6636364
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.03
   far clip plane: 1000
-  field of view: 60
-  orthographic: 1
+  field of view: 32
+  orthographic: 0
   orthographic size: 2.4
   m_Depth: 0
   m_CullingMask:
@@ -4427,13 +4447,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1576618131}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.06471254, y: 0.9105744, z: -0.15622988, w: -0.37717226}
-  m_LocalPosition: {x: 6.0000005, y: 4.1512938, z: 7}
+  m_LocalRotation: {x: 0.11983575, y: -0.63487382, z: 0.10055413, w: 0.75661317}
+  m_LocalPosition: {x: 8.1528749, y: 3.8349924, z: -0.37486541}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 20.166, y: -99.243, z: -1.237}
+  m_LocalEulerAnglesHint: {x: 17.999999, y: -79.999999, z: 0}
 --- !u!1 &1602087077
 GameObject:
   m_ObjectHideFlags: 0

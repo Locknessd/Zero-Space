@@ -143,7 +143,9 @@ namespace FrankRetarget
         public void Evaluate(float time)
         {
             if(!activeDriver||!graph.IsValid())return;
-            double t=Mathf.Clamp(time,0,clip.length);
+            // Imported looping clips wrap at exactly length. The tester owns looping;
+            // hold the last pose when paused at the end so the camera can settle.
+            double t=Mathf.Clamp(time,0,Mathf.Max(0,clip.length-.00001f));
             playable.SetTime(t);graph.Evaluate(0);
             if(equipped){equipped.ApplyGrasp();equipped.Follow();}
             Pose.ApplyPose();

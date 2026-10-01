@@ -10,6 +10,7 @@ namespace FrankRetarget
         public Vector3[] receiverOffsets;
         public Quaternion[] receiverRotations;
         public Camera demoCamera;
+        public FrankCinematicCamera cinematicCamera;
         public FrankUnarmedLibrary unarmedLibrary;
         public FrankComboLibrary comboLibrary;
         public FrankGreatSwordLibrary greatSwordLibrary;
@@ -46,7 +47,7 @@ namespace FrankRetarget
                 Receiver.transform.SetPositionAndRotation(pair.receiverOffset,pair.receiverRotation);
                 Attacker.ConfigureGreatSword(pair.attacker,true,greatSwordWeapon);
                 Receiver.ConfigureGreatSword(pair.receiver,false,null);
-                time=0;Evaluate();FrameCamera();return;
+                time=0;Evaluate(0,paused);return;
             }
             if(gunSword && comboLibrary)
             {
@@ -55,7 +56,7 @@ namespace FrankRetarget
                 Attacker.transform.SetPositionAndRotation(Vector3.zero,Quaternion.identity);
                 Receiver.transform.SetPositionAndRotation(pair.receiverOffset,Quaternion.Euler(0,180,0));
                 Attacker.ConfigureCombo(pair.attack,true);Receiver.ConfigureCombo(pair.reaction,false);
-                time=0;Evaluate();FrameCamera();return;
+                time=0;Evaluate(0,paused);return;
             }
             if(unarmed && unarmedLibrary && unarmedLibrary.pairs.Length>0)
             {
@@ -65,29 +66,30 @@ namespace FrankRetarget
                 Receiver.transform.SetPositionAndRotation(pair.receiverOffset,pair.receiverRotation);
                 Attacker.ConfigureUnarmed(pair.attacker,true);
                 Receiver.ConfigureUnarmed(pair.receiver,false);
-                time=0;Evaluate();FrameCamera();return;
+                time=0;Evaluate(0,paused);return;
             }
             int index=Mathf.Min(motion,6);
             Attacker.transform.SetPositionAndRotation(Vector3.zero,Quaternion.identity);
             Receiver.transform.SetPositionAndRotation(receiverOffsets[index],receiverRotations[index]);
             Attacker.Configure(index,true,false,attackerWeapon==0?null:weapons[attackerWeapon-1],attackerWeapon-1);
             Receiver.Configure(index,false,motion==7,receiverWeapon==0?null:weapons[receiverWeapon-1],receiverWeapon-1);
-            time=0;Evaluate();FrameCamera();
+            time=0;Evaluate(0,paused);
         }
         public void SelectLibrary(bool bareHands){gunSword=false;greatSword=false;unarmed=bareHands;selectionScroll=Vector2.zero;Configure();}
         public void SelectFrankWeapons(){SelectLibrary(false);}
         public void SelectCombos(){gunSword=true;greatSword=false;unarmed=false;selectionScroll=Vector2.zero;Configure();}
         public void SelectGreatSword(){gunSword=false;unarmed=false;greatSword=true;selectionScroll=Vector2.zero;Configure();}
         public void SwapRoles(){pepeAttacks=!pepeAttacks;Configure();}
-        public void Restart(){time=0;Evaluate();}
-        public void Seek(float seconds){time=Mathf.Clamp(seconds,0,Duration);Evaluate();}
-        public void Evaluate()
+        public void Restart(){time=0;Evaluate(0,true);}
+        public void Seek(float seconds){time=Mathf.Clamp(seconds,0,Duration);Evaluate(0,true);}
+        public void Evaluate(float cameraDeltaTime=0,bool immediateCamera=false)
         {
             Attacker.Evaluate(time);Receiver.Evaluate(time);
             if(gunSword && comboLibrary)
                 Receiver.Pose.targetHips.position+=Vector3.up*comboLibrary.pairs[comboMotion].FloorOffset(Receiver==mankey,time);
             if(!gunSword && unarmed && pairSpacing && bodySpacing>0)
                 FrankPairSpacing.Apply(Attacker,Receiver,pairSpacing.Separation(unarmedMotion,pepeAttacks,time)*bodySpacing);
+            FrameCamera(cameraDeltaTime,immediateCamera);
         }
         void LateUpdate()
         {
@@ -96,14 +98,26 @@ namespace FrankRetarget
                 time+=Time.deltaTime*speed;
                 if(time>Duration) {if(loop)time%=Duration;else {time=Duration;paused=true;}}
             }
-            Evaluate();FrameCamera();
+            Evaluate(paused?0:Time.deltaTime);
         }
-        void FrameCamera()
+        void FrameCamera(float deltaTime=0,bool immediate=false)
         {
             if(!demoCamera)return;
             float scale=Mathf.Min(Screen.height/820f,Screen.width/1100f);
             float left=370*scale/Mathf.Max(1,Screen.width);
             demoCamera.rect=new Rect(left,0,1-left,1);
+            demoCamera.aspect=Mathf.Max(.05f,(float)demoCamera.pixelWidth/Mathf.Max(1,demoCamera.pixelHeight));
+            if(!cinematicCamera)
+            {
+                cinematicCamera=GetComponent<FrankCinematicCamera>();
+                if(!cinematicCamera)cinematicCamera=demoCamera.GetComponent<FrankCinematicCamera>();
+            }
+            if(cinematicCamera)
+            {
+                cinematicCamera.tester=this;
+                cinematicCamera.Zoom=zoom/2.4f;
+                if(cinematicCamera.Apply(deltaTime,immediate))return;
+            }
             Vector3 focus=new Vector3(0,1.2f,receiverOffsets[Mathf.Min(motion,6)].z*0.5f);
             float separation=0;
             if(Attacker.Pose && Receiver.Pose)
@@ -226,9 +240,17 @@ namespace FrankRetarget
             GUILayout.BeginHorizontal();GUILayout.Label($"Speed  {speed:0.00}×",small,GUILayout.Width(95));
             speed=GUILayout.HorizontalSlider(speed,.1f,2f);GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            if(GUILayout.Button("Camera: "+new[]{"3/4","Side","Front"}[cameraView],button)){cameraView=(cameraView+1)%3;FrameCamera();}
-            if(GUILayout.Button("−",button,GUILayout.Width(34)))zoom=Mathf.Min(7,zoom+.4f);
-            if(GUILayout.Button("+",button,GUILayout.Width(34)))zoom=Mathf.Max(1.5f,zoom-.4f);
+            bool cinematic=cinematicCamera&&cinematicCamera.cinematic&&cinematicCamera.library;
+            if(GUILayout.Button("Camera: "+(cinematic?"Cinematic":new[]{"3/4","Side","Front"}[cameraView]),button))
+            {
+                if(cinematic){cinematicCamera.cinematic=false;cameraView=0;}
+                else if(cameraView==2&&cinematicCamera&&cinematicCamera.library)
+                {cinematicCamera.cinematic=true;cinematicCamera.ResetView();}
+                else cameraView=(cameraView+1)%3;
+                FrameCamera(0,true);
+            }
+            if(GUILayout.Button("−",button,GUILayout.Width(34))){zoom=Mathf.Min(7,zoom+.4f);FrameCamera(0,true);}
+            if(GUILayout.Button("+",button,GUILayout.Width(34))){zoom=Mathf.Max(1.5f,zoom-.4f);FrameCamera(0,true);}
             GUILayout.EndHorizontal();
             GUILayout.Label(greatSword?"GreatSword_Animset Execution_Sample: four matched attack / reaction pairs.":gunSword?"Full combo or individual step. The shorter clip holds while the receiver finishes falling.":unarmed?"Vol10: 17 paired actions + idle. Swap roles to try either character. Scrub to inspect a pose.":"Choose motion and weapons independently. Each change restarts both actors.",small);
             GUILayout.EndArea();GUI.matrix=old;
