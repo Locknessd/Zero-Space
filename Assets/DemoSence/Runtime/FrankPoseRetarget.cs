@@ -25,10 +25,12 @@ namespace FrankRetarget
         public AnimationClip[] sourceClips;
         public Finger[] fingers;
         public bool transferFingers=true;
+        public bool constrainTargetHipsDepth;
+        float constrainedTargetHipsDepth;
+
         HumanPoseHandler sourceHandler, targetHandler;
         HumanPose pose;
         public FrankPostureCalibration Posture { get; private set; }
-
         [Serializable]
         public sealed class Finger
         {
@@ -114,12 +116,14 @@ namespace FrankRetarget
             Posture=new FrankPostureCalibration(this);
             foreach(var r in originalBody) if(r)r.enabled=false;
         }
+
         void LateUpdate() { ApplyPose(); }
         public void ApplyPose()
         {
             Initialize();
             if(sourceHandler==null)return;
             sourceHandler.GetHumanPose(ref pose);
+
             // GetHumanPose includes the driver root rotation in its parent space. Convert
             // through that parent to world, then into the visible root space. This also
             // handles a driver nested under a rotated persistent actor.
@@ -127,8 +131,8 @@ namespace FrankRetarget
             pose.bodyRotation=Quaternion.Inverse(character.transform.rotation)*sourceParent*pose.bodyRotation;
             pose.bodyPosition=Vector3.zero;
             targetHandler.SetHumanPose(ref pose);
-            // Humanoid bodyPosition is normalized by avatar scale and is a centre of mass,
-            // not an authored root. Lock the pelvis to the untouched source skeleton instead.
+
+            // Preserve the authored pelvis and IK contacts in the same coordinate space.
             targetHips.position=sourceHips.position;
             // Some source avatars report neck/head muscle values beyond +/- 4. Replaying
             // those values through another avatar over-rotates its neck. Quaternion transfer
@@ -142,7 +146,27 @@ namespace FrankRetarget
             // Foot IK changes the ankle orientation after Humanoid evaluation. Reapply the
             // authored toe orientation afterward so toe bend is not counted a second time.
             foreach(var bone in Posture.toes)bone.Apply();
+            if (constrainTargetHipsDepth && targetHips)
+            {
+                Vector3 locked = targetHips.position;
+                locked.z = constrainedTargetHipsDepth;
+                targetHips.position = locked;
+            }
         }
+
+        public void LockTargetHipsDepth(float depth)
+        {
+            if (!float.IsFinite(depth)) return;
+            constrainedTargetHipsDepth = depth;
+            constrainTargetHipsDepth = true;
+            if (targetHips)
+            {
+                Vector3 locked = targetHips.position;
+                locked.z = depth;
+                targetHips.position = locked;
+            }
+        }
+
         void OnDisable() { Release(); }
         void OnDestroy() { Release(); }
         void Release()

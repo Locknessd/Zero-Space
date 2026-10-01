@@ -23,7 +23,16 @@ namespace FrankRetarget.Editor
             if(File.Exists(Jobs+"done"))File.Delete(Jobs+"done");
             try
             {
-                if(EditorApplication.isPlaying && job!="status" && job!="refresh" && job!="stop")throw new InvalidOperationException("Stop Play mode before running asset jobs.");
+                // Asset jobs must run in edit mode because they open/save scenes and rewrite imported
+                // meshes.  If the user left BattleScene in Play mode, stop it automatically and put the
+                // request back for the next editor tick instead of silently reporting a failed repair.
+                if (EditorApplication.isPlaying && job != "status" && job != "refresh" && job != "stop")
+                {
+                    EditorApplication.isPlaying = false;
+                    File.WriteAllText(Jobs + "request", job);
+                    File.WriteAllText(Jobs + "done", job + " queued until Play mode stops");
+                    return;
+                }
                 if (job == "stop") EditorApplication.isPlaying=false;
                 else if (job == "refresh") AssetDatabase.Refresh();
                 else if (job == "status") File.WriteAllText(Jobs+"status", "playing="+EditorApplication.isPlaying+" scene="+UnityEngine.SceneManagement.SceneManager.GetActiveScene().path);

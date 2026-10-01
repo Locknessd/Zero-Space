@@ -108,6 +108,13 @@ namespace FrankRetarget
             }
             StartGraph();
         }
+        public void ConfigureSource(FrankTestDriver driver, AnimationClip animation, bool attacking, bool weapons, bool unarmed)
+        {
+            ConfigureClip(driver, animation, attacking, weapons);
+            // Native Frank reactions leave the fingers free; Vol10 uses both sets.
+            activeDriver.pose.transferFingers = attacking || weapons || unarmed;
+            Evaluate(0);
+        }
         void ConfigureClip(FrankTestDriver driver,AnimationClip animation,bool attacking,bool weapons)
         {
             Clear();
