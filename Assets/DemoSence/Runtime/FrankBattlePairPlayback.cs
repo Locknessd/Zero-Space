@@ -185,14 +185,22 @@ namespace FrankRetarget
 
         void CompleteSourceMotion()
         {
+            float attackFinalX = 0f;
+            float receiverFinalX = 0f;
+            bool hasAttackFinalX = TryGetHipsX(attackActor, out attackFinalX);
+            bool hasReceiverFinalX = false;
+            if (!lethal)
+                hasReceiverFinalX = TryGetHipsX(hitActor, out receiverFinalX);
             ClearActor(ref attackActor);
             attackModel?.Restore();
             attackModel = null;
+            if (hasAttackFinalX) PreserveRootX(attacker ? attacker.Animator : null, attackFinalX);
             if (!lethal && pair.getUp && receiver)
             {
                 ClearActor(ref hitActor);
                 hitModel?.Restore();
                 hitModel = null;
+                if (hasReceiverFinalX) PreserveRootX(receiver.Animator, receiverFinalX);
                 if (receiver.BeginSourceGetUp(pair.getUp))
                 {
                     CombatPositioningController.Instance?.ConstrainDepthNow();
@@ -201,16 +209,16 @@ namespace FrankRetarget
                     return;
                 }
             }
-            CompleteNow();
+            CompleteNow(receiverFinalX, hasReceiverFinalX);
         }
 
         void CompleteAfterGetUp()
         {
             waitingForGetUp = false;
-            CompleteNow();
+            CompleteNow(0f, false);
         }
 
-        void CompleteNow()
+        void CompleteNow(float receiverFinalX, bool hasReceiverFinalX)
         {
             Playing = false;
             if (!lethal)
@@ -218,11 +226,32 @@ namespace FrankRetarget
                 ClearActor(ref hitActor);
                 hitModel?.Restore();
                 hitModel = null;
+                if (hasReceiverFinalX) PreserveRootX(receiver ? receiver.Animator : null, receiverFinalX);
             }
             attacker.CompleteSourceSequence(true);
             if (receiver && receiver.IsBusy) receiver.CompleteSourceSequence(true);
             // A lethal reaction keeps hitActor and hitModel alive so the receiver
             // remains in the authored final death pose. ResetCombat/Cancel clears it.
+        }
+
+        static bool TryGetHipsX(FrankTestActor actor, out float x)
+        {
+            x = 0f;
+            if (!actor || actor.Pose == null || !actor.Pose.targetHips) return false;
+            x = actor.Pose.targetHips.position.x;
+            return float.IsFinite(x);
+        }
+
+        static void PreserveRootX(Animator animator, float finalHipsX)
+        {
+            if (!animator || !float.IsFinite(finalHipsX)) return;
+            var hips = animator.GetBoneTransform(HumanBodyBones.Hips);
+            if (!hips) return;
+            float delta = finalHipsX - hips.position.x;
+            if (Mathf.Abs(delta) <= 0.00001f) return;
+            Vector3 root = animator.transform.position;
+            root.x += delta;
+            animator.transform.position = root;
         }
 
         public void Cancel()
