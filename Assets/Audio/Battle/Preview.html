@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Battle — Bộ SFX đã chọn</title>
+<style>
+:root{color-scheme:dark;font:16px/1.6 system-ui,sans-serif;background:#10151d;color:#e7edf5}body{max-width:1100px;margin:0 auto;padding:32px 20px}h1{font-size:2.1rem;line-height:1.2;margin-bottom:12px}h2{font-size:1.2rem;margin:0}.lead{max-width:850px;color:#b7c4d5}.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:14px;padding:16px;background:#1b2532;border-radius:12px;margin:24px 0}input[type=search],select,button{font:inherit;border:1px solid #53657d;border-radius:6px;background:#121b28;color:#e7edf5;padding:7px 10px}input[type=search]{flex:1;min-width:190px}button{cursor:pointer}button:hover{background:#2c4057}label{display:flex;align-items:center;gap:8px}article{border:1px solid #344458;border-radius:12px;padding:20px;margin:18px 0;background:#161f2b}.tag{font-size:.77rem;background:#293c52;padding:3px 8px;border-radius:8px;margin-left:8px;display:inline-block}.note{color:#b7c4d5;font-size:.9rem;margin:6px 0}.clip{padding:14px 0;border-top:1px solid #2c3b4f;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:12px;align-items:center}.clip-name{font-size:.9rem;overflow-wrap:anywhere}audio{width:100%;height:36px}.path{font-size:.73rem;color:#93a8c2;overflow-wrap:anywhere}.error{color:#ffb29e}a{color:#8ecaff}#status{min-height:1.6em}footer{color:#93a8c2;margin-top:24px;font-size:.9rem}@media(max-width:700px){.clip{grid-template-columns:1fr}h1{font-size:1.6rem}}
+</style>
+</head>
+<body>
+<h1>Battle — Bộ SFX đã chọn</h1>
+<p class="lead">Âm thanh từ Universal Sound FX dành cho Mankey và Pepe. Nghe từng biến thể, xem sự kiện sử dụng và mức âm lượng khởi điểm. Bộ âm đã được tích hợp trong BattleScene; trang này dùng để nghe các file gốc.</p>
+<p class="lead">Lựa chọn dựa trên nhóm, nhãn của pack và kiểm tra dữ liệu WAV. Âm lượng cần được cân lại khi phối trong scene. Các clip gốc được giữ nguyên trong Universal Sound FX.</p>
+<div class="toolbar">
+<input id="search" type="search" placeholder="Tìm: giáo, heavy, ngã, tên file…" aria-label="Tìm âm thanh">
+<select id="filter" aria-label="Lọc nhóm"><option value="all">Tất cả nhóm</option><option value="main">Nhóm chính</option><option value="optional">Tùy chọn</option></select>
+<label>Nghe thử <input id="volume" type="range" min="0" max="1" step="0.05" value="0.7" aria-label="Âm lượng nghe thử"><output id="volume-label">70%</output></label>
+<button id="stop" type="button">Dừng âm</button>
+</div>
+<p id="status" aria-live="polite"></p>
+<main id="groups"></main>
+<footer>Âm lượng nghe thử = thanh âm lượng × volume đề xuất của nhóm. Preview phát ở pitch gốc 1.0 để dễ so sánh. Mở README.md để xem bảng ghép từng đòn và lưu ý đồng bộ với FrankBattlePairPlayback.</footer>
+<script id="selection" type="application/json">{
+    "scene":  "Assets/Scenes/BattleScene.unity",
+    "sourceRoot":  "Assets/Universal Sound FX/",
+    "status":  "Integrated in BattleScene through BattleSfxBank and BattleSfxPlayer; this manifest preserves original source references.",
+    "selectionBasis":  "Pack categories, importer labels and WAV measurements. Audition in Preview.html before final mixing.",
+    "groups":  [
+                   {
+                       "id":  "light_swing",
+                       "label":  "Vung tay / đá",
+                       "optional":  false,
+                       "volume":  0.4,
+                       "pitchMin":  0.96,
+                       "pitchMax":  1.04,
+                       "trigger":  "Khi tay hoặc chân tăng tốc trước điểm tiếp xúc.",
+                       "notes":  "Đây là whoosh, không phải tiếng trúng đòn. Chọn một biến thể mỗi lần vung.",
+                       "clips":  [
+                                     {
+                                         "name":  "MARTIAL_ARTS_Kick_Punch_RR1_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/WHOOSHES/Martial_Arts/MARTIAL_ARTS_Kick_Punch_RR1_mono.wav",
+                                         "guid":  "9c6e19771727aeb47baac8657ad8feb2",
+                                         "durationSeconds":  0.2466,
+                                         "channels":  1,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -14.11
+                                     },
+                                     {
+                                         "name":  "MARTIAL_ARTS_Kick_Punch_RR2_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/WHOOSHES/Martial_Arts/MARTIAL_ARTS_Kick_Punch_RR2_mono.wav",
+                                         "guid":  "d87c96fa52012d544b54e472ad98f481",
+                                         "durationSeconds":  0.2466,
+                                         "channels":  1,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -4.2
+                                     },
+                                     {
+                                         "name":  "MARTIAL_ARTS_Kick_Punch_RR3_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/WHOOSHES/Martial_Arts/MARTIAL_ARTS_Kick_Punch_RR3_mono.wav",
+                                         "guid":  "bc453b64068cd07409247ca449e4d3a5",
+                                         "durationSeconds":  0.2466,
+                                         "channels":  1,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -4.19
+                                     }
+                                 ]
+                   },
+                   {
+                       "id":  "light_hit",
+                       "label":  "Đấm / đá trúng người",
+                       "optional":  false,
+                       "volume":  0.65,
+                       "pitchMin":  0.97,
+                       "pitchMax":  1.03,
+                       "trigger":  "Đúng lúc tay/chân chạm đối thủ; một tiếng cho mỗi lần tiếp xúc.",
+                       "notes":  "Các file có nhãn punch trong metadata. Bản 05 và 09_Short dành cho chuỗi đòn nhanh.",
+                       "clips":  [
+                                     {
+                                         "name":  "IMPACT_Generic_01_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/IMPACTS/Generic/IMPACT_Generic_01_mono.wav",
+                                         "guid":  "956fd22b53107d0418739a8c9eb8eda8",
+                                         "durationSeconds":  0.4377,
+                                         "channels":  1,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -0.7
+                                     },
+                                     {
+                                         "name":  "IMPACT_Generic_05_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/IMPACTS/Generic/IMPACT_Generic_05_mono.wav",
+                                         "guid":  "7b73fe87953bfae4ba2f5e989ab915b9",
+                                         "durationSeconds":  0.3084,
+                                         "channels":  1,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -0.36
+                                     },
+                                     {
+                                         "name":  "IMPACT_Generic_09_Short_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/IMPACTS/Generic/IMPACT_Generic_09_Short_mono.wav",
+                                         "guid":  "7879018cb93baa34a81daf08f7d4679a",
+                                         "durationSeconds":  0.3044,
+                                         "channels":  1,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -0.31
+                                     }
+                                 ]
+                   },
+                   {
+                       "id":  "heavy_swing",
+                       "label":  "Vung kiếm lớn / rìu",
+                       "optional":  false,
+                       "volume":  0.5,
+                       "pitchMin":  0.92,
+                       "pitchMax":  1.0,
+                       "trigger":  "Khi vũ khí bắt đầu quét nhanh về phía đối thủ.",
+                       "notes":  "Dùng cho Heavy_6 GreatSword và Heavy_2 TwoHandedAxe. Đây là lựa chọn whoosh trầm theo tên và nhóm của pack.",
+                       "clips":  [
+                                     {
+                                         "name":  "WHOOSH_Deep_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/WHOOSHES/Classic/WHOOSH_Deep_mono.wav",
+                                         "guid":  "2fe02f29d8c0d1f468ee9a69ef878110",
+                                         "durationSeconds":  0.4289,
+                                         "channels":  1,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -11.57
+                                     },
+                                     {
+                                         "name":  "WHOOSH_Deep_Smooth_01_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/WHOOSHES/Classic/WHOOSH_Deep_Smooth_01_mono.wav",
+                                         "guid":  "47598b071a762ce4d86ff6e587d88b77",
+                                         "durationSeconds":  0.3398,
+                                         "channels":  1,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -7.66
+                                     }
+                                 ]
+                   },
+                   {
+                       "id":  "blade_swing",
+                       "label":  "Vung kiếm / dao đôi",
+                       "optional":  false,
+                       "volume":  0.4,
+                       "pitchMin":  0.98,
+                       "pitchMax":  1.06,
+                       "trigger":  "Mỗi nhát vung kiếm hoặc dao trước khi chạm mục tiêu.",
+                       "notes":  "Dùng cho Heavy_5 WarriorShield và Heavy_8 DualDaggers. Với dao đôi, chọn riêng một biến thể cho từng nhát.",
+                       "clips":  [
+                                     {
+                                         "name":  "WHOOSH_Air_Blade_RR1_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/WHOOSHES/Air/WHOOSH_Air_Blade_RR1_mono.wav",
+                                         "guid":  "641482022e65d08458cfc46d0da318cd",
+                                         "durationSeconds":  0.4086,
+                                         "channels":  1,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -4.19
+                                     },
+                                     {
+                                         "name":  "WHOOSH_Air_Blade_RR2_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/WHOOSHES/Air/WHOOSH_Air_Blade_RR2_mono.wav",
+                                         "guid":  "d0d42bc8c98476646a7b88be93b1948f",
+                                         "durationSeconds":  0.4086,
+                                         "channels":  1,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -4.2
+                                     },
+                                     {
+                                         "name":  "WHOOSH_Air_Blade_RR3_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/WHOOSHES/Air/WHOOSH_Air_Blade_RR3_mono.wav",
+                                         "guid":  "02981d1f2ba873b468dcd08522e34ced",
+                                         "durationSeconds":  0.4087,
+                                         "channels":  1,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -4.22
+                                     }
+                                 ]
+                   },
+                   {
+                       "id":  "thrust_swing",
+                       "label":  "Đâm giáo / dao",
+                       "optional":  false,
+                       "volume":  0.38,
+                       "pitchMin":  0.98,
+                       "pitchMax":  1.04,
+                       "trigger":  "Khi mũi giáo hoặc dao lao tới mục tiêu.",
+                       "notes":  "Dùng cho Heavy_7 Spear và các nhát đâm của DualDaggers.",
+                       "clips":  [
+                                     {
+                                         "name":  "WHOOSH_Air_Very_Fast_RR1_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/WHOOSHES/Air/WHOOSH_Air_Very_Fast_RR1_mono.wav",
+                                         "guid":  "ab80bf828a0c25d4787c01cb11827e6b",
+                                         "durationSeconds":  0.0927,
+                                         "channels":  1,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -5.26
+                                     },
+                                     {
+                                         "name":  "WHOOSH_Air_Very_Fast_RR2_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/WHOOSHES/Air/WHOOSH_Air_Very_Fast_RR2_mono.wav",
+                                         "guid":  "9228feae6f9275c47b4b5b00b1d6a62f",
+                                         "durationSeconds":  0.1926,
+                                         "channels":  1,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -6.79
+                                     }
+                                 ]
+                   },
+                   {
+                       "id":  "heavy_hit",
+                       "label":  "Đòn nặng / đập khiên trúng người",
+                       "optional":  false,
+                       "volume":  0.7,
+                       "pitchMin":  0.94,
+                       "pitchMax":  1.02,
+                       "trigger":  "Tại lần tiếp xúc mạnh nhất của đòn đánh.",
+                       "notes":  "HAMMER_Hit_Body là lớp va chạm thân người dùng thay cho đòn đập khiên/rìu theo phong cách game; không đại diện tiếng lưỡi kiếm. Chọn một file, không phát cả hai cùng lúc.",
+                       "clips":  [
+                                     {
+                                         "name":  "HAMMER_Hit_Body_stereo.wav",
+                                         "path":  "Assets/Universal Sound FX/WEAPONS/Melee/Hammer/HAMMER_Hit_Body_stereo.wav",
+                                         "guid":  "d83f0e3cdc09ddc4294167857c9c37da",
+                                         "durationSeconds":  1.0865,
+                                         "channels":  2,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -1.13
+                                     },
+                                     {
+                                         "name":  "IMPACT_Generic_14_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/IMPACTS/Generic/IMPACT_Generic_14_mono.wav",
+                                         "guid":  "280040a692d9c8a4f8d9933092408cf0",
+                                         "durationSeconds":  0.6169,
+                                         "channels":  1,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -0.39
+                                     }
+                                 ]
+                   },
+                   {
+                       "id":  "stab_hit",
+                       "label":  "Giáo / dao đâm trúng người",
+                       "optional":  false,
+                       "volume":  0.52,
+                       "pitchMin":  0.97,
+                       "pitchMax":  1.03,
+                       "trigger":  "Đúng lúc mũi giáo hoặc dao chạm thân đối thủ.",
+                       "notes":  "Pack không có nhóm Spear riêng. ARROW_Hit_Body là lựa chọn thay thế để nghe thử cho va chạm xuyên vào thân người; không dùng tiếng tên bay.",
+                       "clips":  [
+                                     {
+                                         "name":  "ARROW_Hit_Body_stereo.wav",
+                                         "path":  "Assets/Universal Sound FX/WEAPONS/Bow_Arrow/ARROW_Hit_Body_stereo.wav",
+                                         "guid":  "b6956a7842fc6474ea26f8c4b3e77719",
+                                         "durationSeconds":  0.4603,
+                                         "channels":  2,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -2.6
+                                     }
+                                 ]
+                   },
+                   {
+                       "id":  "body_fall",
+                       "label":  "Ngã / bị vật xuống đất",
+                       "optional":  false,
+                       "volume":  0.6,
+                       "pitchMin":  0.95,
+                       "pitchMax":  1.02,
+                       "trigger":  "Lúc thân người chạm đất sau khi bị đánh hoặc ném.",
+                       "notes":  "Dùng chung cho light/heavy. Đây là thud dùng thay cho body fall; không phát từ đầu animation Hit.",
+                       "clips":  [
+                                     {
+                                         "name":  "THUD_Dark_03_Short_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/THUDS_THUMPS/THUD_Dark_03_Short_mono.wav",
+                                         "guid":  "3dbabf924859ee04d81bd13942d7b4f7",
+                                         "durationSeconds":  0.4352,
+                                         "channels":  1,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -5.16
+                                     },
+                                     {
+                                         "name":  "THUD_Medium_01_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/THUDS_THUMPS/THUD_Medium_01_mono.wav",
+                                         "guid":  "f3e50e58721e02c4d8c3241ef24f4a0e",
+                                         "durationSeconds":  0.4443,
+                                         "channels":  1,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -1.82
+                                     },
+                                     {
+                                         "name":  "THUD_Medium_02_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/THUDS_THUMPS/THUD_Medium_02_mono.wav",
+                                         "guid":  "db55466a3f7e47240b4faf9ab960c686",
+                                         "durationSeconds":  0.4414,
+                                         "channels":  1,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -0.58
+                                     }
+                                 ]
+                   },
+                   {
+                       "id":  "getup",
+                       "label":  "Cử động khi đứng dậy",
+                       "optional":  false,
+                       "volume":  0.22,
+                       "pitchMin":  0.98,
+                       "pitchMax":  1.02,
+                       "trigger":  "Khi bắt đầu cử động chống tay/đứng dậy trong GetUp.",
+                       "notes":  "Lớp tiếng quần áo nhẹ; chỉ phát nếu thực sự có GetUp. Không dùng trên nhánh chết.",
+                       "clips":  [
+                                     {
+                                         "name":  "FABRIC_Movement_Short_RR1_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/FABRIC_CLOTHING/FABRIC_Movement_Short_RR1_mono.wav",
+                                         "guid":  "67bda4d6dceb88741b6ebb7a355b436e",
+                                         "durationSeconds":  0.802,
+                                         "channels":  1,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -21.1
+                                     },
+                                     {
+                                         "name":  "FABRIC_Movement_Short_RR2_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/FABRIC_CLOTHING/FABRIC_Movement_Short_RR2_mono.wav",
+                                         "guid":  "1493d8d125421944c9c03ba81f48d30c",
+                                         "durationSeconds":  0.9387,
+                                         "channels":  1,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -18.03
+                                     }
+                                 ]
+                   },
+                   {
+                       "id":  "knockout_fall",
+                       "label":  "Ngã kết thúc / knockout",
+                       "optional":  false,
+                       "volume":  0.72,
+                       "pitchMin":  0.96,
+                       "pitchMax":  1.0,
+                       "trigger":  "Một lần khi thân người chạm đất trong phản ứng chí mạng.",
+                       "notes":  "Thay body_fall ở cùng một lần chạm đất để tránh chồng hai tiếng. Không lặp trong lúc giữ tư thế chết.",
+                       "clips":  [
+                                     {
+                                         "name":  "THUD_Dark_01_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/THUDS_THUMPS/THUD_Dark_01_mono.wav",
+                                         "guid":  "127ac9325e64045408c22e79a767e99d",
+                                         "durationSeconds":  0.9671,
+                                         "channels":  1,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -1.85
+                                     }
+                                 ]
+                   },
+                   {
+                       "id":  "footstep",
+                       "label":  "Bước chân trên nền cứng",
+                       "optional":  true,
+                       "volume":  0.25,
+                       "pitchMin":  0.97,
+                       "pitchMax":  1.03,
+                       "trigger":  "Khi bàn chân đang di chuyển đặt xuống nền cứng.",
+                       "notes":  "Lựa chọn cho nền kiểu asphalt; đổi theo vật liệu sân nếu khác. Dùng file từng bước, không dùng loop khi nhân vật đứng yên.",
+                       "clips":  [
+                                     {
+                                         "name":  "FOOTSTEP_Asphalt_Trainers_Walk_Slow_RR1_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/HUMAN/Footsteps/Asphalt_Trainers_Walk_Slow/FOOTSTEP_Asphalt_Trainers_Walk_Slow_RR1_mono.wav",
+                                         "guid":  "d88cbad2d217cd74ba1eb0899d6c55ad",
+                                         "durationSeconds":  0.6053,
+                                         "channels":  1,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -23.92
+                                     },
+                                     {
+                                         "name":  "FOOTSTEP_Asphalt_Trainers_Walk_Slow_RR2_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/HUMAN/Footsteps/Asphalt_Trainers_Walk_Slow/FOOTSTEP_Asphalt_Trainers_Walk_Slow_RR2_mono.wav",
+                                         "guid":  "ada024810fd950d408257d2b4903e899",
+                                         "durationSeconds":  0.6513,
+                                         "channels":  1,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -20.51
+                                     },
+                                     {
+                                         "name":  "FOOTSTEP_Asphalt_Trainers_Walk_Slow_RR3_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/HUMAN/Footsteps/Asphalt_Trainers_Walk_Slow/FOOTSTEP_Asphalt_Trainers_Walk_Slow_RR3_mono.wav",
+                                         "guid":  "74fb0bf68831ec14e8bbc1d6ab1dfba5",
+                                         "durationSeconds":  0.591,
+                                         "channels":  1,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -35.13
+                                     }
+                                 ]
+                   },
+                   {
+                       "id":  "metal_clash",
+                       "label":  "Vũ khí va vũ khí",
+                       "optional":  true,
+                       "volume":  0.45,
+                       "pitchMin":  0.97,
+                       "pitchMax":  1.03,
+                       "trigger":  "Chỉ khi hai vũ khí hoặc vũ khí và kim loại thực sự va nhau.",
+                       "notes":  "Không dùng làm tiếng trúng người mặc định: bên nhận đòn hiện đang không cầm vũ khí. Các file được chọn chỉ là hit, không gộp whoosh.",
+                       "clips":  [
+                                     {
+                                         "name":  "SWORD_Hit_Sword_RR1_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/WEAPONS/Melee/Swords/SWORD_Hit_Sword_RR1_mono.wav",
+                                         "guid":  "8019e8477cf2d9d4588cf5f097b41bfe",
+                                         "durationSeconds":  0.3755,
+                                         "channels":  1,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -0.62
+                                     },
+                                     {
+                                         "name":  "SWORD_Hit_Sword_RR2_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/WEAPONS/Melee/Swords/SWORD_Hit_Sword_RR2_mono.wav",
+                                         "guid":  "a8bb10c5b243aa0469a46b0be049329c",
+                                         "durationSeconds":  0.3173,
+                                         "channels":  1,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -0.48
+                                     }
+                                 ]
+                   },
+                   {
+                       "id":  "shield_block",
+                       "label":  "Đòn bị chặn bằng khiên gỗ",
+                       "optional":  true,
+                       "volume":  0.5,
+                       "pitchMin":  0.98,
+                       "pitchMax":  1.02,
+                       "trigger":  "Khi có animation đòn đánh chạm khiên gỗ.",
+                       "notes":  "Chỉ là lựa chọn dự phòng cho block. Heavy_5 có khiên không đồng nghĩa mọi va chạm đều là đánh vào khiên.",
+                       "clips":  [
+                                     {
+                                         "name":  "HAMMER_Hit_Wood_Shield_stereo.wav",
+                                         "path":  "Assets/Universal Sound FX/WEAPONS/Melee/Hammer/HAMMER_Hit_Wood_Shield_stereo.wav",
+                                         "guid":  "983ecbfb126aeb746b6c37b1b95ddbc6",
+                                         "durationSeconds":  0.7468,
+                                         "channels":  2,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -1.21
+                                     }
+                                 ]
+                   },
+                   {
+                       "id":  "blade_cut",
+                       "label":  "Lớp chém trúng người",
+                       "optional":  true,
+                       "volume":  0.25,
+                       "pitchMin":  0.98,
+                       "pitchMax":  1.02,
+                       "trigger":  "Lúc lưỡi kiếm/rìu/dao chạm thân người.",
+                       "notes":  "Âm thuộc nhóm gore; chỉ dùng nhỏ nếu muốn thêm sắc thái chém. Mặc định có thể dùng light_hit/heavy_hit cho phong cách nhẹ hơn.",
+                       "clips":  [
+                                     {
+                                         "name":  "GORE_Blade_Chop_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/GORE_SPLATS/GORE_Blade_Chop_mono.wav",
+                                         "guid":  "5de35d095a26a5042a71af599850b917",
+                                         "durationSeconds":  1.1468,
+                                         "channels":  1,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -0.12
+                                     }
+                                 ]
+                   },
+                   {
+                       "id":  "hurt_voice",
+                       "label":  "Tiếng rên khi trúng đòn",
+                       "optional":  true,
+                       "volume":  0.3,
+                       "pitchMin":  1.0,
+                       "pitchMax":  1.0,
+                       "trigger":  "Một lần ở cú trúng đòn chính, tránh phát chồng giọng trong combo.",
+                       "notes":  "Đây là giọng nam trong pack, cần nghe thử xem hợp Mankey/Pepe không. Không tự gán pitch cao/thấp cho nhân vật.",
+                       "clips":  [
+                                     {
+                                         "name":  "GRUNT_Male_B_Hurt_Short_01_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/VOICES/Grunts_Groans_Hurt/GRUNT_Male_B_Hurt_Short_01_mono.wav",
+                                         "guid":  "a4e803a901dee444c82fbd45bba758a0",
+                                         "durationSeconds":  0.3678,
+                                         "channels":  1,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -1.97
+                                     },
+                                     {
+                                         "name":  "GRUNT_Male_B_Hurt_Short_02_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/VOICES/Grunts_Groans_Hurt/GRUNT_Male_B_Hurt_Short_02_mono.wav",
+                                         "guid":  "0cd1f22ca145bf343a56187c1f9ac087",
+                                         "durationSeconds":  0.6596,
+                                         "channels":  1,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -6.06
+                                     }
+                                 ]
+                   },
+                   {
+                       "id":  "fight_start",
+                       "label":  "Giọng hô bắt đầu trận",
+                       "optional":  true,
+                       "volume":  0.65,
+                       "pitchMin":  1.0,
+                       "pitchMax":  1.0,
+                       "trigger":  "Một lần lúc bắt đầu trận thật sự.",
+                       "notes":  "Giọng tiếng Anh Fight. Không phát mỗi lượt hoặc mỗi lần nhận lại snapshot WebSocket.",
+                       "clips":  [
+                                     {
+                                         "name":  "VOICE_MALE_Fight_1_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/VOICES/Words_Phrases/Male_A/VOICE_MALE_Fight_1_mono.wav",
+                                         "guid":  "5e2132b73ab1cb2479545e372e89decd",
+                                         "durationSeconds":  0.4176,
+                                         "channels":  1,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -0.01
+                                     }
+                                 ]
+                   },
+                   {
+                       "id":  "victory",
+                       "label":  "Giọng hô kết thúc trận",
+                       "optional":  true,
+                       "volume":  0.65,
+                       "pitchMin":  1.0,
+                       "pitchMax":  1.0,
+                       "trigger":  "Một lần khi trình bày kết quả sau phản ứng chết.",
+                       "notes":  "Dùng Victory cho trận hai bot để không gán nhầm You Win cho người xem.",
+                       "clips":  [
+                                     {
+                                         "name":  "VOICE_MALE_Victory_1_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/VOICES/Words_Phrases/Male_A/VOICE_MALE_Victory_1_mono.wav",
+                                         "guid":  "752b1c9a1933e234eb7f17ef55205922",
+                                         "durationSeconds":  0.7274,
+                                         "channels":  1,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -0.01
+                                     }
+                                 ]
+                   },
+                   {
+                       "id":  "ui_click",
+                       "label":  "Nút bấm UI Battle",
+                       "optional":  true,
+                       "volume":  0.3,
+                       "pitchMin":  1.0,
+                       "pitchMax":  1.0,
+                       "trigger":  "Khi người dùng nhấn một nút UI có phản hồi.",
+                       "notes":  "Chọn một âm thống nhất cho UI. Không phát do text hoặc HP tự cập nhật.",
+                       "clips":  [
+                                     {
+                                         "name":  "UI_Click_Smooth_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/USER_INTERFACES/Clicks_Taps/UI_Click_Smooth_mono.wav",
+                                         "guid":  "13a8f34906ab72f428f6b603596a3086",
+                                         "durationSeconds":  0.0203,
+                                         "channels":  1,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -3.67
+                                     },
+                                     {
+                                         "name":  "UI_Click_Distinct_Short_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/USER_INTERFACES/Clicks_Taps/UI_Click_Distinct_Short_mono.wav",
+                                         "guid":  "eb43be47580624945887f5bd177fbed8",
+                                         "durationSeconds":  0.0401,
+                                         "channels":  1,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -2.28
+                                     }
+                                 ]
+                   }
+               ],
+    "totalClips":  35
+}</script>
+<script>
+'use strict';
+const selection = JSON.parse(document.getElementById('selection').textContent);
+const container = document.getElementById('groups');
+const search = document.getElementById('search');
+const filter = document.getElementById('filter');
+const volume = document.getElementById('volume');
+const status = document.getElementById('status');
+const players = [];
+function element(tag, text, className) {
+  const node = document.createElement(tag);
+  if (text !== undefined) node.textContent = text;
+  if (className) node.className = className;
+  return node;
+}
+function stopAll(except) {
+  for (const player of players) if (player !== except) { player.pause(); player.currentTime = 0; }
+}
+for (const group of selection.groups) {
+  const section = element('article');
+  section.dataset.optional = String(group.optional);
+  section.dataset.search = (group.label + ' ' + group.id + ' ' + group.notes + ' ' + group.clips.map(c => c.name).join(' ')).toLocaleLowerCase('vi');
+  const title = element('h2', group.label);
+  title.append(element('span', group.optional ? 'Tùy chọn' : 'Nhóm chính', 'tag'));
+  section.append(title, element('p', group.trigger), element('p', group.notes, 'note'));
+  section.append(element('p', 'Volume: ' + group.volume + ' · Pitch đề xuất: ' + group.pitchMin + '–' + group.pitchMax + ' · ID: ' + group.id, 'note'));
+  for (const clip of group.clips) {
+    const row = element('div', undefined, 'clip');
+    const info = element('div');
+    info.append(element('div', clip.name, 'clip-name'));
+    info.append(element('div', clip.durationSeconds.toFixed(3) + ' giây · ' + (clip.channels === 1 ? 'mono' : 'stereo') + ' · Peak ' + clip.peakDbFS + ' dBFS', 'note'));
+    info.append(element('div', clip.path, 'path'));
+    const player = element('audio');
+    player.controls = true;
+    player.preload = 'none';
+    player.src = '../../' + clip.path.substring('Assets/'.length).split('/').map(encodeURIComponent).join('/');
+    player.setAttribute('aria-label', 'Nghe ' + clip.name);
+    player.dataset.gain = String(group.volume);
+    player.volume = Number(volume.value) * group.volume;
+    player.addEventListener('play', () => stopAll(player));
+    player.addEventListener('error', () => {
+      const message = element('p', 'Không đọc được WAV. Giữ Preview.html tại Assets/Audio/Battle hoặc nghe file gốc trong Unity.', 'error');
+      row.append(message);
+    }, {once: true});
+    players.push(player);
+    row.append(info, player);
+    section.append(row);
+  }
+  container.append(section);
+}
+function applyFilter() {
+  const term = search.value.trim().toLocaleLowerCase('vi');
+  let count = 0;
+  for (const section of container.children) {
+    const accepted = filter.value === 'all' || section.dataset.optional === String(filter.value === 'optional');
+    section.hidden = !accepted || !section.dataset.search.includes(term);
+    if (!section.hidden) count++;
+  }
+  status.textContent = count + '/' + selection.groups.length + ' nhóm · Tổng cộng ' + selection.totalClips + ' file WAV';
+}
+search.addEventListener('input', applyFilter);
+filter.addEventListener('change', applyFilter);
+volume.addEventListener('input', () => {
+  document.getElementById('volume-label').value = Math.round(Number(volume.value) * 100) + '%';
+  for (const player of players) player.volume = Number(volume.value) * Number(player.dataset.gain);
+});
+document.getElementById('stop').addEventListener('click', () => stopAll());
+window.addEventListener('pagehide', () => stopAll());
+applyFilter();
+</script>
+</body>
+</html>

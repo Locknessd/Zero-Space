@@ -21,6 +21,8 @@ public class CharacterCombat : MonoBehaviour
     public AnimationClip walkAnim;
     public AnimationClip victoryAnim;
     public ParticleSystem hitEffect;
+    public BattleSfxPlayer battleSfx;
+    public BattleVfxPlayer battleVfx;
 
     public event Action<CharacterCombat, int, bool> SequenceEnded;
     public Animator Animator => animator;
@@ -42,7 +44,7 @@ public class CharacterCombat : MonoBehaviour
     public FrankRetarget.FrankBattlePairPlayback SourcePlayback { get; private set; }
 
     // Plays the controller GetUp state after a source reaction finishes. This
-    // keeps a light hit from completing directly into Idle.
+    // keeps a surviving hit receiver from completing directly into Idle.
     public bool BeginSourceGetUp(AnimationClip getUp)
     {
         if (getUp == null || IsDead || !Initialize()) return false;
@@ -274,7 +276,12 @@ public class CharacterCombat : MonoBehaviour
         _hasGetUp = getUp != null && !lethal;
         animator.SetBool("HasGetUp", _hasGetUp);
         animator.SetBool("IsDead", lethal);
-        if (hitEffect != null) hitEffect.Play();
+        if (battleVfx && battleVfx.isActiveAndEnabled) battleVfx.PlayHit(this);
+        else if (hitEffect != null)
+        {
+            hitEffect.gameObject.SetActive(true);
+            hitEffect.Play(true);
+        }
         Begin("Hit");
         return true;
     }

@@ -28,6 +28,12 @@ public class GameManager : MonoBehaviour
     public bool enableLocalInputTesting = true;
     public bool debugMode = true;
 
+    [Header("Battle Audio")]
+    public BattleSfxPlayer battleSfx;
+
+    [Header("Battle VFX")]
+    public BattleVfxPlayer battleVfx;
+
     public int PendingEventCount => _queue.Count;
     public bool IsEventQueueBusy => _running || _queue.Count > 0;
     public string QueueError { get; private set; }
@@ -453,6 +459,8 @@ public class GameManager : MonoBehaviour
     [ContextMenu("Reset Combat Queue")]
     public void ResetCombatQueue()
     {
+        if (battleSfx) battleSfx.ResetForMatch();
+        if (battleVfx) battleVfx.ResetForMatch();
         if (_runner != null) StopCoroutine(_runner);
         _runner = null;
         _running = false;
@@ -487,6 +495,8 @@ public class GameManager : MonoBehaviour
         switch (battleEvent.eventType)
         {
             case "MATCH_CREATED":
+                if (battleSfx) battleSfx.ResetForMatch();
+                if (battleVfx) battleVfx.ResetForMatch();
                 _characterNames.Clear();
                 _characterMaxHp.Clear();
                 _hpChangedAppliedKeys.Clear();
@@ -541,6 +551,7 @@ public class GameManager : MonoBehaviour
             case "WINNER_DECLARED":
                 if (_matchEnded) break;
                 _matchEnded = true;
+                if (battleSfx) battleSfx.PlayVictoryOnce();
                 _swapSpeechDuringMatch = false;
                 var winner = SideFromCharacterId(payload.Value<string>("winnerCharacterId"));
                 if (winner.HasValue)

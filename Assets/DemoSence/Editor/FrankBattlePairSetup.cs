@@ -16,7 +16,7 @@ namespace FrankRetarget.Editor
             TrumpWeaponManager.WeaponType.Katana, TrumpWeaponManager.WeaponType.Spear,
             TrumpWeaponManager.WeaponType.WarriorShield };
 
-        static AnimationClip DefaultLightGetUp()
+        static AnimationClip DefaultBattleGetUp()
         {
             const string path = "Assets/InsaneGun_Sword_Set/Animation/Humanoid/rise_01.fbx";
             return AssetDatabase.LoadAllAssetsAtPath(path).OfType<AnimationClip>()
@@ -65,8 +65,10 @@ namespace FrankRetarget.Editor
                             data.spacing = tester.pairSpacing;
                             data.bodySpacing = tester.bodySpacing;
                             data.unarmedIndex = index;
-                            data.getUp = DefaultLightGetUp();
                         }
+                        data.getUp = move.sourcePair?.getUp ? move.sourcePair.getUp :
+                            (move.getUpAnim ? move.getUpAnim : DefaultBattleGetUp());
+                        if (!data.getUp) throw new Exception("Missing battle GetUp clip: " + move.moveName);
                         if (!data.Valid) throw new Exception("Incomplete source pair " + move.moveName);
                         if (Mathf.Abs(data.receiverOffset.x) > .001f || Mathf.Abs(data.receiverOffset.y) > .001f)
                             throw new Exception("Source pair is not compatible with battle lane " + move.moveName);
@@ -75,7 +77,7 @@ namespace FrankRetarget.Editor
                         // Keep these fields descriptive; source playback uses the calibrated drivers.
                         move.attackAnim = data.attack;
                         move.hitAnim = data.reaction;
-                        move.getUpAnim = null;
+                        move.getUpAnim = data.getUp;
                         report.AppendLine($"{fighter.name} {move.moveName}: {data.attack.name} / {data.reaction.name}, offset={data.receiverOffset}, shared duration={Mathf.Max(data.attack.length, data.reaction.length)}");
                     }
                     EditorUtility.SetDirty(fighter);

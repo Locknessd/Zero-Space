@@ -37,6 +37,8 @@ namespace FrankRetarget
         float lockedAttackHipsDepth;
         float lockedHitHipsDepth;
         float attackHipHeight, hitHipHeight;
+        BattleSfxPlayer battleSfx;
+        BattleVfxPlayer battleVfx;
 
         public Vector3 CameraPosition(CharacterCombat fighter)
         {
@@ -125,7 +127,15 @@ namespace FrankRetarget
                 Playing = true;
                 SampleTime = 0;
                 EvaluateAt(0);
-                if (receiver.hitEffect) receiver.hitEffect.Play();
+                battleSfx = source.battleSfx;
+                if (battleSfx) battleSfx.BeginSequence(this, move, lethal);
+                battleVfx = source.battleVfx;
+                bool hasVfxTimeline = battleVfx && battleVfx.BeginSequence(this, source, target, move, lethal);
+                if (!hasVfxTimeline && receiver.hitEffect)
+                {
+                    receiver.hitEffect.gameObject.SetActive(true);
+                    receiver.hitEffect.Play(true);
+                }
                 return true;
             }
             catch
@@ -181,6 +191,8 @@ namespace FrankRetarget
             // Leave the terminal pose visible for a frame, as in the demo's clamped Evaluate.
             if (SampleTime >= Duration) { CompleteSourceMotion(); return; }
             EvaluateAt(SampleTime + Time.deltaTime);
+            if (battleSfx) battleSfx.AdvanceSequence(this, SampleTime);
+            if (battleVfx) battleVfx.AdvanceSequence(this, SampleTime);
         }
 
         void CompleteSourceMotion()
@@ -203,6 +215,7 @@ namespace FrankRetarget
                 if (hasReceiverFinalX) PreserveRootX(receiver.Animator, receiverFinalX);
                 if (receiver.BeginSourceGetUp(pair.getUp))
                 {
+                    if (battleSfx) battleSfx.BeginRecovery(this);
                     CombatPositioningController.Instance?.ConstrainDepthNow();
                     ConstrainLightHipsDepth();
                     waitingForGetUp = true;
@@ -221,6 +234,8 @@ namespace FrankRetarget
         void CompleteNow(float receiverFinalX, bool hasReceiverFinalX)
         {
             Playing = false;
+            if (battleSfx) battleSfx.EndSequence(this);
+            if (battleVfx) battleVfx.EndSequence(this);
             if (!lethal)
             {
                 ClearActor(ref hitActor);
@@ -256,6 +271,8 @@ namespace FrankRetarget
 
         public void Cancel()
         {
+            if (battleSfx) battleSfx.EndSequence(this, true);
+            if (battleVfx) battleVfx.EndSequence(this, true);
             bool interrupted = Playing;
             Playing = false;
             waitingForGetUp = false;
