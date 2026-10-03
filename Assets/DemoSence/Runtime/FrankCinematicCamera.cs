@@ -4,13 +4,20 @@ using UnityEngine;
 namespace FrankRetarget
 {
     /// <summary>
-    /// Plays individually directed camera takes after the tester evaluates both characters.
+    /// Plays individually directed camera takes after the demo or battle evaluates both characters.
     /// The library owns shot design; this component only interpolates, blends and protects framing.
     /// </summary>
     [DisallowMultipleComponent]
+    [DefaultExecutionOrder(13500)]
     public sealed class FrankCinematicCamera : MonoBehaviour
     {
+        [Header("Demo")]
         public FrankCombinationTester tester;
+        [Header("Battle")]
+        public GameManager battle;
+        [Min(1f)] public float battleIdleDistance = 5f;
+        public bool keepBattleCameraInFront = true;
+        [Header("Cinematography")]
         public FrankCameraLibrary library;
         public bool cinematic = true;
         [Range(.05f, .15f)] public float viewportMargin = .07f;
@@ -33,6 +40,13 @@ namespace FrankRetarget
         float previousTime, transitionTime, activeTransitionDuration;
         bool transitioning;
         FrankCameraLibrary.Frame displayed, transitionFrom;
+        Camera battleCamera;
+        FrankBattlePairPlayback battlePlayback;
+        int battlePlaybackId = -1;
+        Vector3 battleOrigin;
+        Quaternion battleRotation;
+        CharacterCombat cachedBattleLeft, cachedBattleRight;
+        FrankTestActor cachedBattleAttack, cachedBattleReaction;
 
         sealed class FramingRenderer
         {
@@ -53,11 +67,12 @@ namespace FrankRetarget
         /// <summary>Returns false when the caller should use its manual fallback view.</summary>
         public bool Apply(float deltaTime = 0, bool immediate = false)
         {
+            if (battle) return ApplyBattle(deltaTime, immediate);
             if (!cinematic || !tester || !tester.demoCamera || !library) return false;
             int mode = tester.greatSword ? 3 : tester.gunSword ? 2 : tester.unarmed ? 1 : 0;
             int motion = mode == 3 ? tester.greatSwordMotion : mode == 2 ? tester.comboMotion : mode == 1 ? tester.unarmedMotion : tester.motion;
             bool changed = mode != cachedMode || motion != cachedMotion || tester.pepeAttacks != cachedPepeAttacks || library != cachedLibrary;
-            string key = changed ? CurrentKey(tester) : currentKey;
+            string key = changed || ActiveShot == null ? CurrentKey(tester) : currentKey;
             if (changed || ActiveShot == null)
             {
                 ActiveShot = library.Find(key);
@@ -66,20 +81,105 @@ namespace FrankRetarget
             if (ActiveShot == null || ActiveShot.frames == null || ActiveShot.frames.Length == 0)
                 return false;
 
-            Camera camera = tester.demoCamera;
+            cachedMode = mode;
+            cachedMotion = motion;
+            cachedPepeAttacks = tester.pepeAttacks;
+            return ApplyFrame(tester.demoCamera, Sample(ActiveShot, tester.time), key, tester.time,
+                changed, deltaTime, immediate, true);
+        }
+
+        public static string BattleKey(CombatTripletData move)
+        {
+            if (move == null || move.sourcePair == null) return null;
+            string role = move.sourcePair.pepeAttacks ? "/pepe" : "/mankey";
+            if (move.sourcePair.unarmedIndex >= 0) return "vol10/" + move.sourcePair.unarmedIndex + role;
+            int index;
+            switch (move.weapon)
+            {
+                case TrumpWeaponManager.WeaponType.TwoHandedAxe: index = 0; break;
+                case TrumpWeaponManager.WeaponType.Assassin: index = 1; break;
+                case TrumpWeaponManager.WeaponType.DualDaggers: index = 2; break;
+                case TrumpWeaponManager.WeaponType.GreatSword: index = 3; break;
+                case TrumpWeaponManager.WeaponType.Katana: index = 4; break;
+                case TrumpWeaponManager.WeaponType.Spear: index = 5; break;
+                case TrumpWeaponManager.WeaponType.WarriorShield: index = 6; break;
+                default: return null;
+            }
+            return "frank/" + index + role;
+        }
+
+        bool ApplyBattle(float deltaTime, bool immediate)
+        {
+            if (!cinematic || !library || !battle.leftCombat || !battle.rightCombat) return false;
+            if (!battleCamera) battleCamera = GetComponent<Camera>();
+            if (!battleCamera) return false;
+            var playback = battle.leftCombat.SourcePlayback;
+            if (!playback || !playback.Playing) playback = battle.rightCombat.SourcePlayback;
+            bool playing = playback && playback.Playing && playback.AttackerActor;
+            string key = playing ? BattleKey(playback.Move) : null;
+            bool newSequence = playing && (playback != battlePlayback ||
+                playback.PlaybackId != battlePlaybackId);
+            if (newSequence)
+            {
+                battlePlayback = playback;
+                battlePlaybackId = playback.PlaybackId;
+                // Library takes are authored around an attacker at the origin facing +Z.
+                // Capture the battle pair's placement once, before root-motion recovery moves it.
+                battleOrigin = playback.AttackerActor.transform.position;
+                battleRotation = playback.AttackerActor.transform.rotation;
+            }
+            if (!playing) { battlePlayback = null; battlePlaybackId = -1; }
+            ActiveShot = key == null ? null : library.Find(key);
+            FrankCameraLibrary.Frame frame;
+            float time = 0;
+            if (ActiveShot != null && ActiveShot.frames != null && ActiveShot.frames.Length > 0)
+            {
+                time = playback.SampleTime;
+                frame = Sample(ActiveShot, time);
+                Vector3 offset = battleRotation * (frame.position - frame.focus);
+                frame.focus = battleOrigin + battleRotation * frame.focus;
+                // Battle's backdrop is behind the X lane. Reflect the viewing side,
+                // keeping the authored elevation, distance and lens for either attacker.
+                if (keepBattleCameraInFront) offset.z = Mathf.Abs(offset.z);
+                frame.position = frame.focus + offset;
+            }
+            else
+            {
+                key = "battle/idle";
+                CollectFramingPoints(framingPoints);
+                Vector3 focus = (battle.leftCombat.transform.position + battle.rightCombat.transform.position) * .5f + Vector3.up;
+                if (framingPoints.Count > 0)
+                {
+                    var bounds = new Bounds(framingPoints[0], Vector3.zero);
+                    foreach (var point in framingPoints) bounds.Encapsulate(point);
+                    focus = bounds.center;
+                }
+                frame = new FrankCameraLibrary.Frame { focus = focus, position = focus + new Vector3(0, .65f, battleIdleDistance), fov = 42 };
+            }
+            return ApplyFrame(battleCamera, frame, key, time, newSequence || key != currentKey,
+                deltaTime, immediate, false);
+        }
+
+        void LateUpdate()
+        {
+            if (battle) Apply(Time.deltaTime);
+        }
+
+        bool ApplyFrame(Camera camera, FrankCameraLibrary.Frame frame, string key, float time,
+            bool changed, float deltaTime, bool immediate, bool relativeTransition)
+        {
             camera.aspect = Mathf.Max(.05f, (float)camera.pixelWidth / Mathf.Max(1, camera.pixelHeight));
-            var frame = Sample(ActiveShot, tester.time);
             // Preserve the baked motion envelope on narrow windows instead of chasing
             // each changing silhouette with a reactive portrait dolly.
             float aspectScale = Mathf.Max(1, 1.30f / camera.aspect);
             frame.position = frame.focus + (frame.position - frame.focus) * Mathf.Clamp(Zoom, .65f, 3f) * aspectScale;
-            bool wrapped = initialized && !changed && tester.time + .001f < previousTime;
+            bool wrapped = initialized && !changed && time + .001f < previousTime;
             if (initialized && (changed || wrapped) && !immediate)
             {
                 transitionFrom = displayed;
                 // Actor selections and loop restarts reset the source motion. Blend
                 // viewing angle and lens relative to the incoming action center.
-                if (changed)
+                if (changed && relativeTransition)
                 {
                     transitionFrom.position += frame.focus - transitionFrom.focus;
                     transitionFrom.focus = frame.focus;
@@ -93,10 +193,7 @@ namespace FrankRetarget
             }
             if (immediate || !initialized) transitioning = false;
             currentKey = key;
-            cachedMode = mode;
-            cachedMotion = motion;
-            cachedPepeAttacks = tester.pepeAttacks;
-            previousTime = tester.time;
+            previousTime = time;
 
             if (transitioning)
             {
@@ -107,6 +204,7 @@ namespace FrankRetarget
                     LookRotation(frame.position, frame.focus), blend);
                 float targetRadius = Vector3.Distance(frame.position, frame.focus);
                 float radius = Mathf.Lerp(Vector3.Distance(transitionFrom.position, transitionFrom.focus), targetRadius, blend);
+                if (!relativeTransition) frame.focus = Vector3.Lerp(transitionFrom.focus, frame.focus, blend);
                 float blendedFov = Mathf.LerpUnclamped(transitionFrom.fov, frame.fov, blend);
                 // Incoming motion already contains an anticipated framing envelope. Do not
                 // squeeze it inside the previous shot or lag behind its action center.
@@ -179,11 +277,22 @@ namespace FrankRetarget
         public void CollectFramingPoints(List<Vector3> points)
         {
             points.Clear();
+            if (battle)
+            {
+                RefreshBattleRenderers();
+                AppendRendererPoints(points);
+                return;
+            }
             if (!tester) return;
             if (!cacheReady || cachedMankey != tester.mankey || cachedPepe != tester.pepe ||
                 cachedMankeyDriver != (tester.mankey ? tester.mankey.activeDriver : null) ||
                 cachedPepeDriver != (tester.pepe ? tester.pepe.activeDriver : null))
                 RefreshRenderers();
+            AppendRendererPoints(points);
+        }
+
+        void AppendRendererPoints(List<Vector3> points)
+        {
             foreach (var entry in framingRenderers)
             {
                 var renderer = entry.renderer;
@@ -197,6 +306,28 @@ namespace FrankRetarget
             }
         }
 
+        void RefreshBattleRenderers()
+        {
+            var left = battle.leftCombat;
+            var right = battle.rightCombat;
+            var playback = left ? left.SourcePlayback : null;
+            if (!playback && right) playback = right.SourcePlayback;
+            var attack = playback ? playback.AttackerActor : null;
+            var reaction = playback ? playback.ReceiverActor : null;
+            if (cacheReady && cachedBattleLeft == left && cachedBattleRight == right &&
+                cachedBattleAttack == attack && cachedBattleReaction == reaction) return;
+            ReleaseMeshes();
+            cachedBattleLeft = left;
+            cachedBattleRight = right;
+            cachedBattleAttack = attack;
+            cachedBattleReaction = reaction;
+            if (left) AddRenderers(left.gameObject);
+            if (right) AddRenderers(right.gameObject);
+            if (attack) AddRenderers(attack.gameObject);
+            if (reaction) AddRenderers(reaction.gameObject);
+            cacheReady = true;
+        }
+
         void RefreshRenderers()
         {
             ReleaseMeshes();
@@ -204,18 +335,17 @@ namespace FrankRetarget
             cachedPepe = tester.pepe;
             cachedMankeyDriver = cachedMankey ? cachedMankey.activeDriver : null;
             cachedPepeDriver = cachedPepe ? cachedPepe.activeDriver : null;
-            AddRenderers(cachedMankey);
-            AddRenderers(cachedPepe);
+            if (cachedMankey) AddRenderers(cachedMankey.gameObject);
+            if (cachedPepe) AddRenderers(cachedPepe.gameObject);
             cacheReady = true;
         }
 
-        void AddRenderers(FrankTestActor actor)
+        void AddRenderers(GameObject actor)
         {
             if (!actor) return;
             foreach (var renderer in actor.GetComponentsInChildren<Renderer>(true))
             {
                 if (!(renderer is SkinnedMeshRenderer) && !(renderer is MeshRenderer)) continue;
-                if (!renderer.enabled || !renderer.gameObject.activeInHierarchy) continue;
                 var entry = new FramingRenderer { renderer = renderer };
                 if (renderer is SkinnedMeshRenderer)
                     entry.baked = new Mesh { name = "Cinematic framing mesh", hideFlags = HideFlags.HideAndDontSave };
@@ -271,6 +401,10 @@ namespace FrankRetarget
         public void ResetView()
         {
             initialized = false;
+            ActiveShot = null;
+            currentKey = null;
+            battlePlayback = null;
+            battlePlaybackId = -1;
             transitioning = false;
             SafetyDolly = 0;
         }

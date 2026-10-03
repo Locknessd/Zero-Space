@@ -4,6 +4,7 @@ using FrankRetarget;
 using UnityEngine;
 
 [DisallowMultipleComponent]
+[DefaultExecutionOrder(14000)]
 public sealed class BattleVfxPlayer : MonoBehaviour
 {
     [Header("Shared animation timeline")]
@@ -13,9 +14,13 @@ public sealed class BattleVfxPlayer : MonoBehaviour
     public GameObject heavyHit;
     public GameObject landingDust;
     public GameObject bladeSlash;
+    public GameObject lightSwing;
+    public GameObject thrustSwing;
+    public GameObject groundImpact;
+    public GameObject landingText;
     [Range(.25f, 2f)] public float effectScale = 1f;
     public float groundHeight;
-    [Min(4)] public int maxInstances = 24;
+    [Min(4)] public int maxInstances = 32;
 
     public event Action<string, GameObject> EffectPlayed;
     public int PlayedEffectCount { get; private set; }
@@ -27,6 +32,9 @@ public sealed class BattleVfxPlayer : MonoBehaviour
         public GameObject prefab, root;
         public ParticleSystem[] particles;
         public float age;
+        public Transform follow;
+        public Vector3 followOffset;
+        public float followSeconds;
     }
 
     readonly List<Instance> instances = new List<Instance>();
@@ -38,6 +46,10 @@ public sealed class BattleVfxPlayer : MonoBehaviour
     int nextCue;
     bool lethal, unarmed;
     float highWaterTime;
+    readonly Dictionary<Transform, Vector3> previousPoints = new Dictionary<Transform, Vector3>();
+    static readonly HumanBodyBones[] Strikers = { HumanBodyBones.LeftHand, HumanBodyBones.RightHand,
+        HumanBodyBones.LeftFoot, HumanBodyBones.RightFoot };
+    Camera battleCamera;
 
     public bool BeginSequence(FrankBattlePairPlayback playback, CharacterCombat source,
         CharacterCombat target, CombatTripletData move, bool isLethal)
@@ -53,6 +65,7 @@ public sealed class BattleVfxPlayer : MonoBehaviour
         weapon = move.weapon;
         lethal = isLethal;
         unarmed = weapon == TrumpWeaponManager.WeaponType.None;
+        battleCamera = FindBattleCamera();
         nextCue = 0;
         highWaterTime = -1;
         return true;
@@ -63,12 +76,24 @@ public sealed class BattleVfxPlayer : MonoBehaviour
         if (!isActiveAndEnabled || owner != playback || sequence == null || !receiver ||
             !float.IsFinite(seconds) || seconds <= highWaterTime) return;
         highWaterTime = seconds;
-        // The same monotonic clock as SFX handles skipped frames and repeated/backwards seeks.
-        while (nextCue < sequence.cues.Length && sequence.cues[nextCue].seconds <= seconds)
+        // Sample the actual cue pose, even when a slow frame crosses several different contacts.
+        // Restore the displayed pose afterwards; preview sampling itself never emits effects.
+        float displayedTime = playback.SampleTime;
+        try
         {
-            var cue = sequence.cues[nextCue++];
-            switch (cue.group)
+            while (nextCue < sequence.cues.Length && sequence.cues[nextCue].seconds <= seconds)
             {
+                var cue = sequence.cues[nextCue++];
+                if (!IsVisualCue(cue.group)) continue;
+                bool swing = cue.group.EndsWith("swing", StringComparison.Ordinal);
+                if (swing)
+                {
+                    playback.EvaluateAt(Mathf.Max(0, cue.seconds - 1f / 30f));
+                    RememberStrikePoints();
+                }
+                playback.EvaluateAt(cue.seconds);
+                switch (cue.group)
+                {
                 case "light_hit":
                 case "stab_hit":
                     Spawn(lightHit, ContactPoint(), FacingCamera(), 1, "light_hit");
@@ -83,20 +108,87 @@ public sealed class BattleVfxPlayer : MonoBehaviour
                     bool knockout = lethal && cue.finalLanding;
                     Spawn(landingDust, ground, Quaternion.identity, knockout ? 1.35f : 1,
                         knockout ? "knockout_fall" : "body_fall");
-                    // The light pool contains throws. Their contact is the landing, not the windup.
-                    if (unarmed && cue.finalLanding)
+                    Spawn(groundImpact, ground, Quaternion.identity, knockout ? 1.2f : .85f, "ground_impact");
+                    if (cue.finalLanding)
+                        Spawn(landingText, ground + Vector3.up * .35f + CameraOffset(.4f),
+                            FacingCamera(), knockout ? 1.15f : 1, "landing_text");
+                    // Older scenes without a ground impact retain feedback on an unarmed throw.
+                    if (unarmed && cue.finalLanding && !groundImpact)
                         Spawn(lightHit, ground + Vector3.up * .12f, FacingCamera(), .8f, "light_hit");
+                    break;
+                case "light_swing":
+                    PlaySwing(lightSwing, false, .9f, "light_swing");
+                    break;
+                case "thrust_swing":
+                    PlaySwing(thrustSwing, true, weapon == TrumpWeaponManager.WeaponType.DualDaggers ? .75f : 1,
+                        "thrust_swing");
                     break;
                 case "blade_swing":
                 case "heavy_swing":
                     if (unarmed || !attacker) break;
-                    float direction = Mathf.Sign(BonePosition(receiver, HumanBodyBones.Hips).x -
-                        BonePosition(attacker, HumanBodyBones.Hips).x);
-                    var angle = FacingCamera() * Quaternion.Euler(0, 0, direction * -35f);
-                    Spawn(bladeSlash, BladePoint(), angle,
-                        weapon == TrumpWeaponManager.WeaponType.DualDaggers ? .65f : 1, "blade_slash");
+                    PlaySwing(bladeSlash, true,
+                        weapon == TrumpWeaponManager.WeaponType.DualDaggers ? .65f :
+                        cue.group == "heavy_swing" ? 1.15f : 1, "blade_slash");
                     break;
+                }
             }
+        }
+        finally { if (playback.Playing) playback.EvaluateAt(displayedTime); }
+    }
+
+    static bool IsVisualCue(string group) => group == "light_hit" || group == "heavy_hit" ||
+        group == "stab_hit" || group == "body_fall" || group == "knockout_fall" ||
+        group == "light_swing" || group == "thrust_swing" || group == "blade_swing" || group == "heavy_swing";
+
+    void RememberStrikePoints()
+    {
+        previousPoints.Clear();
+        foreach (var bone in Strikers)
+        {
+            var anchor = BoneTransform(attacker, bone);
+            if (anchor) previousPoints[anchor] = anchor.position;
+        }
+        var renderers = owner.AttackerActor?.Pose?.weaponRenderers;
+        if (renderers == null) return;
+        foreach (var blade in renderers)
+            if (IsBlade(blade)) previousPoints[blade.transform] = blade.bounds.center;
+    }
+
+    bool IsBlade(Renderer renderer) => renderer && renderer.enabled && renderer.gameObject.activeInHierarchy &&
+        renderer.name.IndexOf("shield", StringComparison.OrdinalIgnoreCase) < 0;
+
+    void PlaySwing(GameObject prefab, bool useBlade, float scale, string cue)
+    {
+        if (!prefab || !attacker) return;
+        Transform anchor = null;
+        Vector3 point = BonePosition(attacker, HumanBodyBones.RightHand), movement = Vector3.zero;
+        float fastest = -1;
+        var renderers = owner.AttackerActor?.Pose?.weaponRenderers;
+        if (useBlade && renderers != null)
+            foreach (var blade in renderers)
+                if (IsBlade(blade)) Consider(blade.transform, blade.bounds.center);
+        if (!anchor)
+            foreach (var bone in Strikers)
+            {
+                var limb = BoneTransform(attacker, bone);
+                if (limb) Consider(limb, limb.position);
+            }
+        Quaternion cameraRotation = FacingCamera();
+        Vector3 screenMotion = Quaternion.Inverse(cameraRotation) * movement;
+        // Comic WHOOSH stays readable. The slash arc rotates along the evaluated weapon sweep.
+        float angle = cue == "blade_slash" && screenMotion.sqrMagnitude > .00001f
+            ? Mathf.Atan2(screenMotion.y, screenMotion.x) * Mathf.Rad2Deg : 0;
+        Spawn(prefab, point + CameraOffset(.09f), cameraRotation * Quaternion.Euler(0, 0, angle),
+            scale, cue, cue == "blade_slash" ? anchor : null);
+
+        void Consider(Transform candidate, Vector3 current)
+        {
+            Vector3 delta = previousPoints.TryGetValue(candidate, out var previous) ? current - previous : Vector3.zero;
+            if (delta.sqrMagnitude <= fastest) return;
+            fastest = delta.sqrMagnitude;
+            anchor = candidate;
+            point = current;
+            movement = delta;
         }
     }
 
@@ -132,34 +224,42 @@ public sealed class BattleVfxPlayer : MonoBehaviour
                 if (distance < closest) { closest = distance; contact = point; }
             }
         }
-        // Keep the burst slightly in front of the body for the side-on battle camera.
-        var camera = Camera.main;
-        return contact + (camera ? -camera.transform.forward : Vector3.forward) * .08f;
+        // Bone anchors sit inside the mesh. Bring comic letters in front of the belly/chest.
+        return contact + CameraOffset(.4f);
     }
 
-    Vector3 BladePoint()
+    Camera FindBattleCamera()
     {
-        var renderers = owner ? owner.AttackerActor?.Pose?.weaponRenderers : null;
-        Renderer blade = null;
-        if (renderers != null)
-            foreach (var renderer in renderers)
-                if (renderer && renderer.enabled && renderer.gameObject.activeInHierarchy &&
-                    (!blade || renderer.bounds.size.sqrMagnitude > blade.bounds.size.sqrMagnitude)) blade = renderer;
-        // For sword + shield rigs the longer mesh is the blade. Emit over the weapon, not the wrist.
-        return blade ? blade.bounds.center : BonePosition(attacker, HumanBodyBones.RightHand);
+        var main = Camera.main;
+        if (main && main.gameObject.scene == gameObject.scene) return main;
+        foreach (var root in gameObject.scene.GetRootGameObjects())
+            foreach (var camera in root.GetComponentsInChildren<Camera>(true))
+                if (camera.CompareTag("MainCamera")) return camera;
+        return main;
+    }
+
+    static Transform BoneTransform(CharacterCombat fighter, HumanBodyBones bone)
+    {
+        if (!fighter) return null;
+        var animator = fighter.Animator;
+        return animator && animator.isHuman ? animator.GetBoneTransform(bone) : null;
     }
 
     static Vector3 BonePosition(CharacterCombat fighter, HumanBodyBones bone)
     {
-        if (!fighter) return Vector3.zero;
-        var animator = fighter.Animator;
-        var transform = animator && animator.isHuman ? animator.GetBoneTransform(bone) : null;
-        return transform ? transform.position : fighter.transform.position + Vector3.up * .8f;
+        var anchor = BoneTransform(fighter, bone);
+        return anchor ? anchor.position : fighter ? fighter.transform.position + Vector3.up * .8f : Vector3.zero;
     }
 
-    static Quaternion FacingCamera() => Camera.main ? Camera.main.transform.rotation : Quaternion.identity;
+    Quaternion FacingCamera()
+    {
+        if (!battleCamera) battleCamera = FindBattleCamera();
+        return battleCamera ? battleCamera.transform.rotation : Quaternion.identity;
+    }
 
-    void Spawn(GameObject prefab, Vector3 position, Quaternion rotation, float scale, string cue)
+    Vector3 CameraOffset(float distance) => -(FacingCamera() * Vector3.forward) * distance;
+
+    void Spawn(GameObject prefab, Vector3 position, Quaternion rotation, float scale, string cue, Transform follow = null)
     {
         if (!prefab) return;
         var instance = instances.Find(i => i.prefab == prefab && i.root && !i.root.activeSelf);
@@ -181,22 +281,28 @@ public sealed class BattleVfxPlayer : MonoBehaviour
         instance.root.transform.SetPositionAndRotation(position, rotation * prefab.transform.localRotation);
         instance.root.transform.localScale = prefab.transform.localScale * (effectScale * scale);
         instance.age = 0;
+        instance.follow = follow;
+        instance.followOffset = follow ? position - follow.position : Vector3.zero;
+        instance.followSeconds = .1f;
         instance.root.SetActive(true);
         foreach (var particles in instance.particles)
         {
             particles.Stop(false, ParticleSystemStopBehavior.StopEmittingAndClear);
-            particles.Play(false);
+            if (particles.gameObject.activeInHierarchy) particles.Play(false);
         }
         PlayedEffectCount++;
         EffectPlayed?.Invoke(cue, instance.root);
     }
 
-    void Update()
+    // Source playback evaluates poses at order 13000. Follow the blade afterwards.
+    void LateUpdate()
     {
         foreach (var instance in instances)
         {
             if (!instance.root || !instance.root.activeSelf) continue;
             instance.age += Time.deltaTime;
+            if (instance.follow && instance.age <= instance.followSeconds)
+                instance.root.transform.position = instance.follow.position + instance.followOffset;
             bool alive = false;
             foreach (var particles in instance.particles)
                 if (particles && particles.IsAlive(false)) { alive = true; break; }
@@ -209,6 +315,7 @@ public sealed class BattleVfxPlayer : MonoBehaviour
         foreach (var particles in instance.particles)
             if (particles) particles.Stop(false, ParticleSystemStopBehavior.StopEmittingAndClear);
         if (instance.root) instance.root.SetActive(false);
+        instance.follow = null;
     }
 
     public void EndSequence(FrankBattlePairPlayback playback, bool interrupted = false)

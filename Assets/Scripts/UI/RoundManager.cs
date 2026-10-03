@@ -17,6 +17,7 @@ public class RoundManager : MonoBehaviour
     public Text timerText;
     public Text multiplierText;
     public Text finalTotalsText;
+    public BattleUiTextEffects textEffects;
 
     // Countdown timer state
     private System.DateTime _turnClosesAtUtc;
@@ -58,7 +59,8 @@ public class RoundManager : MonoBehaviour
     {
         if (roundNumberText != null)
         {
-            roundNumberText.text = $"ROUND {turnNumber}";
+            roundNumberText.text = $"Turn {turnNumber}";
+            textEffects?.Pop(roundNumberText);
         }
 
         if (string.IsNullOrEmpty(closesAtIsoUtc))
@@ -88,6 +90,7 @@ public class RoundManager : MonoBehaviour
     {
         if (multiplierText == null) return;
         multiplierText.text = multiplier.ToString("0.##") + "x";
+        textEffects?.Pop(multiplierText);
     }
 
     public void ShowFinalTotals(System.Collections.Generic.Dictionary<string, long> totals)

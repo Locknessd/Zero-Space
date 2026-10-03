@@ -21,6 +21,7 @@ Shader "Hovl/Particles/Add_Fresnel"
 	{
 		SubShader
 		{
+			LOD 0
 			Tags { "Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent" "PreviewType"="Plane" }
 			Blend SrcAlpha OneMinusSrcAlpha
 			ColorMask RGB
@@ -33,6 +34,14 @@ Shader "Hovl/Particles/Add_Fresnel"
 			
 				CGPROGRAM
 				
+				#if defined(SHADER_API_GLCORE) || defined(SHADER_API_GLES) || defined(SHADER_API_GLES3) || defined(SHADER_API_D3D9)
+				#define FRONT_FACE_SEMANTIC VFACE
+				#define FRONT_FACE_TYPE float
+				#else
+				#define FRONT_FACE_SEMANTIC SV_IsFrontFace
+				#define FRONT_FACE_TYPE bool
+				#endif
+
 				#ifndef UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX
 				#define UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input)
 				#endif
@@ -71,10 +80,18 @@ Shader "Hovl/Particles/Add_Fresnel"
 					//float4 ase_texcoord5 : TEXCOORD5;
 				};
 				
+				#if UNITY_VERSION >= 560
+				UNITY_DECLARE_DEPTH_TEXTURE( _CameraDepthTexture );
+				#else
+				uniform sampler2D_float _CameraDepthTexture;
+				#endif
+
+				//Don't delete this comment
+				// uniform sampler2D_float _CameraDepthTexture;
+				
 				uniform sampler2D _MainTex;
 				uniform fixed4 _TintColor;
 				uniform float4 _MainTex_ST;
-				uniform sampler2D_float _CameraDepthTexture;
 				uniform float _Useonlycolor;
 				uniform float4 _SpeedMainTexUVNoiseZW;
 				uniform sampler2D _Mask;
@@ -120,7 +137,7 @@ Shader "Hovl/Particles/Add_Fresnel"
 					return o;
 				}
 
-				fixed4 frag ( v2f i , half ase_vface : VFACE ) : SV_Target
+				fixed4 frag ( v2f i , FRONT_FACE_TYPE ase_vface : FRONT_FACE_SEMANTIC ) : SV_Target
 				{
 					UNITY_SETUP_INSTANCE_ID( i );
 					UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX( i );

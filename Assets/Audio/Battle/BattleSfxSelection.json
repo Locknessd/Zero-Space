@@ -1,8 +1,8 @@
-{
+﻿{
     "scene":  "Assets/Scenes/BattleScene.unity",
     "sourceRoot":  "Assets/Universal Sound FX/",
-    "status":  "Integrated in BattleScene through BattleSfxBank and BattleSfxPlayer; this manifest preserves original source references.",
-    "selectionBasis":  "Pack categories, importer labels and WAV measurements. Audition in Preview.html before final mixing.",
+    "status":  "Rebalanced BattleScene mix; original sources preserved, processed mono PCM playback at -6 dBFS, trimmed onset and 1 ms fades.",
+    "selectionBasis":  "Full audit of 5108 WAVs (duration, channels, rate, peak/RMS, onset and peak time), pack labels and reviewed source-motion contacts. Short transients for hits; category-specific whoosh lead times; quiet cartoon throw accent and KO UI impact.",
     "groups":  [
                    {
                        "id":  "light_swing",
@@ -22,7 +22,11 @@
                                          "channels":  1,
                                          "sampleRate":  44100,
                                          "bitsPerSample":  16,
-                                         "peakDbFS":  -14.11
+                                         "peakDbFS":  -14.11,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/light_swing_MARTIAL_ARTS_Kick_Punch_RR1_mono.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.2553061224489796,
+                                         "playbackOnsetSeconds":  0.0009297052154195011
                                      },
                                      {
                                          "name":  "MARTIAL_ARTS_Kick_Punch_RR2_mono.wav",
@@ -32,7 +36,11 @@
                                          "channels":  1,
                                          "sampleRate":  44100,
                                          "bitsPerSample":  16,
-                                         "peakDbFS":  -4.2
+                                         "peakDbFS":  -4.2,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/light_swing_MARTIAL_ARTS_Kick_Punch_RR2_mono.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.26011337868480727,
+                                         "playbackOnsetSeconds":  0.00088435374149659865
                                      },
                                      {
                                          "name":  "MARTIAL_ARTS_Kick_Punch_RR3_mono.wav",
@@ -42,7 +50,11 @@
                                          "channels":  1,
                                          "sampleRate":  44100,
                                          "bitsPerSample":  16,
-                                         "peakDbFS":  -4.19
+                                         "peakDbFS":  -4.19,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/light_swing_MARTIAL_ARTS_Kick_Punch_RR3_mono.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.26238095238095238,
+                                         "playbackOnsetSeconds":  0.00081632653061224493
                                      }
                                  ]
                    },
@@ -54,37 +66,49 @@
                        "pitchMin":  0.97,
                        "pitchMax":  1.03,
                        "trigger":  "Đúng lúc tay/chân chạm đối thủ; một tiếng cho mỗi lần tiếp xúc.",
-                       "notes":  "Các file có nhãn punch trong metadata. Bản 05 và 09_Short dành cho chuỗi đòn nhanh.",
+                       "notes":  "Short punch transients with 26-36 ms peak timing for rapid combos.",
                        "clips":  [
                                      {
-                                         "name":  "IMPACT_Generic_01_mono.wav",
-                                         "path":  "Assets/Universal Sound FX/IMPACTS/Generic/IMPACT_Generic_01_mono.wav",
-                                         "guid":  "956fd22b53107d0418739a8c9eb8eda8",
-                                         "durationSeconds":  0.4377,
+                                         "name":  "IMPACT_Generic_07_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/IMPACTS/Generic/IMPACT_Generic_07_mono.wav",
+                                         "guid":  "f9394d7f720823040a377e98408d664b",
+                                         "durationSeconds":  0.39,
                                          "channels":  1,
                                          "sampleRate":  44100,
                                          "bitsPerSample":  16,
-                                         "peakDbFS":  -0.7
+                                         "peakDbFS":  -0.43537737255514714,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/light_hit_IMPACT_Generic_07_mono.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.37201814058956917,
+                                         "playbackOnsetSeconds":  0.0008390022675736961
                                      },
                                      {
-                                         "name":  "IMPACT_Generic_05_mono.wav",
-                                         "path":  "Assets/Universal Sound FX/IMPACTS/Generic/IMPACT_Generic_05_mono.wav",
-                                         "guid":  "7b73fe87953bfae4ba2f5e989ab915b9",
-                                         "durationSeconds":  0.3084,
+                                         "name":  "IMPACT_Generic_08_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/IMPACTS/Generic/IMPACT_Generic_08_mono.wav",
+                                         "guid":  "03525ab8d735fb04ea1fd82f36682d2e",
+                                         "durationSeconds":  0.45854875283446711,
                                          "channels":  1,
                                          "sampleRate":  44100,
                                          "bitsPerSample":  16,
-                                         "peakDbFS":  -0.36
+                                         "peakDbFS":  -0.34113332578034644,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/light_hit_IMPACT_Generic_08_mono.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.41680272108843536,
+                                         "playbackOnsetSeconds":  0.00068027210884353737
                                      },
                                      {
                                          "name":  "IMPACT_Generic_09_Short_mono.wav",
                                          "path":  "Assets/Universal Sound FX/IMPACTS/Generic/IMPACT_Generic_09_Short_mono.wav",
                                          "guid":  "7879018cb93baa34a81daf08f7d4679a",
-                                         "durationSeconds":  0.3044,
+                                         "durationSeconds":  0.304421768707483,
                                          "channels":  1,
                                          "sampleRate":  44100,
                                          "bitsPerSample":  16,
-                                         "peakDbFS":  -0.31
+                                         "peakDbFS":  -0.3108602410436766,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/light_hit_IMPACT_Generic_09_Short_mono.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.32435374149659862,
+                                         "playbackOnsetSeconds":  0.00029478458049886624
                                      }
                                  ]
                    },
@@ -96,27 +120,35 @@
                        "pitchMin":  0.92,
                        "pitchMax":  1.0,
                        "trigger":  "Khi vũ khí bắt đầu quét nhanh về phía đối thủ.",
-                       "notes":  "Dùng cho Heavy_6 GreatSword và Heavy_2 TwoHandedAxe. Đây là lựa chọn whoosh trầm theo tên và nhóm của pack.",
+                       "notes":  "Consistent deep whoosh peaks before heavy contact; quiet variants normalized offline.",
                        "clips":  [
-                                     {
-                                         "name":  "WHOOSH_Deep_mono.wav",
-                                         "path":  "Assets/Universal Sound FX/WHOOSHES/Classic/WHOOSH_Deep_mono.wav",
-                                         "guid":  "2fe02f29d8c0d1f468ee9a69ef878110",
-                                         "durationSeconds":  0.4289,
-                                         "channels":  1,
-                                         "sampleRate":  44100,
-                                         "bitsPerSample":  16,
-                                         "peakDbFS":  -11.57
-                                     },
                                      {
                                          "name":  "WHOOSH_Deep_Smooth_01_mono.wav",
                                          "path":  "Assets/Universal Sound FX/WHOOSHES/Classic/WHOOSH_Deep_Smooth_01_mono.wav",
                                          "guid":  "47598b071a762ce4d86ff6e587d88b77",
-                                         "durationSeconds":  0.3398,
+                                         "durationSeconds":  0.33979591836734696,
                                          "channels":  1,
                                          "sampleRate":  44100,
                                          "bitsPerSample":  16,
-                                         "peakDbFS":  -7.66
+                                         "peakDbFS":  -7.6574017459996169,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/heavy_swing_WHOOSH_Deep_Smooth_01_mono.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.33873015873015871,
+                                         "playbackOnsetSeconds":  0.0009297052154195011
+                                     },
+                                     {
+                                         "name":  "WHOOSH_Deep_Smooth_02_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/WHOOSHES/Classic/WHOOSH_Deep_Smooth_02_mono.wav",
+                                         "guid":  "855ecd91a6a32cc43a864bef459aed70",
+                                         "durationSeconds":  0.18020408163265306,
+                                         "channels":  1,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -14.334604995494233,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/heavy_swing_WHOOSH_Deep_Smooth_02_mono.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.19975056689342405,
+                                         "playbackOnsetSeconds":  0.00095238095238095238
                                      }
                                  ]
                    },
@@ -138,7 +170,11 @@
                                          "channels":  1,
                                          "sampleRate":  44100,
                                          "bitsPerSample":  16,
-                                         "peakDbFS":  -4.19
+                                         "peakDbFS":  -4.19,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/blade_swing_WHOOSH_Air_Blade_RR1_mono.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.41659863945578229,
+                                         "playbackOnsetSeconds":  0.00079365079365079365
                                      },
                                      {
                                          "name":  "WHOOSH_Air_Blade_RR2_mono.wav",
@@ -148,7 +184,11 @@
                                          "channels":  1,
                                          "sampleRate":  44100,
                                          "bitsPerSample":  16,
-                                         "peakDbFS":  -4.2
+                                         "peakDbFS":  -4.2,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/blade_swing_WHOOSH_Air_Blade_RR2_mono.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.41317460317460319,
+                                         "playbackOnsetSeconds":  0.00079365079365079365
                                      },
                                      {
                                          "name":  "WHOOSH_Air_Blade_RR3_mono.wav",
@@ -158,7 +198,11 @@
                                          "channels":  1,
                                          "sampleRate":  44100,
                                          "bitsPerSample":  16,
-                                         "peakDbFS":  -4.22
+                                         "peakDbFS":  -4.22,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/blade_swing_WHOOSH_Air_Blade_RR3_mono.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.42188208616780043,
+                                         "playbackOnsetSeconds":  0.0007482993197278912
                                      }
                                  ]
                    },
@@ -180,7 +224,11 @@
                                          "channels":  1,
                                          "sampleRate":  44100,
                                          "bitsPerSample":  16,
-                                         "peakDbFS":  -5.26
+                                         "peakDbFS":  -5.26,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/thrust_swing_WHOOSH_Air_Very_Fast_RR1_mono.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.10458049886621315,
+                                         "playbackOnsetSeconds":  0.00090702947845804993
                                      },
                                      {
                                          "name":  "WHOOSH_Air_Very_Fast_RR2_mono.wav",
@@ -190,7 +238,11 @@
                                          "channels":  1,
                                          "sampleRate":  44100,
                                          "bitsPerSample":  16,
-                                         "peakDbFS":  -6.79
+                                         "peakDbFS":  -6.79,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/thrust_swing_WHOOSH_Air_Very_Fast_RR2_mono.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.20476190476190476,
+                                         "playbackOnsetSeconds":  0.0009297052154195011
                                      }
                                  ]
                    },
@@ -198,31 +250,39 @@
                        "id":  "heavy_hit",
                        "label":  "Đòn nặng / đập khiên trúng người",
                        "optional":  false,
-                       "volume":  0.7,
+                       "volume":  0.72,
                        "pitchMin":  0.94,
                        "pitchMax":  1.02,
                        "trigger":  "Tại lần tiếp xúc mạnh nhất của đòn đánh.",
-                       "notes":  "HAMMER_Hit_Body là lớp va chạm thân người dùng thay cho đòn đập khiên/rìu theo phong cách game; không đại diện tiếng lưỡi kiếm. Chọn một file, không phát cả hai cùng lúc.",
+                       "notes":  "Compact body impacts; avoids the long hammer windup and overlapping heavy tails.",
                        "clips":  [
                                      {
-                                         "name":  "HAMMER_Hit_Body_stereo.wav",
-                                         "path":  "Assets/Universal Sound FX/WEAPONS/Melee/Hammer/HAMMER_Hit_Body_stereo.wav",
-                                         "guid":  "d83f0e3cdc09ddc4294167857c9c37da",
-                                         "durationSeconds":  1.0865,
-                                         "channels":  2,
+                                         "name":  "IMPACT_Generic_13_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/IMPACTS/Generic/IMPACT_Generic_13_mono.wav",
+                                         "guid":  "a46a90608d6683b46a4cc1f81e69a17d",
+                                         "durationSeconds":  0.44886621315192743,
+                                         "channels":  1,
                                          "sampleRate":  44100,
                                          "bitsPerSample":  16,
-                                         "peakDbFS":  -1.13
+                                         "peakDbFS":  -0.42451496085632534,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/heavy_hit_IMPACT_Generic_13_mono.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.46886621315192745,
+                                         "playbackOnsetSeconds":  0.00015873015873015873
                                      },
                                      {
                                          "name":  "IMPACT_Generic_14_mono.wav",
                                          "path":  "Assets/Universal Sound FX/IMPACTS/Generic/IMPACT_Generic_14_mono.wav",
                                          "guid":  "280040a692d9c8a4f8d9933092408cf0",
-                                         "durationSeconds":  0.6169,
+                                         "durationSeconds":  0.61691609977324258,
                                          "channels":  1,
                                          "sampleRate":  44100,
                                          "bitsPerSample":  16,
-                                         "peakDbFS":  -0.39
+                                         "peakDbFS":  -0.3931183036970044,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/heavy_hit_IMPACT_Generic_14_mono.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.49950113378684807,
+                                         "playbackOnsetSeconds":  0.00052154195011337864
                                      }
                                  ]
                    },
@@ -244,7 +304,11 @@
                                          "channels":  2,
                                          "sampleRate":  44100,
                                          "bitsPerSample":  16,
-                                         "peakDbFS":  -2.6
+                                         "peakDbFS":  -2.6,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/stab_hit_ARROW_Hit_Body_stereo.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.3534467120181406,
+                                         "playbackOnsetSeconds":  0.000997732426303855
                                      }
                                  ]
                    },
@@ -266,7 +330,11 @@
                                          "channels":  1,
                                          "sampleRate":  44100,
                                          "bitsPerSample":  16,
-                                         "peakDbFS":  -5.16
+                                         "peakDbFS":  -5.16,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/body_fall_THUD_Dark_03_Short_mono.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.33759637188208619,
+                                         "playbackOnsetSeconds":  0.00079365079365079365
                                      },
                                      {
                                          "name":  "THUD_Medium_01_mono.wav",
@@ -276,7 +344,11 @@
                                          "channels":  1,
                                          "sampleRate":  44100,
                                          "bitsPerSample":  16,
-                                         "peakDbFS":  -1.82
+                                         "peakDbFS":  -1.82,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/body_fall_THUD_Medium_01_mono.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.15095238095238095,
+                                         "playbackOnsetSeconds":  0.00097505668934240366
                                      },
                                      {
                                          "name":  "THUD_Medium_02_mono.wav",
@@ -286,7 +358,11 @@
                                          "channels":  1,
                                          "sampleRate":  44100,
                                          "bitsPerSample":  16,
-                                         "peakDbFS":  -0.58
+                                         "peakDbFS":  -0.58,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/body_fall_THUD_Medium_02_mono.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.21823129251700679,
+                                         "playbackOnsetSeconds":  0.0007482993197278912
                                      }
                                  ]
                    },
@@ -308,7 +384,11 @@
                                          "channels":  1,
                                          "sampleRate":  44100,
                                          "bitsPerSample":  16,
-                                         "peakDbFS":  -21.1
+                                         "peakDbFS":  -21.1,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/getup_FABRIC_Movement_Short_RR1_mono.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.82047619047619047,
+                                         "playbackOnsetSeconds":  0.0008390022675736961
                                      },
                                      {
                                          "name":  "FABRIC_Movement_Short_RR2_mono.wav",
@@ -318,7 +398,11 @@
                                          "channels":  1,
                                          "sampleRate":  44100,
                                          "bitsPerSample":  16,
-                                         "peakDbFS":  -18.03
+                                         "peakDbFS":  -18.03,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/getup_FABRIC_Movement_Short_RR2_mono.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.94630385487528346,
+                                         "playbackOnsetSeconds":  0.00072562358276643992
                                      }
                                  ]
                    },
@@ -340,7 +424,11 @@
                                          "channels":  1,
                                          "sampleRate":  44100,
                                          "bitsPerSample":  16,
-                                         "peakDbFS":  -1.85
+                                         "peakDbFS":  -1.85,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/knockout_fall_THUD_Dark_01_mono.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.28038548752834469,
+                                         "playbackOnsetSeconds":  0.00097505668934240366
                                      }
                                  ]
                    },
@@ -362,7 +450,11 @@
                                          "channels":  1,
                                          "sampleRate":  44100,
                                          "bitsPerSample":  16,
-                                         "peakDbFS":  -23.92
+                                         "peakDbFS":  -23.92,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/footstep_FOOTSTEP_Asphalt_Trainers_Walk_Slow_RR1_mono.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.3799092970521542,
+                                         "playbackOnsetSeconds":  0.00024943310657596373
                                      },
                                      {
                                          "name":  "FOOTSTEP_Asphalt_Trainers_Walk_Slow_RR2_mono.wav",
@@ -372,7 +464,11 @@
                                          "channels":  1,
                                          "sampleRate":  44100,
                                          "bitsPerSample":  16,
-                                         "peakDbFS":  -20.51
+                                         "peakDbFS":  -20.51,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/footstep_FOOTSTEP_Asphalt_Trainers_Walk_Slow_RR2_mono.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.5947165532879819,
+                                         "playbackOnsetSeconds":  0.00024943310657596373
                                      },
                                      {
                                          "name":  "FOOTSTEP_Asphalt_Trainers_Walk_Slow_RR3_mono.wav",
@@ -382,7 +478,11 @@
                                          "channels":  1,
                                          "sampleRate":  44100,
                                          "bitsPerSample":  16,
-                                         "peakDbFS":  -35.13
+                                         "peakDbFS":  -35.13,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/footstep_FOOTSTEP_Asphalt_Trainers_Walk_Slow_RR3_mono.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.61102040816326531,
+                                         "playbackOnsetSeconds":  0.00034013605442176868
                                      }
                                  ]
                    },
@@ -404,7 +504,11 @@
                                          "channels":  1,
                                          "sampleRate":  44100,
                                          "bitsPerSample":  16,
-                                         "peakDbFS":  -0.62
+                                         "peakDbFS":  -0.62,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/metal_clash_SWORD_Hit_Sword_RR1_mono.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.23507936507936508,
+                                         "playbackOnsetSeconds":  0.000997732426303855
                                      },
                                      {
                                          "name":  "SWORD_Hit_Sword_RR2_mono.wav",
@@ -414,7 +518,11 @@
                                          "channels":  1,
                                          "sampleRate":  44100,
                                          "bitsPerSample":  16,
-                                         "peakDbFS":  -0.48
+                                         "peakDbFS":  -0.48,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/metal_clash_SWORD_Hit_Sword_RR2_mono.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.16682539682539682,
+                                         "playbackOnsetSeconds":  0.00058956916099773247
                                      }
                                  ]
                    },
@@ -436,7 +544,11 @@
                                          "channels":  2,
                                          "sampleRate":  44100,
                                          "bitsPerSample":  16,
-                                         "peakDbFS":  -1.21
+                                         "peakDbFS":  -1.21,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/shield_block_HAMMER_Hit_Wood_Shield_stereo.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.58158730158730154,
+                                         "playbackOnsetSeconds":  0.00086167800453514738
                                      }
                                  ]
                    },
@@ -458,7 +570,11 @@
                                          "channels":  1,
                                          "sampleRate":  44100,
                                          "bitsPerSample":  16,
-                                         "peakDbFS":  -0.12
+                                         "peakDbFS":  -0.12,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/blade_cut_GORE_Blade_Chop_mono.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.82172335600907032,
+                                         "playbackOnsetSeconds":  0.000997732426303855
                                      }
                                  ]
                    },
@@ -480,7 +596,11 @@
                                          "channels":  1,
                                          "sampleRate":  44100,
                                          "bitsPerSample":  16,
-                                         "peakDbFS":  -1.97
+                                         "peakDbFS":  -1.97,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/hurt_voice_GRUNT_Male_B_Hurt_Short_01_mono.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.36528344671201812,
+                                         "playbackOnsetSeconds":  0.00097505668934240366
                                      },
                                      {
                                          "name":  "GRUNT_Male_B_Hurt_Short_02_mono.wav",
@@ -490,7 +610,11 @@
                                          "channels":  1,
                                          "sampleRate":  44100,
                                          "bitsPerSample":  16,
-                                         "peakDbFS":  -6.06
+                                         "peakDbFS":  -6.06,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/hurt_voice_GRUNT_Male_B_Hurt_Short_02_mono.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.56528344671201813,
+                                         "playbackOnsetSeconds":  0.00090702947845804993
                                      }
                                  ]
                    },
@@ -512,7 +636,11 @@
                                          "channels":  1,
                                          "sampleRate":  44100,
                                          "bitsPerSample":  16,
-                                         "peakDbFS":  -0.01
+                                         "peakDbFS":  -0.01,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/fight_start_VOICE_MALE_Fight_1_mono.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.42870748299319728,
+                                         "playbackOnsetSeconds":  0.000997732426303855
                                      }
                                  ]
                    },
@@ -534,7 +662,11 @@
                                          "channels":  1,
                                          "sampleRate":  44100,
                                          "bitsPerSample":  16,
-                                         "peakDbFS":  -0.01
+                                         "peakDbFS":  -0.01,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/victory_VOICE_MALE_Victory_1_mono.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.71206349206349207,
+                                         "playbackOnsetSeconds":  0.00086167800453514738
                                      }
                                  ]
                    },
@@ -556,7 +688,11 @@
                                          "channels":  1,
                                          "sampleRate":  44100,
                                          "bitsPerSample":  16,
-                                         "peakDbFS":  -3.67
+                                         "peakDbFS":  -3.67,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/ui_click_UI_Click_Smooth_mono.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.1,
+                                         "playbackOnsetSeconds":  0.000997732426303855
                                      },
                                      {
                                          "name":  "UI_Click_Distinct_Short_mono.wav",
@@ -566,7 +702,63 @@
                                          "channels":  1,
                                          "sampleRate":  44100,
                                          "bitsPerSample":  16,
-                                         "peakDbFS":  -2.28
+                                         "peakDbFS":  -2.28,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/ui_click_UI_Click_Distinct_Short_mono.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.1,
+                                         "playbackOnsetSeconds":  0.00063492063492063492
+                                     }
+                                 ]
+                   },
+                   {
+                       "id":  "comic_fall",
+                       "label":  "Nhấn tiếng ngã hài",
+                       "optional":  false,
+                       "volume":  0.16,
+                       "pitchMin":  0.97,
+                       "pitchMax":  1.03,
+                       "trigger":  "20 ms after an unarmed throw lands.",
+                       "notes":  "Subtle boing accent under the physical ground impact, only on the two unarmed throw motions.",
+                       "clips":  [
+                                     {
+                                         "name":  "CARTOON_Boing_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/CARTOON/CARTOON_Boing_mono.wav",
+                                         "guid":  "8bbdd39c16ad2de43adde5e39b5d6df7",
+                                         "durationSeconds":  0.65834467120181406,
+                                         "channels":  1,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -0.27576568971266596,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/comic_fall_CARTOON_Boing_mono.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.63623582766439912,
+                                         "playbackOnsetSeconds":  0.00079365079365079365
+                                     }
+                                 ]
+                   },
+                   {
+                       "id":  "ko_impact",
+                       "label":  "Chữ KO va vào màn hình",
+                       "optional":  false,
+                       "volume":  0.55,
+                       "pitchMin":  1,
+                       "pitchMax":  1,
+                       "trigger":  "At the KO lettering settle/shake, 250 ms after overlay entrance.",
+                       "notes":  "Separate one-shot UI impact after the fighter death motion; never replayed by duplicate HP/result events.",
+                       "clips":  [
+                                     {
+                                         "name":  "IMPACT_Generic_15_mono.wav",
+                                         "path":  "Assets/Universal Sound FX/IMPACTS/Generic/IMPACT_Generic_15_mono.wav",
+                                         "guid":  "80697af7158f2fa4ea08d0c52ba9f12d",
+                                         "durationSeconds":  0.97324263038548753,
+                                         "channels":  1,
+                                         "sampleRate":  44100,
+                                         "bitsPerSample":  16,
+                                         "peakDbFS":  -0.35686188887008086,
+                                         "playbackPath":  "Assets/Audio/Battle/Clips/Processed/ko_impact_IMPACT_Generic_15_mono.wav",
+                                         "playbackPeakDbFS":  -6.0004777433190126,
+                                         "playbackDurationSeconds":  0.76156462585034013,
+                                         "playbackOnsetSeconds":  0.000997732426303855
                                      }
                                  ]
                    }

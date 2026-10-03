@@ -459,6 +459,8 @@ public class GameManager : MonoBehaviour
     [ContextMenu("Reset Combat Queue")]
     public void ResetCombatQueue()
     {
+        UI?.ResetTransientEffects();
+        roundManager?.StopTimer();
         if (battleSfx) battleSfx.ResetForMatch();
         if (battleVfx) battleVfx.ResetForMatch();
         if (_runner != null) StopCoroutine(_runner);
@@ -495,6 +497,7 @@ public class GameManager : MonoBehaviour
         switch (battleEvent.eventType)
         {
             case "MATCH_CREATED":
+                roundManager?.StopTimer();
                 if (battleSfx) battleSfx.ResetForMatch();
                 if (battleVfx) battleVfx.ResetForMatch();
                 _characterNames.Clear();
@@ -524,6 +527,7 @@ public class GameManager : MonoBehaviour
                 }
                 break;
             case "TURN_STARTED":
+                battleSfx?.PlayFightOnce();
                 roundManager?.StartTurnTimer(payload.Value<int?>("turnNumber") ?? 0,
                     payload.Value<string>("opensAt"), payload.Value<string>("closesAt"));
                 UI?.ClearDialogue(MemeBattleUI.Side.Left);
@@ -558,7 +562,11 @@ public class GameManager : MonoBehaviour
                 {
                     UI?.SetDialogue(ToUISide(winner.Value), "VICTORY!");
                     CombatFor(winner.Value)?.PlayVictory();
-                    CombatFor(winner.Value == PlayerUI.Side.Left ? PlayerUI.Side.Right : PlayerUI.Side.Left)?.MarkDead();
+                    var defeated = winner.Value == PlayerUI.Side.Left ? PlayerUI.Side.Right : PlayerUI.Side.Left;
+                    CombatFor(defeated)?.MarkDead();
+                    // A final result may arrive without a separate zero-HP event.
+                    // Keep the HUD and KO presentation consistent with the dead fighter.
+                    ApplyHealthToUi(defeated, 0);
                 }
                 break;
         }

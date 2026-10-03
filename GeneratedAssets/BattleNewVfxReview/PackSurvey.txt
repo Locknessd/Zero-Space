@@ -1,0 +1,1290 @@
+Assets/Hovl Studio/Archer skills pack/Prefabs/Arrow AoE/AoEtrail.prefab: systems=5; scale=(1.00, 1.00, 1.00); scripts=; audio=1
+  ; active=True; loop=True; duration=1; delay=0; lifetime=0.5; size=1.5; max=1000
+  Flare; active=True; loop=True; duration=1; delay=0; lifetime=0.2; size=2; max=1000
+  Circle; active=True; loop=True; duration=1; delay=0; lifetime=0.2; size=2; max=1000
+  Distortion; active=True; loop=True; duration=1; delay=0; lifetime=0.25; size=1.5; max=1000
+  Arrow; active=True; loop=True; duration=1; delay=0; lifetime=0.1; size=0.25; max=1000
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Flare21bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/TrailShader4.mat; shader=Hovl/Particles/AddTrail; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Flare4cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Aura16bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Gradient17bd2.mat; shader=Hovl/Particles/BlendDistort; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/Arrow6bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/Archer skills pack/Prefabs/Arrow AoE/ArrowAOE.prefab: systems=14; scale=(1.00, 1.00, 1.00); scripts=; audio=0
+  ; active=True; loop=True; duration=2; delay=0; lifetime=0.36; size=3.2; max=1000
+  Dissolve; active=True; loop=True; duration=2; delay=0; lifetime=0.36; size=3.7; max=1000
+  LightWave; active=True; loop=True; duration=2; delay=0; lifetime=0.5; size=6; max=1000
+  LightWaveGround; active=True; loop=True; duration=2; delay=0; lifetime=0.5; size=10; max=1000
+  DarkWave; active=True; loop=True; duration=2; delay=0; lifetime=0.5; size=3.5; max=1000
+  DarkWaveGround; active=True; loop=True; duration=2; delay=0; lifetime=0.5; size=5; max=1000
+  Fire; active=True; loop=True; duration=2; delay=0; lifetime=1; size=4; max=1000
+  Smoke; active=True; loop=True; duration=2; delay=0; lifetime=1; size=3; max=1000
+  SmokeOnHero; active=True; loop=True; duration=2; delay=0; lifetime=0.8; size=2.5; max=1000
+  ShockWaveHero; active=True; loop=True; duration=2; delay=0; lifetime=0.45; size=3; max=1000
+  Sparks; active=True; loop=True; duration=2; delay=0; lifetime=1; size=0.07; max=1000
+  SparksLong; active=True; loop=True; duration=2; delay=0; lifetime=0.4; size=0.04; max=1000
+  Distortion; active=True; loop=True; duration=2; delay=0; lifetime=0.4; size=3; max=1000
+  Arrows; active=True; loop=True; duration=2; delay=0; lifetime=0.3; size=0.25; max=1000
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Motion12sc.mat; shader=Hovl/Particles/Scroll; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Gradient17bd2.mat; shader=Hovl/Particles/BlendDistort; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Gradient17bd.mat; shader=Hovl/Particles/BlendDistort; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Gradient17bcg2.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Gradient17bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Smoke21bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Smoke24bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Noise53bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Point12cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Point11cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Distortion.mat; shader=Hovl/Particles/Distortion; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/Arrow7bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trails73cg2.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/Archer skills pack/Prefabs/Arrow discharge/Arrow discharge.prefab: systems=18; scale=(1.00, 1.00, 1.00); scripts=; audio=0
+  ; active=True; loop=False; duration=2; delay=0.1; lifetime=1; size=0.3; max=1000
+  SubSparks; active=True; loop=False; duration=2; delay=0; lifetime=0.7; size=0.02; max=1000
+  Flash; active=True; loop=False; duration=2; delay=0.1; lifetime=0.15; size=0.2; max=1000
+  Flash2; active=True; loop=False; duration=2; delay=0.1; lifetime=0.25; size=0.3; max=1000
+  MagicCircle; active=True; loop=False; duration=2; delay=0.1; lifetime=0.2; size=0.6; max=1000
+  Glow; active=True; loop=False; duration=2; delay=0.1; lifetime=1; size=0.6; max=1000
+  Trails; active=True; loop=False; duration=2; delay=0.1; lifetime=0.12; size=0.6; max=1000
+  Trails2; active=True; loop=False; duration=2; delay=0.1; lifetime=0.4; size=0.5; max=1000
+  ArrowsSmoke; active=True; loop=False; duration=2; delay=0.1; lifetime=1; size=0.45; max=1000
+  Smoke; active=True; loop=False; duration=2; delay=0.1; lifetime=1; size=1.5; max=1000
+  CoreWind; active=True; loop=False; duration=2; delay=0.1; lifetime=0.25; size=3.5; max=1000
+  CoreWind2; active=True; loop=False; duration=2; delay=0.1; lifetime=0.25; size=3; max=1000
+  Distortion; active=True; loop=False; duration=2; delay=0.1; lifetime=0.3; size=6; max=1000
+  Twists; active=True; loop=False; duration=2; delay=0.1; lifetime=0.4; size=0.4; max=1000
+  MiddleArrow; active=True; loop=False; duration=2; delay=0.1; lifetime=0.1; size=0.3; max=1000
+  MiddleArrow/SubSparks; active=True; loop=False; duration=2; delay=0; lifetime=0.7; size=0.02; max=1000
+  MiddleArrow/Trails; active=True; loop=False; duration=2; delay=0.1; lifetime=0.12; size=0.6; max=1000
+  MiddleArrow/Trails2; active=True; loop=False; duration=2; delay=0.1; lifetime=0.4; size=0.5; max=1000
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/Arrow9.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/Trails73bd.mat; shader=Hovl/Particles/BlendDistort; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/MagicCircle62dn.mat; shader=Hovl/Particles/DissolveNoise; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/Trail29cg3.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trails73cg2.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/FireF4.mat; shader=Hovl/Particles/Fire; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Gradient17сg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Gradient17cg2.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Distortion.mat; shader=Hovl/Particles/Distortion; supported=True; errors=False
+Assets/Hovl Studio/Archer skills pack/Prefabs/Arrow discharge/Discharge attack.prefab: systems=5; scale=(1.00, 1.00, 1.00); scripts=HS_ParticleCollisionInstance; audio=1
+  ; active=True; loop=False; duration=2; delay=0.1; lifetime=0.2; size=0.3; max=1000
+  SubSparks; active=True; loop=False; duration=2; delay=0; lifetime=0.7; size=0.02; max=1000
+  Trails; active=True; loop=False; duration=2; delay=0.1; lifetime=0.4; size=0.5; max=1000
+  Flash; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=0.1; max=1000
+  Smoke; active=True; loop=False; duration=2; delay=0; lifetime=1.5; size=3; max=1000
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/Arrow9.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/Trails65cg3.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/Trails73cg3.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Smoke24bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/Archer skills pack/Prefabs/Arrow discharge/Discharge hit.prefab: systems=6; scale=(1.00, 1.00, 1.00); scripts=; audio=0
+  ; active=True; loop=False; duration=2; delay=0; lifetime=1; size=0.1; max=1000
+  Light; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=1; max=1000
+  SparksLong; active=True; loop=False; duration=2; delay=0; lifetime=0.8; size=0.15; max=1000
+  Distortion(Delete for Mobile); active=True; loop=False; duration=2; delay=0; lifetime=0.35; size=3; max=1000
+  Flash1; active=True; loop=False; duration=2; delay=0; lifetime=0.3; size=2; max=1000
+  Stone; active=True; loop=False; duration=2; delay=0; lifetime=1.6; size=0.15; max=1000
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Resources/unity_builtin_extra; shader=Legacy Shaders/Particles/Alpha Blended Premultiply; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail21bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/DistortionSmoke18.mat; shader=Hovl/Particles/Distortion; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Impact1dn.mat; shader=Hovl/Particles/DissolveNoise; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Stone1.mat; shader=Standard; supported=True; errors=False
+Assets/Hovl Studio/Archer skills pack/Prefabs/Arrow discharge/DischargeAccum.prefab: systems=8; scale=(1.00, 1.00, 1.00); scripts=; audio=1
+  ; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=2; max=1000
+  Distortion; active=True; loop=False; duration=2; delay=0; lifetime=0.25; size=1.5; max=1000
+  InsideSparks; active=True; loop=False; duration=2; delay=0; lifetime=0.25; size=0.07; max=1000
+  Arrow; active=True; loop=False; duration=2; delay=0; lifetime=0.95; size=0.3; max=1000
+  Sparks; active=True; loop=False; duration=2; delay=0; lifetime=0.6; size=0.07; max=1000
+  Glow; active=True; loop=False; duration=2; delay=0.1; lifetime=1; size=0.6; max=1000
+  Twists; active=True; loop=False; duration=2; delay=0.1; lifetime=0.4; size=0.4; max=1000
+  ArrowsSmoke; active=True; loop=False; duration=2; delay=0.1; lifetime=1; size=0.45; max=1000
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Aura16bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Gradient17bd2.mat; shader=Hovl/Particles/BlendDistort; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/Arrow9.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trails73cg2.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/Trails73bd.mat; shader=Hovl/Particles/BlendDistort; supported=True; errors=False
+Assets/Hovl Studio/Archer skills pack/Prefabs/Arrow rain/Arrow rain.prefab: systems=4; scale=(1.00, 1.00, 1.00); scripts=HS_ParticleCollisionInstance; audio=1
+  ; active=True; loop=True; duration=3; delay=0; lifetime=1; size=0.6; max=1000
+  SubSparks; active=True; loop=True; duration=3; delay=0; lifetime=1; size=0.03; max=1000
+  SubFlash; active=True; loop=True; duration=3; delay=0; lifetime=0.2; size=0.5; max=1000
+  SubLightning; active=True; loop=True; duration=3; delay=0; lifetime=0.5; size=1.1; max=1000
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/Arrow6bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trails73cg2.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Point11cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/Trail29cg3.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Lightning10l.mat; shader=Hovl/Particles/Lightning; supported=True; errors=False
+Assets/Hovl Studio/Archer skills pack/Prefabs/Arrow rain/ArrowRain Hit.prefab: systems=7; scale=(1.00, 1.00, 1.00); scripts=; audio=0
+  ; active=True; loop=False; duration=1.5; delay=0; lifetime=0.2; size=2.5; max=1000
+  Sparks; active=True; loop=False; duration=1.5; delay=0; lifetime=0.5; size=0.07; max=1000
+  Crater; active=True; loop=False; duration=1.5; delay=0; lifetime=1.5; size=4; max=1000
+  Smoke; active=True; loop=False; duration=1.5; delay=0; lifetime=1.8; size=3; max=1000
+  SmokeTrails; active=True; loop=False; duration=1.5; delay=0; lifetime=1; size=2.5; max=1000
+  Distortion(Delete for Mobile); active=True; loop=False; duration=1.5; delay=0; lifetime=0.35; size=3; max=1000
+  Lightning; active=True; loop=False; duration=1.5; delay=0; lifetime=0.1; size=2.5; max=1000
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/LineDistort1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Point12cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Crater38dn.mat; shader=Hovl/Particles/DissolveNoise; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Smoke27bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/SparkTrail1.mat; shader=Hovl/Particles/Explosion; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/DistortionSmoke18.mat; shader=Hovl/Particles/Distortion; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Lightning11cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/Archer skills pack/Prefabs/Arrow rain/Arrows.prefab: systems=5; scale=(1.00, 1.00, 1.00); scripts=; audio=0
+  ; active=True; loop=True; duration=2; delay=0; lifetime=0.1; size=0.3; max=1000
+  SubSparks; active=True; loop=True; duration=2; delay=0; lifetime=1; size=0.03; max=1000
+  SubFlash; active=True; loop=True; duration=2; delay=0; lifetime=0.4; size=0.3; max=1000
+  SubLightning; active=True; loop=True; duration=2; delay=0; lifetime=0.5; size=1.1; max=1000
+  Smoke; active=True; loop=True; duration=2; delay=0; lifetime=0.5; size=1; max=1000
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/Arrow6bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Point11cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trails73cg2.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Lightning10l.mat; shader=Hovl/Particles/Lightning; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Smoke24bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/Archer skills pack/Prefabs/Arrow rain/ArrowVolley.prefab: systems=8; scale=(1.00, 1.00, 1.00); scripts=; audio=1
+  ; active=True; loop=True; duration=2; delay=0; lifetime=0.5; size=1.5; max=1000
+  Flare; active=True; loop=True; duration=2; delay=0; lifetime=0.2; size=2; max=1000
+  Circle; active=True; loop=True; duration=2; delay=0; lifetime=0.2; size=2; max=1000
+  Distortion; active=True; loop=True; duration=2; delay=0; lifetime=0.25; size=1.5; max=1000
+  Arrow; active=True; loop=True; duration=2; delay=0; lifetime=0.1; size=0.3; max=1000
+  Distortion; active=True; loop=True; duration=2; delay=0; lifetime=0.2; size=4; max=1000
+  ShockWave; active=True; loop=True; duration=2; delay=0; lifetime=0.12; size=2; max=1000
+  ShockWaveDis; active=True; loop=True; duration=2; delay=0; lifetime=0.2; size=1.5; max=1000
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Flare21bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/TrailShader4.mat; shader=Hovl/Particles/AddTrail; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Flare4cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Aura16bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Gradient17bd2.mat; shader=Hovl/Particles/BlendDistort; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/Arrow6bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Distortion.mat; shader=Hovl/Particles/Distortion; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Circle134cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/Archer skills pack/Prefabs/Dragon attack/Dragon attack cast.prefab: systems=16; scale=(1.00, 1.00, 1.00); scripts=HS_FrontAttack; audio=0
+  ; active=True; loop=False; duration=1; delay=0; lifetime=0.5; size=1; max=1000
+  Dragon; active=True; loop=True; duration=1; delay=0; lifetime=5; size=1; max=1000
+  Dragon/Armature; active=True; loop=True; duration=1; delay=0; lifetime=5; size=1; max=1000
+  Dragon/Armature/Bone; active=True; loop=False; duration=1; delay=0.1; lifetime=0.5; size=10; max=1000
+  Dragon/Armature/Bone/DragonSmoke; active=True; loop=False; duration=1; delay=0.1; lifetime=0.6; size=2; max=1000
+  Dragon/Armature/Bone/DragonSparks; active=True; loop=False; duration=1; delay=0.2; lifetime=0.7; size=0.05; max=1000
+  Dragon 2; active=True; loop=True; duration=1; delay=0; lifetime=5; size=1; max=1000
+  Dragon 2/Armature; active=True; loop=True; duration=1; delay=0; lifetime=5; size=1; max=1000
+  Dragon 2/Armature/Bone; active=True; loop=False; duration=1; delay=0.1; lifetime=0.5; size=10; max=1000
+  Dragon 2/Armature/Bone/DragonSmoke; active=True; loop=False; duration=1; delay=0.1; lifetime=0.6; size=2; max=1000
+  Dragon 2/Armature/Bone/DragonSparks; active=True; loop=False; duration=1; delay=0.2; lifetime=0.7; size=0.05; max=1000
+  Dragon 3; active=True; loop=True; duration=1; delay=0; lifetime=5; size=1; max=1000
+  Dragon 3/Armature; active=True; loop=True; duration=1; delay=0; lifetime=5; size=1; max=1000
+  Dragon 3/Armature/Bone; active=True; loop=False; duration=1; delay=0.1; lifetime=0.5; size=10; max=1000
+  Dragon 3/Armature/Bone/DragonSmoke; active=True; loop=False; duration=1; delay=0.1; lifetime=0.6; size=2; max=1000
+  Dragon 3/Armature/Bone/DragonSparks; active=True; loop=False; duration=1; delay=0.2; lifetime=0.7; size=0.05; max=1000
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Smoke24bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Lightning10l.mat; shader=Hovl/Particles/Lightning; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/Dragon3ts.mat; shader=Hovl/Particles/Blend_TwoSides; supported=True; errors=False
+Assets/Hovl Studio/Archer skills pack/Prefabs/Dragon attack/MagicAccumulation 2.prefab: systems=2; scale=(1.00, 1.00, 1.00); scripts=; audio=1
+  ; active=True; loop=False; duration=1; delay=0; lifetime=0.3; size=1; max=1000
+  Trails; active=True; loop=False; duration=1; delay=0; lifetime=0.4; size=0.12; max=1000
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Motion12sc.mat; shader=Hovl/Particles/Scroll; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail64Path.mat; shader=Hovl/Particles/Blend_LinePath; supported=True; errors=False
+Assets/Hovl Studio/Archer skills pack/Prefabs/Fire arrow/Fire projectile.prefab: systems=3; scale=(1.00, 1.00, 1.00); scripts=HS_TargetProjectile,AutoDestroyPS; audio=0
+  ; active=True; loop=True; duration=1.9; delay=0; lifetime=2; size=0.4; max=1000
+  SubFire; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=0.7; max=1000
+  SubFire/SubSmoke; active=True; loop=False; duration=2; delay=0; lifetime=0.3; size=1; max=1000
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/Arrow6bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail66cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/Fire14bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Smoke24bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/Archer skills pack/Prefabs/Fire arrow/FireAccumulation.prefab: systems=6; scale=(1.00, 1.00, 1.00); scripts=; audio=1
+  ; active=True; loop=False; duration=1; delay=0; lifetime=0.2; size=2; max=1000
+  Distortion; active=True; loop=False; duration=1; delay=0; lifetime=0.25; size=1.5; max=1000
+  InsideSparks; active=True; loop=False; duration=1; delay=0; lifetime=0.25; size=0.07; max=1000
+  Arrow; active=True; loop=False; duration=1; delay=0; lifetime=0.25; size=0.25; max=1000
+  Sparks; active=True; loop=False; duration=1; delay=0; lifetime=0.6; size=0.07; max=1000
+  Fire; active=True; loop=False; duration=1; delay=0; lifetime=0.4; size=1.2; max=1000
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Aura16bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Gradient17bd2.mat; shader=Hovl/Particles/BlendDistort; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/Arrow6bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/Fire14bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/Archer skills pack/Prefabs/Fire arrow/FireArrow hit.prefab: systems=13; scale=(1.00, 1.00, 1.00); scripts=; audio=1
+  ; active=True; loop=False; duration=2; delay=0; lifetime=0.6; size=0.6; max=1000
+  SubFire; active=True; loop=False; duration=2; delay=0; lifetime=0.4; size=0.7; max=1000
+  SubSmoke; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=1; max=1000
+  SubSparks; active=True; loop=False; duration=2; delay=0; lifetime=1; size=0.07; max=1000
+  Fire; active=True; loop=False; duration=2; delay=0; lifetime=0.4; size=1.5; max=1000
+  Distortion; active=True; loop=False; duration=2; delay=0; lifetime=0.4; size=3; max=1000
+  SparksLong; active=True; loop=False; duration=2; delay=0; lifetime=0.4; size=0.04; max=1000
+  Sparks; active=True; loop=False; duration=2; delay=0; lifetime=1; size=0.07; max=1000
+  Smoke; active=True; loop=False; duration=2; delay=0; lifetime=1; size=3; max=1000
+  DarkWave; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=3.5; max=1000
+  Dissolve; active=True; loop=False; duration=2; delay=0; lifetime=0.35; size=4; max=1000
+  Light; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=1; max=1000
+  FireGround; active=True; loop=False; duration=2; delay=0; lifetime=0.9; size=1.5; max=1000
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/Fire14bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Smoke24bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Distortion.mat; shader=Hovl/Particles/Distortion; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Point12cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Gradient17cg2.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Motion12sc.mat; shader=Hovl/Particles/Scroll; supported=True; errors=False
+Assets/Hovl Studio/Archer skills pack/Prefabs/Front attack/Arrow Fron tAttack.prefab: systems=19; scale=(1.00, 1.00, 1.00); scripts=; audio=0
+  ; active=True; loop=True; duration=2; delay=0; lifetime=0.38; size=1; max=1000
+  RayWaves; active=True; loop=True; duration=2; delay=0; lifetime=0.6; size=3; max=1000
+  LightCone1; active=True; loop=True; duration=2; delay=0; lifetime=0.5; size=1; max=1000
+  LightCone2; active=True; loop=True; duration=2; delay=0; lifetime=0.5; size=2.5; max=1000
+  LightCone3; active=True; loop=True; duration=2; delay=0; lifetime=0.5; size=2.5; max=1000
+  LightCone4; active=True; loop=True; duration=2; delay=0; lifetime=0.5; size=3; max=1000
+  LongSparks; active=True; loop=True; duration=2; delay=0; lifetime=0.8; size=0.05; max=1000
+  Sparks; active=True; loop=True; duration=2; delay=0; lifetime=0.8; size=0.07; max=1000
+  Smoke; active=True; loop=True; duration=2; delay=0; lifetime=0.3; size=2; max=1000
+  DarkCone2; active=True; loop=True; duration=2; delay=0; lifetime=0.5; size=2.5; max=1000
+  DarkCone1; active=True; loop=True; duration=2; delay=0; lifetime=0.5; size=1; max=1000
+  DarkCone3; active=True; loop=True; duration=2; delay=0; lifetime=0.5; size=2.5; max=1000
+  DarkCone4; active=True; loop=True; duration=2; delay=0; lifetime=0.5; size=3; max=1000
+  ShockWaveDis; active=True; loop=True; duration=2; delay=0; lifetime=0.2; size=1.6; max=1000
+  ShockWaveLight; active=True; loop=True; duration=2; delay=0; lifetime=0.3; size=1.5; max=1000
+  StartSparks; active=True; loop=True; duration=2; delay=0; lifetime=0.4; size=0.04; max=1000
+  StartSmoke; active=True; loop=True; duration=2; delay=0; lifetime=0.2; size=0.8; max=1000
+  Distortion; active=True; loop=True; duration=2; delay=0; lifetime=0.3; size=4; max=1000
+  Smoke; active=True; loop=True; duration=2; delay=0; lifetime=0.5; size=1; max=1000
+  MATERIAL Resources/unity_builtin_extra; shader=Legacy Shaders/Particles/Alpha Blended Premultiply; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/TwoSides19.mat; shader=Hovl/Particles/Blend_TwoSides; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/SoftNoise69bd.mat; shader=Hovl/Particles/BlendDistort; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Point11cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/SmokeAnim1.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Motion12sc.mat; shader=Hovl/Particles/Scroll; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Gradient17bd2.mat; shader=Hovl/Particles/BlendDistort; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Distortion.mat; shader=Hovl/Particles/Distortion; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Smoke24bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/Archer skills pack/Prefabs/Front attack/MagicAccumulation.prefab: systems=2; scale=(1.00, 1.00, 1.00); scripts=; audio=1
+  ; active=True; loop=False; duration=1; delay=0; lifetime=0.3; size=1; max=1000
+  Trails; active=True; loop=False; duration=1; delay=0; lifetime=0.4; size=0.12; max=1000
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Motion12sc.mat; shader=Hovl/Particles/Scroll; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail64Path.mat; shader=Hovl/Particles/Blend_LinePath; supported=True; errors=False
+Assets/Hovl Studio/Archer skills pack/Prefabs/Ice arrow/Ice Arrow.prefab: systems=19; scale=(1.00, 1.00, 1.00); scripts=; audio=1
+  ; active=True; loop=True; duration=2.5; delay=0; lifetime=0.1; size=0.4; max=1000
+  ArrowHit; active=True; loop=True; duration=2.5; delay=0; lifetime=1.1; size=0.4; max=1000
+  Twists; active=True; loop=True; duration=2.5; delay=0.1; lifetime=0.4; size=0.7; max=1000
+  Trail; active=True; loop=True; duration=2.5; delay=0; lifetime=1.4; size=0.8; max=1000
+  CoreWind; active=True; loop=True; duration=2.5; delay=0; lifetime=0.2; size=5; max=1000
+  CoreWind2; active=True; loop=True; duration=2.5; delay=0; lifetime=0.2; size=4; max=1000
+  Stones; active=True; loop=True; duration=2.5; delay=0; lifetime=2; size=0.05; max=1000
+  Flash; active=True; loop=True; duration=2.5; delay=0; lifetime=0.15; size=8; max=1000
+  Sparks; active=True; loop=True; duration=2.5; delay=0; lifetime=1.2; size=0.04; max=1000
+  Crater; active=True; loop=True; duration=2.5; delay=0; lifetime=2; size=9; max=1000
+  Smoke; active=True; loop=True; duration=2.5; delay=0; lifetime=2; size=3; max=1000
+  Smoke2; active=True; loop=True; duration=2.5; delay=0; lifetime=1; size=2; max=1000
+  SmokeTrails; active=True; loop=True; duration=2.5; delay=0; lifetime=1; size=6; max=1000
+  Spikes; active=True; loop=True; duration=2.5; delay=0; lifetime=2.1; size=0.6; max=1000
+  SpikesSmall; active=True; loop=True; duration=2.5; delay=0; lifetime=2.1; size=0.4; max=1000
+  SpikesDistortion; active=True; loop=True; duration=2.5; delay=0; lifetime=2.1; size=0.6; max=1000
+  SpikesSmallDistortion; active=True; loop=True; duration=2.5; delay=0; lifetime=2.1; size=0.4; max=1000
+  Distortion; active=True; loop=True; duration=2.5; delay=0; lifetime=0.4; size=2.5; max=1000
+  Light(Delete for HD); active=True; loop=True; duration=2.5; delay=0; lifetime=1.45; size=1; max=1000
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/Arrow11.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trails73cg2.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Gradient17сg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Gradient17cg2.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Stone3bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/FlashGroundCG.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/Crater67ss.mat; shader=Hovl/Particles/SmoothSmoke; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/EmberExpl2.mat; shader=Hovl/Particles/Explosion; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Smoke21bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/SparkTrail1.mat; shader=Hovl/Particles/Explosion; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/Noise53cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/DistortionNormal11.mat; shader=Hovl/Particles/Distortion; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/DistortionSmoke18.mat; shader=Hovl/Particles/Distortion; supported=True; errors=False
+  MATERIAL Resources/unity_builtin_extra; shader=Legacy Shaders/Particles/Alpha Blended Premultiply; supported=True; errors=False
+Assets/Hovl Studio/Archer skills pack/Prefabs/Ice arrow/IceAArrowFlash.prefab: systems=3; scale=(1.00, 1.00, 1.00); scripts=; audio=1
+  ; active=True; loop=False; duration=1; delay=0; lifetime=0.2; size=2; max=1000
+  Distortion; active=True; loop=False; duration=1; delay=0; lifetime=0.25; size=1.5; max=1000
+  InsideSparks; active=True; loop=False; duration=1; delay=0; lifetime=0.25; size=0.07; max=1000
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Aura16bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Gradient17bd2.mat; shader=Hovl/Particles/BlendDistort; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/Archer skills pack/Prefabs/Ice arrow/IceArrowFly.prefab: systems=4; scale=(1.00, 1.00, 1.00); scripts=; audio=0
+  ; active=True; loop=False; duration=2; delay=0; lifetime=0.1; size=0.3; max=1000
+  SubSparks; active=True; loop=False; duration=2; delay=0; lifetime=0.7; size=0.02; max=1000
+  Trails; active=True; loop=False; duration=2; delay=0; lifetime=0.12; size=0.6; max=1000
+  Trails2; active=True; loop=False; duration=2; delay=0; lifetime=0.4; size=0.5; max=1000
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/Arrow11.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/Trail29cg3.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trails73cg2.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/Archer skills pack/Prefabs/Light arrow/ArrowHit.prefab: systems=10; scale=(1.20, 1.20, 1.20); scripts=; audio=0
+  ; active=True; loop=False; duration=1; delay=0; lifetime=0.3; size=0.06; max=1000
+  Arrow; active=True; loop=False; duration=1; delay=0; lifetime=0.4; size=0.3; max=1000
+  Distortion; active=True; loop=False; duration=1; delay=0; lifetime=0.3; size=3; max=1000
+  Circle; active=True; loop=False; duration=1; delay=0; lifetime=0.15; size=4; max=1000
+  Flare; active=True; loop=False; duration=1; delay=0; lifetime=0.12; size=3; max=1000
+  Flash; active=True; loop=False; duration=1; delay=0; lifetime=0.15; size=3; max=1000
+  Sparks; active=True; loop=False; duration=1; delay=0; lifetime=1; size=0.1; max=1000
+  Smoke; active=True; loop=False; duration=1; delay=0; lifetime=1; size=2; max=1000
+  Trails; active=True; loop=False; duration=1; delay=0; lifetime=0.5; size=0.08; max=1000
+  Sparks; active=True; loop=False; duration=1; delay=0; lifetime=0.5; size=0.06; max=1000
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/Arrow6bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Gradient17bd2.mat; shader=Hovl/Particles/BlendDistort; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Aura16bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/Flare25cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Smoke24bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail75bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Point12cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/Archer skills pack/Prefabs/Light arrow/EnergyAccumulation.prefab: systems=9; scale=(1.00, 1.00, 1.00); scripts=; audio=1
+  ; active=True; loop=False; duration=3; delay=0; lifetime=0.15; size=4; max=1000
+  Flash; active=True; loop=False; duration=3; delay=0; lifetime=1.5; size=2; max=1000
+  Sparks; active=True; loop=False; duration=3; delay=0; lifetime=0.2; size=0.1; max=1000
+  Trails; active=True; loop=False; duration=3; delay=0; lifetime=0.65; size=0.12; max=1000
+  Flare; active=True; loop=False; duration=3; delay=0; lifetime=0.7; size=3; max=1000
+  Blinking; active=True; loop=False; duration=3; delay=0; lifetime=0.1; size=3; max=1000
+  EndFlare; active=True; loop=False; duration=3; delay=0; lifetime=0.05; size=2.5; max=1000
+  Circle; active=True; loop=False; duration=3; delay=0; lifetime=0.7; size=3; max=1000
+  Distortion; active=True; loop=False; duration=3; delay=0; lifetime=0.7; size=3; max=1000
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Flare21cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Flash23cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail64Path.mat; shader=Hovl/Particles/Blend_LinePath; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Flare4cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/Flare25cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Aura16bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Gradient17bd2.mat; shader=Hovl/Particles/BlendDistort; supported=True; errors=False
+Assets/Hovl Studio/Archer skills pack/Prefabs/Light arrow/Projectile.prefab: systems=3; scale=(1.00, 1.00, 1.00); scripts=HS_TargetProjectile,AutoDestroyPS; audio=0
+  ; active=True; loop=True; duration=1.9; delay=0; lifetime=2; size=0.4; max=1000
+  Wind; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=0.1; max=1000
+  Distortion(Delete for HD and LW); active=True; loop=True; duration=1.9; delay=0; lifetime=2; size=0.3; max=1000
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/Arrow6bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail66cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail65cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/DistortionTrail1.mat; shader=Hovl/Particles/Distortion; supported=True; errors=False
+Assets/Hovl Studio/Archer skills pack/Prefabs/Light arrow/ShockWave.prefab: systems=4; scale=(1.00, 1.00, 1.00); scripts=; audio=0
+  ; active=True; loop=False; duration=3; delay=0; lifetime=0.12; size=0.6; max=1000
+  Sparks; active=True; loop=False; duration=3; delay=0; lifetime=0.3; size=0.06; max=1000
+  Smoke; active=True; loop=False; duration=3; delay=0; lifetime=0.3; size=1.5; max=1000
+  Arrow; active=True; loop=False; duration=3; delay=0; lifetime=1; size=0.3; max=1000
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/ParticleMesh1bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Smoke24bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/Arrow6bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/Archer skills pack/Prefabs/Light arrow/Trails.prefab: systems=2; scale=(1.00, 1.00, 1.00); scripts=; audio=0
+  ; active=True; loop=False; duration=3; delay=0; lifetime=1; size=0.25; max=1000
+  Distortion; active=True; loop=False; duration=3; delay=0; lifetime=1; size=1.3; max=1000
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trails73cg2.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Distortion.mat; shader=Hovl/Particles/Distortion; supported=True; errors=False
+Assets/Hovl Studio/Archer skills pack/Prefabs/Shield/Shield.prefab: systems=12; scale=(1.00, 1.00, 1.00); scripts=; audio=1
+  ; active=True; loop=True; duration=5; delay=0; lifetime=0.8; size=4; max=1000
+  CircleRainbow; active=True; loop=True; duration=5; delay=0; lifetime=0.5; size=5; max=1000
+  Flares; active=True; loop=True; duration=5; delay=0; lifetime=1.2; size=0.1; max=1000
+  Rainbow; active=True; loop=True; duration=5; delay=0; lifetime=0.5; size=6; max=1000
+  Flash; active=True; loop=True; duration=5; delay=0; lifetime=0.15; size=6; max=1000
+  CoreWind; active=True; loop=True; duration=5; delay=0; lifetime=0.3; size=1.5; max=1000
+  Shield; active=True; loop=True; duration=5; delay=0; lifetime=4; size=0.27; max=1000
+  DitortionShield; active=True; loop=True; duration=5; delay=0; lifetime=4.2; size=0.245; max=1000
+  Distortion; active=True; loop=True; duration=5; delay=0; lifetime=0.6; size=5; max=1000
+  Fire; active=True; loop=True; duration=5; delay=0; lifetime=1.5; size=3; max=1000
+  Shine; active=True; loop=True; duration=5; delay=0; lifetime=0.4; size=5; max=1000
+  Aura(Delete for mobiles); active=True; loop=True; duration=5; delay=0; lifetime=1.5; size=3.5; max=1000
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Flare2cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/CircleRainbow15cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Flare30bcg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Flare21cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Gradient17cg2.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/Shield3cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/DistortionNormal11.mat; shader=Hovl/Particles/Distortion; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/DistortionCircle19.mat; shader=Hovl/Particles/Distortion; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Smoke21bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Circle8cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/Noise84bd2.mat; shader=Hovl/Particles/BlendDistort; supported=True; errors=False
+Assets/Hovl Studio/Archer skills pack/Prefabs/Simple shots/Arrow flash.prefab: systems=3; scale=(1.00, 1.00, 1.00); scripts=; audio=0
+  ; active=True; loop=False; duration=1; delay=0; lifetime=0.12; size=0.5; max=1000
+  Smoke; active=True; loop=False; duration=1; delay=0; lifetime=0.3; size=1; max=1000
+  Distortion; active=True; loop=False; duration=1; delay=0; lifetime=0.15; size=2.5; max=1000
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/ParticleMesh1bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Smoke24bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/DistortionCircle19.mat; shader=Hovl/Particles/Distortion; supported=True; errors=False
+Assets/Hovl Studio/Archer skills pack/Prefabs/Simple shots/Arrow hit.prefab: systems=6; scale=(1.00, 1.00, 1.00); scripts=; audio=1
+  ; active=True; loop=False; duration=1; delay=0; lifetime=0.15; size=6; max=1000
+  Flash; active=True; loop=False; duration=1; delay=0; lifetime=0.15; size=3; max=1000
+  Debris; active=True; loop=False; duration=1; delay=0; lifetime=0.9; size=0.07; max=1000
+  Smoke; active=True; loop=False; duration=1; delay=0; lifetime=0.7; size=1.5; max=1000
+  Distortion(Delete for HD and LW); active=True; loop=False; duration=1; delay=0; lifetime=0.15; size=3; max=1000
+  Flash; active=True; loop=False; duration=1; delay=0; lifetime=0.1; size=0.25; max=1000
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Flare21cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Smoke24bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Distortion.mat; shader=Hovl/Particles/Distortion; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Rays12bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/Archer skills pack/Prefabs/Simple shots/Arrow.prefab: systems=4; scale=(1.00, 1.00, 1.00); scripts=HS_TargetProjectile; audio=1
+  ; active=True; loop=True; duration=2; delay=0; lifetime=2; size=0.2; max=1000
+  Trail; active=True; loop=True; duration=2; delay=0; lifetime=2; size=0.2; max=1000
+  Trail/Dust; active=True; loop=True; duration=2; delay=0; lifetime=0.7; size=0.07; max=1000
+  Trail/Distortion(Delete for HD and LW); active=True; loop=True; duration=2; delay=0; lifetime=2; size=0.3; max=1000
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/Arrow10bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trails65cg2.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Snow4bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Archer skills pack/Materials/DistortionTrail1.mat; shader=Hovl/Particles/Distortion; supported=True; errors=False
+Assets/Hovl Studio/White mage spells/Demo scene/Demo scene files/TargetMarker.prefab: systems=2; scale=(1.00, 1.00, 1.00); scripts=; audio=0
+  MarkerVFX; active=True; loop=True; duration=2; delay=0; lifetime=2; size=10; max=1000
+  ShockWave; active=True; loop=True; duration=2; delay=0; lifetime=1.5; size=9; max=1000
+  MATERIAL Assets/Hovl Studio/White mage spells/Demo scene/Demo scene files/Target.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Circle38cg2.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/White mage spells/Demo scene/Demo scene files/TargetMarker2.prefab: systems=1; scale=(1.00, 1.00, 1.00); scripts=; audio=0
+  MarkerVFX; active=True; loop=True; duration=2; delay=0; lifetime=2; size=4; max=1000
+  MATERIAL Assets/Hovl Studio/White mage spells/Demo scene/Demo scene files/Target 2.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/White mage spells/Prefabs/Energy strike/Energy strike.prefab: systems=166; scale=(1.00, 1.00, 1.00); scripts=; audio=1
+  ; active=True; loop=False; duration=2; delay=0; lifetime=1.2; size=1; max=1000
+  GlowingOrb0; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=2.3; max=1000
+  GlowingOrb0/LightningTrails; active=True; loop=False; duration=4; delay=0; lifetime=0.3; size=0.03; max=20
+  GlowingOrb0/Glow; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=1.15; max=1000
+  GlowingOrb0/Flare; active=True; loop=False; duration=2; delay=0; lifetime=0.1; size=4; max=1000
+  GlowingOrb0/Darkness; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=1.25; max=1000
+  GlowingOrb0/Distortion(Re-save shader if black); active=True; loop=False; duration=2; delay=0; lifetime=0.25; size=2; max=1000
+  GlowingOrb0/Sparks; active=True; loop=False; duration=2; delay=0; lifetime=1; size=0.08; max=1000
+  GlowingOrb0/Smoke; active=True; loop=False; duration=2; delay=0; lifetime=0.8; size=2; max=1000
+  GlowingOrb0/ShockWave; active=True; loop=False; duration=2; delay=0; lifetime=0.3; size=2.7; max=1000
+  GlowingOrb0/Flare; active=True; loop=False; duration=2; delay=0; lifetime=0.16; size=12; max=1000
+  GlowingOrb0/Lightning; active=True; loop=False; duration=2; delay=0; lifetime=0.05; size=2; max=1000
+  GlowingOrb0/FlareBlack; active=True; loop=False; duration=2; delay=0; lifetime=0.12; size=10; max=1000
+  GlowingOrb1; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=2.3; max=1000
+  GlowingOrb1/LightningTrails; active=True; loop=False; duration=4; delay=0; lifetime=0.3; size=0.03; max=20
+  GlowingOrb1/Glow; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=1.15; max=1000
+  GlowingOrb1/Flare; active=True; loop=False; duration=2; delay=0; lifetime=0.1; size=4; max=1000
+  GlowingOrb1/Darkness; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=1.25; max=1000
+  GlowingOrb1/Distortion(Re-save shader if black); active=True; loop=False; duration=2; delay=0; lifetime=0.25; size=2; max=1000
+  GlowingOrb1/Sparks; active=True; loop=False; duration=2; delay=0; lifetime=1; size=0.08; max=1000
+  GlowingOrb1/Smoke; active=True; loop=False; duration=2; delay=0; lifetime=0.8; size=2; max=1000
+  GlowingOrb1/Flare; active=True; loop=False; duration=2; delay=0; lifetime=0.16; size=12; max=1000
+  GlowingOrb1/ShockWave; active=True; loop=False; duration=2; delay=0; lifetime=0.3; size=2.7; max=1000
+  GlowingOrb1/Lightning; active=True; loop=False; duration=2; delay=0; lifetime=0.05; size=2; max=1000
+  GlowingOrb1/FlareBlack; active=True; loop=False; duration=2; delay=0; lifetime=0.12; size=10; max=1000
+  GlowingOrb1/Trail; active=True; loop=False; duration=2; delay=0; lifetime=0.12; size=0.8; max=1000
+  GlowingOrb2; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=2.3; max=1000
+  GlowingOrb2/LightningTrails; active=True; loop=False; duration=4; delay=0; lifetime=0.3; size=0.03; max=20
+  GlowingOrb2/Glow; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=1.15; max=1000
+  GlowingOrb2/Flare; active=True; loop=False; duration=2; delay=0; lifetime=0.1; size=4; max=1000
+  GlowingOrb2/Darkness; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=1.25; max=1000
+  GlowingOrb2/Distortion(Re-save shader if black); active=True; loop=False; duration=2; delay=0; lifetime=0.25; size=2; max=1000
+  GlowingOrb2/Sparks; active=True; loop=False; duration=2; delay=0; lifetime=1; size=0.08; max=1000
+  GlowingOrb2/Smoke; active=True; loop=False; duration=2; delay=0; lifetime=0.8; size=2; max=1000
+  GlowingOrb2/ShockWave; active=True; loop=False; duration=2; delay=0; lifetime=0.3; size=2.7; max=1000
+  GlowingOrb2/Flare; active=True; loop=False; duration=2; delay=0; lifetime=0.16; size=12; max=1000
+  GlowingOrb2/Lightning; active=True; loop=False; duration=2; delay=0; lifetime=0.05; size=2; max=1000
+  GlowingOrb2/FlareBlack; active=True; loop=False; duration=2; delay=0; lifetime=0.12; size=10; max=1000
+  GlowingOrb2/Trail; active=True; loop=False; duration=2; delay=0; lifetime=0.12; size=0.8; max=1000
+  GlowingOrb3; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=2.3; max=1000
+  GlowingOrb3/LightningTrails; active=True; loop=False; duration=4; delay=0; lifetime=0.3; size=0.03; max=20
+  GlowingOrb3/Glow; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=1.15; max=1000
+  GlowingOrb3/Flare; active=True; loop=False; duration=2; delay=0; lifetime=0.1; size=4; max=1000
+  GlowingOrb3/Darkness; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=1.25; max=1000
+  GlowingOrb3/Distortion(Re-save shader if black); active=True; loop=False; duration=2; delay=0; lifetime=0.25; size=2; max=1000
+  GlowingOrb3/Sparks; active=True; loop=False; duration=2; delay=0; lifetime=1; size=0.08; max=1000
+  GlowingOrb3/Smoke; active=True; loop=False; duration=2; delay=0; lifetime=0.8; size=2; max=1000
+  GlowingOrb3/ShockWave; active=True; loop=False; duration=2; delay=0; lifetime=0.3; size=2.7; max=1000
+  GlowingOrb3/Flare; active=True; loop=False; duration=2; delay=0; lifetime=0.16; size=12; max=1000
+  GlowingOrb3/Lightning; active=True; loop=False; duration=2; delay=0; lifetime=0.05; size=2; max=1000
+  GlowingOrb3/FlareBlack; active=True; loop=False; duration=2; delay=0; lifetime=0.12; size=10; max=1000
+  GlowingOrb3/Trail; active=True; loop=False; duration=2; delay=0; lifetime=0.12; size=0.8; max=1000
+  GlowingOrb4; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=2.3; max=1000
+  GlowingOrb4/LightningTrails; active=True; loop=False; duration=4; delay=0; lifetime=0.3; size=0.03; max=20
+  GlowingOrb4/Glow; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=1.15; max=1000
+  GlowingOrb4/Flare; active=True; loop=False; duration=2; delay=0; lifetime=0.1; size=4; max=1000
+  GlowingOrb4/Darkness; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=1.25; max=1000
+  GlowingOrb4/Distortion(Re-save shader if black); active=True; loop=False; duration=2; delay=0; lifetime=0.25; size=2; max=1000
+  GlowingOrb4/Sparks; active=True; loop=False; duration=2; delay=0; lifetime=1; size=0.08; max=1000
+  GlowingOrb4/Smoke; active=True; loop=False; duration=2; delay=0; lifetime=0.8; size=2; max=1000
+  GlowingOrb4/ShockWave; active=True; loop=False; duration=2; delay=0; lifetime=0.3; size=2.7; max=1000
+  GlowingOrb4/Flare; active=True; loop=False; duration=2; delay=0; lifetime=0.16; size=12; max=1000
+  GlowingOrb4/Lightning; active=True; loop=False; duration=2; delay=0; lifetime=0.05; size=2; max=1000
+  GlowingOrb4/FlareBlack; active=True; loop=False; duration=2; delay=0; lifetime=0.12; size=10; max=1000
+  GlowingOrb4/Trail; active=True; loop=False; duration=2; delay=0; lifetime=0.12; size=0.8; max=1000
+  GlowingOrb5; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=2.3; max=1000
+  GlowingOrb5/LightningTrails; active=True; loop=False; duration=4; delay=0; lifetime=0.3; size=0.03; max=20
+  GlowingOrb5/Glow; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=1.15; max=1000
+  GlowingOrb5/Flare; active=True; loop=False; duration=2; delay=0; lifetime=0.1; size=4; max=1000
+  GlowingOrb5/Darkness; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=1.25; max=1000
+  GlowingOrb5/Distortion(Re-save shader if black); active=True; loop=False; duration=2; delay=0; lifetime=0.25; size=2; max=1000
+  GlowingOrb5/Sparks; active=True; loop=False; duration=2; delay=0; lifetime=1; size=0.08; max=1000
+  GlowingOrb5/Smoke; active=True; loop=False; duration=2; delay=0; lifetime=0.8; size=2; max=1000
+  GlowingOrb5/ShockWave; active=True; loop=False; duration=2; delay=0; lifetime=0.3; size=2.7; max=1000
+  GlowingOrb5/Flare; active=True; loop=False; duration=2; delay=0; lifetime=0.16; size=12; max=1000
+  GlowingOrb5/Lightning; active=True; loop=False; duration=2; delay=0; lifetime=0.05; size=2; max=1000
+  GlowingOrb5/FlareBlack; active=True; loop=False; duration=2; delay=0; lifetime=0.12; size=10; max=1000
+  GlowingOrb5/Trail; active=True; loop=False; duration=2; delay=0; lifetime=0.12; size=0.8; max=1000
+  GlowingOrb6; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=2.3; max=1000
+  GlowingOrb6/LightningTrails; active=True; loop=False; duration=4; delay=0; lifetime=0.3; size=0.03; max=20
+  GlowingOrb6/Glow; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=1.15; max=1000
+  GlowingOrb6/Flare; active=True; loop=False; duration=2; delay=0; lifetime=0.1; size=4; max=1000
+  GlowingOrb6/Darkness; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=1.25; max=1000
+  GlowingOrb6/Distortion(Re-save shader if black); active=True; loop=False; duration=2; delay=0; lifetime=0.25; size=2; max=1000
+  GlowingOrb6/Sparks; active=True; loop=False; duration=2; delay=0; lifetime=1; size=0.08; max=1000
+  GlowingOrb6/Smoke; active=True; loop=False; duration=2; delay=0; lifetime=0.8; size=2; max=1000
+  GlowingOrb6/ShockWave; active=True; loop=False; duration=2; delay=0; lifetime=0.3; size=2.7; max=1000
+  GlowingOrb6/Flare; active=True; loop=False; duration=2; delay=0; lifetime=0.16; size=12; max=1000
+  GlowingOrb6/Lightning; active=True; loop=False; duration=2; delay=0; lifetime=0.05; size=2; max=1000
+  GlowingOrb6/FlareBlack; active=True; loop=False; duration=2; delay=0; lifetime=0.12; size=10; max=1000
+  GlowingOrb6/Trail; active=True; loop=False; duration=2; delay=0; lifetime=0.12; size=0.8; max=1000
+  GlowingOrb7; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=2.3; max=1000
+  GlowingOrb7/LightningTrails; active=True; loop=False; duration=4; delay=0; lifetime=0.3; size=0.03; max=20
+  GlowingOrb7/Glow; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=1.15; max=1000
+  GlowingOrb7/Flare; active=True; loop=False; duration=2; delay=0; lifetime=0.1; size=4; max=1000
+  GlowingOrb7/Darkness; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=1.25; max=1000
+  GlowingOrb7/Distortion(Re-save shader if black); active=True; loop=False; duration=2; delay=0; lifetime=0.25; size=2; max=1000
+  GlowingOrb7/Sparks; active=True; loop=False; duration=2; delay=0; lifetime=1; size=0.08; max=1000
+  GlowingOrb7/Smoke; active=True; loop=False; duration=2; delay=0; lifetime=0.8; size=2; max=1000
+  GlowingOrb7/ShockWave; active=True; loop=False; duration=2; delay=0; lifetime=0.3; size=2.7; max=1000
+  GlowingOrb7/Flare; active=True; loop=False; duration=2; delay=0; lifetime=0.16; size=12; max=1000
+  GlowingOrb7/Lightning; active=True; loop=False; duration=2; delay=0; lifetime=0.05; size=2; max=1000
+  GlowingOrb7/FlareBlack; active=True; loop=False; duration=2; delay=0; lifetime=0.12; size=10; max=1000
+  GlowingOrb7/Trail; active=True; loop=False; duration=2; delay=0; lifetime=0.12; size=0.8; max=1000
+  GlowingOrb8; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=2.3; max=1000
+  GlowingOrb8/LightningTrails; active=True; loop=False; duration=4; delay=0; lifetime=0.3; size=0.03; max=20
+  GlowingOrb8/Glow; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=1.15; max=1000
+  GlowingOrb8/Flare; active=True; loop=False; duration=2; delay=0; lifetime=0.1; size=4; max=1000
+  GlowingOrb8/Darkness; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=1.25; max=1000
+  GlowingOrb8/Distortion(Re-save shader if black); active=True; loop=False; duration=2; delay=0; lifetime=0.25; size=2; max=1000
+  GlowingOrb8/Sparks; active=True; loop=False; duration=2; delay=0; lifetime=1; size=0.08; max=1000
+  GlowingOrb8/Smoke; active=True; loop=False; duration=2; delay=0; lifetime=0.8; size=2; max=1000
+  GlowingOrb8/ShockWave; active=True; loop=False; duration=2; delay=0; lifetime=0.3; size=2.7; max=1000
+  GlowingOrb8/Flare; active=True; loop=False; duration=2; delay=0; lifetime=0.16; size=12; max=1000
+  GlowingOrb8/Lightning; active=True; loop=False; duration=2; delay=0; lifetime=0.05; size=2; max=1000
+  GlowingOrb8/FlareBlack; active=True; loop=False; duration=2; delay=0; lifetime=0.12; size=10; max=1000
+  GlowingOrb8/Trail; active=True; loop=False; duration=2; delay=0; lifetime=0.12; size=0.8; max=1000
+  GlowingOrb9; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=2.3; max=1000
+  GlowingOrb9/LightningTrails; active=True; loop=False; duration=4; delay=0; lifetime=0.3; size=0.03; max=20
+  GlowingOrb9/Glow; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=1.15; max=1000
+  GlowingOrb9/Flare; active=True; loop=False; duration=2; delay=0; lifetime=0.1; size=4; max=1000
+  GlowingOrb9/Darkness; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=1.25; max=1000
+  GlowingOrb9/Distortion(Re-save shader if black); active=True; loop=False; duration=2; delay=0; lifetime=0.25; size=2; max=1000
+  GlowingOrb9/Sparks; active=True; loop=False; duration=2; delay=0; lifetime=1; size=0.08; max=1000
+  GlowingOrb9/Smoke; active=True; loop=False; duration=2; delay=0; lifetime=0.8; size=2; max=1000
+  GlowingOrb9/ShockWave; active=True; loop=False; duration=2; delay=0; lifetime=0.3; size=2.7; max=1000
+  GlowingOrb9/Flare; active=True; loop=False; duration=2; delay=0; lifetime=0.16; size=12; max=1000
+  GlowingOrb9/Lightning; active=True; loop=False; duration=2; delay=0; lifetime=0.05; size=2; max=1000
+  GlowingOrb9/FlareBlack; active=True; loop=False; duration=2; delay=0; lifetime=0.12; size=10; max=1000
+  GlowingOrb9/Trail; active=True; loop=False; duration=2; delay=0; lifetime=0.12; size=0.8; max=1000
+  GlowingOrb10; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=2.3; max=1000
+  GlowingOrb10/LightningTrails; active=True; loop=False; duration=4; delay=0; lifetime=0.3; size=0.03; max=20
+  GlowingOrb10/Glow; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=1.15; max=1000
+  GlowingOrb10/Flare; active=True; loop=False; duration=2; delay=0; lifetime=0.1; size=4; max=1000
+  GlowingOrb10/Darkness; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=1.25; max=1000
+  GlowingOrb10/Distortion(Re-save shader if black); active=True; loop=False; duration=2; delay=0; lifetime=0.25; size=2; max=1000
+  GlowingOrb10/Sparks; active=True; loop=False; duration=2; delay=0; lifetime=1; size=0.08; max=1000
+  GlowingOrb10/Smoke; active=True; loop=False; duration=2; delay=0; lifetime=0.8; size=2; max=1000
+  GlowingOrb10/ShockWave; active=True; loop=False; duration=2; delay=0; lifetime=0.3; size=2.7; max=1000
+  GlowingOrb10/Flare; active=True; loop=False; duration=2; delay=0; lifetime=0.16; size=12; max=1000
+  GlowingOrb10/Lightning; active=True; loop=False; duration=2; delay=0; lifetime=0.05; size=2; max=1000
+  GlowingOrb10/FlareBlack; active=True; loop=False; duration=2; delay=0; lifetime=0.12; size=10; max=1000
+  GlowingOrb10/Trail; active=True; loop=False; duration=2; delay=0; lifetime=0.12; size=0.8; max=1000
+  GlowingOrb11; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=2.3; max=1000
+  GlowingOrb11/LightningTrails; active=True; loop=False; duration=4; delay=0; lifetime=0.3; size=0.03; max=20
+  GlowingOrb11/Glow; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=1.15; max=1000
+  GlowingOrb11/Flare; active=True; loop=False; duration=2; delay=0; lifetime=0.1; size=4; max=1000
+  GlowingOrb11/Darkness; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=1.25; max=1000
+  GlowingOrb11/Distortion(Re-save shader if black); active=True; loop=False; duration=2; delay=0; lifetime=0.25; size=2; max=1000
+  GlowingOrb11/Sparks; active=True; loop=False; duration=2; delay=0; lifetime=1; size=0.08; max=1000
+  GlowingOrb11/Smoke; active=True; loop=False; duration=2; delay=0; lifetime=0.8; size=2; max=1000
+  GlowingOrb11/ShockWave; active=True; loop=False; duration=2; delay=0; lifetime=0.3; size=2.7; max=1000
+  GlowingOrb11/Flare; active=True; loop=False; duration=2; delay=0; lifetime=0.16; size=12; max=1000
+  GlowingOrb11/Lightning; active=True; loop=False; duration=2; delay=0; lifetime=0.05; size=2; max=1000
+  GlowingOrb11/FlareBlack; active=True; loop=False; duration=2; delay=0; lifetime=0.12; size=10; max=1000
+  GlowingOrb11/Trail; active=True; loop=False; duration=2; delay=0; lifetime=0.12; size=0.8; max=1000
+  Stunning explosion; active=True; loop=False; duration=2; delay=0; lifetime=0.3; size=4.3; max=1000
+  Stunning explosion/Smoke; active=True; loop=False; duration=2; delay=0; lifetime=0.6; size=2; max=1000
+  Stunning explosion/Sparks; active=True; loop=False; duration=2; delay=0; lifetime=1; size=0.15; max=1000
+  Stunning explosion/SparksLong; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=0.04; max=1000
+  Stunning explosion/Flash; active=True; loop=False; duration=2; delay=0; lifetime=0.15; size=8; max=1000
+  Stunning explosion/LightningTrails; active=True; loop=False; duration=4; delay=0; lifetime=0.3; size=0.05; max=20
+  Stunning explosion/Distortion(Re-save shader if black); active=True; loop=False; duration=2; delay=0; lifetime=0.25; size=2; max=1000
+  Stunning explosion/Flare; active=True; loop=False; duration=2; delay=0; lifetime=0.16; size=12; max=1000
+  Stunning explosion/ShockWave; active=True; loop=False; duration=2; delay=0; lifetime=0.3; size=2.7; max=1000
+  Craters; active=True; loop=False; duration=2; delay=0; lifetime=0.9; size=3; max=1000
+  MATERIAL Resources/unity_builtin_extra; shader=Legacy Shaders/Particles/Alpha Blended Premultiply; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Lightning10bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Fresnel4.mat; shader=Hovl/Particles/Add_Fresnel; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Flare21cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/ErbGameArt/Sword slash FX/Materials/Waves21bdt.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Distortion.mat; shader=Hovl/Particles/Distortion; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Point12cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Smoke24cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Motion7sc.mat; shader=Hovl/Particles/Scroll; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Flare23cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Lightning11cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Flare19bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Rays12bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Smoke24bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/FlashGroundCG.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Crater37bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/White mage spells/Prefabs/Energy strike/Glowing orb.prefab: systems=13; scale=(1.00, 1.00, 1.00); scripts=; audio=1
+  ; active=True; loop=False; duration=1; delay=0; lifetime=0.2; size=2.3; max=1000
+  Lightning; active=True; loop=False; duration=1; delay=0; lifetime=0.05; size=2; max=1000
+  LightningTrails; active=True; loop=False; duration=2; delay=0; lifetime=0.3; size=0.03; max=20
+  Glow; active=True; loop=False; duration=1; delay=0; lifetime=0.2; size=1.15; max=1000
+  Flare; active=True; loop=False; duration=1; delay=0; lifetime=0.1; size=4; max=1000
+  Darkness; active=True; loop=False; duration=1; delay=0; lifetime=0.2; size=1.25; max=1000
+  Light(Delete for HD); active=True; loop=False; duration=1; delay=0; lifetime=0.3; size=1; max=1000
+  Distortion(Re-save shader if black); active=True; loop=False; duration=1; delay=0; lifetime=0.25; size=2; max=1000
+  Sparks; active=True; loop=False; duration=1; delay=0; lifetime=1; size=0.08; max=1000
+  Smoke; active=True; loop=False; duration=1; delay=0; lifetime=1; size=2; max=1000
+  ShockWave; active=True; loop=False; duration=1; delay=0; lifetime=0.3; size=2.7; max=1000
+  Flare; active=True; loop=False; duration=1; delay=0; lifetime=0.16; size=12; max=1000
+  FlareBlack; active=True; loop=False; duration=1; delay=0; lifetime=0.12; size=10; max=1000
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Lightning10bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Lightning11cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Fresnel4.mat; shader=Hovl/Particles/Add_Fresnel; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Flare21cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/ErbGameArt/Sword slash FX/Materials/Waves21bdt.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Resources/unity_builtin_extra; shader=Legacy Shaders/Particles/Alpha Blended Premultiply; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Distortion.mat; shader=Hovl/Particles/Distortion; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Point12cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Smoke24cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Motion7sc.mat; shader=Hovl/Particles/Scroll; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Flare23cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Flare19bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/White mage spells/Prefabs/Front attack/Ground shine attack.prefab: systems=0; scale=(1.00, 1.00, 1.00); scripts=HS_FrontAttack; audio=1
+Assets/Hovl Studio/White mage spells/Prefabs/Front attack/Ground shine.prefab: systems=13; scale=(0.65, 0.65, 0.65); scripts=; audio=0
+  ; active=True; loop=False; duration=2; delay=0; lifetime=0.4; size=0.01; max=1000
+  Distortion; active=True; loop=False; duration=2; delay=0; lifetime=0.8; size=2; max=1000
+  FireBurst; active=True; loop=False; duration=2; delay=0; lifetime=0.6; size=1.5; max=1000
+  Lightning; active=True; loop=False; duration=2; delay=0; lifetime=0.12; size=2; max=1000
+  Flash; active=True; loop=False; duration=2; delay=0; lifetime=0.15; size=3; max=1000
+  Smoke; active=True; loop=False; duration=2; delay=0; lifetime=1; size=1.5; max=1000
+  Rays; active=True; loop=False; duration=2; delay=0; lifetime=0.25; size=1.6; max=1000
+  Ray; active=True; loop=False; duration=2; delay=0; lifetime=0.35; size=1; max=1000
+  RayCore; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=0.5; max=1000
+  Lightning; active=True; loop=False; duration=2; delay=0; lifetime=0.3; size=1.5; max=1000
+  Sparks; active=True; loop=False; duration=2; delay=0; lifetime=1; size=0.04; max=1000
+  Derbis; active=True; loop=False; duration=2; delay=0; lifetime=1.6; size=0.3; max=1000
+  Crater; active=True; loop=False; duration=2; delay=0; lifetime=2; size=2.3; max=1000
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Distortion.mat; shader=Hovl/Particles/Distortion; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Smoke21bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Lightning11cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/FlashGroundCG.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Smoke24bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Rays12bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/TwoSides27.mat; shader=Hovl/Particles/Blend_TwoSides; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Waves21cg2.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Lightning10l.mat; shader=Hovl/Particles/Lightning; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Stone3bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Crater38dn.mat; shader=Hovl/Particles/DissolveNoise; supported=True; errors=False
+Assets/Hovl Studio/White mage spells/Prefabs/Light bomb/Light bomb cast.prefab: systems=7; scale=(1.00, 1.00, 1.00); scripts=; audio=1
+  ; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=1.5; max=1000
+  TrailsRound; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=0.5; max=1000
+  LightAccumulating; active=True; loop=False; duration=2; delay=0; lifetime=0.85; size=1; max=1000
+  BigFlashLight; active=True; loop=False; duration=2; delay=0; lifetime=0.15; size=2; max=1000
+  EndWave; active=True; loop=False; duration=2; delay=0; lifetime=0.15; size=1.5; max=1000
+  EndDissolve; active=True; loop=False; duration=2; delay=0; lifetime=0.15; size=1; max=1000
+  EndSideSmoke; active=True; loop=False; duration=2; delay=0; lifetime=0.12; size=0.8; max=1000
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Gradient17cg2.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail64Path.mat; shader=Hovl/Particles/Blend_LinePath; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/SoftNoise69bd.mat; shader=Hovl/Particles/BlendDistort; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/TwoSides29.mat; shader=Hovl/Particles/Blend_TwoSides; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Noise83bd.mat; shader=Hovl/Particles/BlendDistort; supported=True; errors=False
+Assets/Hovl Studio/White mage spells/Prefabs/Light bomb/Light bomb.prefab: systems=14; scale=(1.00, 1.00, 1.00); scripts=; audio=0
+  ; active=True; loop=False; duration=2; delay=0; lifetime=1; size=4; max=1000
+  Glow; active=True; loop=False; duration=2; delay=0; lifetime=1; size=4; max=1000
+  Aura; active=True; loop=False; duration=2; delay=0; lifetime=1; size=7; max=1000
+  EnergyAccumulating; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=5; max=1000
+  Smoke; active=True; loop=False; duration=2; delay=0; lifetime=1; size=3; max=1000
+  SideSmoke; active=True; loop=False; duration=2; delay=0; lifetime=0.6; size=3; max=1000
+  SideSmokeDissolve; active=True; loop=False; duration=2; delay=0; lifetime=1; size=3; max=1000
+  Trails; active=True; loop=False; duration=2; delay=0; lifetime=0.45; size=1.1; max=1000
+  Lightning; active=True; loop=False; duration=4; delay=0; lifetime=0.5; size=0.04; max=20
+  EndLightning; active=True; loop=False; duration=4; delay=0; lifetime=0.5; size=0.04; max=20
+  EndSideSmoke; active=True; loop=False; duration=2; delay=0; lifetime=0.3; size=4; max=1000
+  EndDissolve; active=True; loop=False; duration=2; delay=0; lifetime=0.3; size=5; max=1000
+  EndWave; active=True; loop=False; duration=2; delay=0; lifetime=0.3; size=7; max=1000
+  Distortion(Delete for Mobile); active=True; loop=False; duration=2; delay=0; lifetime=0.3; size=3; max=1000
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Circle137cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Noise83bd.mat; shader=Hovl/Particles/BlendDistort; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Gradient17bd2.mat; shader=Hovl/Particles/BlendDistort; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Smoke24cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/TwoSides29.mat; shader=Hovl/Particles/Blend_TwoSides; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail21Path.mat; shader=Hovl/Particles/Blend_LinePath; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail55bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/SoftNoise69bd.mat; shader=Hovl/Particles/BlendDistort; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/DistortionSmoke18.mat; shader=Hovl/Particles/Distortion; supported=True; errors=False
+Assets/Hovl Studio/White mage spells/Prefabs/Light bomb/Mobile Light bomb cast.prefab: systems=7; scale=(1.00, 1.00, 1.00); scripts=; audio=1
+  ; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=1.5; max=1000
+  TrailsRound; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=0.5; max=1000
+  LightAccumulating; active=True; loop=False; duration=2; delay=0; lifetime=0.85; size=1; max=1000
+  BigFlashLight; active=True; loop=False; duration=2; delay=0; lifetime=0.15; size=2; max=1000
+  EndWave; active=True; loop=False; duration=2; delay=0; lifetime=0.15; size=1.5; max=1000
+  EndDissolve; active=True; loop=False; duration=2; delay=0; lifetime=0.15; size=1; max=1000
+  EndSideSmoke; active=True; loop=False; duration=2; delay=0; lifetime=0.12; size=0.8; max=1000
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Gradient17cg2.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail64Path.mat; shader=Hovl/Particles/Blend_LinePath; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/SoftNoise69cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/TwoSides29.mat; shader=Hovl/Particles/Blend_TwoSides; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Noise83cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/White mage spells/Prefabs/Light bomb/Mobile Light bomb.prefab: systems=14; scale=(1.00, 1.00, 1.00); scripts=; audio=0
+  ; active=True; loop=False; duration=2; delay=0; lifetime=1; size=4; max=1000
+  Glow; active=True; loop=False; duration=2; delay=0; lifetime=1; size=4; max=1000
+  Aura; active=True; loop=False; duration=2; delay=0; lifetime=1; size=7; max=1000
+  EnergyAccumulating; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=5; max=1000
+  Smoke; active=True; loop=False; duration=2; delay=0; lifetime=1; size=3; max=1000
+  SideSmoke; active=True; loop=False; duration=2; delay=0; lifetime=0.6; size=3; max=1000
+  SideSmokeDissolve; active=True; loop=False; duration=2; delay=0; lifetime=1; size=3; max=1000
+  Trails; active=True; loop=False; duration=2; delay=0; lifetime=0.45; size=1.1; max=1000
+  Lightning; active=True; loop=False; duration=4; delay=0; lifetime=0.5; size=0.04; max=20
+  EndLightning; active=True; loop=False; duration=4; delay=0; lifetime=0.5; size=0.04; max=20
+  EndSideSmoke; active=True; loop=False; duration=2; delay=0; lifetime=0.3; size=4; max=1000
+  EndDissolve; active=True; loop=False; duration=2; delay=0; lifetime=0.3; size=5; max=1000
+  EndWave; active=True; loop=False; duration=2; delay=0; lifetime=0.3; size=7; max=1000
+  Distortion(Delete for Mobile); active=True; loop=False; duration=2; delay=0; lifetime=0.3; size=3; max=1000
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Circle137cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Noise83cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Gradient17cg2.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Smoke24cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/TwoSides29.mat; shader=Hovl/Particles/Blend_TwoSides; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail21Path.mat; shader=Hovl/Particles/Blend_LinePath; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail55bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/SoftNoise69cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/DistortionSmoke18.mat; shader=Hovl/Particles/Distortion; supported=True; errors=False
+Assets/Hovl Studio/White mage spells/Prefabs/Light buff/Light buff.prefab: systems=11; scale=(1.00, 1.00, 1.00); scripts=; audio=1
+  ; active=True; loop=False; duration=2; delay=0; lifetime=0.8; size=4; max=1000
+  CircleRainbow; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=6; max=1000
+  Flares; active=True; loop=False; duration=2; delay=0; lifetime=1.2; size=1; max=1000
+  Distortion(Delete for HD and LW); active=True; loop=False; duration=2; delay=0; lifetime=0.3; size=2; max=1000
+  Rainbow; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=12; max=1000
+  Flash; active=True; loop=False; duration=2; delay=0; lifetime=0.15; size=7; max=1000
+  CoreWind; active=True; loop=False; duration=2; delay=0; lifetime=0.8; size=3.5; max=1000
+  LightTrails; active=True; loop=False; duration=2; delay=0; lifetime=0.8; size=1; max=1000
+  Shield; active=True; loop=False; duration=2; delay=0; lifetime=0.8; size=6.5; max=1000
+  Trails; active=True; loop=False; duration=2; delay=0; lifetime=1; size=1; max=1000
+  Trails/Flares; active=True; loop=True; duration=2; delay=0; lifetime=1; size=0.5; max=1000
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Flare3cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/CircleRainbow11cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Flare4cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Distortion.mat; shader=Hovl/Particles/Distortion; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Flare30bcg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Flare28cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Gradient17bd2.mat; shader=Hovl/Particles/BlendDistort; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Trail71cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Noise84bd.mat; shader=Hovl/Particles/BlendDistort; supported=True; errors=False
+  MATERIAL Resources/unity_builtin_extra; shader=Legacy Shaders/Particles/Alpha Blended Premultiply; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail65cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Flare21bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/White mage spells/Prefabs/Light buff/Mobile Light buff.prefab: systems=11; scale=(1.00, 1.00, 1.00); scripts=; audio=1
+  ; active=True; loop=False; duration=2; delay=0; lifetime=0.8; size=4; max=1000
+  CircleRainbow; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=6; max=1000
+  Flares; active=True; loop=False; duration=2; delay=0; lifetime=1.2; size=1; max=1000
+  Distortion(Delete for HD and LW); active=True; loop=False; duration=2; delay=0; lifetime=0.3; size=2; max=1000
+  Rainbow; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=12; max=1000
+  Flash; active=True; loop=False; duration=2; delay=0; lifetime=0.15; size=7; max=1000
+  CoreWind; active=True; loop=False; duration=2; delay=0; lifetime=0.8; size=3.5; max=1000
+  LightTrails; active=True; loop=False; duration=2; delay=0; lifetime=0.8; size=1; max=1000
+  Shield; active=True; loop=False; duration=2; delay=0; lifetime=0.8; size=6; max=1000
+  Trails; active=True; loop=False; duration=2; delay=0; lifetime=1; size=1; max=1000
+  Trails/Flares; active=True; loop=True; duration=2; delay=0; lifetime=1; size=0.5; max=1000
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Flare3cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/CircleRainbow11cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Flare4cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Distortion.mat; shader=Hovl/Particles/Distortion; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Flare30bcg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Flare28cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Gradient17cg2.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Trail71cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Noise84cg2.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Resources/unity_builtin_extra; shader=Legacy Shaders/Particles/Alpha Blended Premultiply; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail65cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Flare21bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/White mage spells/Prefabs/Light buff/Mobile Rainbow shield.prefab: systems=6; scale=(1.00, 1.00, 1.00); scripts=; audio=0
+  ; active=True; loop=False; duration=2; delay=0; lifetime=0.7; size=1; max=1000
+  Flares; active=True; loop=False; duration=2; delay=0; lifetime=1; size=0.5; max=1000
+  Shield; active=False; loop=False; duration=2; delay=0; lifetime=0.7; size=2; max=1000
+  CoreWind; active=True; loop=False; duration=2; delay=0; lifetime=0.7; size=1.5; max=1000
+  Rainbow; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=4; max=1000
+  ShockWave; active=True; loop=False; duration=2; delay=0; lifetime=0.4; size=3; max=1000
+  MATERIAL Resources/unity_builtin_extra; shader=Legacy Shaders/Particles/Alpha Blended Premultiply; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail65cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Flare21bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Noise84cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Gradient17bd2.mat; shader=Hovl/Particles/BlendDistort; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Flare30bcg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/White mage spells/Prefabs/Light buff/Rainbow shield.prefab: systems=6; scale=(1.00, 1.00, 1.00); scripts=; audio=0
+  ; active=True; loop=False; duration=2; delay=0; lifetime=0.7; size=1; max=1000
+  Flares; active=True; loop=False; duration=2; delay=0; lifetime=1; size=0.5; max=1000
+  Shield; active=False; loop=False; duration=2; delay=0; lifetime=0.7; size=2; max=1000
+  CoreWind; active=True; loop=False; duration=2; delay=0; lifetime=0.7; size=1.5; max=1000
+  Rainbow; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=4; max=1000
+  ShockWave; active=True; loop=False; duration=2; delay=0; lifetime=0.4; size=3; max=1000
+  MATERIAL Resources/unity_builtin_extra; shader=Legacy Shaders/Particles/Alpha Blended Premultiply; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail65cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Flare21bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Noise84cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Gradient17bd2.mat; shader=Hovl/Particles/BlendDistort; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Flare30bcg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/White mage spells/Prefabs/Light ray/Light ray attack.prefab: systems=1; scale=(1.00, 1.00, 1.00); scripts=HS_ParticleCollisionInstance; audio=0
+  ; active=True; loop=False; duration=4; delay=0; lifetime=1; size=1.1; max=1000
+Assets/Hovl Studio/White mage spells/Prefabs/Light ray/Light ray cast.prefab: systems=8; scale=(1.00, 1.00, 1.00); scripts=; audio=1
+  ; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=1.5; max=1000
+  TrailsRound; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=0.5; max=1000
+  Rays; active=True; loop=False; duration=2; delay=0; lifetime=0.6; size=0.3; max=1000
+  Sparks; active=True; loop=False; duration=2; delay=0; lifetime=0.2; size=0.03; max=1000
+  LightAccumulating; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=1; max=1000
+  BigFlashLight; active=True; loop=False; duration=2; delay=0; lifetime=0.15; size=2; max=1000
+  ShockWave; active=True; loop=False; duration=2; delay=0; lifetime=0.25; size=2; max=1000
+  MagicCircle; active=True; loop=False; duration=2; delay=0; lifetime=1.5; size=1; max=1000
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Gradient17cg2.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail64Path.mat; shader=Hovl/Particles/Blend_LinePath; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail78cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/CircleRainbow15cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/MagicCircle62dn.mat; shader=Hovl/Particles/DissolveNoise; supported=True; errors=False
+Assets/Hovl Studio/White mage spells/Prefabs/Light ray/Light ray long.prefab: systems=22; scale=(1.00, 1.00, 1.00); scripts=; audio=0
+  ; active=True; loop=False; duration=3; delay=0; lifetime=0.3; size=0.5; max=1000
+  StartWind; active=True; loop=False; duration=3; delay=0; lifetime=0.3; size=1.6; max=1000
+  StartLight; active=True; loop=False; duration=3; delay=0; lifetime=0.3; size=5; max=1000
+  StartSparks; active=True; loop=False; duration=3; delay=0; lifetime=0.4; size=0.06; max=1000
+  StartFlash; active=True; loop=False; duration=3; delay=0; lifetime=0.15; size=8; max=1000
+  StartWave; active=True; loop=False; duration=3; delay=0; lifetime=2; size=5; max=1000
+  GroundWind; active=True; loop=False; duration=3; delay=0; lifetime=0.5; size=4; max=1000
+  CoreWind; active=True; loop=False; duration=3; delay=0; lifetime=0.5; size=4; max=1000
+  Light; active=True; loop=False; duration=3; delay=0; lifetime=2; size=1; max=1000
+  RayDark; active=True; loop=False; duration=3; delay=0; lifetime=2; size=1; max=1000
+  RayLight; active=True; loop=False; duration=3; delay=0; lifetime=2; size=0.6; max=1000
+  Ray(ChangeColorIfNoBloom); active=True; loop=False; duration=3; delay=0; lifetime=2; size=1.5; max=1000
+  Sparks; active=True; loop=False; duration=3; delay=0; lifetime=0.3; size=0.02; max=1000
+  Crater; active=True; loop=False; duration=3; delay=0; lifetime=2.2; size=6; max=1000
+  CraterGlow; active=True; loop=False; duration=3; delay=0; lifetime=2; size=3; max=1000
+  UpSparks; active=True; loop=False; duration=3; delay=0; lifetime=0.35; size=0.05; max=1000
+  Rainbow; active=True; loop=False; duration=3; delay=0; lifetime=0.5; size=7; max=1000
+  ShockWave; active=True; loop=False; duration=3; delay=0; lifetime=2; size=5; max=1000
+  Distortion; active=True; loop=False; duration=3; delay=0; lifetime=0.6; size=2; max=1000
+  TrailsRound; active=True; loop=False; duration=3; delay=0; lifetime=0.6; size=1; max=1000
+  GroundGlow; active=True; loop=False; duration=3; delay=0; lifetime=2.2; size=2; max=1000
+  Triangles; active=True; loop=False; duration=3; delay=0; lifetime=0.5; size=0.6; max=1000
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Waves21cg4.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Noise69bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Flare21cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/FlashGroundCG.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Noise53bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Gradient17сg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Gradient17cg2.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Resources/unity_builtin_extra; shader=Legacy Shaders/Particles/Alpha Blended Premultiply; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail79bcg2.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail79bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Crater55bcg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Motion10dn.mat; shader=Hovl/Particles/DissolveNoise; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/CircleRainbow11cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Distortion.mat; shader=Hovl/Particles/Distortion; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail64Path.mat; shader=Hovl/Particles/Blend_LinePath; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/MaskPoint1.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Triangle1bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/White mage spells/Prefabs/Light ray/Light ray.prefab: systems=21; scale=(1.00, 1.00, 1.00); scripts=; audio=1
+  ; active=True; loop=False; duration=2; delay=0; lifetime=0.3; size=0.5; max=1000
+  StartWind; active=True; loop=False; duration=2; delay=0; lifetime=0.3; size=1.6; max=1000
+  StartLight; active=True; loop=False; duration=2; delay=0; lifetime=0.3; size=5; max=1000
+  StartSparks; active=True; loop=False; duration=2; delay=0; lifetime=0.4; size=0.06; max=1000
+  StartFlash; active=True; loop=False; duration=2; delay=0; lifetime=0.15; size=8; max=1000
+  StartWave; active=True; loop=False; duration=2; delay=0; lifetime=0.6; size=5; max=1000
+  GroundWind; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=4; max=1000
+  CoreWind; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=4; max=1000
+  Light; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=1; max=1000
+  RayDark; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=1; max=1000
+  RayLight; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=0.6; max=1000
+  Ray(ChangeColorIfNoBloom); active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=1.5; max=1000
+  Sparks; active=True; loop=False; duration=2; delay=0; lifetime=0.3; size=0.02; max=1000
+  Crater; active=True; loop=False; duration=2; delay=0; lifetime=0.55; size=6; max=1000
+  CraterGlow; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=3; max=1000
+  UpSparks; active=True; loop=False; duration=2; delay=0; lifetime=0.35; size=0.05; max=1000
+  Rainbow; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=7; max=1000
+  Distortion; active=True; loop=False; duration=2; delay=0; lifetime=0.6; size=2; max=1000
+  TrailsRound; active=True; loop=False; duration=2; delay=0; lifetime=0.4; size=1; max=1000
+  GroundGlow; active=True; loop=False; duration=2; delay=0; lifetime=0.55; size=2; max=1000
+  Triangles; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=0.6; max=1000
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Waves21cg4.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Noise69bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Flare21cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/FlashGroundCG.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Noise53bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Gradient17сg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Gradient17cg2.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Resources/unity_builtin_extra; shader=Legacy Shaders/Particles/Alpha Blended Premultiply; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail79bcg2.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail79bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Crater55bcg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Motion10dn.mat; shader=Hovl/Particles/DissolveNoise; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/CircleRainbow11cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Distortion.mat; shader=Hovl/Particles/Distortion; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail64Path.mat; shader=Hovl/Particles/Blend_LinePath; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/MaskPoint1.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Triangle1bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/White mage spells/Prefabs/Magic circle/Magic circle cast.prefab: systems=3; scale=(1.00, 1.00, 1.00); scripts=; audio=0
+  ; active=True; loop=False; duration=1; delay=0; lifetime=0.9; size=0.1; max=1000
+  Smoke; active=True; loop=False; duration=1; delay=0; lifetime=0.7; size=1.5; max=1000
+  Distortion(Delete for HD and LW); active=True; loop=False; duration=1; delay=0; lifetime=0.2; size=3; max=1000
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Leave9bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Smoke24bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Distortion.mat; shader=Hovl/Particles/Distortion; supported=True; errors=False
+Assets/Hovl Studio/White mage spells/Prefabs/Magic circle/Magic circle.prefab: systems=15; scale=(1.00, 1.00, 1.00); scripts=; audio=1
+  ; active=True; loop=False; duration=5; delay=0; lifetime=4.2; size=7; max=1000
+  ShockWave; active=True; loop=False; duration=5; delay=0; lifetime=1; size=14.5; max=1000
+  Smoke; active=True; loop=False; duration=5; delay=0; lifetime=1; size=1.5; max=1000
+  CoreSmoke; active=True; loop=False; duration=5; delay=0; lifetime=2; size=7; max=1000
+  CoreSmoke2; active=True; loop=False; duration=5; delay=0; lifetime=1; size=5; max=1000
+  CoreWind; active=True; loop=False; duration=5; delay=0; lifetime=1; size=10; max=1000
+  CoreWind2; active=True; loop=False; duration=5; delay=0; lifetime=1; size=6; max=1000
+  CoreDistortion; active=True; loop=False; duration=5; delay=0; lifetime=2; size=7; max=1000
+  TrailsLifetime; active=True; loop=False; duration=5; delay=0; lifetime=1.2; size=0.15; max=1000
+  SparksLifetime; active=True; loop=False; duration=5; delay=0; lifetime=1; size=0.12; max=1000
+  SparksEnd; active=True; loop=False; duration=5; delay=0; lifetime=1.2; size=0.15; max=1000
+  Light; active=True; loop=False; duration=5; delay=0; lifetime=4.5; size=1; max=1000
+  Petals; active=True; loop=False; duration=5; delay=0; lifetime=1; size=0.12; max=1000
+  Trails; active=True; loop=False; duration=5; delay=0; lifetime=1; size=2; max=1000
+  Crystal; active=True; loop=False; duration=5; delay=0; lifetime=4.1; size=0.4; max=1000
+  MATERIAL Assets/Hovl Studio/Resources/Materials/MagicText6dn.mat; shader=Hovl/Particles/DissolveNoise; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Circle116cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/FireF5.mat; shader=Hovl/Particles/Fire; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Gradient17bd.mat; shader=Hovl/Particles/BlendDistort; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Gradient17bd2.mat; shader=Hovl/Particles/BlendDistort; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail21bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Snow4cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Resources/unity_builtin_extra; shader=Legacy Shaders/Particles/Alpha Blended Premultiply; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Leave9bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/SmoothHeart1ts.mat; shader=Hovl/Particles/Blend_TwoSides; supported=True; errors=False
+Assets/Hovl Studio/White mage spells/Prefabs/Magic circle/Mobile Magic circle.prefab: systems=14; scale=(1.00, 1.00, 1.00); scripts=; audio=1
+  ; active=True; loop=False; duration=5; delay=0; lifetime=4.2; size=7; max=1000
+  ShockWave; active=True; loop=False; duration=5; delay=0; lifetime=1; size=14.5; max=1000
+  Smoke; active=True; loop=False; duration=5; delay=0; lifetime=1; size=1.5; max=1000
+  CoreSmoke; active=True; loop=False; duration=5; delay=0; lifetime=2; size=7; max=1000
+  CoreSmoke2; active=True; loop=False; duration=5; delay=0; lifetime=1; size=5; max=1000
+  CoreWind; active=True; loop=False; duration=5; delay=0; lifetime=1; size=10; max=1000
+  CoreWind2; active=True; loop=False; duration=5; delay=0; lifetime=1; size=6; max=1000
+  TrailsLifetime; active=True; loop=False; duration=5; delay=0; lifetime=1.2; size=0.15; max=1000
+  SparksLifetime; active=True; loop=False; duration=5; delay=0; lifetime=1; size=0.12; max=1000
+  SparksEnd; active=True; loop=False; duration=5; delay=0; lifetime=1.2; size=0.15; max=1000
+  Light; active=True; loop=False; duration=5; delay=0; lifetime=4.5; size=1; max=1000
+  Petals; active=True; loop=False; duration=5; delay=0; lifetime=1; size=0.12; max=1000
+  Trails; active=True; loop=False; duration=5; delay=0; lifetime=1; size=2; max=1000
+  Crystal; active=True; loop=False; duration=5; delay=0; lifetime=4.1; size=0.4; max=1000
+  MATERIAL Assets/Hovl Studio/Resources/Materials/MagicText6dn.mat; shader=Hovl/Particles/DissolveNoise; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Circle116cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/FireF5.mat; shader=Hovl/Particles/Fire; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Gradient17сg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Gradient17cg2.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail21bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Snow4cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Resources/unity_builtin_extra; shader=Legacy Shaders/Particles/Alpha Blended Premultiply; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Leave9bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/SmoothHeart1ts.mat; shader=Hovl/Particles/Blend_TwoSides; supported=True; errors=False
+Assets/Hovl Studio/White mage spells/Prefabs/Magic rain/Magic rain cast.prefab: systems=5; scale=(1.00, 1.00, 1.00); scripts=; audio=1
+  ; active=True; loop=False; duration=2; delay=0; lifetime=0.6; size=0.69; max=1000
+  Trail; active=True; loop=False; duration=2; delay=0; lifetime=0.6; size=0.69; max=1000
+  Flare; active=True; loop=False; duration=2; delay=0; lifetime=0.96; size=10; max=1000
+  Shine; active=True; loop=False; duration=2; delay=0; lifetime=0.96; size=1.4; max=1000
+  Sparks; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=0.04; max=1000
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail64Path2.mat; shader=Hovl/Particles/Blend_LinePath; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Flare2cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Aura16bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/White mage spells/Prefabs/Magic rain/Magic rain hit 2.prefab: systems=7; scale=(1.00, 1.00, 1.00); scripts=; audio=0
+  ; active=True; loop=False; duration=1; delay=0; lifetime=0.3; size=0.05; max=1000
+  Crater; active=True; loop=False; duration=1; delay=0; lifetime=1; size=3; max=1000
+  GroundFlash; active=True; loop=False; duration=1; delay=0; lifetime=0.25; size=2.7; max=1000
+  Flash; active=True; loop=False; duration=1; delay=0; lifetime=0.25; size=2.7; max=1000
+  Glow; active=True; loop=False; duration=1; delay=0; lifetime=0.12; size=3; max=1000
+  SideTrails; active=True; loop=True; duration=2; delay=0; lifetime=0.1; size=0.5; max=1000
+  Distortion(Delete for Mobile); active=True; loop=False; duration=1; delay=0; lifetime=0.36; size=3; max=1000
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail75bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Crack7bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Circle134cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Fresnel5.mat; shader=Hovl/Particles/Add_Fresnel; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/TwoSides9.mat; shader=Hovl/Particles/Blend_TwoSides; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/DistortionSmoke18.mat; shader=Hovl/Particles/Distortion; supported=True; errors=False
+Assets/Hovl Studio/White mage spells/Prefabs/Magic rain/Magic rain hit.prefab: systems=2; scale=(1.00, 1.00, 1.00); scripts=; audio=0
+  ; active=True; loop=False; duration=1; delay=0; lifetime=0.2; size=1.5; max=1000
+  Sparks; active=True; loop=False; duration=1; delay=0; lifetime=0.3; size=0.05; max=1000
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/MaskPoint1.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/White mage spells/Prefabs/Magic rain/Magic rain.prefab: systems=24; scale=(1.00, 1.00, 1.00); scripts=HS_ParticleCollisionInstance,HS_ParticleCollisionInstance; audio=1
+  ; active=True; loop=False; duration=2; delay=0; lifetime=1.5; size=10; max=1000
+  StartFlash; active=True; loop=False; duration=2; delay=0; lifetime=0.15; size=14; max=1000
+  EnergyAccumulating; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=15; max=1000
+  LightAccumulating; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=5; max=1000
+  Stars; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=1; max=1000
+  Sparks; active=True; loop=False; duration=2; delay=0; lifetime=0.4; size=0.08; max=1000
+  Trails; active=True; loop=False; duration=2; delay=0; lifetime=0.6; size=5; max=1000
+  Trails2; active=True; loop=False; duration=2; delay=0; lifetime=0.6; size=0.7; max=1000
+  Rays; active=True; loop=False; duration=2; delay=0; lifetime=0.6; size=2; max=1000
+  Flash; active=True; loop=False; duration=2; delay=0; lifetime=0.65; size=15; max=1000
+  BigFlashLight; active=True; loop=False; duration=2; delay=0; lifetime=0.15; size=50; max=1000
+  Light(Delete for HD); active=True; loop=False; duration=2; delay=0; lifetime=1.5; size=1; max=1000
+  Flare; active=True; loop=False; duration=2; delay=0; lifetime=0.6; size=55; max=1000
+  Rainbow; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=20; max=1000
+  ShockWave; active=True; loop=False; duration=2; delay=0; lifetime=1.4; size=20; max=1000
+  WindBlue; active=True; loop=False; duration=2; delay=0; lifetime=0.4; size=12; max=1000
+  Wind; active=True; loop=False; duration=2; delay=0; lifetime=0.4; size=9; max=1000
+  WindOrange; active=True; loop=False; duration=2; delay=0; lifetime=0.4; size=10; max=1000
+  FlashOrange; active=True; loop=False; duration=2; delay=0; lifetime=0.15; size=55; max=1000
+  ShockWave2; active=True; loop=False; duration=2; delay=0; lifetime=1.4; size=18; max=1000
+  EndSparks; active=True; loop=False; duration=2; delay=0; lifetime=2; size=0.3; max=1000
+  MeteorsBlue; active=True; loop=False; duration=2; delay=0; lifetime=2; size=0.1; max=1000
+  MeteorsOrange; active=True; loop=False; duration=2; delay=0; lifetime=2; size=0.35; max=1000
+  Aulora; active=True; loop=False; duration=2; delay=0; lifetime=1.5; size=10; max=1000
+  MATERIAL Assets/Hovl Studio/Resources/Materials/FireF5.mat; shader=Hovl/Particles/Fire; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Gradient17cg2.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Flare21bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail64Path2.mat; shader=Hovl/Particles/Blend_LinePath; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail64Path.mat; shader=Hovl/Particles/Blend_LinePath; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail78cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Flare20cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Resources/unity_builtin_extra; shader=Legacy Shaders/Particles/Alpha Blended Premultiply; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Flare2cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/CircleRainbow11cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Noise53bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Smoke17cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Noise69bd.mat; shader=Hovl/Particles/BlendDistort; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Noise69bcg2.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Dust2cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail80bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Aulora1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/White mage spells/Prefabs/Magic rain/Mobile Magic rain.prefab: systems=24; scale=(1.00, 1.00, 1.00); scripts=HS_ParticleCollisionInstance,HS_ParticleCollisionInstance; audio=1
+  ; active=True; loop=False; duration=2; delay=0; lifetime=1.5; size=10; max=1000
+  StartFlash; active=True; loop=False; duration=2; delay=0; lifetime=0.15; size=14; max=1000
+  EnergyAccumulating; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=15; max=1000
+  LightAccumulating; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=5; max=1000
+  Stars; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=1; max=1000
+  Sparks; active=True; loop=False; duration=2; delay=0; lifetime=0.4; size=0.08; max=1000
+  Trails; active=True; loop=False; duration=2; delay=0; lifetime=0.6; size=5; max=1000
+  Trails2; active=True; loop=False; duration=2; delay=0; lifetime=0.6; size=0.7; max=1000
+  Rays; active=True; loop=False; duration=2; delay=0; lifetime=0.6; size=2; max=1000
+  Flash; active=True; loop=False; duration=2; delay=0; lifetime=0.65; size=15; max=1000
+  BigFlashLight; active=True; loop=False; duration=2; delay=0; lifetime=0.15; size=50; max=1000
+  Light(Delete for HD); active=True; loop=False; duration=2; delay=0; lifetime=1.5; size=1; max=1000
+  Flare; active=True; loop=False; duration=2; delay=0; lifetime=0.6; size=55; max=1000
+  Rainbow; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=20; max=1000
+  ShockWave; active=True; loop=False; duration=2; delay=0; lifetime=1.4; size=20; max=1000
+  WindBlue; active=True; loop=False; duration=2; delay=0; lifetime=0.4; size=12; max=1000
+  Wind; active=True; loop=False; duration=2; delay=0; lifetime=0.4; size=9; max=1000
+  WindOrange; active=True; loop=False; duration=2; delay=0; lifetime=0.4; size=10; max=1000
+  FlashOrange; active=True; loop=False; duration=2; delay=0; lifetime=0.15; size=55; max=1000
+  ShockWave2; active=True; loop=False; duration=2; delay=0; lifetime=1.4; size=18; max=1000
+  EndSparks; active=True; loop=False; duration=2; delay=0; lifetime=2; size=0.3; max=1000
+  MeteorsBlue; active=True; loop=False; duration=2; delay=0; lifetime=2; size=0.1; max=1000
+  MeteorsOrange; active=True; loop=False; duration=2; delay=0; lifetime=2; size=0.35; max=1000
+  Aulora; active=True; loop=False; duration=2; delay=0; lifetime=1.5; size=10; max=1000
+  MATERIAL Assets/Hovl Studio/Resources/Materials/FireF5.mat; shader=Hovl/Particles/Fire; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Gradient17cg2.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Flare21bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail64Path2.mat; shader=Hovl/Particles/Blend_LinePath; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail64Path.mat; shader=Hovl/Particles/Blend_LinePath; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail78cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Flare20cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Resources/unity_builtin_extra; shader=Legacy Shaders/Particles/Alpha Blended Premultiply; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Flare2cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/CircleRainbow11cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Noise53bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Smoke17cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Noise69bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Noise69bcg2.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Dust2cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail80bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Aulora1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/White mage spells/Prefabs/Nature buff/Mobile Nature buff.prefab: systems=9; scale=(1.00, 1.00, 1.00); scripts=; audio=0
+  ; active=True; loop=False; duration=3; delay=0; lifetime=1.5; size=1; max=1000
+  Leaves; active=True; loop=False; duration=3; delay=0; lifetime=0; size=0; max=250
+  Smoke; active=True; loop=False; duration=3; delay=0; lifetime=2; size=2; max=1000
+  Sparks; active=True; loop=False; duration=3; delay=0; lifetime=0.7; size=0.1; max=1000
+  Flow; active=True; loop=False; duration=3; delay=0; lifetime=1.2; size=5; max=1000
+  Flares; active=True; loop=False; duration=3; delay=0; lifetime=0.7; size=0.5; max=1000
+  LightTrails; active=True; loop=False; duration=3; delay=0; lifetime=1.4; size=1; max=1000
+  SmallSparks; active=True; loop=False; duration=3; delay=0; lifetime=0.5; size=0.03; max=1000
+  LightRays; active=True; loop=False; duration=3; delay=0; lifetime=0.7; size=2; max=1000
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail52bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Leaf12bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Smoke24bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/SoftNoise79cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Flare6cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail48cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail66cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/White mage spells/Prefabs/Nature buff/Nature buff cast.prefab: systems=4; scale=(1.00, 1.00, 1.00); scripts=; audio=1
+  ; active=True; loop=False; duration=1; delay=0; lifetime=0.6; size=0.2; max=1000
+  Sparks; active=True; loop=False; duration=1; delay=0; lifetime=0.3; size=0.1; max=1000
+  Distortion; active=True; loop=False; duration=1; delay=0; lifetime=0.5; size=1.3; max=1000
+  Trails; active=True; loop=False; duration=1; delay=0; lifetime=0.5; size=0.25; max=1000
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Leaf12bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Distortion.mat; shader=Hovl/Particles/Distortion; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trails73cg2.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/White mage spells/Prefabs/Nature buff/Nature buff.prefab: systems=9; scale=(1.00, 1.00, 1.00); scripts=; audio=0
+  ; active=True; loop=False; duration=3; delay=0; lifetime=1.5; size=1; max=1000
+  Leaves; active=True; loop=False; duration=3; delay=0; lifetime=0; size=0; max=250
+  Smoke; active=True; loop=False; duration=3; delay=0; lifetime=2; size=2; max=1000
+  Sparks; active=True; loop=False; duration=3; delay=0; lifetime=0.7; size=0.1; max=1000
+  Flow; active=True; loop=False; duration=3; delay=0; lifetime=1.2; size=5; max=1000
+  Flares; active=True; loop=False; duration=3; delay=0; lifetime=0.7; size=0.5; max=1000
+  LightTrails; active=True; loop=False; duration=3; delay=0; lifetime=1.4; size=1; max=1000
+  SmallSparks; active=True; loop=False; duration=3; delay=0; lifetime=0.5; size=0.03; max=1000
+  LightRays; active=True; loop=False; duration=3; delay=0; lifetime=0.7; size=2; max=1000
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail52bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Leaf12bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Smoke24bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/SoftNoise79bd.mat; shader=Hovl/Particles/BlendDistort; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Flare6cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail48cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail66cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/White mage spells/Prefabs/Poison eggs (for environment)/Mobile Poison eggs.prefab: systems=18; scale=(1.00, 1.00, 1.00); scripts=HS_ZoneTrigger; audio=1
+  Egg; active=True; loop=True; duration=5; delay=0; lifetime=5; size=0.15; max=1000
+  Egg/Egg; active=True; loop=True; duration=5; delay=0; lifetime=5; size=0.1; max=1000
+  Egg/Egg; active=True; loop=True; duration=5; delay=0; lifetime=5; size=0.12; max=1000
+  Eggs explosion; active=True; loop=False; duration=3; delay=0; lifetime=2; size=3; max=1000
+  Eggs explosion/ShockWave; active=True; loop=False; duration=3; delay=0; lifetime=0.4; size=4.5; max=1000
+  Eggs explosion/ShockWave2; active=True; loop=False; duration=3; delay=0; lifetime=0.3; size=2; max=1000
+  Eggs explosion/Sparks; active=True; loop=False; duration=3; delay=0; lifetime=1; size=0.12; max=1000
+  Eggs explosion/DarkSparks; active=True; loop=False; duration=3; delay=0; lifetime=1.2; size=0.08; max=2000
+  Eggs explosion/SparksLong; active=True; loop=False; duration=3; delay=0; lifetime=1; size=0.15; max=1000
+  Eggs explosion/Derbis; active=True; loop=False; duration=3; delay=0; lifetime=1; size=0.07; max=1000
+  Eggs explosion/Bubbles; active=True; loop=False; duration=3; delay=0; lifetime=1; size=0.2; max=1000
+  Eggs explosion/Fire; active=True; loop=False; duration=3; delay=0; lifetime=1; size=2; max=1000
+  Eggs explosion/Smoke; active=True; loop=False; duration=3; delay=0; lifetime=1; size=2; max=1000
+  Eggs explosion/Fire; active=True; loop=False; duration=3; delay=0; lifetime=1; size=2; max=1000
+  Eggs explosion/EggBroken1; active=True; loop=False; duration=3; delay=0; lifetime=2.5; size=0.15; max=1000
+  Eggs explosion/EggBroken2; active=True; loop=False; duration=3; delay=0; lifetime=2.5; size=0.1; max=1000
+  Eggs explosion/EggBroken3; active=True; loop=False; duration=3; delay=0; lifetime=2.5; size=0.12; max=1000
+  Eggs explosion/GroundSmoke; active=True; loop=False; duration=3; delay=0; lifetime=1; size=2.5; max=1000
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Egg1ts.mat; shader=Hovl/Particles/Blend_TwoSides; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Crater48dn.mat; shader=Hovl/Particles/DissolveNoise; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Circle17bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Noise69bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Mask9bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Point12cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Object1bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Smoke32bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Smoke30bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Smoke21bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Gradient17сg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/White mage spells/Prefabs/Poison eggs (for environment)/Poison eggs.prefab: systems=18; scale=(1.00, 1.00, 1.00); scripts=HS_ZoneTrigger; audio=1
+  Egg; active=True; loop=True; duration=5; delay=0; lifetime=5; size=0.15; max=1000
+  Egg/Egg; active=True; loop=True; duration=5; delay=0; lifetime=5; size=0.1; max=1000
+  Egg/Egg; active=True; loop=True; duration=5; delay=0; lifetime=5; size=0.12; max=1000
+  Eggs explosion; active=True; loop=False; duration=3; delay=0; lifetime=2; size=3; max=1000
+  Eggs explosion/ShockWave; active=True; loop=False; duration=3; delay=0; lifetime=0.4; size=4.5; max=1000
+  Eggs explosion/ShockWave2; active=True; loop=False; duration=3; delay=0; lifetime=0.3; size=2; max=1000
+  Eggs explosion/Sparks; active=True; loop=False; duration=3; delay=0; lifetime=1; size=0.12; max=1000
+  Eggs explosion/DarkSparks; active=True; loop=False; duration=3; delay=0; lifetime=1.2; size=0.08; max=2000
+  Eggs explosion/SparksLong; active=True; loop=False; duration=3; delay=0; lifetime=1; size=0.15; max=1000
+  Eggs explosion/Derbis; active=True; loop=False; duration=3; delay=0; lifetime=1; size=0.07; max=1000
+  Eggs explosion/Bubbles; active=True; loop=False; duration=3; delay=0; lifetime=1; size=0.2; max=1000
+  Eggs explosion/Fire; active=True; loop=False; duration=3; delay=0; lifetime=1; size=2; max=1000
+  Eggs explosion/Smoke; active=True; loop=False; duration=3; delay=0; lifetime=1; size=2; max=1000
+  Eggs explosion/Fire; active=True; loop=False; duration=3; delay=0; lifetime=1; size=2; max=1000
+  Eggs explosion/EggBroken1; active=True; loop=False; duration=3; delay=0; lifetime=2.5; size=0.15; max=1000
+  Eggs explosion/EggBroken2; active=True; loop=False; duration=3; delay=0; lifetime=2.5; size=0.1; max=1000
+  Eggs explosion/EggBroken3; active=True; loop=False; duration=3; delay=0; lifetime=2.5; size=0.12; max=1000
+  Eggs explosion/GroundSmoke; active=True; loop=False; duration=3; delay=0; lifetime=1; size=2.5; max=1000
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Egg1ts.mat; shader=Hovl/Particles/Blend_TwoSides; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Crater48dn.mat; shader=Hovl/Particles/DissolveNoise; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Circle17bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Noise69bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Mask9bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Point12cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Object1bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Smoke32bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Smoke30bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Smoke21bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Gradient17bd.mat; shader=Hovl/Particles/BlendDistort; supported=True; errors=False
+Assets/Hovl Studio/White mage spells/Prefabs/Projectiles/Light Flash.prefab: systems=4; scale=(1.00, 1.00, 1.00); scripts=; audio=1
+  ; active=True; loop=False; duration=1; delay=0; lifetime=0.15; size=2.5; max=1000
+  Flash; active=True; loop=False; duration=1; delay=0; lifetime=0.15; size=1.5; max=1000
+  Debris; active=True; loop=False; duration=1; delay=0; lifetime=0.7; size=0.1; max=1000
+  Sparks; active=True; loop=False; duration=1; delay=0; lifetime=0.3; size=0.07; max=1000
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Flare28cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/CircleRainbow11cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Dust2bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/White mage spells/Prefabs/Projectiles/Light hit.prefab: systems=8; scale=(1.00, 1.00, 1.00); scripts=; audio=1
+  ; active=True; loop=False; duration=1; delay=0; lifetime=0.3; size=3.5; max=1000
+  Flare; active=True; loop=False; duration=1; delay=0; lifetime=0.12; size=3; max=1000
+  Dust; active=True; loop=False; duration=2; delay=0; lifetime=1; size=0.05; max=1000
+  Rays; active=True; loop=False; duration=3; delay=0; lifetime=0.2; size=0.5; max=1000
+  DarkAura; active=True; loop=False; duration=1; delay=0; lifetime=0.12; size=2; max=1000
+  Sparks; active=True; loop=False; duration=1; delay=0; lifetime=1; size=0.03; max=1000
+  ShockWave; active=True; loop=False; duration=1; delay=0; lifetime=0.3; size=1.3; max=1000
+  Bubble; active=True; loop=False; duration=1; delay=0; lifetime=0.2; size=2.7; max=1000
+  MATERIAL Assets/Hovl Studio/Resources/Materials/CircleRainbow11cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Flare28cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Dust2bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail78cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/ParticleMesh1bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Point11cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Gradient17cg2.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trails65cg2.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/White mage spells/Prefabs/Projectiles/Light projectile.prefab: systems=3; scale=(1.00, 1.00, 1.00); scripts=HS_TargetProjectile; audio=0
+  ; active=True; loop=False; duration=2; delay=0; lifetime=2; size=0.4; max=1000
+  BlackTrail; active=True; loop=False; duration=2; delay=0; lifetime=2; size=0.4; max=1000
+  Smoke; active=True; loop=False; duration=2; delay=0; lifetime=2; size=0.4; max=1000
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail80bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trails65cg2.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+Assets/Hovl Studio/White mage spells/Prefabs/Wings buff/WindsSpinePivot.prefab: systems=0; scale=(1.00, 1.00, 1.00); scripts=; audio=0
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Slash9dn.mat; shader=Hovl/Particles/DissolveNoise; supported=True; errors=False
+Assets/Hovl Studio/White mage spells/Prefabs/Wings buff/Wings buff cast.prefab: systems=18; scale=(1.00, 1.00, 1.00); scripts=HS_FrontAttack; audio=1
+  Wings effect; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=1.5; max=1000
+  Wings effect/Rays; active=True; loop=False; duration=3; delay=0; lifetime=0.6; size=0.4; max=1000
+  Wings effect/Flash; active=True; loop=False; duration=2; delay=0; lifetime=0.65; size=2.8; max=1000
+  Wings effect/BigFlashLight; active=True; loop=False; duration=2; delay=0; lifetime=0.15; size=4; max=1000
+  Wings effect/Light(Delete for HD); active=True; loop=False; duration=2; delay=0; lifetime=1.2; size=1; max=1000
+  Wings effect/Distortion(Delete for HD and LW); active=True; loop=False; duration=2; delay=0; lifetime=0.3; size=2; max=1000
+  Wings effect/Feathers; active=True; loop=False; duration=2; delay=0; lifetime=1; size=0.05; max=1000
+  Wings effect/Wind; active=True; loop=False; duration=2; delay=0; lifetime=0.4; size=1.5; max=1000
+  Wings effect/ShockWave; active=True; loop=False; duration=2; delay=0; lifetime=0.25; size=5.2; max=1000
+  Wings effect/ShockWave2; active=True; loop=False; duration=2; delay=0; lifetime=0.7; size=5; max=1000
+  Wings effect/Smoke; active=True; loop=False; duration=2; delay=0; lifetime=1; size=2; max=1000
+  Wings effect/Rainbow; active=True; loop=False; duration=2; delay=0; lifetime=0.5; size=6; max=1000
+  Wings effect/Flare; active=True; loop=False; duration=2; delay=0; lifetime=0.4; size=12; max=1000
+  Wings effect/Sparks; active=True; loop=False; duration=2; delay=0; lifetime=0.4; size=0.05; max=1000
+  Wings effect/Smoke; active=True; loop=False; duration=2; delay=0; lifetime=1; size=1.5; max=1000
+  Wings effect/SmokeFlash; active=True; loop=False; duration=2; delay=0; lifetime=1.2; size=2; max=1000
+  Wings effect/Smoke; active=True; loop=False; duration=2; delay=0; lifetime=1.5; size=1.6; max=1000
+  Wings effect/Distortion(Delete for Mobile); active=True; loop=False; duration=2; delay=0; lifetime=0.3; size=3; max=1000
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Noise69bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail78cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Flash23cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Resources/unity_builtin_extra; shader=Legacy Shaders/Particles/Alpha Blended Premultiply; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Distortion.mat; shader=Hovl/Particles/Distortion; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Feather3bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Smoke17cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/CircleRainbow10cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Noise53bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Smoke3cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/CircleRainbow11cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Flare23cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/FireF5.mat; shader=Hovl/Particles/Fire; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trails73cg2.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Noise43bcg3.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/DistortionSmoke18.mat; shader=Hovl/Particles/Distortion; supported=True; errors=False
+Assets/Hovl Studio/White mage spells/Prefabs/Wings buff/Wings buff.prefab: systems=8; scale=(1.00, 1.00, 1.00); scripts=; audio=0
+  ; active=True; loop=False; duration=2; delay=0; lifetime=0.8; size=1; max=1000
+  Feathers; active=True; loop=False; duration=2; delay=0; lifetime=1; size=0.05; max=1000
+  Sparks; active=True; loop=False; duration=2; delay=0; lifetime=0.3; size=0.04; max=1000
+  Runes; active=True; loop=False; duration=2; delay=0; lifetime=0.7; size=0.7; max=1000
+  Fire; active=True; loop=False; duration=2; delay=0; lifetime=0.8; size=0.9; max=1000
+  Glow; active=True; loop=False; duration=2; delay=0; lifetime=1; size=1.55; max=1000
+  Trail1; active=True; loop=False; duration=2; delay=0; lifetime=0.6; size=0.7; max=1000
+  Trail2; active=True; loop=False; duration=2; delay=0; lifetime=0.6; size=0.7; max=1000
+  MATERIAL Assets/Hovl Studio/Resources/Materials/FireF5.mat; shader=Hovl/Particles/Fire; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Feather3bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Sword slash VFX/Materials/Glow1cg.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/MagicText8bcg.mat; shader=Hovl/Particles/Blend_CenterGlow; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trails73cg2.mat; shader=Hovl/Particles/Add_CenterGlow; supported=True; errors=False
+  MATERIAL Resources/unity_builtin_extra; shader=Legacy Shaders/Particles/Alpha Blended Premultiply; supported=True; errors=False
+  MATERIAL Assets/Hovl Studio/Resources/Materials/Trail64Path.mat; shader=Hovl/Particles/Blend_LinePath; supported=True; errors=False

@@ -25,6 +25,8 @@ namespace FrankRetarget
         public FrankTestActor AttackerActor => attackActor;
         public FrankTestActor ReceiverActor => hitActor;
         public float SampleTime { get; private set; }
+        public CombatTripletData Move { get; private set; }
+        public int PlaybackId => attacker ? attacker.PlaybackId : -1;
         public float Duration => Mathf.Max(pair.attack.length, pair.reaction.length);
         public bool Playing { get; private set; }
         FrankBattlePair pair;
@@ -88,6 +90,7 @@ namespace FrankRetarget
         {
             if (move.sourcePair == null || !move.sourcePair.Valid) return false;
             pair = move.sourcePair;
+            Move = move;
             attacker = source;
             receiver = target;
             lethal = isLethal;

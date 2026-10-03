@@ -23,7 +23,7 @@ namespace FrankRetarget.Editor
             public float volume, pitchMin, pitchMax;
             public SfxSelectionClip[] clips;
         }
-        [Serializable] sealed class SfxSelectionClip { public string path; public float peakDbFS; }
+        [Serializable] sealed class SfxSelectionClip { public string path, playbackPath; public float peakDbFS, playbackPeakDbFS; }
 
         [MenuItem("Tools/Battle/Install selected SFX")]
         public static void InstallBattleSfx()
@@ -35,10 +35,11 @@ namespace FrankRetarget.Editor
             bank.groups = selection.groups.Select(g => new BattleSfxBank.Group
             {
                 id = g.id, volume = g.volume, pitch = new Vector2(g.pitchMin, g.pitchMax),
-                clips = g.clips.Select(c => LoadBattleSfxClip(c.path)).ToArray(),
+                clips = g.clips.Select(c => LoadBattleSfxClip(string.IsNullOrEmpty(c.playbackPath) ? c.path : c.playbackPath)).ToArray(),
                 // Bring variant peaks closer without rewriting the source WAV/importer.
                 // Cap boosts on quiet foley; final output is clamped by the player.
-                clipGains = g.clips.Select(c => Mathf.Min(4f, Mathf.Pow(10f, (-6f - c.peakDbFS) / 20f))).ToArray()
+                clipGains = g.clips.Select(c => string.IsNullOrEmpty(c.playbackPath) ?
+                    Mathf.Min(4f, Mathf.Pow(10f, (-6f - c.peakDbFS) / 20f)) : 1f).ToArray()
             }).ToArray();
             var scene = SceneManager.GetSceneByPath(SfxScene);
             bool opened = !scene.IsValid() || !scene.isLoaded;
@@ -49,6 +50,7 @@ namespace FrankRetarget.Editor
                 var player = game.GetComponent<BattleSfxPlayer>();
                 if (!player) player = game.gameObject.AddComponent<BattleSfxPlayer>();
                 player.bank = bank;
+                player.masterVolume = .95f;
                 player.uiButtons = scene.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<Button>(true)).Distinct().ToArray();
                 game.battleSfx = player;
                 var fighters = new[] { game.leftCombat, game.rightCombat };
@@ -140,6 +142,20 @@ namespace FrankRetarget.Editor
                 clip = AssetDatabase.LoadAssetAtPath<AudioClip>(converted);
             }
             if (!clip) throw new Exception("Missing SFX after explicit import: " + path);
+            if (path.StartsWith("Assets/Audio/Battle/Clips/Processed/", StringComparison.Ordinal))
+            {
+                var importer = AssetImporter.GetAtPath(path) as AudioImporter;
+                var settings = importer.defaultSampleSettings;
+                if (settings.loadType != AudioClipLoadType.DecompressOnLoad || settings.compressionFormat != AudioCompressionFormat.PCM || !settings.preloadAudioData)
+                {
+                    settings.loadType = AudioClipLoadType.DecompressOnLoad;
+                    settings.compressionFormat = AudioCompressionFormat.PCM;
+                    settings.preloadAudioData = true;
+                    importer.defaultSampleSettings = settings;
+                    importer.SaveAndReimport();
+                    clip = AssetDatabase.LoadAssetAtPath<AudioClip>(path);
+                }
+            }
             return clip;
         }
 
@@ -150,15 +166,18 @@ namespace FrankRetarget.Editor
                 { seconds = time, group = id, finalLanding = final });
             void Hit(float time, string swing, string impact)
             {
-                Cue(Mathf.Max(0, time - .16f), swing);
+                // Put the whoosh's measured energy peak just before contact.
+                float lead = swing == "blade_swing" ? .23f : swing == "heavy_swing" ? .19f :
+                    swing == "thrust_swing" ? .105f : .13f;
+                Cue(Mathf.Max(0, time - lead), swing);
                 Cue(time, impact);
             }
             // Source-pose samples at 30 Hz and visual contact review, shared by
             // Mankey and Pepe. Receiver landing is separate from attacker landing.
             switch (move.moveName)
             {
-                case "Light_1": Cue(.48f, "light_swing"); Cue(1.05f, "light_swing"); Cue(1.27f, "body_fall", true); break;
-                case "Light_3": Cue(.53f, "light_swing"); Cue(1.53f, "light_swing"); Cue(1.77f, "body_fall", true); break;
+                case "Light_1": Cue(.48f, "light_swing"); Cue(1.05f, "light_swing"); Cue(1.27f, "body_fall", true); Cue(1.29f, "comic_fall"); break;
+                case "Light_3": Cue(.53f, "light_swing"); Cue(1.53f, "light_swing"); Cue(1.77f, "body_fall", true); Cue(1.79f, "comic_fall"); break;
                 case "Heavy_5":
                     Hit(1.47f, "light_swing", "heavy_hit"); Hit(2.30f, "blade_swing", "light_hit");
                     Hit(2.90f, "blade_swing", "heavy_hit"); Hit(3.67f, "blade_swing", "light_hit");

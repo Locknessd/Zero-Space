@@ -24,10 +24,7 @@ public class CFX_SpawnSystem : MonoBehaviour
 	/// </param>
 	static public GameObject GetNextObject(GameObject sourceObj, bool activateObject = true)
 	{
-		// Unity 6.5 promotes GetInstanceID to an error (CS0619). Entity IDs
-		// remain stable for the lifetime of an object and are the supported
-		// replacement for this pool key.
-		EntityId uniqueId = sourceObj.GetEntityId();
+		int uniqueId = sourceObj.GetInstanceID();
 		
 		if(!instance.poolCursors.ContainsKey(uniqueId))
 		{
@@ -131,12 +128,12 @@ public class CFX_SpawnSystem : MonoBehaviour
 	public bool instantiateIfNeeded = false;
 	
 	private bool allObjectsLoaded;
-	private Dictionary<EntityId,List<GameObject>> instantiatedObjects = new Dictionary<EntityId, List<GameObject>>();
-	private Dictionary<EntityId,int> poolCursors = new Dictionary<EntityId, int>();
+	private Dictionary<int,List<GameObject>> instantiatedObjects = new Dictionary<int, List<GameObject>>();
+	private Dictionary<int,int> poolCursors = new Dictionary<int, int>();
 	
 	private void addObjectToPool(GameObject sourceObject, int number)
 	{
-		EntityId uniqueId = sourceObject.GetEntityId();
+		int uniqueId = sourceObject.GetInstanceID();
 
 		//Add new entry if it doesn't exist
 		if(!instantiatedObjects.ContainsKey(uniqueId))
@@ -177,7 +174,7 @@ public class CFX_SpawnSystem : MonoBehaviour
 	
 	private void removeObjectsFromPool(GameObject sourceObject)
 	{
-		EntityId uniqueId = sourceObject.GetEntityId();
+		int uniqueId = sourceObject.GetInstanceID();
 		
 		if(!instantiatedObjects.ContainsKey(uniqueId))
 		{
@@ -198,7 +195,7 @@ public class CFX_SpawnSystem : MonoBehaviour
 		poolCursors.Remove(uniqueId);
 	}
 
-	private void increasePoolCursor(EntityId uniqueId)
+	private void increasePoolCursor(int uniqueId)
 	{
 		instance.poolCursors[uniqueId]++;
 		if(instance.poolCursors[uniqueId] >= instance.instantiatedObjects[uniqueId].Count)

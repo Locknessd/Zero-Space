@@ -1,0 +1,596 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5be01484388ad4b41a633befbbbbc6c4, type: 3}
+  m_Name: BattleSfxBank
+  m_EditorClassIdentifier: Assembly-CSharp::BattleSfxBank
+  groups:
+  - id: light_swing
+    volume: 0.4
+    pitch: {x: 0.96, y: 1.04}
+    clips:
+    - {fileID: 8300000, guid: 9c6e19771727aeb47baac8657ad8feb2, type: 3}
+    - {fileID: 8300000, guid: d87c96fa52012d544b54e472ad98f481, type: 3}
+    - {fileID: 8300000, guid: bc453b64068cd07409247ca449e4d3a5, type: 3}
+    clipGains:
+    - 2.5438998
+    - 0.8128305
+    - 0.81189525
+  - id: light_hit
+    volume: 0.65
+    pitch: {x: 0.97, y: 1.03}
+    clips:
+    - {fileID: 8300000, guid: 956fd22b53107d0418739a8c9eb8eda8, type: 3}
+    - {fileID: 8300000, guid: 7b73fe87953bfae4ba2f5e989ab915b9, type: 3}
+    - {fileID: 8300000, guid: 7879018cb93baa34a81daf08f7d4679a, type: 3}
+    clipGains:
+    - 0.5432503
+    - 0.5223962
+    - 0.5193977
+  - id: heavy_swing
+    volume: 0.5
+    pitch: {x: 0.92, y: 1}
+    clips:
+    - {fileID: 8300000, guid: 2fe02f29d8c0d1f468ee9a69ef878110, type: 3}
+    - {fileID: 8300000, guid: 47598b071a762ce4d86ff6e587d88b77, type: 3}
+    clipGains:
+    - 1.8988909
+    - 1.2105981
+  - id: blade_swing
+    volume: 0.4
+    pitch: {x: 0.98, y: 1.06}
+    clips:
+    - {fileID: 8300000, guid: 641482022e65d08458cfc46d0da318cd, type: 3}
+    - {fileID: 8300000, guid: d0d42bc8c98476646a7b88be93b1948f, type: 3}
+    - {fileID: 8300000, guid: 02981d1f2ba873b468dcd08522e34ced, type: 3}
+    clipGains:
+    - 0.81189525
+    - 0.8128305
+    - 0.81470424
+  - id: thrust_swing
+    volume: 0.38
+    pitch: {x: 0.98, y: 1.04}
+    clips:
+    - {fileID: 8300000, guid: ab80bf828a0c25d4787c01cb11827e6b, type: 3}
+    - {fileID: 8300000, guid: 9228feae6f9275c47b4b5b00b1d6a62f, type: 3}
+    clipGains:
+    - 0.91833264
+    - 1.0952165
+  - id: heavy_hit
+    volume: 0.7
+    pitch: {x: 0.94, y: 1.02}
+    clips:
+    - {fileID: 8300000, guid: d83f0e3cdc09ddc4294167857c9c37da, type: 3}
+    - {fileID: 8300000, guid: 280040a692d9c8a4f8d9933092408cf0, type: 3}
+    clipGains:
+    - 0.5708211
+    - 0.5242036
+  - id: stab_hit
+    volume: 0.52
+    pitch: {x: 0.97, y: 1.03}
+    clips:
+    - {fileID: 8300000, guid: b6956a7842fc6474ea26f8c4b3e77719, type: 3}
+    clipGains:
+    - 0.67608297
+  - id: body_fall
+    volume: 0.6
+    pitch: {x: 0.95, y: 1.02}
+    clips:
+    - {fileID: 8300000, guid: 3dbabf924859ee04d81bd13942d7b4f7, type: 3}
+    - {fileID: 8300000, guid: f3e50e58721e02c4d8c3241ef24f4a0e, type: 3}
+    - {fileID: 8300000, guid: db55466a3f7e47240b4faf9ab960c686, type: 3}
+    clipGains:
+    - 0.9078205
+    - 0.6180164
+    - 0.53579664
+  - id: getup
+    volume: 0.22
+    pitch: {x: 0.98, y: 1.02}
+    clips:
+    - {fileID: 8300000, guid: 67bda4d6dceb88741b6ebb7a355b436e, type: 3}
+    - {fileID: 8300000, guid: 1493d8d125421944c9c03ba81f48d30c, type: 3}
+    clipGains:
+    - 4
+    - 3.9948459
+  - id: knockout_fall
+    volume: 0.72
+    pitch: {x: 0.96, y: 1}
+    clips:
+    - {fileID: 8300000, guid: 127ac9325e64045408c22e79a767e99d, type: 3}
+    clipGains:
+    - 0.6201547
+  - id: footstep
+    volume: 0.25
+    pitch: {x: 0.97, y: 1.03}
+    clips:
+    - {fileID: 8300000, guid: d88cbad2d217cd74ba1eb0899d6c55ad, type: 3}
+    - {fileID: 8300000, guid: ada024810fd950d408257d2b4903e899, type: 3}
+    - {fileID: 8300000, guid: 74fb0bf68831ec14e8bbc1d6ab1dfba5, type: 3}
+    clipGains:
+    - 4
+    - 4
+    - 4
+  - id: metal_clash
+    volume: 0.45
+    pitch: {x: 0.97, y: 1.03}
+    clips:
+    - {fileID: 8300000, guid: 8019e8477cf2d9d4588cf5f097b41bfe, type: 3}
+    - {fileID: 8300000, guid: a8bb10c5b243aa0469a46b0be049329c, type: 3}
+    clipGains:
+    - 0.5382698
+    - 0.52966344
+  - id: shield_block
+    volume: 0.5
+    pitch: {x: 0.98, y: 1.02}
+    clips:
+    - {fileID: 8300000, guid: 983ecbfb126aeb746b6c37b1b95ddbc6, type: 3}
+    clipGains:
+    - 0.5761028
+  - id: blade_cut
+    volume: 0.25
+    pitch: {x: 0.98, y: 1.02}
+    clips:
+    - {fileID: 8300000, guid: 5de35d095a26a5042a71af599850b917, type: 3}
+    clipGains:
+    - 0.50815946
+  - id: hurt_voice
+    volume: 0.3
+    pitch: {x: 1, y: 1}
+    clips:
+    - {fileID: 8300000, guid: a4e803a901dee444c82fbd45bba758a0, type: 3}
+    - {fileID: 8300000, guid: 0cd1f22ca145bf343a56187c1f9ac087, type: 3}
+    clipGains:
+    - 0.62878186
+    - 1.0069317
+  - id: fight_start
+    volume: 0.65
+    pitch: {x: 1, y: 1}
+    clips:
+    - {fileID: 8300000, guid: 5e2132b73ab1cb2479545e372e89decd, type: 3}
+    clipGains:
+    - 0.5017646
+  - id: victory
+    volume: 0.65
+    pitch: {x: 1, y: 1}
+    clips:
+    - {fileID: 8300000, guid: 752b1c9a1933e234eb7f17ef55205922, type: 3}
+    clipGains:
+    - 0.5017646
+  - id: ui_click
+    volume: 0.3
+    pitch: {x: 1, y: 1}
+    clips:
+    - {fileID: 8300000, guid: c62ca667e6a9e0f46bd6dd4f8d79ade7, type: 3}
+    - {fileID: 8300000, guid: eb43be47580624945887f5bd177fbed8, type: 3}
+    clipGains:
+    - 0.7647157
+    - 0.6516284
+  moves:
+  - label: Mankey Light_1
+    attack: {fileID: 7400000, guid: 639221af9523ddee5aa6a8a5e94f7de0, type: 2}
+    reaction: {fileID: 7400000, guid: 303a99312dc6839d78b0c9bbc6f448af, type: 2}
+    cues:
+    - seconds: 0.48
+      group: light_swing
+      finalLanding: 0
+    - seconds: 1.05
+      group: light_swing
+      finalLanding: 0
+    - seconds: 1.27
+      group: body_fall
+      finalLanding: 1
+  - label: Mankey Light_3
+    attack: {fileID: 7400000, guid: 76e9c5411407b62e39172a6f4375b4bd, type: 2}
+    reaction: {fileID: 7400000, guid: ce7a44ba3b2afc477be79759a8fd2010, type: 2}
+    cues:
+    - seconds: 0.53
+      group: light_swing
+      finalLanding: 0
+    - seconds: 1.53
+      group: light_swing
+      finalLanding: 0
+    - seconds: 1.77
+      group: body_fall
+      finalLanding: 1
+  - label: Mankey Heavy_5
+    attack: {fileID: 7400000, guid: 704a3636bd202b4a8a22c98bc3ff67e3, type: 2}
+    reaction: {fileID: 7400000, guid: 51ecae1bd49859bfc96cfd34496401c5, type: 2}
+    cues:
+    - seconds: 1.3100001
+      group: light_swing
+      finalLanding: 0
+    - seconds: 1.47
+      group: heavy_hit
+      finalLanding: 0
+    - seconds: 2.1399999
+      group: blade_swing
+      finalLanding: 0
+    - seconds: 2.3
+      group: light_hit
+      finalLanding: 0
+    - seconds: 2.74
+      group: blade_swing
+      finalLanding: 0
+    - seconds: 2.9
+      group: heavy_hit
+      finalLanding: 0
+    - seconds: 3.51
+      group: blade_swing
+      finalLanding: 0
+    - seconds: 3.67
+      group: light_hit
+      finalLanding: 0
+    - seconds: 4.04
+      group: blade_swing
+      finalLanding: 0
+    - seconds: 4.2
+      group: heavy_hit
+      finalLanding: 0
+    - seconds: 4.97
+      group: body_fall
+      finalLanding: 1
+  - label: Mankey Heavy_6
+    attack: {fileID: 7400000, guid: d7f6ec4fe18d56ed4b64b0a65410cdaa, type: 2}
+    reaction: {fileID: 7400000, guid: 1154b9ff101932c3884ca761764f4480, type: 2}
+    cues:
+    - seconds: 1.3100001
+      group: heavy_swing
+      finalLanding: 0
+    - seconds: 1.47
+      group: heavy_hit
+      finalLanding: 0
+    - seconds: 2.11
+      group: heavy_swing
+      finalLanding: 0
+    - seconds: 2.27
+      group: heavy_hit
+      finalLanding: 0
+    - seconds: 2.81
+      group: heavy_swing
+      finalLanding: 0
+    - seconds: 2.97
+      group: heavy_hit
+      finalLanding: 0
+    - seconds: 4.2400002
+      group: heavy_swing
+      finalLanding: 0
+    - seconds: 4.4
+      group: heavy_hit
+      finalLanding: 0
+    - seconds: 5.07
+      group: body_fall
+      finalLanding: 1
+  - label: Mankey Heavy_7
+    attack: {fileID: 7400000, guid: c3bf65b3b61bc4d9c853c894a6b5c888, type: 2}
+    reaction: {fileID: 7400000, guid: 8adc83af964f26c6c811c3b7615a9531, type: 2}
+    cues:
+    - seconds: 1.01
+      group: thrust_swing
+      finalLanding: 0
+    - seconds: 1.17
+      group: stab_hit
+      finalLanding: 0
+    - seconds: 2.57
+      group: blade_swing
+      finalLanding: 0
+    - seconds: 2.73
+      group: light_hit
+      finalLanding: 0
+    - seconds: 3.1399999
+      group: blade_swing
+      finalLanding: 0
+    - seconds: 3.3
+      group: light_hit
+      finalLanding: 0
+    - seconds: 3.57
+      group: light_swing
+      finalLanding: 0
+    - seconds: 3.73
+      group: heavy_hit
+      finalLanding: 0
+    - seconds: 4.54
+      group: thrust_swing
+      finalLanding: 0
+    - seconds: 4.7
+      group: stab_hit
+      finalLanding: 0
+    - seconds: 5.44
+      group: light_swing
+      finalLanding: 0
+    - seconds: 5.6
+      group: heavy_hit
+      finalLanding: 0
+    - seconds: 6.03
+      group: body_fall
+      finalLanding: 1
+  - label: Mankey Heavy_2
+    attack: {fileID: 7400000, guid: 0bdec02c684bfaf45a09de44c51a1302, type: 2}
+    reaction: {fileID: 7400000, guid: d0ce6f3fc511d507b93b0a229c02337e, type: 2}
+    cues:
+    - seconds: 1.3100001
+      group: heavy_swing
+      finalLanding: 0
+    - seconds: 1.47
+      group: heavy_hit
+      finalLanding: 0
+    - seconds: 2.1399999
+      group: light_swing
+      finalLanding: 0
+    - seconds: 2.3
+      group: heavy_hit
+      finalLanding: 0
+    - seconds: 2.83
+      group: body_fall
+      finalLanding: 0
+    - seconds: 3.31
+      group: heavy_swing
+      finalLanding: 0
+    - seconds: 3.47
+      group: heavy_hit
+      finalLanding: 0
+    - seconds: 4.11
+      group: heavy_swing
+      finalLanding: 0
+    - seconds: 4.27
+      group: heavy_hit
+      finalLanding: 0
+    - seconds: 4.53
+      group: body_fall
+      finalLanding: 1
+  - label: Mankey Heavy_8
+    attack: {fileID: 7400000, guid: e762c1dee3c6fd4158d7c574da543530, type: 2}
+    reaction: {fileID: 7400000, guid: aa01adb79aec1d8bfa373f7930b47d9f, type: 2}
+    cues:
+    - seconds: 0.9100001
+      group: blade_swing
+      finalLanding: 0
+    - seconds: 1.07
+      group: light_hit
+      finalLanding: 0
+    - seconds: 1.1700001
+      group: blade_swing
+      finalLanding: 0
+    - seconds: 1.33
+      group: light_hit
+      finalLanding: 0
+    - seconds: 1.74
+      group: blade_swing
+      finalLanding: 0
+    - seconds: 1.9
+      group: heavy_hit
+      finalLanding: 0
+    - seconds: 2.51
+      group: thrust_swing
+      finalLanding: 0
+    - seconds: 2.67
+      group: stab_hit
+      finalLanding: 0
+    - seconds: 3.01
+      group: blade_swing
+      finalLanding: 0
+    - seconds: 3.17
+      group: light_hit
+      finalLanding: 0
+    - seconds: 3.37
+      group: thrust_swing
+      finalLanding: 0
+    - seconds: 3.53
+      group: stab_hit
+      finalLanding: 0
+    - seconds: 3.6699998
+      group: light_swing
+      finalLanding: 0
+    - seconds: 3.83
+      group: heavy_hit
+      finalLanding: 0
+    - seconds: 4.13
+      group: body_fall
+      finalLanding: 1
+    - seconds: 5.43
+      group: body_fall
+      finalLanding: 0
+  - label: Pepe Heavy_5
+    attack: {fileID: 7400000, guid: 55df8da958feec5379886b57b8fdaa22, type: 2}
+    reaction: {fileID: 7400000, guid: 815993e08bc1e7bc6ad4c04db31399c9, type: 2}
+    cues:
+    - seconds: 1.3100001
+      group: light_swing
+      finalLanding: 0
+    - seconds: 1.47
+      group: heavy_hit
+      finalLanding: 0
+    - seconds: 2.1399999
+      group: blade_swing
+      finalLanding: 0
+    - seconds: 2.3
+      group: light_hit
+      finalLanding: 0
+    - seconds: 2.74
+      group: blade_swing
+      finalLanding: 0
+    - seconds: 2.9
+      group: heavy_hit
+      finalLanding: 0
+    - seconds: 3.51
+      group: blade_swing
+      finalLanding: 0
+    - seconds: 3.67
+      group: light_hit
+      finalLanding: 0
+    - seconds: 4.04
+      group: blade_swing
+      finalLanding: 0
+    - seconds: 4.2
+      group: heavy_hit
+      finalLanding: 0
+    - seconds: 4.97
+      group: body_fall
+      finalLanding: 1
+  - label: Pepe Heavy_6
+    attack: {fileID: 7400000, guid: 32a144720df8bb1cfb3dc58b6eb1b05b, type: 2}
+    reaction: {fileID: 7400000, guid: 29d1673c59917bf858ecdeda1c1d3ef3, type: 2}
+    cues:
+    - seconds: 1.3100001
+      group: heavy_swing
+      finalLanding: 0
+    - seconds: 1.47
+      group: heavy_hit
+      finalLanding: 0
+    - seconds: 2.11
+      group: heavy_swing
+      finalLanding: 0
+    - seconds: 2.27
+      group: heavy_hit
+      finalLanding: 0
+    - seconds: 2.81
+      group: heavy_swing
+      finalLanding: 0
+    - seconds: 2.97
+      group: heavy_hit
+      finalLanding: 0
+    - seconds: 4.2400002
+      group: heavy_swing
+      finalLanding: 0
+    - seconds: 4.4
+      group: heavy_hit
+      finalLanding: 0
+    - seconds: 5.07
+      group: body_fall
+      finalLanding: 1
+  - label: Pepe Heavy_7
+    attack: {fileID: 7400000, guid: e3d0e60f2b1771925ac4af64e74863a1, type: 2}
+    reaction: {fileID: 7400000, guid: 1a1eacea83607f6a3ae147efbbc23558, type: 2}
+    cues:
+    - seconds: 1.01
+      group: thrust_swing
+      finalLanding: 0
+    - seconds: 1.17
+      group: stab_hit
+      finalLanding: 0
+    - seconds: 2.57
+      group: blade_swing
+      finalLanding: 0
+    - seconds: 2.73
+      group: light_hit
+      finalLanding: 0
+    - seconds: 3.1399999
+      group: blade_swing
+      finalLanding: 0
+    - seconds: 3.3
+      group: light_hit
+      finalLanding: 0
+    - seconds: 3.57
+      group: light_swing
+      finalLanding: 0
+    - seconds: 3.73
+      group: heavy_hit
+      finalLanding: 0
+    - seconds: 4.54
+      group: thrust_swing
+      finalLanding: 0
+    - seconds: 4.7
+      group: stab_hit
+      finalLanding: 0
+    - seconds: 5.44
+      group: light_swing
+      finalLanding: 0
+    - seconds: 5.6
+      group: heavy_hit
+      finalLanding: 0
+    - seconds: 6.03
+      group: body_fall
+      finalLanding: 1
+  - label: Pepe Heavy_2
+    attack: {fileID: 7400000, guid: 9c35a5274953fd6efbf06df0defbdf9c, type: 2}
+    reaction: {fileID: 7400000, guid: 1ad661b136b91122291ed51469b56be9, type: 2}
+    cues:
+    - seconds: 1.3100001
+      group: heavy_swing
+      finalLanding: 0
+    - seconds: 1.47
+      group: heavy_hit
+      finalLanding: 0
+    - seconds: 2.1399999
+      group: light_swing
+      finalLanding: 0
+    - seconds: 2.3
+      group: heavy_hit
+      finalLanding: 0
+    - seconds: 2.83
+      group: body_fall
+      finalLanding: 0
+    - seconds: 3.31
+      group: heavy_swing
+      finalLanding: 0
+    - seconds: 3.47
+      group: heavy_hit
+      finalLanding: 0
+    - seconds: 4.11
+      group: heavy_swing
+      finalLanding: 0
+    - seconds: 4.27
+      group: heavy_hit
+      finalLanding: 0
+    - seconds: 4.53
+      group: body_fall
+      finalLanding: 1
+  - label: Pepe Heavy_8
+    attack: {fileID: 7400000, guid: 1ad3d996a0d19d8e6a467d4df0bbfb72, type: 2}
+    reaction: {fileID: 7400000, guid: 07afc81177a579c6c8735a0a421889f5, type: 2}
+    cues:
+    - seconds: 0.9100001
+      group: blade_swing
+      finalLanding: 0
+    - seconds: 1.07
+      group: light_hit
+      finalLanding: 0
+    - seconds: 1.1700001
+      group: blade_swing
+      finalLanding: 0
+    - seconds: 1.33
+      group: light_hit
+      finalLanding: 0
+    - seconds: 1.74
+      group: blade_swing
+      finalLanding: 0
+    - seconds: 1.9
+      group: heavy_hit
+      finalLanding: 0
+    - seconds: 2.51
+      group: thrust_swing
+      finalLanding: 0
+    - seconds: 2.67
+      group: stab_hit
+      finalLanding: 0
+    - seconds: 3.01
+      group: blade_swing
+      finalLanding: 0
+    - seconds: 3.17
+      group: light_hit
+      finalLanding: 0
+    - seconds: 3.37
+      group: thrust_swing
+      finalLanding: 0
+    - seconds: 3.53
+      group: stab_hit
+      finalLanding: 0
+    - seconds: 3.6699998
+      group: light_swing
+      finalLanding: 0
+    - seconds: 3.83
+      group: heavy_hit
+      finalLanding: 0
+    - seconds: 4.13
+      group: body_fall
+      finalLanding: 1
+    - seconds: 5.43
+      group: body_fall
+      finalLanding: 0

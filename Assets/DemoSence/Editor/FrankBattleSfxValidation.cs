@@ -24,7 +24,7 @@ namespace FrankRetarget.Editor
                     throw new Exception("Missing scene/fighter audio bindings");
                 if (audio.masterVolume <= 0) throw new Exception("Battle SFX muted");
                 var bank = audio.bank;
-                if (bank.groups.Sum(g => g.clips.Length) != 35) throw new Exception("Expected the 35 selected clips");
+                if (bank.groups.Sum(g => g.clips.Length) != 37) throw new Exception("Expected the 37 reviewed playback clips");
                 foreach (var group in bank.groups)
                 {
                     if (group.clips.Length != group.clipGains.Length || group.clips.Any(c => !c || c.samples <= 0 || c.length <= 0))
@@ -114,7 +114,7 @@ namespace FrankRetarget.Editor
                     }
                     finally { audio.CuePlayed -= onCue; foreach (var f in fighters) f.ResetCombat(); }
                 }
-                report.AppendLine($"PASS {cases} source sequence cases, 35 AudioClips, both fighter bindings, one listener, Fight/Victory deduplication.");
+                report.AppendLine($"PASS {cases} source sequence cases, {bank.groups.Sum(g => g.clips.Length)} AudioClips, both fighter bindings, one listener, Fight/Victory deduplication.");
             }
             catch (Exception e) { report.AppendLine("FAIL " + e); throw; }
             finally

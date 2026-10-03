@@ -1,0 +1,11 @@
+LandingDust t=0.08: magentaPixels=0
+LandingDust t=0.20: magentaPixels=0
+LandingDust t=0.40: magentaPixels=0
+cfxr smoke cloud corner ab: shader=Cartoon FX/Remaster/Particle Ubershader; path=Assets/JMO Assets/Cartoon FX Remaster/CFXR Assets/Shaders/CFXR Particle Ubershader.shader; supported=True; errors=False; passes=3
+GroundImpact t=0.08: magentaPixels=0
+GroundImpact t=0.20: magentaPixels=0
+GroundImpact t=0.40: magentaPixels=0
+cfxr stretch triangle smooth nosp ab: shader=Cartoon FX/Remaster/Particle Ubershader; path=Assets/JMO Assets/Cartoon FX Remaster/CFXR Assets/Shaders/CFXR Particle Ubershader.shader; supported=True; errors=False; passes=3
+cfxr proc ring local space ab: shader=Cartoon FX/Remaster/Particle Procedural Ring; path=Assets/JMO Assets/Cartoon FX Remaster/CFXR Assets/Shaders/CFXR Particle Procedural Ring.shader; supported=True; errors=False; passes=3
+cfxr proc ring local space add: shader=Cartoon FX/Remaster/Particle Procedural Ring; path=Assets/JMO Assets/Cartoon FX Remaster/CFXR Assets/Shaders/CFXR Particle Procedural Ring.shader; supported=True; errors=False; passes=3
+PASS landing VFX rendering: no error-magenta pixels or shader errors.

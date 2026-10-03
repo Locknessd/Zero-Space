@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public sealed class BattleSfxPlayer : MonoBehaviour
 {
     public BattleSfxBank bank;
-    [Range(0f, 1f)] public float masterVolume = .85f;
+    [Range(0f, 1f)] public float masterVolume = .95f;
     public bool enableAnnouncer = true;
     public bool enableHurtVoices;
     public bool enableUiSounds = true;
@@ -24,9 +24,11 @@ public sealed class BattleSfxPlayer : MonoBehaviour
     FrankBattlePairPlayback owner;
     BattleSfxBank.Move sequence;
     int nextCue;
-    bool lethal, recoveryPlayed, fightPlayed, victoryPlayed;
+    bool lethal, recoveryPlayed, fightPlayed, victoryPlayed, knockoutPlayed;
     float highWaterTime;
     AudioSource announcer;
+    float lastUiClick = -1;
+    readonly Dictionary<AudioSource, double> voiceStarts = new Dictionary<AudioSource, double>();
 
     void OnEnable()
     {
@@ -97,14 +99,24 @@ public sealed class BattleSfxPlayer : MonoBehaviour
 
     public void PlayUiClick()
     {
+        if (Application.isPlaying && Time.unscaledTime - lastUiClick < .06f) return;
+        lastUiClick = Time.unscaledTime;
         if (enableUiSounds) PlayGroup("ui_click");
+    }
+
+    public void PlayKnockoutOnce()
+    {
+        if (knockoutPlayed) return;
+        knockoutPlayed = true;
+        PlayGroup("ko_impact");
     }
 
     public void ResetForMatch()
     {
         owner = null;
         sequence = null;
-        fightPlayed = victoryPlayed = recoveryPlayed = false;
+        fightPlayed = victoryPlayed = recoveryPlayed = knockoutPlayed = false;
+        lastUiClick = -1;
         StopVoices();
     }
 
@@ -127,11 +139,16 @@ public sealed class BattleSfxPlayer : MonoBehaviour
         float gain = index < group.clipGains.Length ? group.clipGains[index] : 1f;
         if (Application.isPlaying)
         {
+            int priority = isAnnouncement ? 32 : id == "ko_impact" ? 48 :
+                id.EndsWith("hit", StringComparison.Ordinal) || id.EndsWith("fall", StringComparison.Ordinal) ? 64 :
+                id.EndsWith("swing", StringComparison.Ordinal) ? 100 : 160;
             var source = GetVoice(isAnnouncement);
             source.Stop();
             source.clip = clip;
+            source.priority = priority;
             source.volume = Mathf.Clamp01(masterVolume * group.volume * gain);
             source.pitch = Mathf.Lerp(group.pitch.x, group.pitch.y, (float)random.NextDouble());
+            voiceStarts[source] = AudioSettings.dspTime;
             source.Play();
         }
         PlayedCueCount++;
@@ -153,10 +170,11 @@ public sealed class BattleSfxPlayer : MonoBehaviour
             voices.Add(source);
             return source;
         }
-        // Saturation cannot cut off the announcer; reuse the oldest pooled voice.
+        // Reclaim low-priority foley/swings first; break ties by start time.
         var reused = voices[0];
-        voices.RemoveAt(0);
-        voices.Add(reused);
+        foreach (var source in voices)
+            if (source.priority > reused.priority ||
+                (source.priority == reused.priority && voiceStarts[source] < voiceStarts[reused])) reused = source;
         return reused;
     }
 

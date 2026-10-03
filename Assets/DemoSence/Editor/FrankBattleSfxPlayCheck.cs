@@ -22,9 +22,14 @@ namespace FrankRetarget.Editor
         static readonly List<string> effects = new List<string>();
         static readonly float[] samples = new float[256];
         static GameManager game;
+        static FrankCinematicCamera cameraDirector;
+        static Camera cinematicCamera;
+        static int cameraFrames;
+        static readonly HashSet<string> cameraShots = new HashSet<string>();
         static CharacterCombat[] fighters;
         static CombatTripletData[][] moves;
         static int step, frame = -1, outputFrames, sourceStarts;
+        static float mixedPeak;
         static int effectStarts;
         static bool started, waitingForResult;
         static string audioFailure;
@@ -104,6 +109,23 @@ namespace FrankRetarget.Editor
                     game.battleVfx.EffectPlayed += OnEffect;
                     fighters = new[] { game.leftCombat, game.rightCombat };
                     moves = fighters.Select(f => f.lightCombatMoves.Concat(f.heavyCombatMoves).ToArray()).ToArray();
+                    cinematicCamera = game.gameObject.scene.GetRootGameObjects()
+                        .SelectMany(r => r.GetComponentsInChildren<Camera>()).Single(c => c.CompareTag("MainCamera"));
+                    cameraDirector = cinematicCamera.GetComponent<FrankCinematicCamera>();
+                    if (cameraDirector && (!cameraDirector.enabled || cameraDirector.battle != game))
+                        throw new Exception("Live cinematic camera bindings are invalid");
+                }
+                if (cameraDirector)
+                {
+                    if (cameraDirector.LastFramingPoints.Count == 0) throw new Exception("Cinematic LateUpdate has not framed the fighters");
+                    foreach (var point in cameraDirector.LastFramingPoints)
+                    {
+                        var viewport = cinematicCamera.WorldToViewportPoint(point);
+                        if (viewport.z <= .03f || viewport.x < .049f || viewport.x > .951f || viewport.y < .049f || viewport.y > .951f)
+                            throw new Exception("Live body/weapon left the cinematic frame: " + viewport);
+                    }
+                    if (cameraDirector.ActiveShot != null) cameraShots.Add(cameraDirector.ActiveShot.key);
+                    cameraFrames++;
                 }
                 foreach (var source in game.battleSfx.GetComponentsInChildren<AudioSource>())
                 {
@@ -111,6 +133,9 @@ namespace FrankRetarget.Editor
                     source.GetOutputData(samples, 0);
                     if (samples.Any(s => Mathf.Abs(s) > .00001f)) { outputFrames++; break; }
                 }
+                AudioListener.GetOutputData(samples, 0);
+                foreach (float sample in samples) mixedPeak = Mathf.Max(mixedPeak, Mathf.Abs(sample));
+                if (mixedPeak >= .999f) throw new Exception("The battle mix clipped at the listener output.");
                 if (game.QueueError != null) throw new Exception(game.QueueError);
                 int total = moves.Sum(m => m.Length);
                 if (step > total)
@@ -128,11 +153,15 @@ namespace FrankRetarget.Editor
                     if (game.IsEventQueueBusy || EditorApplication.timeSinceStartup - stepBegan < 2.5) return;
                     if (game.battleVfx.ActiveEffectCount != 0) throw new Exception("Finished VFX did not return to the pool");
                     if (heard.Count(id => id == "victory") != 1) throw new Exception("Repeated result did not produce exactly one Victory");
+                    if (game.uiManager && game.uiManager.knockout && heard.Count(id => id == "ko_impact") != 1)
+                        throw new Exception("The KO lettering did not produce exactly one timed impact.");
                     game.battleSfx.PlayUiClick();
                     if (!heard.Contains("ui_click") || outputFrames == 0) throw new Exception("Missing UI cue or nonzero audio output");
+                    if (cameraDirector && cameraShots.Count != total) throw new Exception("Live cinematic camera did not play every battle shot");
                     Finish(true, $"PASS {total} local exchanges + duplicated lethal DAMAGE_APPLIED + duplicated WINNER_DECLARED; " +
-                        $"{sourceStarts} AudioSource starts, {outputFrames} frames with nonzero audio output; " +
-                        $"{effectStarts} VFX starts, finished particles returned to pool; UI click played.");
+                        $"{sourceStarts} AudioSource starts, {outputFrames} frames with nonzero audio output, mixed peak {mixedPeak:F3}; " +
+                        $"{effectStarts} VFX starts, finished particles returned to pool; UI click played. " +
+                        (cameraDirector ? $"Cinematic camera: {cameraShots.Count} authored shots, {cameraFrames} frames with bodies/weapons inside the safe frame, recovery/KO/victory completed." : ""));
                     return;
                 }
                 int side = step < moves[0].Length || step == total ? 0 : 1;
@@ -167,10 +196,11 @@ namespace FrankRetarget.Editor
                 if (game.IsEventQueueBusy || attacker.IsBusy || receiver.IsBusy) return;
                 var expected = game.battleSfx.bank.FindMove(move).cues.Select(c => lethal && c.finalLanding ? "knockout_fall" : c.group).ToList();
                 if (!lethal) expected.Add("getup");
+                if (lethal && game.uiManager && game.uiManager.knockout && game.uiManager.knockout.HasShown && heard.Contains("ko_impact")) expected.Add("ko_impact");
                 if (step == 0) expected.Insert(0, "fight_start");
                 if (!heard.SequenceEqual(expected)) throw new Exception("Live cue mismatch " + attacker.name + " " + move.moveName + ": " + string.Join(",", heard));
                 var profile = game.battleSfx.bank.FindMove(move);
-                int expectedHits = profile.cues.Count(c => c.group == "light_hit" || c.group == "heavy_hit" || c.group == "stab_hit") + (heavy ? 0 : 1);
+                int expectedHits = profile.cues.Count(c => c.group == "light_hit" || c.group == "heavy_hit" || c.group == "stab_hit");
                 if (effects.Count(id => id.EndsWith("hit")) != expectedHits ||
                     effects.Count(id => id.EndsWith("fall")) != profile.cues.Count(c => c.group == "body_fall"))
                     throw new Exception("Live VFX mismatch " + attacker.name + " " + move.moveName);
@@ -207,6 +237,7 @@ namespace FrankRetarget.Editor
             EditorSceneManager.playModeStartScene = AssetDatabase.LoadAssetAtPath<SceneAsset>(SessionState.GetString(Key + ".previous", ""));
             AssetDatabase.DeleteAsset(Copy);
             game = null; fighters = null; moves = null;
+            cameraDirector = null; cinematicCamera = null; cameraFrames = 0; cameraShots.Clear();
             step = outputFrames = sourceStarts = 0; frame = -1;
             began = stepBegan = 0; started = waitingForResult = false;
             audioFailure = null;
