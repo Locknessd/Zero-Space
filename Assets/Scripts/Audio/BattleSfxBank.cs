@@ -21,6 +21,13 @@ public sealed class BattleSfxBank : ScriptableObject
         public string group;
         [Tooltip("Use knockout_fall for this landing when the receiver dies.")]
         public bool finalLanding;
+        [Tooltip("Contact sampled on the receiver's animated mesh; shared by impact and damage timing.")]
+        public bool hasContactPoint;
+        public HumanBodyBones contactBone = HumanBodyBones.Chest;
+        public Vector3 contactOffset;
+        public string contactSource;
+        [Tooltip("A throw finisher deals its share of damage on the ground impact.")]
+        public bool damageOnLanding;
     }
 
     [Serializable]

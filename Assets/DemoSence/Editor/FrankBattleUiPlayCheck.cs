@@ -22,6 +22,8 @@ namespace FrankRetarget.Editor
         static MemeBattleUI ui;
         static int step, frame = -1, pendingFrames;
         static double began, phaseBegan;
+        static Vector3 heldHipsPosition;
+        static Quaternion heldHipsRotation;
 
         static FrankBattleUiPlayCheck()
         {
@@ -122,6 +124,7 @@ namespace FrankRetarget.Editor
                         if (!ui.knockout.HasShown) return;
                         if (!game.rightCombat.IsDead || ui.knockout.ShowCount != 1 || pendingFrames < 2)
                             throw new Exception("Right-side KO did not follow the complete lethal sequence.");
+                        CaptureDeathPose(game.rightCombat);
                         game.ApplyRawMessage(Message("ui-first", "late-hp", "HP_CHANGED",
                             new JObject { ["characterId"] = "bot_b", ["hpAfterAtomic"] = 0 }, "lethal"));
                         string winner = Message("ui-first", "winner", "WINNER_DECLARED", new JObject { ["winnerCharacterId"] = "bot_a" });
@@ -130,7 +133,8 @@ namespace FrankRetarget.Editor
                         Next();
                         break;
                     case 3:
-                        if (elapsed < .7) return;
+                        if (elapsed < .7 || game.IsEventQueueBusy) return;
+                        ValidateWinnerFacing(game.leftCombat, game.rightCombat);
                         if (ui.knockout.ShowCount != 1 || ui.knockout.group.alpha < .9f) throw new Exception("Late HP/winner events restarted or hid KO.");
                         if (ui.knockout.group.blocksRaycasts || ui.knockout.group.interactable) throw new Exception("KO intercepts UI input.");
                         Time.timeScale = 0;
@@ -139,6 +143,7 @@ namespace FrankRetarget.Editor
                         break;
                     case 4:
                         if (elapsed < 3) return;
+                        ValidateWinnerFacing(game.leftCombat, game.rightCombat);
                         if (ui.knockout.IsShowing || ui.knockout.group.alpha > .001f) throw new Exception("KO did not finish at timeScale zero.");
                         if (ui.right.damageText && !string.IsNullOrEmpty(ui.right.damageText.text))
                             throw new Exception("Damage popup did not clear at timeScale zero.");
@@ -165,15 +170,20 @@ namespace FrankRetarget.Editor
                         if (!ui.knockout.HasShown) return;
                         if (!game.leftCombat.IsDead || ui.knockout.ShowCount != 1 || !ui.knockout.defeatedLabel.text.StartsWith("MANKEY"))
                             throw new Exception("New-match left KO had the wrong fighter or replay count.");
-                        game.ResetCombatQueue();
-                        if (ui.knockout.group.alpha != 0 || DOTween.TotalTweensById(ui.knockout) != 0)
-                            throw new Exception("Reset during the KO entrance left a visible overlay/tween.");
-                        report.AppendLine("PASS second match resets KO latch; left-side death shows correct fighter; reset during KO entrance clears presentation.");
+                        CaptureDeathPose(game.leftCombat);
+                        string secondWinner = Message("ui-second", "winner", "WINNER_DECLARED", new JObject { ["winnerCharacterId"] = "bot_b" });
+                        game.ApplyRawMessage(secondWinner); game.ApplyRawMessage(secondWinner);
                         Next();
                         break;
                     case 7:
-                        if (elapsed < .5) return;
+                        if (elapsed < .7 || game.IsEventQueueBusy) return;
+                        ValidateWinnerFacing(game.rightCombat, game.leftCombat);
+                        game.ResetCombatQueue();
+                        if (ui.knockout.group.alpha != 0 || DOTween.TotalTweensById(ui.knockout) != 0)
+                            throw new Exception("Reset during the KO entrance left a visible overlay/tween.");
                         if (ui.knockout.HasShown || ui.knockout.IsShowing || ui.knockout.Pending) throw new Exception("Stale KO returned after reset.");
+                        report.AppendLine("PASS second match resets KO latch; left-side death shows correct fighter; reset during KO entrance clears presentation.");
+                        report.AppendLine("PASS both winners face the visible fallen body after KO and duplicate winner events; the held death pose stays unchanged, including at timeScale zero.");
                         NewMatch("ui-winner-only");
                         Next();
                         break;
@@ -187,6 +197,7 @@ namespace FrankRetarget.Editor
                         if (!ui.knockout.HasShown || elapsed < .5) return;
                         if (!game.leftCombat.IsDead || ui.left.healthText.text != "0/1000" || ui.knockout.ShowCount != 1)
                             throw new Exception("Winner-only death did not synchronize HP and KO.");
+                        ValidateWinnerFacing(game.rightCombat, game.leftCombat, false);
                         game.ResetCombatQueue();
                         report.AppendLine("PASS winner-only event marks the loser dead, sets HP to zero and shows KO once even without a damage/HP event.");
                         NewMatch("ui-chat");
@@ -220,6 +231,36 @@ namespace FrankRetarget.Editor
                             ui.left.speechBubbleText.text != Dialogue || !ui.left.speechBubble.IsVisible))
                             throw new Exception("The other actor's argument did not reach its styled card.");
                         report.AppendLine("PASS received ARGUMENT_SELECTED for both actors: only styled HUD cards display; old world bubbles and result bindings are absent.");
+                        NewMatch("ui-damage-cancel");
+                        Next();
+                        break;
+                    case 13:
+                        if (game.IsEventQueueBusy || elapsed < .5) return;
+                        // Damage owns the sampled source clock even with audio/VFX disabled.
+                        game.battleSfx.enabled = game.battleVfx.enabled = false;
+                        game.leftCombat.heavyCombatMoves = new[] {game.leftCombat.heavyCombatMoves.Single(m => m.moveName == "Heavy_Katana")};
+                        game.ApplyRawMessage(Message("ui-damage-cancel", "damage", "DAMAGE_APPLIED", new JObject
+                        { ["actorCharacterId"] = "bot_a", ["targetCharacterId"] = "bot_b", ["hpAfterAtomic"] = 899,
+                            ["damageAtomic"] = 101, ["animationId"] = "attack_heavy" }, "cancel"));
+                        Next();
+                        break;
+                    case 14:
+                        var hp = long.Parse(ui.right.healthText.text.Split('/')[0]);
+                        var source = game.leftCombat.SourcePlayback;
+                        if (hp == 1000) return;
+                        if (hp != 967 || !source || !source.Playing || source.SampleTime < 1.57f || ui.right.damageText.text != "-33")
+                            throw new Exception("Muted source playback did not apply exactly the first 33 damage at contact.");
+                        game.ResetCombatQueue();
+                        game.battleSfx.enabled = game.battleVfx.enabled = true;
+                        NewMatch("ui-after-damage-cancel");
+                        Next();
+                        break;
+                    case 15:
+                        if (game.IsEventQueueBusy || elapsed < 1.5) return;
+                        if (ui.right.healthText.text != "1000/1000" || ui.left.healthText.text != "1000/1000" ||
+                            !string.IsNullOrEmpty(ui.right.damageText.text) || ui.knockout.HasShown)
+                            throw new Exception("Interrupted damage leaked into the next match.");
+                        report.AppendLine("PASS damage follows source contact with audio/VFX disabled; reset after first hit clears remaining damage and the next match stays at full HP.");
                         Finish(true, $"PASS all UI/KO play checks; {ui.textEffects.StartedAnimations} text animations; {pendingFrames} frames with KO deferred during lethal playback; both fighters, duplicate events, new match, interrupted overlay and winner-only death tested.");
                         break;
                 }
@@ -232,6 +273,25 @@ namespace FrankRetarget.Editor
             step++;
             phaseBegan = EditorApplication.timeSinceStartup;
             File.WriteAllText(ReportPath, report.ToString());
+        }
+
+        static void CaptureDeathPose(CharacterCombat defeated)
+        {
+            var hips = defeated.Animator.GetBoneTransform(HumanBodyBones.Hips);
+            heldHipsPosition = hips.position;
+            heldHipsRotation = hips.rotation;
+        }
+
+        static void ValidateWinnerFacing(CharacterCombat winner, CharacterCombat defeated, bool checkHeldPose = true)
+        {
+            var hips = defeated.Animator.GetBoneTransform(HumanBodyBones.Hips);
+            Vector3 direction = hips.position - winner.Animator.GetBoneTransform(HumanBodyBones.Hips).position;
+            direction.y = 0;
+            if (!defeated.IsDead || winner.IsDead || Vector3.Dot(winner.Animator.transform.forward, direction.normalized) < .98f)
+                throw new Exception("Winner faces away from the visible defeated body after KO: " + winner.name);
+            if (checkHeldPose && (Vector3.Distance(heldHipsPosition, hips.position) > .0001f ||
+                Quaternion.Angle(heldHipsRotation, hips.rotation) > .001f))
+                throw new Exception("Winner facing changed the held death pose.");
         }
 
         static void NewMatch(string match) => game.ApplyRawMessage(Message(match, "created", "MATCH_CREATED",

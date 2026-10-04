@@ -201,6 +201,12 @@ namespace FrankRetarget.Editor
                     Hit(3.17f, "blade_swing", "light_hit"); Hit(3.53f, "thrust_swing", "stab_hit");
                     Hit(3.83f, "light_swing", "heavy_hit"); Cue(4.13f, "body_fall", true);
                     Cue(5.43f, "body_fall"); break;
+                case "Heavy_Katana":
+                    Hit(1.57f, "blade_swing", "heavy_hit"); Hit(2.27f, "blade_swing", "heavy_hit");
+                    Hit(3.13f, "blade_swing", "heavy_hit"); Cue(4.07f, "body_fall", true); break;
+                case "Heavy_Assassin":
+                    Hit(.87f, "blade_swing", "light_hit"); Hit(1.33f, "thrust_swing", "stab_hit");
+                    Cue(3.33f, "light_swing"); Cue(4.10f, "body_fall", true); break;
                 default: throw new Exception("Review SFX timing for new move: " + move.moveName);
             }
             float duration = Mathf.Max(move.sourcePair.attack.length, move.sourcePair.reaction.length);

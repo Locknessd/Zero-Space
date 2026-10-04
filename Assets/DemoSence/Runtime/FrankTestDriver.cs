@@ -19,10 +19,18 @@ namespace FrankRetarget
         {
             public string proximal, intermediate, distal;
         }
-        public void Bind(Animator character)
+        public void Bind(Animator character, bool preserveCharacterScale = false)
         {
             pose.enabled=false;
-            character.transform.localScale=characterScale;
+            if (preserveCharacterScale)
+            {
+                var scale = character.transform.localScale;
+                // Battle owns visible model size. Resize the hidden source equally
+                // so its authored hips, limb contacts and weapons still fit.
+                transform.localScale = Vector3.Scale(transform.localScale, new Vector3(
+                    scale.x / characterScale.x, scale.y / characterScale.y, scale.z / characterScale.z));
+            }
+            else character.transform.localScale=characterScale;
             pose.character=character;
             pose.targetHips=character.transform.Find(hips);
             for(int i=0;i<targetLimbs.Length;i++)

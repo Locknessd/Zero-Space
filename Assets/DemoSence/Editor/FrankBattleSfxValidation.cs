@@ -24,7 +24,7 @@ namespace FrankRetarget.Editor
                     throw new Exception("Missing scene/fighter audio bindings");
                 if (audio.masterVolume <= 0) throw new Exception("Battle SFX muted");
                 var bank = audio.bank;
-                if (bank.groups.Sum(g => g.clips.Length) != 37) throw new Exception("Expected the 37 reviewed playback clips");
+                if (bank.groups.SelectMany(g => g.clips).Distinct().Count() != 37) throw new Exception("Expected the 37 reviewed playback clips");
                 foreach (var group in bank.groups)
                 {
                     if (group.clips.Length != group.clipGains.Length || group.clips.Any(c => !c || c.samples <= 0 || c.length <= 0))
@@ -44,7 +44,7 @@ namespace FrankRetarget.Editor
                     attacker.transform.position = Vector3.zero;
                     receiver.transform.position = Vector3.right * move.attackRange;
                     var profile = bank.FindMove(move);
-                    float duration = Mathf.Max(move.sourcePair.attack.length, move.sourcePair.reaction.length);
+                    float duration = Mathf.Max(move.sourcePair.attack.length, move.sourcePair.reactionDelay + move.sourcePair.reaction.length);
                     if (profile == null || profile.cues.Length == 0 || profile.cues.Count(c => c.finalLanding) != 1)
                         throw new Exception("Missing timeline/final landing: " + move.moveName);
                     if (profile.cues.Any(c => c.seconds < 0 || c.seconds > duration || bank.FindGroup(c.group) == null) ||

@@ -16,6 +16,7 @@ namespace FrankRetarget
         [Header("Battle")]
         public GameManager battle;
         [Min(1f)] public float battleIdleDistance = 5f;
+        [Range(.65f, 1.2f)] public float battleDistanceScale = 1f;
         public bool keepBattleCameraInFront = true;
         [Header("Cinematography")]
         public FrankCameraLibrary library;
@@ -156,6 +157,9 @@ namespace FrankRetarget
                 }
                 frame = new FrankCameraLibrary.Frame { focus = focus, position = focus + new Vector3(0, .65f, battleIdleDistance), fov = 42 };
             }
+            // Dolly along the existing viewing ray: preserve each take's angle and lens.
+            // ApplyFrame still fits the actual bodies and weapons when a take needs more room.
+            frame.position = frame.focus + (frame.position - frame.focus) * battleDistanceScale;
             return ApplyFrame(battleCamera, frame, key, time, newSequence || key != currentKey,
                 deltaTime, immediate, false);
         }

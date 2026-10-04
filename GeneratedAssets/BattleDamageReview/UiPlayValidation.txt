@@ -1,0 +1,9 @@
+PASS live HUD text: repeated damage clears independently; changing/clearing chat does not erase damage; Vietnamese dialogue stays visible; HP stays immediate; positive HP does not show KO.
+PASS right KO after zero HP and death animation; duplicate DAMAGE_APPLIED suppressed.
+PASS duplicate HP/winner did not replay KO; input passed through; unscaled exit and queue reset cleared KO tweens.
+PASS second match resets KO latch; left-side death shows correct fighter; reset during KO entrance clears presentation.
+PASS both winners face the visible fallen body after KO and duplicate winner events; the held death pose stays unchanged, including at timeScale zero.
+PASS winner-only event marks the loser dead, sets HP to zero and shows KO once even without a damage/HP event.
+PASS received ARGUMENT_SELECTED for both actors: only styled HUD cards display; old world bubbles and result bindings are absent.
+PASS damage follows source contact with audio/VFX disabled; reset after first hit clears remaining damage and the next match stays at full HP.
+PASS all UI/KO play checks; 36 text animations; 147 frames with KO deferred during lethal playback; both fighters, duplicate events, new match, interrupted overlay and winner-only death tested.

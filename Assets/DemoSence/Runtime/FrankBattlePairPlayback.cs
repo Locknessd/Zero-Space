@@ -15,6 +15,8 @@ namespace FrankRetarget
         public float bodySpacing;
         public int unarmedIndex = -1;
         public bool pepeAttacks;
+        public bool showWeapon;
+        public float reactionDelay;
         public bool Valid => attackerDriver && receiverDriver && attack && reaction;
     }
 
@@ -27,8 +29,9 @@ namespace FrankRetarget
         public float SampleTime { get; private set; }
         public CombatTripletData Move { get; private set; }
         public int PlaybackId => attacker ? attacker.PlaybackId : -1;
-        public float Duration => Mathf.Max(pair.attack.length, pair.reaction.length);
+        public float Duration => Mathf.Max(pair.attack.length, pair.reactionDelay + pair.reaction.length);
         public bool Playing { get; private set; }
+        public event Action<FrankBattlePairPlayback, float> TimelineAdvanced;
         FrankBattlePair pair;
         CharacterCombat attacker, receiver;
         FrankTestActor attackActor, hitActor;
@@ -41,6 +44,9 @@ namespace FrankRetarget
         float attackHipHeight, hitHipHeight;
         BattleSfxPlayer battleSfx;
         BattleVfxPlayer battleVfx;
+        float[] contactTimes = Array.Empty<float>();
+        int nextContact;
+        float timelineHighWater;
 
         public Vector3 CameraPosition(CharacterCombat fighter)
         {
@@ -118,7 +124,7 @@ namespace FrankRetarget
             }
             try
             {
-                attackActor = Actor(source, pair.attackerDriver, pair.attack, true, move.weapon != TrumpWeaponManager.WeaponType.None, pair.unarmedIndex >= 0);
+                attackActor = Actor(source, pair.attackerDriver, pair.attack, true, pair.showWeapon || move.weapon != TrumpWeaponManager.WeaponType.None, pair.unarmedIndex >= 0);
                 hitActor = Actor(target, pair.receiverDriver, pair.reaction, false, false, pair.unarmedIndex >= 0);
                 if (lightDepthLocked)
                 {
@@ -133,6 +139,10 @@ namespace FrankRetarget
                 battleSfx = source.battleSfx;
                 if (battleSfx) battleSfx.BeginSequence(this, move, lethal);
                 battleVfx = source.battleVfx;
+                var timeline = battleSfx ? battleSfx.bank : battleVfx ? battleVfx.timeline : null;
+                contactTimes = BattleHitDamageSequence.ContactTimes(timeline ? timeline.FindMove(move) : null, Duration);
+                nextContact = 0;
+                timelineHighWater = -1;
                 bool hasVfxTimeline = battleVfx && battleVfx.BeginSequence(this, source, target, move, lethal);
                 if (!hasVfxTimeline && receiver.hitEffect)
                 {
@@ -156,7 +166,7 @@ namespace FrankRetarget
             var actor = root.AddComponent<FrankTestActor>();
             actor.characterName = combat.name;
             actor.character = combat.Animator;
-            try { actor.ConfigureSource(driver, clip, attacking, weapons, unarmed); }
+            try { actor.ConfigureSource(driver, clip, attacking, weapons, unarmed, preserveCharacterScale: true); }
             catch { actor.Clear(); Destroy(root); throw; }
             return actor;
         }
@@ -166,7 +176,7 @@ namespace FrankRetarget
             if (!Playing) return;
             SampleTime = Mathf.Clamp(seconds, 0, Duration);
             attackActor.Evaluate(SampleTime);
-            hitActor.Evaluate(SampleTime);
+            hitActor.Evaluate(Mathf.Max(0, SampleTime - pair.reactionDelay));
             if (pair.spacing && pair.unarmedIndex >= 0 && pair.bodySpacing > 0)
             {
                 Vector3 separation = pair.spacing.Separation(pair.unarmedIndex, pair.pepeAttacks, SampleTime) * pair.bodySpacing;
@@ -193,9 +203,34 @@ namespace FrankRetarget
             }
             // Leave the terminal pose visible for a frame, as in the demo's clamped Evaluate.
             if (SampleTime >= Duration) { CompleteSourceMotion(); return; }
-            EvaluateAt(SampleTime + Time.deltaTime);
-            if (battleSfx) battleSfx.AdvanceSequence(this, SampleTime);
-            if (battleVfx) battleVfx.AdvanceSequence(this, SampleTime);
+            AdvanceTo(SampleTime + Time.deltaTime);
+        }
+
+        // Health, impact audio and VFX all observe the same contact pose. A slow
+        // frame crossing multiple strikes still presents each hit exactly once.
+        public void AdvanceTo(float seconds)
+        {
+            if (!Playing || waitingForGetUp || !float.IsFinite(seconds) || seconds <= timelineHighWater) return;
+            float displayedTime = Mathf.Clamp(seconds, 0, Duration);
+            timelineHighWater = displayedTime;
+            try
+            {
+                while (nextContact < contactTimes.Length && contactTimes[nextContact] <= displayedTime)
+                {
+                    EvaluateAt(contactTimes[nextContact++]);
+                    TimelineAdvanced?.Invoke(this, SampleTime);
+                    if (!Playing) return;
+                    if (battleSfx) battleSfx.AdvanceSequence(this, SampleTime);
+                    if (battleVfx) battleVfx.AdvanceSequence(this, SampleTime);
+                    if (!Playing) return;
+                }
+                EvaluateAt(displayedTime);
+                TimelineAdvanced?.Invoke(this, SampleTime);
+                if (!Playing) return;
+                if (battleSfx) battleSfx.AdvanceSequence(this, SampleTime);
+                if (battleVfx) battleVfx.AdvanceSequence(this, SampleTime);
+            }
+            finally { if (Playing) EvaluateAt(displayedTime); }
         }
 
         void CompleteSourceMotion()

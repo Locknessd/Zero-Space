@@ -463,17 +463,17 @@ public class LoaddingManager : MonoBehaviour
         {
             case "SOCKET_AUTH_REQUIRED":
             case "UNITY_AUTH_REQUIRED":
-                return "Không thể xác thực Unity renderer";
+                return "Unable to authenticate the Unity renderer";
             case "UNITY_AUTH_INVALID":
-                return "Thông tin xác thực của Unity không hợp lệ";
+                return "Invalid Unity authentication";
             case "UNITY_EVENT_FORBIDDEN":
-                return "Unity renderer không được phép gọi event này";
+                return "Unity renderer is not allowed to call this event";
             case "MATCH_SUBSCRIBE_INVALID":
-                return "Dữ liệu subscribe không hợp lệ";
+                return "Invalid subscription data";
             case "MATCH_NOT_FOUND":
-                return "Không tìm thấy match";
+                return "Match not found";
             case "SOCKET_RECONNECT_FAILED":
-                return "Không thể kết nối lại với game server";
+                return "Unable to reconnect to the game server";
             default:
                 return raw;
         }

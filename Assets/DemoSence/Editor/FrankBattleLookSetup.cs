@@ -160,14 +160,7 @@ namespace FrankRetarget.Editor
             }
             if (fighter)
             {
-                material.SetFloat("_OutlineWidth", 1.3f);
-                material.SetColor("_OutlineColor", new Color(.055f, .045f, .075f, 1));
-                material.SetFloat("_RimEnabled", 1);
-                material.EnableKeyword("DR_RIM_ON");
-                material.SetColor("_FlatRimColor", left ? new Color(.18f, .3f, .34f, 1) : new Color(.33f, .22f, .14f, 1));
-                material.SetFloat("_FlatRimSize", .16f);
-                material.SetFloat("_FlatRimEdgeSmoothness", .22f);
-                material.SetFloat("_FlatRimLightAlign", .2f);
+                ConfigureCleanBattleCharacterMaterial(material, !left);
             }
             material.enableInstancing = true;
             EditorUtility.SetDirty(material);

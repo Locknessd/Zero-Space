@@ -6,7 +6,7 @@ using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public class GameManager : MonoBehaviour
+public partial class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
@@ -48,6 +48,13 @@ public class GameManager : MonoBehaviour
         public bool heavy;
     }
 
+    private sealed class TurnHealthUpdate
+    {
+        public string key, targetId;
+        public long hpBefore = -1, hpAfter, damage;
+        public bool critical;
+    }
+
     private readonly Queue<BattleStack> _queue = new Queue<BattleStack>();
     private readonly Dictionary<string, BattleStack> _pendingTurns = new Dictionary<string, BattleStack>();
     private readonly Dictionary<string, MemeBattleEvent> _arguments = new Dictionary<string, MemeBattleEvent>();
@@ -56,6 +63,9 @@ public class GameManager : MonoBehaviour
     private readonly HashSet<string> _hpChangedAppliedKeys = new HashSet<string>();
     private Dictionary<string, long> _characterMaxHp = new Dictionary<string, long>();
     private readonly Dictionary<string, string> _characterNames = new Dictionary<string, string>();
+    private readonly Dictionary<PlayerUI.Side, long> _characterHp = new Dictionary<PlayerUI.Side, long>();
+    private BattleHitDamageSequence _hitDamage;
+    private FrankRetarget.FrankBattlePairPlayback _damagePlayback;
     private MemeBattleMatchSnapshot _latestSnapshot;
     private string _collectingTurn;
     private bool _running;
@@ -176,6 +186,8 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         SubscribeSocket();
+        // Incoming match events remain queued while the local animation browser owns playback.
+        if (IsAnimationTestMode) return;
         if (enableLocalInputTesting)
         {
             if (IsKeyDown(KeyCode.Q)) DebugTriggerQ();
@@ -283,16 +295,16 @@ public class GameManager : MonoBehaviour
         bool resolved = damage != null || hp != null;
         bool hasExchange = resolved && attacker.HasValue && receiver.HasValue && attacker != receiver &&
                            (stack.key == null || !_playedTurns.Contains(stack.key));
-        Action applyHealth = () =>
+        var health = new TurnHealthUpdate
         {
-            ApplyTurnHpOnce(stack.key, targetId, hpAfter, damageAmount, animationId);
-            if (_latestSnapshot?.characterHpAtomic != null && !string.IsNullOrEmpty(targetId) && hpAfter >= 0)
-                _latestSnapshot.characterHpAtomic[targetId] = hpAfter;
+            key = stack.key, targetId = targetId, hpAfter = hpAfter, damage = Math.Max(0, damageAmount),
+            hpBefore = hp?.payload.Value<long?>("hpBeforeAtomic") ?? damage?.payload.Value<long?>("hpBeforeAtomic") ?? -1,
+            critical = IsHeavy(animationId)
         };
 
         if (hasExchange)
         {
-            yield return RunExchange(attacker.Value, IsHeavy(animationId), hpAfter == 0, applyHealth);
+            yield return RunExchange(attacker.Value, IsHeavy(animationId), hpAfter == 0, health);
             if (QueueError == null && stack.key != null)
             {
                 _playedTurns.Add(stack.key);
@@ -301,7 +313,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            applyHealth();
+            ApplyTurnHealth(health);
             if (hpAfter == 0 && receiver.HasValue) CombatFor(receiver.Value)?.MarkDead();
         }
 
@@ -310,7 +322,8 @@ public class GameManager : MonoBehaviour
         if (rightCombat != null && rightCombat.IsBusy) yield return WaitForSequence(rightCombat);
     }
 
-    private IEnumerator RunExchange(PlayerUI.Side side, bool heavy, bool lethal, Action applyHealth)
+    private IEnumerator RunExchange(PlayerUI.Side side, bool heavy, bool lethal, TurnHealthUpdate health,
+        CombatTripletData selectedMove = null)
     {
         CharacterCombat attacker = CombatFor(side);
         CharacterCombat receiver = CombatFor(side == PlayerUI.Side.Left ? PlayerUI.Side.Right : PlayerUI.Side.Left);
@@ -319,7 +332,7 @@ public class GameManager : MonoBehaviour
             Fault("Chưa cấu hình đủ hai CharacterCombat.");
             yield break;
         }
-        CombatTripletData move = heavy ? attacker.GetRandomHeavyMove() : attacker.GetRandomLightMove();
+        CombatTripletData move = selectedMove ?? (heavy ? attacker.GetRandomHeavyMove() : attacker.GetRandomLightMove());
         if (move == null)
         {
             Fault("Pool " + (heavy ? "Heavy" : "Light") + " không có bộ animation hợp lệ trên " + attacker.name);
@@ -347,7 +360,8 @@ public class GameManager : MonoBehaviour
                 Fault("Không thể bắt đầu đòn " + move.moveName + ".");
                 yield break;
             }
-            applyHealth?.Invoke();
+            if (IsAnimationTestMode) BeginAnimationTestDamage(side, move, attacker.SourcePlayback, lethal);
+            else BeginTurnDamage(health, move, attacker.SourcePlayback);
             MortalKombatCamera.Instance?.OnCharacterAttack(attacker.Animator.transform);
             MortalKombatCamera.Instance?.TriggerImpactShake();
             float elapsed = 0f;
@@ -371,12 +385,14 @@ public class GameManager : MonoBehaviour
                 Fault("Animation bị ngắt trước khi hoàn tất.");
                 yield break;
             }
+            _hitDamage?.Complete();
             positioningController?.FinishExchange(leftCombat, rightCombat);
             if (!lethal) MortalKombatCamera.Instance?.EndAttackFocus();
             if (debugMode) Debug.Log("Combat stack completed: " + move.moveName);
         }
         finally
         {
+            ClearDamagePresentation();
             if (attacker != null) attacker.SequenceEnded -= onEnd;
             if (receiver != null) receiver.SequenceEnded -= onEnd;
         }
@@ -424,7 +440,7 @@ public class GameManager : MonoBehaviour
 
     public void EnqueueLocalAttack(PlayerUI.Side side, bool heavy)
     {
-        if (!Application.isPlaying) return;
+        if (!Application.isPlaying || IsAnimationTestMode) return;
         CloseCollectingTurn();
         _queue.Enqueue(new BattleStack { ready = true, localAttacker = side, heavy = heavy });
     }
@@ -459,6 +475,7 @@ public class GameManager : MonoBehaviour
     [ContextMenu("Reset Combat Queue")]
     public void ResetCombatQueue()
     {
+        ClearDamagePresentation();
         UI?.ResetTransientEffects();
         roundManager?.StopTimer();
         if (battleSfx) battleSfx.ResetForMatch();
@@ -475,6 +492,8 @@ public class GameManager : MonoBehaviour
 
     private void OnDisable()
     {
+        if (IsAnimationTestMode) EndAnimationTestMode();
+        ClearDamagePresentation();
         if (_running) Fault("GameManager bị tắt khi đang chạy lượt; reset queue trước khi chạy tiếp.");
         if (_runner != null) StopCoroutine(_runner);
         _runner = null;
@@ -497,11 +516,13 @@ public class GameManager : MonoBehaviour
         switch (battleEvent.eventType)
         {
             case "MATCH_CREATED":
+                ClearDamagePresentation();
                 roundManager?.StopTimer();
                 if (battleSfx) battleSfx.ResetForMatch();
                 if (battleVfx) battleVfx.ResetForMatch();
                 _characterNames.Clear();
                 _characterMaxHp.Clear();
+                _characterHp.Clear();
                 _hpChangedAppliedKeys.Clear();
                 _playedTurns.Clear();
                 _arguments.Clear();
@@ -522,6 +543,7 @@ public class GameManager : MonoBehaviour
                     string id = CharacterIdForSide(side);
                     _characterMaxHp[id] = initialHp;
                     _characterMaxHp[side == PlayerUI.Side.Left ? "bot_a" : "bot_b"] = initialHp;
+                    _characterHp[side] = initialHp;
                     UI?.SetFighterName(ToUISide(side), id);
                     UI?.UpdateHealth(ToUISide(side), initialHp, initialHp);
                 }
@@ -590,32 +612,76 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void ApplyTurnHpOnce(string turnId, string targetId, long hpAfter, long damage, string animationIdForWeight)
+    private bool AcceptTurnHealth(TurnHealthUpdate health, out PlayerUI.Side side, out long hpBefore)
     {
-        if (hpAfter < 0 || string.IsNullOrEmpty(targetId)) return;
+        side = default; hpBefore = 0;
+        if (health == null || health.hpAfter < 0 || string.IsNullOrEmpty(health.targetId)) return false;
 
-        var side = SideFromCharacterId(targetId);
-        if (!side.HasValue)
+        var resolved = SideFromCharacterId(health.targetId);
+        if (!resolved.HasValue)
         {
-            Debug.LogWarning($"Animation [GameManager] turn HP ignored: could not resolve '{targetId}' to a side.");
-            return;
+            Debug.LogWarning($"Animation [GameManager] turn HP ignored: could not resolve '{health.targetId}' to a side.");
+            return false;
         }
+        side = resolved.Value;
 
-        string hpKey = !string.IsNullOrEmpty(turnId) ? $"{turnId}:{side.Value}" : null;
+        string hpKey = !string.IsNullOrEmpty(health.key) ? $"{health.key}:{side}" : null;
         if (!string.IsNullOrEmpty(hpKey) && !_hpChangedAppliedKeys.Add(hpKey))
         {
-            if (debugMode) AnimLogChecker.Log("GM", $"turn HP for {targetId} ignored: '{hpKey}' already applied.");
-            return;
+            if (debugMode) AnimLogChecker.Log("GM", $"turn HP for {health.targetId} ignored: '{hpKey}' already applied.");
+            return false;
         }
 
-        // Record the max candidate from any known hp value so the bar's max stays stable.
-        EnsureKnownMaxHp(targetId, 0, hpAfter);
+        if (health.hpBefore >= 0) hpBefore = health.hpBefore;
+        else if (!_characterHp.TryGetValue(side, out hpBefore))
+            hpBefore = health.hpAfter + Math.Min(health.damage, long.MaxValue - health.hpAfter);
+        EnsureKnownMaxHp(health.targetId, hpBefore, health.hpAfter);
+        // Accept the authoritative result once. Intermediate presentation never edits server state.
+        _characterHp[side] = health.hpAfter;
+        if (_latestSnapshot?.characterHpAtomic != null) _latestSnapshot.characterHpAtomic[health.targetId] = health.hpAfter;
+        return true;
+    }
 
-        ApplyHealthToUi(side.Value, hpAfter);
-        if (damage > 0) uiManager?.ShowDamage(ToUISide(side.Value), (int)damage);
+    private void ApplyTurnHealth(TurnHealthUpdate health)
+    {
+        if (!AcceptTurnHealth(health, out var side, out var before)) return;
+        ApplyHealthToUi(side, health.hpAfter);
+        if (health.damage > 0) UI?.ShowDamage(ToUISide(side), health.damage, health.critical);
+    }
 
-        if (debugMode)
-            AnimLogChecker.Log("GM", $"turn HP applied ONCE for {targetId}: -{damage} = {hpAfter}");
+    private void BeginTurnDamage(TurnHealthUpdate health, CombatTripletData move, FrankRetarget.FrankBattlePairPlayback playback)
+    {
+        if (!AcceptTurnHealth(health, out var side, out var before)) return;
+        long total = health.damage > 0 ? health.damage : Math.Max(0, before - health.hpAfter);
+        var bank = battleSfx ? battleSfx.bank : battleVfx ? battleVfx.timeline : null;
+        float[] contacts = playback && playback.Playing && playback.Move == move
+            ? BattleHitDamageSequence.ContactTimes(bank ? bank.FindMove(move) : null, playback.Duration) : Array.Empty<float>();
+        long maxHp = ResolveMaxHpFor(health.targetId, before, health.hpAfter);
+        void Present(long hp, long damage)
+        {
+            UI?.UpdateHealth(ToUISide(side), hp, maxHp);
+            if (damage > 0) UI?.ShowDamage(ToUISide(side), damage, health.critical);
+        }
+        if (contacts.Length == 0 || before <= health.hpAfter)
+        {
+            Present(health.hpAfter, total);
+            return;
+        }
+        UI?.UpdateHealth(ToUISide(side), before, maxHp);
+        _hitDamage = new BattleHitDamageSequence(before, health.hpAfter, total, contacts, Present);
+        _damagePlayback = playback;
+        playback.TimelineAdvanced += AdvanceDamagePresentation;
+    }
+
+    private void AdvanceDamagePresentation(FrankRetarget.FrankBattlePairPlayback playback, float seconds)
+    {
+        if (_damagePlayback == playback) _hitDamage?.Advance(seconds);
+    }
+
+    private void ClearDamagePresentation()
+    {
+        if (_damagePlayback) _damagePlayback.TimelineAdvanced -= AdvanceDamagePresentation;
+        _hitDamage?.Cancel(); _hitDamage = null; _damagePlayback = null;
     }
 
     private long ResolveMaxHpFor(string characterId, long hpBefore, long hpAfter)
@@ -650,6 +716,7 @@ public class GameManager : MonoBehaviour
 
     private void ApplyHealthToUi(PlayerUI.Side side, long hpAfter)
     {
+        _characterHp[side] = hpAfter;
         string charId = CharacterIdForSide(side);
         long maxHp = ResolveMaxHpFor(charId, 0, hpAfter);
         uiManager?.UpdateHealth(ToUISide(side), hpAfter, maxHp);
@@ -690,6 +757,7 @@ public class GameManager : MonoBehaviour
 
             if (snap.characterHpAtomic.TryGetValue(lookupId, out long hp))
             {
+                _characterHp[side] = hp;
                 long max = 0;
                 if (snap.characterMaxHpAtomic != null) snap.characterMaxHpAtomic.TryGetValue(lookupId, out max);
                 if (max <= 0) max = hp;

@@ -89,7 +89,10 @@ namespace FrankRetarget.Editor
             finally { EditorSceneManager.ClosePreviewScene(source); }
         }
 
-        public static void ValidateBattlePairs()
+        public static void ValidateBattlePairs() => ValidateBattlePairs(false);
+        public static void ValidateCriticalBattlePairs() => ValidateBattlePairs(true);
+
+        static void ValidateBattlePairs(bool criticalOnly)
         {
             var battle = EditorSceneManager.OpenPreviewScene("Assets/Scenes/BattleScene.unity");
             var source = EditorSceneManager.OpenPreviewScene("Assets/DemoSence/Frank_Damages_Mankey_Pepe.unity");
@@ -99,8 +102,11 @@ namespace FrankRetarget.Editor
                 var tester = source.GetRootGameObjects().SelectMany(g => g.GetComponentsInChildren<FrankCombinationTester>(true)).Single();
                 var game = battle.GetRootGameObjects().SelectMany(g => g.GetComponentsInChildren<GameManager>(true)).Single();
                 var fighters = new[] { game.leftCombat, game.rightCombat };
+                int cases = 0;
                 foreach (var a in fighters)
-                foreach (var move in a.lightCombatMoves.Concat(a.heavyCombatMoves))
+                foreach (var move in a.lightCombatMoves.Concat(a.heavyCombatMoves)
+                    .Where(m => !criticalOnly || m.weapon == TrumpWeaponManager.WeaponType.Katana ||
+                        m.weapon == TrumpWeaponManager.WeaponType.Assassin))
                 {
                     var b = fighters.First(f => f != a);
                     foreach (var f in fighters) f.ResetCombat();
@@ -143,13 +149,15 @@ namespace FrankRetarget.Editor
                     report.AppendLine($"{a.name} {move.moveName}: 121 samples, max bone position error against source = {error:F6}m");
                     if (error > .015f) throw new Exception("Source pose mismatch " + a.name + " " + move.moveName);
                     player.Cancel();
+                    cases++;
                 }
-                report.AppendLine("PASS all 16 pairs match source under a rigid rotation into the battle lane.");
+                report.AppendLine($"PASS all {cases} pairs match source under a rigid rotation into the battle lane.");
             }
             catch (Exception e) { report.AppendLine("FAIL " + e); throw; }
             finally
             {
-                File.WriteAllText("Temp/FrankRetarget/battle-pairs-validation.txt", report.ToString());
+                File.WriteAllText(criticalOnly ? "GeneratedAssets/BattleCriticalMovesReview/PairValidation.txt" :
+                    "Temp/FrankRetarget/battle-pairs-validation.txt", report.ToString());
                 EditorSceneManager.ClosePreviewScene(battle);
                 EditorSceneManager.ClosePreviewScene(source);
             }

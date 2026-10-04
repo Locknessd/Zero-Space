@@ -2,7 +2,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>Shows one KO per match after zero HP and the lethal character sequence has settled.</summary>
+/// <summary>Queues KO at zero HP and shows it after the finishing animation and slow motion.</summary>
 [DisallowMultipleComponent]
 [DefaultExecutionOrder(15000)]
 public sealed class BattleKoPresentation : MonoBehaviour
@@ -37,15 +37,28 @@ public sealed class BattleKoPresentation : MonoBehaviour
         pending = true;
         pendingSide = side;
         pendingName = fighterName;
+        // Slow motion belongs to the finishing contact, independently of the later KO panel.
+        if (game) game.GetComponent<BattleImpactFeedback>()?.BeginKnockoutSlowMotion();
     }
 
     void LateUpdate()
     {
         if (!pending || HasShown || !game) return;
-        var fighter = pendingSide == MemeBattleUI.Side.Left ? game.leftCombat : game.rightCombat;
-        // HP updates at attack start; wait until its authored death pose is complete.
-        if (fighter && fighter.IsBusy) return;
         Present(pendingSide, pendingName);
+    }
+
+    bool FinisherFinished()
+    {
+        if (!game) return true;
+        var feedback = game.GetComponent<BattleImpactFeedback>();
+        if (feedback && feedback.isActiveAndEnabled)
+        {
+            // Retry a result-only KO once an external pause is released; the feedback guards duplicates.
+            feedback.BeginKnockoutSlowMotion();
+            if (feedback.IsHolding || feedback.IsSlowing ||
+                feedback.knockoutSlowMotion && !feedback.HasPlayedKnockoutSlowMotion) return false;
+        }
+        return !(game.leftCombat && game.leftCombat.IsBusy || game.rightCombat && game.rightCombat.IsBusy);
     }
 
     void CacheLayout()
@@ -61,6 +74,11 @@ public sealed class BattleKoPresentation : MonoBehaviour
     public bool Present(MemeBattleUI.Side side, string fighterName)
     {
         if (HasShown || !isActiveAndEnabled || (!Application.isPlaying && !PreviewAnimations)) return false;
+        if (Application.isPlaying)
+        {
+            ObserveHealth(side, 0, fighterName);
+            if (!FinisherFinished()) return false;
+        }
         CacheLayout();
         animation?.Kill(false);
         pending = false;
@@ -112,13 +130,12 @@ public sealed class BattleKoPresentation : MonoBehaviour
         if (group) { group.alpha = 0; group.interactable = group.blocksRaycasts = false; }
         if (burst) burst.Progress = 1;
         if (!cached) return;
-        letterK.anchoredPosition = kHome;
-        letterO.anchoredPosition = oHome;
-        letterK.localScale = letterO.localScale = Vector3.one;
-        word.anchoredPosition = wordHome;
-        word.localScale = Vector3.one;
-        band.localScale = Vector3.one;
-        subtitle.rectTransform.anchoredPosition = subtitleHome;
+        // UI children can be destroyed before the HUD's OnDisable during scene teardown.
+        if (letterK) { letterK.anchoredPosition = kHome; letterK.localScale = Vector3.one; }
+        if (letterO) { letterO.anchoredPosition = oHome; letterO.localScale = Vector3.one; }
+        if (word) { word.anchoredPosition = wordHome; word.localScale = Vector3.one; }
+        if (band) band.localScale = Vector3.one;
+        if (subtitle) subtitle.rectTransform.anchoredPosition = subtitleHome;
     }
 
     public void EvaluatePreview(float seconds)

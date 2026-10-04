@@ -18,6 +18,8 @@ public class CombatPositioningController : MonoBehaviour
     private float _rightGround;
     private float _lockedDepth;
     private bool _depthCaptured;
+    private CharacterCombat _leftCombat;
+    private CharacterCombat _rightCombat;
 
     private void Awake()
     {
@@ -31,6 +33,7 @@ public class CombatPositioningController : MonoBehaviour
         if (leftFighter == left && rightFighter == right) return;
         leftFighter = left;
         rightFighter = right;
+        _leftCombat = _rightCombat = null;
         CaptureGround();
         CaptureDepth();
     }
@@ -53,12 +56,34 @@ public class CombatPositioningController : MonoBehaviour
         ConstrainDepth();
     }
 
+    private void FaceStandingSurvivor()
+    {
+        if (!faceEachOther || !leftFighter || !rightFighter) return;
+        if (!_leftCombat) _leftCombat = leftFighter.GetComponentInParent<CharacterCombat>();
+        if (!_rightCombat) _rightCombat = rightFighter.GetComponentInParent<CharacterCombat>();
+        if (!_leftCombat || !_rightCombat || _leftCombat.IsBusy || _rightCombat.IsBusy) return;
+        // A source death pose can lie beyond either fighter root. Keep the survivor
+        // facing the visible body after KO, including while the result UI fades out.
+        if (!_leftCombat.IsDead && _rightCombat.IsDead)
+            Face(leftFighter, FallenBodyPosition(_rightCombat));
+        else if (!_rightCombat.IsDead && _leftCombat.IsDead)
+            Face(rightFighter, FallenBodyPosition(_leftCombat));
+    }
+
+    private static Vector3 FallenBodyPosition(CharacterCombat fighter)
+    {
+        var animator = fighter.Animator;
+        var hips = animator.isHuman ? animator.GetBoneTransform(HumanBodyBones.Hips) : null;
+        return hips ? hips.position : animator.transform.position;
+    }
+
     private void LateUpdate()
     {
         // Retargeting and animation callbacks run before this controller. Applying the
         // constraint last prevents authored root travel or positioning from sliding a
         // fighter off the battle lane for a frame.
         ConstrainDepth();
+        FaceStandingSurvivor();
     }
 
     private void ConstrainDepth()
@@ -140,8 +165,10 @@ public class CombatPositioningController : MonoBehaviour
         Correct(right, _rightGround);
         if (left != null && right != null)
         {
-            if (!left.IsDead) Face(left.Animator.transform, right.Animator.transform);
-            if (!right.IsDead) Face(right.Animator.transform, left.Animator.transform);
+            if (!left.IsDead) Face(left.Animator.transform,
+                right.IsDead ? FallenBodyPosition(right) : right.Animator.transform.position);
+            if (!right.IsDead) Face(right.Animator.transform,
+                left.IsDead ? FallenBodyPosition(left) : left.Animator.transform.position);
         }
     }
 
@@ -156,8 +183,13 @@ public class CombatPositioningController : MonoBehaviour
 
     private void Face(Transform source, Transform target)
     {
+        Face(source, target.position);
+    }
+
+    private void Face(Transform source, Vector3 targetPosition)
+    {
         if (!faceEachOther) return;
-        Vector3 direction = target.position - source.position;
+        Vector3 direction = targetPosition - source.position;
         direction.y = 0f;
         if (direction.sqrMagnitude > 0.0001f) source.rotation = Quaternion.LookRotation(direction);
     }

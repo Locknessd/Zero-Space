@@ -108,20 +108,20 @@ namespace FrankRetarget
             }
             StartGraph();
         }
-        public void ConfigureSource(FrankTestDriver driver, AnimationClip animation, bool attacking, bool weapons, bool unarmed)
+        public void ConfigureSource(FrankTestDriver driver, AnimationClip animation, bool attacking, bool weapons, bool unarmed, bool preserveCharacterScale = false)
         {
-            ConfigureClip(driver, animation, attacking, weapons);
+            ConfigureClip(driver, animation, attacking, weapons, preserveCharacterScale);
             // Native Frank reactions leave the fingers free; Vol10 uses both sets.
             activeDriver.pose.transferFingers = attacking || weapons || unarmed;
             Evaluate(0);
         }
-        void ConfigureClip(FrankTestDriver driver,AnimationClip animation,bool attacking,bool weapons)
+        void ConfigureClip(FrankTestDriver driver,AnimationClip animation,bool attacking,bool weapons,bool preserveCharacterScale = false)
         {
             Clear();
             activeDriver=Instantiate(driver,transform,false);
             activeDriver.name=(attacking?"Active":"Passive")+" animation skeleton";
             activeDriver.transform.SetLocalPositionAndRotation(Vector3.zero,Quaternion.identity);
-            activeDriver.Bind(character);
+            activeDriver.Bind(character, preserveCharacterScale);
             clip=animation;
             activeDriver.pose.isAttacker=attacking;
             activeDriver.pose.transferFingers=true;

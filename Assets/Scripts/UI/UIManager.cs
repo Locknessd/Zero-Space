@@ -88,6 +88,8 @@ public class MemeBattleUI : MonoBehaviour
     [Header("Battle Text Animation")]
     public BattleUiTextEffects textEffects;
     public BattleKoPresentation knockout;
+    public BattleComicCutIn comicCutIn;
+    public BattleHudFeedback hudFeedback;
 
     [Header("Behavior")]
     [Tooltip("Default initial max HP shown before the server snapshot arrives.")]
@@ -179,6 +181,7 @@ public class MemeBattleUI : MonoBehaviour
         {
             float target = maxHp > 0 ? Mathf.Clamp01((float)currentHp / maxHp) : 0f;
             StartSliderLerp(side, slot.hpSlider, target);
+            hudFeedback?.Health(side, target);
         }
 
         // Text, e.g. "850/1000".
@@ -215,7 +218,7 @@ public class MemeBattleUI : MonoBehaviour
     /// <summary>
     /// Shows a damage popup above the HP bar, independently of the fighter's dialogue.
     /// </summary>
-    public void ShowDamage(Side side, int amount)
+    public void ShowDamage(Side side, long amount, bool critical = false)
     {
         var slot = GetSlot(side);
         if (slot == null || amount <= 0) return;
@@ -228,7 +231,8 @@ public class MemeBattleUI : MonoBehaviour
         if (_damageHideRoutine[i] != null) StopCoroutine(_damageHideRoutine[i]);
 
         label.text = $"-{amount}";
-        textEffects?.Damage(label);
+        textEffects?.Damage(label, critical);
+        hudFeedback?.Damage(side, critical);
         _damageHideRoutine[i] = StartCoroutine(HideDamageThenRestoreDialogue(side, label, slot.damageText ? 1.15f : 1.5f));
     }
 
@@ -458,6 +462,8 @@ public class MemeBattleUI : MonoBehaviour
     {
         textEffects?.ResetEffects();
         knockout?.ResetPresentation();
+        comicCutIn?.ResetPresentation();
+        hudFeedback?.ResetEffects();
         if (_memeDisplayLeft != null) StopCoroutine(_memeDisplayLeft);
         if (_memeDisplayRight != null) StopCoroutine(_memeDisplayRight);
         _memeDisplayLeft = _memeDisplayRight = null;

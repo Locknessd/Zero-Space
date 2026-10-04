@@ -100,14 +100,23 @@ namespace FrankRetarget.Editor
                     game.leftCombat.battleVfx != vfx || game.rightCombat.battleVfx != vfx)
                     throw new Exception("Missing shared VFX/timeline bindings.");
                 foreach (var prefab in new[] { vfx.lightHit, vfx.heavyHit, vfx.landingDust, vfx.bladeSlash,
-                    vfx.lightSwing, vfx.thrustSwing, vfx.groundImpact, vfx.landingText })
+                    vfx.lightSwing, vfx.thrustSwing, vfx.groundImpact, vfx.landingText }
+                    .Concat((vfx.bladeSlashVariants ?? Array.Empty<BattleVfxPlayer.WeaponSlashVariant>())
+                        .Where(v => v != null && v.prefab).Select(v => v.prefab))
+                    .Concat(vfx.impactVariants.SelectMany(v => new[] { v.light, v.heavy }))
+                    .Concat(vfx.skillVariants.SelectMany(v => new[] { v.cast, v.projectile, v.impact })).Distinct())
                 {
                     if (!prefab || prefab.GetComponentsInChildren<ParticleSystem>(true).Length == 0)
                         throw new Exception("Missing particle prefab.");
                     foreach (var particles in prefab.GetComponentsInChildren<ParticleSystem>(true))
+                    {
                         if (particles.main.playOnAwake || particles.main.loop ||
-                            particles.main.scalingMode != ParticleSystemScalingMode.Hierarchy)
+                            particles.main.scalingMode != ParticleSystemScalingMode.Hierarchy ||
+                            particles.emission.rateOverTime.constantMax != 0 || particles.emission.rateOverDistance.constantMax != 0 || particles.subEmitters.enabled)
                             throw new Exception("Invalid pooled particle setup: " + prefab.name);
+                        var bursts = new ParticleSystem.Burst[particles.emission.burstCount]; particles.emission.GetBursts(bursts);
+                        if (bursts.Any(b => b.cycleCount != 1)) throw new Exception("Repeating burst: " + prefab.name);
+                    }
                     foreach (var effect in prefab.GetComponentsInChildren<CFXR_Effect>(true))
                         if (effect.clearBehavior != CFXR_Effect.ClearBehavior.None ||
                             effect.cameraShake != null && effect.cameraShake.enabled)
@@ -153,6 +162,13 @@ namespace FrankRetarget.Editor
                             throw new Exception("Dust is not on the arena floor.");
                         if (!root.GetComponentsInChildren<ParticleSystem>().Any(p => p.isPlaying))
                             throw new Exception("Cue did not start any particle systems.");
+                        if (id == "blade_slash")
+                        {
+                            var variant = vfx.bladeSlashVariants?.FirstOrDefault(v => v != null && v.weapon == move.weapon && v.prefab);
+                            var selected = variant != null ? variant.prefab : vfx.bladeSlash;
+                            if (root.name != selected.name + "(Clone)")
+                                throw new Exception("Wrong weapon slash: " + move.moveName + "/" + root.name);
+                        }
                     };
                     vfx.EffectPlayed += observe;
                     try
@@ -181,6 +197,9 @@ namespace FrankRetarget.Editor
                                     effectTimes, time);
                         }
                         int hits = profile.cues.Count(c => c.group == "light_hit" || c.group == "heavy_hit" || c.group == "stab_hit");
+                        foreach (string skillCue in new[] { "skill_cast", "skill_shot" })
+                            if (heard.Count(id => id == skillCue) != profile.cues.Count(c => c.group == skillCue))
+                                throw new Exception("Missing skill phase: " + move.moveName + "/" + skillCue);
                         if (heard.Count(id => id.EndsWith("hit")) != hits ||
                             heard.Count(id => id.EndsWith("fall")) != profile.cues.Count(c => c.group == "body_fall"))
                             throw new Exception("Missing hit/landing effects: " + move.moveName);

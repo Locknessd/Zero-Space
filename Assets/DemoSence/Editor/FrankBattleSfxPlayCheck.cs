@@ -28,10 +28,17 @@ namespace FrankRetarget.Editor
         static readonly HashSet<string> cameraShots = new HashSet<string>();
         static CharacterCombat[] fighters;
         static CombatTripletData[][] moves;
-        static int step, frame = -1, outputFrames, sourceStarts;
+        static int step, frame = -1, outputFrames, sourceStarts, knockoutSounds;
         static float mixedPeak;
         static int effectStarts;
-        static bool started, waitingForResult;
+        static int lightingStarts;
+        static int heldFrames;
+        static FrankBattlePairPlayback heldPlayback;
+        static float heldSample;
+        static bool wasHolding;
+        static bool observedKoSlow;
+        static readonly HashSet<string> comicCaptures = new HashSet<string>();
+        static bool started, waitingForResult, damageMode;
         static string audioFailure;
         static string vfxFailure;
         static double began, stepBegan;
@@ -42,7 +49,7 @@ namespace FrankRetarget.Editor
             EditorApplication.playModeStateChanged += Restore;
         }
 
-        public static void Start()
+        public static void Start(bool criticalOnly = false, bool checkDamage = false)
         {
             if (EditorApplication.isPlaying) throw new Exception("Start the SFX check in Edit Mode");
             if (File.Exists(Copy)) throw new Exception("Temporary SFX test scene already exists: " + Copy);
@@ -62,6 +69,9 @@ namespace FrankRetarget.Editor
             SessionState.SetString(Key + ".previous", AssetDatabase.GetAssetPath(EditorSceneManager.playModeStartScene));
             EditorSceneManager.playModeStartScene = AssetDatabase.LoadAssetAtPath<SceneAsset>(Copy);
             SessionState.SetBool(Key + ".restore", true);
+            SessionState.SetBool(Key + ".criticalOnly", criticalOnly);
+            SessionState.SetBool(Key + ".damage", checkDamage);
+            if (checkDamage) Directory.CreateDirectory("GeneratedAssets/BattleDamageReview");
             SessionState.SetBool(Key, true);
             File.WriteAllText(ReportPath, "RUNNING: isolated Battle copy, local Q/E queue and synthetic received events.\n");
             EditorApplication.isPlaying = true;
@@ -70,6 +80,7 @@ namespace FrankRetarget.Editor
         static void OnCue(string id, AudioClip clip)
         {
             heard.Add(id);
+            if (id == "ko_impact") knockoutSounds++;
             if (!game.battleSfx.GetComponentsInChildren<AudioSource>().Any(s => s.clip == clip && s.isPlaying && s.volume > 0))
                 audioFailure = "Cue did not start an audible-volume AudioSource: " + id;
             sourceStarts++;
@@ -83,6 +94,13 @@ namespace FrankRetarget.Editor
                 vfxFailure = "VFX cue did not start a live particle system: " + id;
             if (game.battleVfx.PooledEffectCount > game.battleVfx.maxInstances)
                 vfxFailure = "VFX pool exceeded its cap";
+            var lighting = game.GetComponent<BattleLightingRig>();
+            if (lighting && (id == "heavy_hit" || id == "light_hit" || id == "ground_impact"))
+            {
+                if (lighting.ActiveFlashCount < 1 || lighting.ActiveFlashCount > 2 || QualitySettings.pixelLightCount < 5)
+                    vfxFailure = "Impact cue did not have bounded live pixel lighting: " + id;
+                lightingStarts++;
+            }
         }
 
         static void Tick()
@@ -97,18 +115,57 @@ namespace FrankRetarget.Editor
                 if (Time.frameCount == frame || EditorApplication.timeSinceStartup - began < 1) return;
                 frame = Time.frameCount;
                 Application.runInBackground = true;
+                if (damageMode) FrankBattleDamagePlayProbe.Tick();
+                if (game && game.GetComponent<BattleImpactFeedback>() is BattleImpactFeedback impact)
+                {
+                    if (impact.IsSlowing && !impact.IsHolding && !game.uiManager.knockout.HasShown && Mathf.Approximately(Time.timeScale, impact.knockoutSpeed))
+                        observedKoSlow = true;
+                    if (game.uiManager.knockout.HasShown && (impact.IsSlowing || impact.IsHolding))
+                        throw new Exception("KO lettering appeared before the finishing slow motion completed.");
+                    var playback = game.leftCombat.SourcePlayback && game.leftCombat.SourcePlayback.Playing ? game.leftCombat.SourcePlayback : game.rightCombat.SourcePlayback;
+                    if (impact.IsHolding)
+                    {
+                        if (Time.timeScale != 0) throw new Exception("Hit-stop did not pause the shared battle clock.");
+                        if (wasHolding && heldPlayback == playback && playback && Mathf.Abs(heldSample - playback.SampleTime) > .001f)
+                            throw new Exception("Source pose advanced during hit-stop.");
+                        heldFrames++;
+                    }
+                    wasHolding = impact.IsHolding; heldPlayback = playback; heldSample = playback ? playback.SampleTime : 0;
+                    var cut = game.uiManager.comicCutIn;
+                    if (observedKoSlow && game.uiManager.knockout.IsShowing && game.uiManager.knockout.letterK.localScale.x < 1.03f && comicCaptures.Add("AccentKO"))
+                        ScreenCapture.CaptureScreenshot("GeneratedAssets/BattleCombatAccentReview/LiveKO.png");
+                    if (playback && playback.Playing && playback.Move.skill != BattleSkill.None)
+                    {
+                        float shot = game.battleVfx.timeline.FindMove(playback.Move).cues.First(c => c.group == "skill_shot").seconds;
+                        string flight = playback.name + "_" + playback.Move.skill + "_Flight";
+                        if (playback.SampleTime >= shot + .07f && playback.SampleTime < shot + .14f && comicCaptures.Add(flight))
+                            ScreenCapture.CaptureScreenshot("GeneratedAssets/BattleCombatAccentReview/" + flight + ".png");
+                    }
+                    if (cut && cut.IsShowing && playback && playback.SampleTime > .08f && playback.SampleTime < .24f)
+                    {
+                        string name = cut.caption.text.EndsWith("FINISHER", StringComparison.Ordinal) ? "Finisher" : cut.portrait.sprite == cut.leftPortrait ? "Mankey" : "Pepe";
+                        if (comicCaptures.Add(name)) ScreenCapture.CaptureScreenshot((damageMode ? "GeneratedAssets/BattleDamageReview/" : "GeneratedAssets/BattleComicReview/") + "LiveComic_" + name + ".png");
+                    }
+                }
                 if (!game)
                 {
                     game = GameManager.Instance;
                     if (!game) return;
                     game.debugMode = false;
                     game.enableLocalInputTesting = false;
+                    damageMode = SessionState.GetBool(Key + ".damage", false);
+                    if (damageMode) game.ApplyRawMessage(Message("damage-created", "MATCH_CREATED", new JObject
+                        { ["characterIds"] = new JArray("Mankey", "Pepe"), ["initialHpAtomic"] = 2000 }, null));
                     if (!game.battleSfx) throw new Exception("No BattleSfxPlayer in saved scene");
                     game.battleSfx.CuePlayed += OnCue;
                     if (!game.battleVfx) throw new Exception("No BattleVfxPlayer in saved scene");
                     game.battleVfx.EffectPlayed += OnEffect;
                     fighters = new[] { game.leftCombat, game.rightCombat };
-                    moves = fighters.Select(f => f.lightCombatMoves.Concat(f.heavyCombatMoves).ToArray()).ToArray();
+                    bool criticalOnly = SessionState.GetBool(Key + ".criticalOnly", false);
+                    moves = fighters.Select(f => f.lightCombatMoves.Concat(f.heavyCombatMoves)
+                        .Where(m => !criticalOnly || m.weapon == TrumpWeaponManager.WeaponType.Katana ||
+                            m.weapon == TrumpWeaponManager.WeaponType.Assassin).ToArray()).ToArray();
+                    if (criticalOnly && moves.Any(m => m.Length != 2)) throw new Exception("Expected Katana and Assassin in both saved heavy pools.");
                     cinematicCamera = game.gameObject.scene.GetRootGameObjects()
                         .SelectMany(r => r.GetComponentsInChildren<Camera>()).Single(c => c.CompareTag("MainCamera"));
                     cameraDirector = cinematicCamera.GetComponent<FrankCinematicCamera>();
@@ -153,14 +210,54 @@ namespace FrankRetarget.Editor
                     if (game.IsEventQueueBusy || EditorApplication.timeSinceStartup - stepBegan < 2.5) return;
                     if (game.battleVfx.ActiveEffectCount != 0) throw new Exception("Finished VFX did not return to the pool");
                     if (heard.Count(id => id == "victory") != 1) throw new Exception("Repeated result did not produce exactly one Victory");
-                    if (game.uiManager && game.uiManager.knockout && heard.Count(id => id == "ko_impact") != 1)
+                    if (game.uiManager && game.uiManager.knockout && knockoutSounds != 1)
                         throw new Exception("The KO lettering did not produce exactly one timed impact.");
                     game.battleSfx.PlayUiClick();
                     if (!heard.Contains("ui_click") || outputFrames == 0) throw new Exception("Missing UI cue or nonzero audio output");
-                    if (cameraDirector && cameraShots.Count != total) throw new Exception("Live cinematic camera did not play every battle shot");
-                    Finish(true, $"PASS {total} local exchanges + duplicated lethal DAMAGE_APPLIED + duplicated WINNER_DECLARED; " +
+                    int authoredShots = moves.SelectMany(m => m).Count(m => cameraDirector && cameraDirector.library.Find(FrankCinematicCamera.BattleKey(m)) != null);
+                    if (cameraDirector && cameraShots.Count != authoredShots) throw new Exception("Live cinematic camera did not play every authored battle shot");
+                    var impactCheck = game.GetComponent<BattleImpactFeedback>();
+                    if (impactCheck && (impactCheck.IsHolding || Time.timeScale != 1 || heldFrames == 0)) throw new Exception("Hit-stop did not hold and restore the clock.");
+                    if (impactCheck && impactCheck.knockoutSlowMotion && (impactCheck.SlowMotionCount != 1 || impactCheck.IsSlowing || !observedKoSlow))
+                        throw new Exception("KO slow motion did not fire once and restore the clock.");
+                    var shake = cinematicCamera ? cinematicCamera.GetComponent<BattleCameraShake>() : null;
+                    if (shake && (shake.ShakeCount <= 0 || shake.IsShaking)) throw new Exception("Heavy camera shake failed to play and settle.");
+                    var comicCheck = game.uiManager.comicCutIn;
+                    if (comicCheck && comicCheck.ShowCount < 5) throw new Exception("Missing critical/finisher comic panels.");
+                    if (impactCheck)
+                    {
+                        // Exercise cancellation through actual VFX, including a pre-existing slow/pause clock.
+                        Time.timeScale = .5f;
+                        game.battleVfx.PlayHit(game.rightCombat);
+                        if (!impactCheck.IsHolding || Time.timeScale != 0) throw new Exception("Slow-clock contact did not hold.");
+                        game.battleVfx.ClearEffects();
+                        if (impactCheck.IsHolding || Time.timeScale != .5f) throw new Exception("Cancelled contact lost the original slow clock.");
+                        Time.timeScale = 0;
+                        game.battleVfx.PlayHit(game.rightCombat);
+                        game.battleVfx.ClearEffects();
+                        if (impactCheck.IsHolding || Time.timeScale != 0) throw new Exception("Contact resumed an externally paused battle.");
+                        Time.timeScale = 1;
+                        game.battleVfx.PlayHit(game.rightCombat);
+                        game.ResetCombatQueue();
+                        if (impactCheck.IsHolding || Time.timeScale != 1 || impactCheck.flash.Progress != 1)
+                            throw new Exception("Match reset left a held clock or flash.");
+                        game.battleVfx.PlayHit(game.rightCombat);
+                        impactCheck.enabled = false;
+                        if (Time.timeScale != 1) throw new Exception("Disabling impact feedback left time paused.");
+                        impactCheck.enabled = true;
+                        int slowCount = impactCheck.SlowMotionCount;
+                        impactCheck.BeginKnockoutSlowMotion(); impactCheck.BeginKnockoutSlowMotion();
+                        if (!impactCheck.IsSlowing || !Mathf.Approximately(Time.timeScale, impactCheck.knockoutSpeed) || impactCheck.SlowMotionCount != slowCount + 1)
+                            throw new Exception("KO without a finishing animation failed or repeated slow motion.");
+                        impactCheck.ResetFeedback();
+                        if (Time.timeScale != 1) throw new Exception("Fallback KO cancellation left the clock slowed.");
+                        game.battleVfx.ClearEffects();
+                        report.AppendLine("PASS live hit-stop cancellation, slow-clock restoration, external pause, match reset and disable cleanup.");
+                    }
+                    if (damageMode) report.AppendLine($"PASS {FrankBattleDamagePlayProbe.CheckedHits} native damage contact frames, duplicate DAMAGE_APPLIED/HP_CHANGED and late HP snapshots.");
+                    Finish(true, $"PASS {total} " + (damageMode ? "server damage exchanges" : "local exchanges") + " + duplicated lethal DAMAGE_APPLIED + duplicated WINNER_DECLARED; " +
                         $"{sourceStarts} AudioSource starts, {outputFrames} frames with nonzero audio output, mixed peak {mixedPeak:F3}; " +
-                        $"{effectStarts} VFX starts, finished particles returned to pool; UI click played. " +
+                        $"{effectStarts} VFX starts, {lightingStarts} synchronized impact light cues, {heldFrames} held pose frames with clock restored, {comicCheck?.ShowCount ?? 0} comic panels; one KO/UI impact with observed 32% slow motion; {shake?.ShakeCount ?? 0} settled contact shakes; fallback KO/pause/cancel checks passed; finished particles returned to pool; UI click played. " +
                         (cameraDirector ? $"Cinematic camera: {cameraShots.Count} authored shots, {cameraFrames} frames with bodies/weapons inside the safe frame, recovery/KO/victory completed." : ""));
                     return;
                 }
@@ -178,7 +275,8 @@ namespace FrankRetarget.Editor
                     else attacker.lightCombatMoves = new[] { move };
                     heard.Clear();
                     effects.Clear();
-                    if (lethal)
+                    if (damageMode) FrankBattleDamagePlayProbe.Begin(game, attacker, move, step, lethal);
+                    else if (lethal)
                     {
                         var payload = new JObject { ["actorCharacterId"] = "bot_a", ["targetCharacterId"] = "bot_b",
                             ["hpAfterAtomic"] = 0, ["damageAtomic"] = 1000, ["animationId"] = "attack_heavy" };
@@ -196,9 +294,9 @@ namespace FrankRetarget.Editor
                 if (game.IsEventQueueBusy || attacker.IsBusy || receiver.IsBusy) return;
                 var expected = game.battleSfx.bank.FindMove(move).cues.Select(c => lethal && c.finalLanding ? "knockout_fall" : c.group).ToList();
                 if (!lethal) expected.Add("getup");
-                if (lethal && game.uiManager && game.uiManager.knockout && game.uiManager.knockout.HasShown && heard.Contains("ko_impact")) expected.Add("ko_impact");
                 if (step == 0) expected.Insert(0, "fight_start");
-                if (!heard.SequenceEqual(expected)) throw new Exception("Live cue mismatch " + attacker.name + " " + move.moveName + ": " + string.Join(",", heard));
+                // KO UI uses an unscaled clock and may enter during the lethal reaction.
+                if (!heard.Where(id => id != "ko_impact").SequenceEqual(expected)) throw new Exception("Live cue mismatch " + attacker.name + " " + move.moveName + ": " + string.Join(",", heard));
                 var profile = game.battleSfx.bank.FindMove(move);
                 int expectedHits = profile.cues.Count(c => c.group == "light_hit" || c.group == "heavy_hit" || c.group == "stab_hit");
                 if (effects.Count(id => id.EndsWith("hit")) != expectedHits ||
@@ -206,6 +304,7 @@ namespace FrankRetarget.Editor
                     throw new Exception("Live VFX mismatch " + attacker.name + " " + move.moveName);
                 if (!attacker.LastSequenceSucceeded || !receiver.LastSequenceSucceeded || (lethal && !receiver.IsDead))
                     throw new Exception("Animation completion regressed");
+                if (damageMode) report.AppendLine(FrankBattleDamagePlayProbe.Complete());
                 report.AppendLine($"PASS live {attacker.name} {move.moveName} lethal={lethal}: {heard.Count} audio cues, {effects.Count} VFX, queue completed.");
                 File.WriteAllText(ReportPath, report.ToString());
                 step++;
@@ -223,6 +322,7 @@ namespace FrankRetarget.Editor
         {
             report.AppendLine((passed ? "" : "FAIL ") + detail);
             File.WriteAllText(ReportPath, report.ToString());
+            if (damageMode) File.WriteAllText("GeneratedAssets/BattleDamageReview/PlayValidation.txt", report.ToString());
             if (game && game.battleSfx) game.battleSfx.CuePlayed -= OnCue;
             if (game && game.battleVfx) game.battleVfx.EffectPlayed -= OnEffect;
             SessionState.SetBool(Key, false);
@@ -238,11 +338,14 @@ namespace FrankRetarget.Editor
             AssetDatabase.DeleteAsset(Copy);
             game = null; fighters = null; moves = null;
             cameraDirector = null; cinematicCamera = null; cameraFrames = 0; cameraShots.Clear();
-            step = outputFrames = sourceStarts = 0; frame = -1;
+            step = outputFrames = sourceStarts = knockoutSounds = 0; frame = -1;
             began = stepBegan = 0; started = waitingForResult = false;
             audioFailure = null;
             vfxFailure = null;
             effectStarts = 0;
+            lightingStarts = 0;
+            heldFrames = 0; heldPlayback = null; wasHolding = false; observedKoSlow = false; comicCaptures.Clear();
+            damageMode = false; FrankBattleDamagePlayProbe.Reset();
             heard.Clear(); effects.Clear(); report.Clear();
         }
     }
@@ -250,5 +353,6 @@ namespace FrankRetarget.Editor
     public static partial class FrankRetargetBuilder
     {
         public static void BattleSfxPlayCheck() => FrankBattleSfxPlayCheck.Start();
+        public static void BattleCriticalMovesPlayCheck() => FrankBattleSfxPlayCheck.Start(true);
     }
 }

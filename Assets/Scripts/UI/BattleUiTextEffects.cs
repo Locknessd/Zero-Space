@@ -63,15 +63,23 @@ public sealed class BattleUiTextEffects : MonoBehaviour
             .SetEase(Ease.Linear));
     }
 
-    public void Damage(Text label)
+    public void Damage(Text label, bool critical = false)
     {
         var state = Prepare(label);
         if (state == null) return;
         var rect = label.rectTransform;
-        label.color = new Color(1, .65f, .12f, state.color.a);
-        state.animation.Append(rect.DOScale(state.scale * 1.2f, .12f).SetEase(Ease.OutBack))
+        label.color = critical ? new Color(1, .34f, .07f, state.color.a) : new Color(1, .65f, .12f, state.color.a);
+        float rise = 28;
+        var canvas = label.canvas;
+        if (canvas && canvas.transform is RectTransform canvasRect)
+        {
+            var bounds = RectTransformUtility.CalculateRelativeRectTransformBounds(canvasRect, rect);
+            float growth = rect.rect.height * (critical ? .4f : .2f);
+            rise = Mathf.Clamp(canvasRect.rect.yMax - bounds.max.y - growth - 8, 0, 28);
+        }
+        state.animation.Append(rect.DOScale(state.scale * (critical ? 1.4f : 1.2f), .12f).SetEase(Ease.OutBack))
             .Append(rect.DOScale(state.scale, .2f).SetEase(Ease.OutQuad))
-            .Insert(.1f, rect.DOAnchorPos(state.position + Vector2.up * 28, .85f).SetEase(Ease.OutCubic))
+            .Insert(.1f, rect.DOAnchorPos(state.position + Vector2.up * rise, .85f).SetEase(Ease.OutCubic))
             .Insert(.55f, label.DOFade(0, .45f));
     }
 
