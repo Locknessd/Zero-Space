@@ -20,16 +20,18 @@ namespace FrankRetarget.Editor
                 var vfx = game.battleVfx; var shake = camera.GetComponent<BattleCameraShake>();
                 var feedback = game.GetComponent<BattleImpactFeedback>();
                 lighting = game.GetComponent<BattleLightingRig>(); lighting.InitializeRig(); shake.Bind(); feedback.Bind();
-                if (vfx.impactVariants.Length != 7 || vfx.bladeSlashVariants.Select(v => v.prefab).Distinct().Count() != 7 || vfx.skillVariants.Length != 2)
-                    throw new Exception("Missing weapon/skill variation.");
+                if (vfx.impactVariants.Length != 7 || vfx.bladeSlashVariants.Select(v => v.prefab).Distinct().Count() != 7)
+                    throw new Exception("Missing weapon variation.");
                 foreach (var fighter in new[] { game.leftCombat, game.rightCombat })
                 {
                     fighter.Initialize();
-                    foreach (var skill in new[] { BattleSkill.Archer, BattleSkill.WhiteMage })
+                    foreach (var move in fighter.heavyCombatMoves.Where(m => m.skill != BattleSkill.None))
                     {
-                        var move = fighter.heavyCombatMoves.Single(m => m.skill == skill);
+                        var variant = vfx.skillVariants.FirstOrDefault(v => v != null && v.skill == move.skill);
+                        if (variant == null || !variant.cast || !variant.projectile || !variant.impact)
+                            throw new Exception("Configured skill has no matching VFX: " + move.skill);
                         var cues = vfx.timeline.FindMove(move).cues;
-                        if (cues.Count(c => c.group == "heavy_hit") != (skill == BattleSkill.Archer ? 3 : 1) ||
+                        if (cues.Count(c => c.group == "heavy_hit") != (move.skill == BattleSkill.Archer ? 3 : 1) ||
                             cues.Last().seconds > Mathf.Max(move.sourcePair.attack.length, move.sourcePair.reactionDelay + move.sourcePair.reaction.length))
                             throw new Exception("Invalid skill damage/animation timeline.");
                     }
@@ -59,10 +61,11 @@ namespace FrankRetarget.Editor
                     }
                 }
                 finally { vfx.EffectPlayed -= observe; }
-                int expectedShake = profile.cues.Count(c => c.group == "heavy_hit" || c.group == "body_fall");
+                int expectedShake = profile.cues.Count(c => c.group == "light_hit" || c.group == "stab_hit" ||
+                    c.group == "heavy_hit" || c.group == "body_fall" || c.group == "knockout_fall");
                 if (shake.ShakeCount - initialShake != expectedShake || finishers != 1) throw new Exception("Shake/finishing contact count mismatch.");
                 shake.ApplyShake(); Vector3 first = camera.transform.position; shake.ApplyShake();
-                if (Vector3.Distance(first, camera.transform.position) > .00001f || Vector3.Distance(first, cameraPosition) > .055f)
+                if (Vector3.Distance(first, camera.transform.position) > .00001f || Vector3.Distance(first, cameraPosition) > .065f)
                     throw new Exception("Camera shake accumulated or exceeded its limit.");
                 shake.AdvanceShake(.3f); shake.ApplyShake();
                 if (Vector3.Distance(cameraPosition, camera.transform.position) > .00001f || Quaternion.Angle(cameraRotation, camera.transform.rotation) > .001f)
@@ -70,8 +73,8 @@ namespace FrankRetarget.Editor
                 pair.Cancel(); lighting.RefreshLighting(.4f);
                 if (Mathf.Abs(lighting.key.intensity - originalKey) > .001f || Mathf.Abs(lighting.fill.intensity - originalFill) > .001f || vfx.ActiveEffectCount != 0)
                     throw new Exception("Cancellation left lighting or effects active.");
-                report.AppendLine("PASS seven unique weapon slashes, fourteen weapon impacts and two skills on both fighters.");
-                report.AppendLine("PASS one finisher contact; repeated Begin/Advance deduplicated; shake only at heavy/floor contacts; bounded displacement; no camera drift.");
+                report.AppendLine("PASS seven unique weapon slashes, fourteen weapon impacts; all configured skills have matching VFX/timelines.");
+                report.AppendLine("PASS one finisher contact; repeated Begin/Advance deduplicated; shake only at light/heavy/floor contacts; bounded displacement; no camera drift.");
                 report.AppendLine("PASS combat light levels and restoration after cancellation.");
                 File.WriteAllText(AccentReview + "/AccentValidation.txt", report.ToString());
             }

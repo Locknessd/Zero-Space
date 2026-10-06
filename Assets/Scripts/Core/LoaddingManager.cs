@@ -1,6 +1,4 @@
 using UnityEngine;
-
-using UnityEngine;
 using UnityEngine.UI;
 using Newtonsoft.Json.Linq;
 using System;
@@ -36,17 +34,41 @@ public class LoaddingManager : MonoBehaviour
     private AsyncOperation _loadOp = null;
     private bool _sceneReady = false;
     private bool _preloadStarted = false;
+    private bool _persistAcrossScenes = false;
+
+    public bool IsBufferingMessages => _isBuffering;
 
     void Start()
     {
         if (loadingPanel != null) loadingPanel.SetActive(true);
         TrySubscribe();
         // If auto-subscribe configured, persist across scene load so we can buffer messages
-        if (!string.IsNullOrEmpty(autoSubscribeMatchId))
+        if (WebSocketManager.Instance != null && WebSocketManager.Instance.IsFrontendControlled)
         {
-            DontDestroyOnLoad(gameObject);
+            if (WebSocketManager.Instance.IsWaitingForFrontend)
+                _status = "Waiting for frontend to start the game...";
         }
+        else if (!string.IsNullOrEmpty(autoSubscribeMatchId))
+        {
+            PersistAcrossScenes();
         }
+    }
+
+    private void PersistAcrossScenes()
+    {
+        if (_persistAcrossScenes) return;
+        _persistAcrossScenes = true;
+        DontDestroyOnLoad(gameObject);
+    }
+
+    private void PrepareFrontendStart()
+    {
+        if (_isBuffering) return;
+        PersistAcrossScenes();
+        _isBuffering = true;
+        _bufferedMessages.Clear();
+        _status = "Connecting...";
+    }
 
     // Called by other systems (e.g. GameManager) to display an external error in the loading UI
     public void HandleExternalError(string code, string message)
@@ -65,6 +87,7 @@ public class LoaddingManager : MonoBehaviour
         {
             WebSocketManager.Instance.OnConnectionProgress += HandleConnectionProgress;
             WebSocketManager.Instance.OnConnectionError += HandleConnectionError;
+            WebSocketManager.Instance.OnFrontendStartRequested += PrepareFrontendStart;
             // Always listen for raw messages to detect match start (even without autoSubscribeMatchId)
             if (_bufferHandler == null)
             {
@@ -72,6 +95,10 @@ public class LoaddingManager : MonoBehaviour
                 WebSocketManager.Instance.OnRawMessageReceived += _bufferHandler;
             }
             _subscribed = true;
+            // FE may call immediately after createUnityInstance, before this component's Start.
+            if (WebSocketManager.Instance.IsFrontendControlled && !WebSocketManager.Instance.IsWaitingForFrontend)
+                PrepareFrontendStart();
+            if (WebSocketManager.Instance.IsConnected()) HandleConnectionProgress(1f, "Connected");
         }
     }
 
@@ -81,6 +108,7 @@ public class LoaddingManager : MonoBehaviour
         {
             WebSocketManager.Instance.OnConnectionProgress -= HandleConnectionProgress;
             WebSocketManager.Instance.OnConnectionError -= HandleConnectionError;
+            WebSocketManager.Instance.OnFrontendStartRequested -= PrepareFrontendStart;
             if (_bufferHandler != null)
             {
                 WebSocketManager.Instance.OnRawMessageReceived -= _bufferHandler;
@@ -106,7 +134,8 @@ public class LoaddingManager : MonoBehaviour
             _hasReachedFull = true;
             Debug.Log($"LoaddingManager: reached full progress (hasReachedFull=true)");
             // Start buffering/subscribe if configured
-            if (!string.IsNullOrEmpty(autoSubscribeMatchId))
+            if (!string.IsNullOrEmpty(autoSubscribeMatchId) &&
+                (WebSocketManager.Instance == null || !WebSocketManager.Instance.IsFrontendControlled))
             {
                 Debug.Log($"LoaddingManager: autoSubscribeMatchId present, starting buffer+subscribe={autoSubscribeMatchId}");
                 StartBufferAndSubscribe();
@@ -392,7 +421,7 @@ public class LoaddingManager : MonoBehaviour
         _bufferedMessages.Clear();
 
         // destroy loading manager if it was moved to DontDestroyOnLoad
-        if (!string.IsNullOrEmpty(autoSubscribeMatchId)) Destroy(gameObject);
+        if (_persistAcrossScenes) Destroy(gameObject);
     }
 
     void TryActivateScene()

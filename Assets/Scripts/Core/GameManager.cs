@@ -104,16 +104,20 @@ public partial class GameManager : MonoBehaviour
     private void SubscribeSocket()
     {
         if (_socket != null || WebSocketManager.Instance == null) return;
+        // Apply the loading scene's snapshot and backlog before receiving live events.
+        var loading = UnityEngine.Object.FindFirstObjectByType<LoaddingManager>();
+        if (loading != null && loading.IsBufferingMessages) return;
         _socket = WebSocketManager.Instance;
         _socket.OnRawMessageReceived += HandleRawMessage;
-        if (string.IsNullOrEmpty(initialMatchId)) return;
+        if (_socket.IsFrontendControlled || string.IsNullOrEmpty(initialMatchId)) return;
         if (_socket.IsConnected()) _ = _socket.SubscribeToMatch(initialMatchId, 0);
         else _socket.OnConnectionProgress += WaitAndSubscribe;
     }
 
     private void WaitAndSubscribe(float progress, string status)
     {
-        if (progress < 1f || _socket == null || string.IsNullOrEmpty(initialMatchId)) return;
+        if (progress < 1f || _socket == null || _socket.IsFrontendControlled ||
+            string.IsNullOrEmpty(initialMatchId)) return;
         _ = _socket.SubscribeToMatch(initialMatchId, 0);
         _socket.OnConnectionProgress -= WaitAndSubscribe;
     }
@@ -188,7 +192,8 @@ public partial class GameManager : MonoBehaviour
         SubscribeSocket();
         // Incoming match events remain queued while the local animation browser owns playback.
         if (IsAnimationTestMode) return;
-        if (enableLocalInputTesting)
+        if (enableLocalInputTesting &&
+            (WebSocketManager.Instance == null || !WebSocketManager.Instance.IsFrontendControlled))
         {
             if (IsKeyDown(KeyCode.Q)) DebugTriggerQ();
             if (IsKeyDown(KeyCode.E)) DebugTriggerE();

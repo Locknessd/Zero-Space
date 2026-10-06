@@ -76,8 +76,9 @@ public partial class GameManager
 
     public bool BeginAnimationTestMode()
     {
+#if UNITY_EDITOR
         if (IsAnimationTestMode) return true;
-        // Finish the current exchange before handing its shared clock/actors to the browser.
+        // Finish the current exchange before handing its shared clock/actors to the test panel.
         if (!Application.isPlaying || !isActiveAndEnabled || _running || !leftCombat || !rightCombat ||
             leftCombat.IsBusy || rightCombat.IsBusy || !leftCombat.Initialize() || !rightCombat.Initialize()) return false;
         var feedback = GetComponent<BattleImpactFeedback>();
@@ -91,6 +92,9 @@ public partial class GameManager
         IsAnimationTestMode = true;
         StopAnimationTest();
         return true;
+#else
+        return false;
+#endif
     }
 
     public bool PlayAnimationTest(PlayerUI.Side side, CombatTripletData move, bool lethal = false)

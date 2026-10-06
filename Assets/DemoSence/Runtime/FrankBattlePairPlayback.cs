@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace FrankRetarget
@@ -47,6 +48,7 @@ namespace FrankRetarget
         float[] contactTimes = Array.Empty<float>();
         int nextContact;
         float timelineHighWater;
+        float deferredDelta;
 
         public Vector3 CameraPosition(CharacterCombat fighter)
         {
@@ -140,9 +142,20 @@ namespace FrankRetarget
                 if (battleSfx) battleSfx.BeginSequence(this, move, lethal);
                 battleVfx = source.battleVfx;
                 var timeline = battleSfx ? battleSfx.bank : battleVfx ? battleVfx.timeline : null;
-                contactTimes = BattleHitDamageSequence.ContactTimes(timeline ? timeline.FindMove(move) : null, Duration);
+                var profile = timeline ? timeline.FindMove(move) : null;
+                var contacts = new SortedSet<float>(BattleHitDamageSequence.ContactTimes(profile, Duration));
+                // Floor feedback also needs its exact pose; damage still uses its
+                // separate hit/damaging-landing timeline in BattleHitDamageSequence.
+                if (profile != null)
+                    foreach (var cue in profile.cues)
+                        if ((cue.group == "body_fall" || cue.group == "knockout_fall") &&
+                            float.IsFinite(cue.seconds) && cue.seconds >= 0 && cue.seconds <= Duration)
+                            contacts.Add(cue.seconds);
+                contactTimes = new float[contacts.Count];
+                contacts.CopyTo(contactTimes);
                 nextContact = 0;
                 timelineHighWater = -1;
+                deferredDelta = 0;
                 bool hasVfxTimeline = battleVfx && battleVfx.BeginSequence(this, source, target, move, lethal);
                 if (!hasVfxTimeline && receiver.hitEffect)
                 {
@@ -192,7 +205,7 @@ namespace FrankRetarget
 
         void LateUpdate()
         {
-            if (!Playing) return;
+            if (!Playing || Application.isPlaying && Time.timeScale <= 0) return;
             if (waitingForGetUp)
             {
                 ConstrainLightHipsDepth();
@@ -203,34 +216,49 @@ namespace FrankRetarget
             }
             // Leave the terminal pose visible for a frame, as in the demo's clamped Evaluate.
             if (SampleTime >= Duration) { CompleteSourceMotion(); return; }
-            AdvanceTo(SampleTime + Time.deltaTime);
+            if (Time.deltaTime <= 0) return;
+            float carriedDelta = deferredDelta;
+            deferredDelta = 0;
+            AdvanceTo(SampleTime + Time.deltaTime + carriedDelta);
         }
 
         // Health, impact audio and VFX all observe the same contact pose. A slow
         // frame crossing multiple strikes still presents each hit exactly once.
         public void AdvanceTo(float seconds)
         {
-            if (!Playing || waitingForGetUp || !float.IsFinite(seconds) || seconds <= timelineHighWater) return;
+            if (!Playing || waitingForGetUp || !float.IsFinite(seconds) || seconds <= timelineHighWater ||
+                Application.isPlaying && Time.timeScale <= 0) return;
             float displayedTime = Mathf.Clamp(seconds, 0, Duration);
-            timelineHighWater = displayedTime;
+            float settledTime = displayedTime;
+            deferredDelta = 0;
             try
             {
                 while (nextContact < contactTimes.Length && contactTimes[nextContact] <= displayedTime)
                 {
                     EvaluateAt(contactTimes[nextContact++]);
+                    timelineHighWater = SampleTime;
                     TimelineAdvanced?.Invoke(this, SampleTime);
                     if (!Playing) return;
                     if (battleSfx) battleSfx.AdvanceSequence(this, SampleTime);
                     if (battleVfx) battleVfx.AdvanceSequence(this, SampleTime);
                     if (!Playing) return;
+                    if (Application.isPlaying && Time.timeScale <= 0)
+                    {
+                        // Hold the actual contact pose, including a slow frame crossing
+                        // several hits. Resume the unconsumed time after the hold ends.
+                        settledTime = SampleTime;
+                        deferredDelta = Mathf.Max(0, displayedTime - settledTime);
+                        return;
+                    }
                 }
                 EvaluateAt(displayedTime);
+                timelineHighWater = displayedTime;
                 TimelineAdvanced?.Invoke(this, SampleTime);
                 if (!Playing) return;
                 if (battleSfx) battleSfx.AdvanceSequence(this, SampleTime);
                 if (battleVfx) battleVfx.AdvanceSequence(this, SampleTime);
             }
-            finally { if (Playing) EvaluateAt(displayedTime); }
+            finally { if (Playing) EvaluateAt(settledTime); }
         }
 
         void CompleteSourceMotion()

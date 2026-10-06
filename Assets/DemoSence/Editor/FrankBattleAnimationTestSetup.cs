@@ -30,7 +30,6 @@ namespace FrankRetarget.Editor
                 }
                 panel.battle = game;
                 panel.openOnStart = false;
-                panel.enableInReleaseBuilds = false;
                 EditorUtility.SetDirty(panel);
                 foreach (var fighter in new[] { game.leftCombat, game.rightCombat })
                 {

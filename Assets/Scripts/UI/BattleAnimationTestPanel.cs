@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>Local battle animation browser using the scene's actual move pools and playback.</summary>
+/// <summary>Editor-only battle animation browser using the scene's actual move pools and playback.</summary>
 [DisallowMultipleComponent]
 public sealed class BattleAnimationTestPanel : MonoBehaviour
 {
     public GameManager battle;
     public bool openOnStart;
-    public bool enableInReleaseBuilds;
 
     public sealed class Entry
     {
@@ -46,15 +45,19 @@ public sealed class BattleAnimationTestPanel : MonoBehaviour
 
     void Start()
     {
-        if (!Application.isEditor && !Debug.isDebugBuild && !enableInReleaseBuilds) return;
+#if UNITY_EDITOR
         if (!battle) battle = GameManager.Instance;
         if (!battle) return;
         BuildUI();
         if (openOnStart) Open();
+#else
+        enabled = false;
+#endif
     }
 
     void Update()
     {
+#if UNITY_EDITOR
         if (!canvasRoot || !battle) return;
         if (Input.GetKeyDown(KeyCode.F8))
         {
@@ -83,6 +86,7 @@ public sealed class BattleAnimationTestPanel : MonoBehaviour
             }
         }
         RefreshStatus();
+#endif
     }
 
     public void Open()

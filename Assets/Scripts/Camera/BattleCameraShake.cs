@@ -6,13 +6,15 @@ using UnityEngine;
 public sealed class BattleCameraShake : MonoBehaviour
 {
     public BattleVfxPlayer vfx;
-    [Range(0, .1f)] public float heavyStrength = .045f;
-    [Range(0, .1f)] public float groundStrength = .035f;
-    [Range(.05f, .4f)] public float duration = .2f;
+    [Range(0, .1f)] public float lightStrength = .014f;
+    [Range(0, .1f)] public float heavyStrength = .055f;
+    [Range(0, .1f)] public float groundStrength = .04f;
+    [Range(.05f, .4f)] public float lightDuration = .09f;
+    [Range(.05f, .4f)] public float duration = .18f;
     public int ShakeCount { get; private set; }
-    public bool IsShaking => age < duration;
+    public bool IsShaking => age < activeDuration;
     BattleVfxPlayer subscribed;
-    float age = 1, strength;
+    float age = 1, strength, activeDuration = .18f;
     Vector3 basePosition, appliedPosition;
     Quaternion baseRotation, appliedRotation;
     bool applied;
@@ -23,12 +25,17 @@ public sealed class BattleCameraShake : MonoBehaviour
     {
         if (subscribed == vfx) return;
         Unbind(); subscribed = vfx;
-        if (subscribed) { subscribed.EffectPlayed += Contact; subscribed.EffectsCleared += ResetShake; }
+        if (subscribed) { subscribed.ContactOccurred += Contact; subscribed.EffectsCleared += ResetShake; }
     }
-    void Contact(string cue, GameObject effect)
+    void Contact(BattleVfxPlayer.Impact impact)
     {
-        if (!effect || cue != "heavy_hit" && cue != "ground_impact") return;
-        strength = Mathf.Max(strength * Mathf.Clamp01(1 - age / duration), cue == "heavy_hit" ? heavyStrength : groundStrength);
+        float impulse = impact.kind == BattleVfxPlayer.ContactKind.Heavy ? heavyStrength :
+            impact.kind == BattleVfxPlayer.ContactKind.Ground ? groundStrength : lightStrength;
+        if (impulse <= 0) return;
+        bool carryingStronger = IsShaking && strength * Mathf.Clamp01(1 - age / activeDuration) > impulse;
+        strength = Mathf.Max(strength * Mathf.Clamp01(1 - age / activeDuration), impulse);
+        if (!carryingStronger)
+            activeDuration = impact.kind == BattleVfxPlayer.ContactKind.Light ? lightDuration : duration;
         age = 0; ShakeCount++;
     }
     public void AdvanceShake(float unscaledDelta) => age += Mathf.Max(0, unscaledDelta);
@@ -37,7 +44,7 @@ public sealed class BattleCameraShake : MonoBehaviour
         RemoveOffset();
         if (!IsShaking) { strength = 0; return; }
         basePosition = transform.position; baseRotation = transform.rotation;
-        float envelope = Mathf.Pow(1 - Mathf.Clamp01(age / duration), 2);
+        float envelope = Mathf.Pow(1 - Mathf.Clamp01(age / activeDuration), 2);
         float phase = age * 95;
         Vector3 offset = new Vector3(Mathf.Sin(phase + ShakeCount * .9f), Mathf.Sin(phase * 1.35f + 1.2f) * .55f, 0) * (strength * envelope);
         if (!view) view = GetComponent<Camera>();
@@ -68,10 +75,10 @@ public sealed class BattleCameraShake : MonoBehaviour
             transform.SetPositionAndRotation(basePosition, baseRotation);
         applied = false;
     }
-    public void ResetShake() { RemoveOffset(); age = duration; strength = 0; }
+    public void ResetShake() { RemoveOffset(); age = activeDuration; strength = 0; }
     void Unbind()
     {
-        if (subscribed) { subscribed.EffectPlayed -= Contact; subscribed.EffectsCleared -= ResetShake; }
+        if (subscribed) { subscribed.ContactOccurred -= Contact; subscribed.EffectsCleared -= ResetShake; }
         subscribed = null;
     }
     void OnEnable() => Bind();

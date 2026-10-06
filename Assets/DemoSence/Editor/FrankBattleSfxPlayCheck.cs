@@ -90,9 +90,11 @@ namespace FrankRetarget.Editor
         {
             effects.Add(id);
             effectStarts++;
-            if (!root.activeInHierarchy || !root.GetComponentsInChildren<ParticleSystem>().Any(p => p.IsAlive(false)))
-                vfxFailure = "VFX cue did not start a live particle system: " + id;
-            if (game.battleVfx.PooledEffectCount > game.battleVfx.maxInstances)
+            bool ribbon = game.battleVfx.weaponTrails && game.battleVfx.weaponTrails.Owns(root);
+            if (!root.activeInHierarchy || !ribbon && !root.GetComponentsInChildren<ParticleSystem>().Any(p => p.IsAlive(false)))
+                vfxFailure = "VFX cue did not start a live effect: " + id;
+            if (game.battleVfx.PooledEffectCount > game.battleVfx.maxInstances +
+                (game.battleVfx.weaponTrails ? game.battleVfx.weaponTrails.maxTrails : 0))
                 vfxFailure = "VFX pool exceeded its cap";
             var lighting = game.GetComponent<BattleLightingRig>();
             if (lighting && (id == "heavy_hit" || id == "light_hit" || id == "ground_impact"))

@@ -7,6 +7,29 @@ using UnityEngine;
 [DefaultExecutionOrder(14000)]
 public sealed class BattleVfxPlayer : MonoBehaviour
 {
+    public enum ContactKind { Light, Heavy, Ground }
+
+    // Contact feedback must survive a missing prefab or a saturated particle pool.
+    public readonly struct Impact
+    {
+        public readonly FrankBattlePairPlayback playback;
+        public readonly CharacterCombat attacker, receiver;
+        public readonly CombatTripletData move;
+        public readonly ContactKind kind;
+        public readonly Vector3 position;
+        public readonly float seconds;
+        public readonly bool finishing;
+
+        public Impact(FrankBattlePairPlayback playback, CharacterCombat attacker,
+            CharacterCombat receiver, CombatTripletData move, ContactKind kind,
+            Vector3 position, float seconds, bool finishing)
+        {
+            this.playback = playback; this.attacker = attacker; this.receiver = receiver;
+            this.move = move; this.kind = kind; this.position = position;
+            this.seconds = seconds; this.finishing = finishing;
+        }
+    }
+
     [Header("Shared animation timeline")]
     public BattleSfxBank timeline;
     [Header("Battle effect prefabs")]
@@ -14,6 +37,8 @@ public sealed class BattleVfxPlayer : MonoBehaviour
     public GameObject heavyHit;
     public GameObject landingDust;
     public GameObject bladeSlash;
+    public BattleWeaponTrails weaponTrails;
+    public GameObject shieldImpact;
     [Serializable]
     public sealed class WeaponSlashVariant
     {
@@ -27,7 +52,7 @@ public sealed class BattleVfxPlayer : MonoBehaviour
     public sealed class WeaponImpactVariant
     {
         public TrumpWeaponManager.WeaponType weapon;
-        public GameObject light, heavy;
+        public GameObject light, heavy, stab;
         [Range(.25f, 2f)] public float scale = 1;
     }
     public WeaponImpactVariant[] impactVariants = Array.Empty<WeaponImpactVariant>();
@@ -51,11 +76,13 @@ public sealed class BattleVfxPlayer : MonoBehaviour
     [Min(4)] public int maxInstances = 48;
 
     public event Action<string, GameObject> EffectPlayed;
+    public event Action<Impact> ContactOccurred;
     public event Action EffectsCleared;
     public event Action<CharacterCombat, CombatTripletData, bool> SequenceBegan;
     public int PlayedEffectCount { get; private set; }
-    public int ActiveEffectCount => instances.FindAll(i => i.root && i.root.activeSelf).Count;
-    public int PooledEffectCount => instances.Count;
+    public int ActiveEffectCount => instances.FindAll(i => i.root && i.root.activeSelf).Count +
+        (weaponTrails ? weaponTrails.ActiveTrailCount : 0);
+    public int PooledEffectCount => instances.Count + (weaponTrails ? weaponTrails.PooledTrailCount : 0);
     public bool IsFinishingContact { get; private set; }
     public int ContactCount { get; private set; }
 
@@ -95,7 +122,7 @@ public sealed class BattleVfxPlayer : MonoBehaviour
     Camera battleCamera;
     GameObject sequenceSlash;
     float sequenceSlashScale;
-    GameObject sequenceLightHit, sequenceHeavyHit;
+    GameObject sequenceLightHit, sequenceHeavyHit, sequenceStabHit;
     float sequenceImpactScale, finishingTime;
     int ownerPlaybackId = -1;
     SkillVariant sequenceSkill;
@@ -105,7 +132,7 @@ public sealed class BattleVfxPlayer : MonoBehaviour
     public bool BeginSequence(FrankBattlePairPlayback playback, CharacterCombat source,
         CharacterCombat target, CombatTripletData move, bool isLethal)
     {
-        if (!isActiveAndEnabled || !timeline || !lightHit || !heavyHit || !landingDust || !bladeSlash)
+        if (!isActiveAndEnabled || !timeline)
             return false;
         var profile = timeline.FindMove(move);
         if (profile == null) return false;
@@ -116,12 +143,13 @@ public sealed class BattleVfxPlayer : MonoBehaviour
         attacker = source;
         receiver = target;
         weapon = move.weapon;
-        sequenceLightHit = lightHit; sequenceHeavyHit = heavyHit; sequenceImpactScale = 1;
+        sequenceLightHit = lightHit; sequenceHeavyHit = heavyHit; sequenceStabHit = null; sequenceImpactScale = 1;
         foreach (var variant in impactVariants ?? Array.Empty<WeaponImpactVariant>())
             if (variant != null && variant.weapon == weapon)
             {
                 if (variant.light) sequenceLightHit = variant.light;
                 if (variant.heavy) sequenceHeavyHit = variant.heavy;
+                sequenceStabHit = variant.stab;
                 sequenceImpactScale = Mathf.Clamp(variant.scale, .25f, 2);
                 break;
             }
@@ -147,6 +175,8 @@ public sealed class BattleVfxPlayer : MonoBehaviour
         battleCamera = FindBattleCamera();
         nextCue = 0;
         highWaterTime = -1;
+        if (!weaponTrails) weaponTrails = GetComponent<BattleWeaponTrails>();
+        if (weaponTrails) weaponTrails.Begin(playback, source, profile);
         SequenceBegan?.Invoke(source, move, isLethal);
         return true;
     }
@@ -202,12 +232,16 @@ public sealed class BattleVfxPlayer : MonoBehaviour
                     break;
                 case "light_hit":
                 case "stab_hit":
-                    Spawn(sequenceLightHit, ContactPoint(cue), FacingCamera(), sequenceImpactScale, "light_hit");
+                    Vector3 lightPoint = ContactPoint(cue);
+                    Spawn(ContactPrefab(cue, false), lightPoint, ContactRotation(cue), sequenceImpactScale, "light_hit");
                     ContactCount++;
+                    PublishContact(ContactKind.Light, lightPoint, cue.seconds);
                     break;
                 case "heavy_hit":
-                    Spawn(sequenceHeavyHit, ContactPoint(cue), FacingCamera(), sequenceImpactScale, "heavy_hit");
+                    Vector3 heavyPoint = ContactPoint(cue);
+                    Spawn(ContactPrefab(cue, true), heavyPoint, ContactRotation(cue), sequenceImpactScale, "heavy_hit");
                     ContactCount++;
+                    PublishContact(ContactKind.Heavy, heavyPoint, cue.seconds);
                     break;
                 case "body_fall":
                 case "knockout_fall":
@@ -223,25 +257,71 @@ public sealed class BattleVfxPlayer : MonoBehaviour
                     // Older scenes without a ground impact retain feedback on an unarmed throw.
                     if (unarmed && cue.finalLanding && !groundImpact)
                         Spawn(lightHit, ground + Vector3.up * .12f, FacingCamera(), .8f, "light_hit");
+                    PublishContact(ContactKind.Ground, ground, cue.seconds);
                     break;
                 case "light_swing":
-                    PlaySwing(lightSwing, false, .9f, "light_swing");
+                    PlaySwing(lightSwing, false, .9f, "light_swing", cue);
                     break;
                 case "thrust_swing":
                     PlaySwing(thrustSwing, true, weapon == TrumpWeaponManager.WeaponType.DualDaggers ? .75f : 1,
-                        "thrust_swing");
+                        "thrust_swing", cue);
                     break;
                 case "blade_swing":
                 case "heavy_swing":
                     if (unarmed || !attacker) break;
                     PlaySwing(sequenceSlash, true, sequenceSlashScale *
                         (weapon == TrumpWeaponManager.WeaponType.DualDaggers ? .65f :
-                        cue.group == "heavy_swing" ? 1.15f : 1), "blade_slash");
+                        cue.group == "heavy_swing" ? 1.15f : 1), "blade_slash", cue);
                     break;
                 }
             }
+            if (weaponTrails) weaponTrails.Advance(seconds);
         }
         finally { IsFinishingContact = false; if (playback.Playing) playback.EvaluateAt(displayedTime); }
+    }
+
+    GameObject ContactPrefab(BattleSfxBank.Cue cue, bool heavy)
+    {
+        if (sequenceSkill == null)
+        {
+            if (cue.contactSource == "Shield" && shieldImpact) return shieldImpact;
+            if (!string.IsNullOrEmpty(cue.contactSource) && cue.contactSource != "Weapon" && cue.contactSource != "Shield")
+                return heavy ? heavyHit : lightHit;
+            if (cue.group == "stab_hit" && sequenceStabHit) return sequenceStabHit;
+        }
+        return heavy ? sequenceHeavyHit : sequenceLightHit;
+    }
+
+    Quaternion ContactRotation(BattleSfxBank.Cue cue)
+    {
+        Quaternion facing = FacingCamera();
+        Vector3 motion = Vector3.zero;
+        if (Enum.TryParse(cue.contactSource, out HumanBodyBones limb))
+        {
+            var bone = BoneTransform(attacker, limb);
+            if (bone && previousPoints.TryGetValue(bone, out var prior)) motion = bone.position - prior;
+        }
+        else
+        {
+            float fastest = -1;
+            var renderers = owner.AttackerActor?.Pose?.weaponRenderers;
+            if (renderers != null) foreach (var blade in renderers)
+                if (IsBlade(blade) && previousPoints.TryGetValue(blade.transform, out var prior))
+                {
+                    Vector3 delta = BladeCenter(blade) - prior;
+                    if (delta.sqrMagnitude > fastest) { fastest = delta.sqrMagnitude; motion = delta; }
+                }
+        }
+        Vector3 screen = Quaternion.Inverse(facing) * motion;
+        float angle = screen.sqrMagnitude > .000001f ? Mathf.Atan2(screen.y, screen.x) * Mathf.Rad2Deg : 0;
+        return facing * Quaternion.Euler(0, 0, angle);
+    }
+
+    void PublishContact(ContactKind kind, Vector3 position, float seconds)
+    {
+        if (!owner || !receiver) return;
+        ContactOccurred?.Invoke(new Impact(owner, attacker, receiver, owner.Move, kind,
+            position, seconds, IsFinishingContact));
     }
 
     static bool IsVisualCue(string group) => group == "light_hit" || group == "heavy_hit" ||
@@ -285,8 +365,15 @@ public sealed class BattleVfxPlayer : MonoBehaviour
         return renderer.bounds.center;
     }
 
-    void PlaySwing(GameObject prefab, bool useBlade, float scale, string cue)
+    void PlaySwing(GameObject prefab, bool useBlade, float scale, string cue, BattleSfxBank.Cue timing)
     {
+        var trail = weaponTrails ? weaponTrails.Play(timing) : null;
+        if (trail)
+        {
+            PlayedEffectCount++;
+            EffectPlayed?.Invoke(cue, trail);
+            return;
+        }
         if (!prefab || !attacker) return;
         Transform anchor = null;
         Renderer bladeAnchor = null;
@@ -530,12 +617,14 @@ public sealed class BattleVfxPlayer : MonoBehaviour
         owner = null;
         sequence = null;
         attacker = receiver = null;
+        if (weaponTrails) weaponTrails.End(playback);
         if (interrupted) ClearEffects();
     }
 
     public void ClearEffects()
     {
         foreach (var instance in instances) Release(instance);
+        if (weaponTrails) weaponTrails.Clear();
         EffectsCleared?.Invoke();
     }
 

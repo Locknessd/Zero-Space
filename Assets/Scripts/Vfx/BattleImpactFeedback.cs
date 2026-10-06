@@ -9,9 +9,10 @@ public sealed class BattleImpactFeedback : MonoBehaviour
     public BattleVfxPlayer vfx;
     public Camera battleCamera;
     public BattleImpactFlashGraphic flash;
-    [Range(0, .12f)] public float lightHold = .035f;
-    [Range(0, .12f)] public float heavyHold = .075f;
+    [Range(0, .12f)] public float lightHold = .04f;
+    [Range(0, .12f)] public float heavyHold = .08f;
     [Range(0, .12f)] public float groundHold = .055f;
+    [Range(0, .12f)] public float finishingHold = .10f;
     [Header("KO slow motion")]
     public bool knockoutSlowMotion;
     [Range(.1f, .8f)] public float knockoutSpeed = .32f;
@@ -37,28 +38,30 @@ public sealed class BattleImpactFeedback : MonoBehaviour
         if (subscribed == vfx) return;
         Unbind(); subscribed = vfx;
         if (!subscribed) return;
-        subscribed.EffectPlayed += Contact;
+        subscribed.ContactOccurred += Contact;
         subscribed.EffectsCleared += ResetFeedback;
     }
 
-    void Contact(string cue, GameObject effect)
+    void Contact(BattleVfxPlayer.Impact impact)
     {
-        float hold = cue == "heavy_hit" ? heavyHold : cue == "light_hit" ? lightHold : cue == "ground_impact" ? groundHold : 0;
-        if (hold <= 0 || !effect) return;
-        HitStopCount++;
-        if (Application.isPlaying && (ownsTime || Time.timeScale > 0))
+        float hold = impact.kind == BattleVfxPlayer.ContactKind.Heavy ? heavyHold :
+            impact.kind == BattleVfxPlayer.ContactKind.Ground ? groundHold : lightHold;
+        if (impact.finishing) hold = Mathf.Max(hold, finishingHold);
+        if (hold > 0) HitStopCount++;
+        if (hold > 0 && Application.isPlaying && (ownsTime || Time.timeScale > 0))
         {
             if (!ownsTime) { savedTimeScale = Time.timeScale; ownsTime = true; }
             remaining = Mathf.Max(remaining, hold);
-            if (vfx.IsFinishingContact) BeginKnockoutSlowMotion();
+            if (impact.finishing) BeginKnockoutSlowMotion();
             ApplyTime();
         }
-        flashAge = 0; flashPosition = effect.transform.position;
+        flashAge = 0; flashPosition = impact.position;
         if (!flash) return;
         RefreshFlashProjection();
-        float size = cue == "heavy_hit" ? 190 : cue == "ground_impact" ? 165 : 120;
+        float size = impact.kind == BattleVfxPlayer.ContactKind.Heavy ? 190 :
+            impact.kind == BattleVfxPlayer.ContactKind.Ground ? 165 : 120;
         flash.rectTransform.sizeDelta = Vector2.one * size;
-        flash.color = cue == "ground_impact" ? new Color(1, .83f, .32f, .8f) : new Color(1, .98f, .84f, .9f);
+        flash.color = impact.kind == BattleVfxPlayer.ContactKind.Ground ? new Color(1, .83f, .32f, .8f) : new Color(1, .98f, .84f, .9f);
         flash.Progress = 0;
     }
 
@@ -125,7 +128,7 @@ public sealed class BattleImpactFeedback : MonoBehaviour
     {
         if (subscribed)
         {
-            subscribed.EffectPlayed -= Contact;
+            subscribed.ContactOccurred -= Contact;
             subscribed.EffectsCleared -= ResetFeedback;
         }
         subscribed = null;

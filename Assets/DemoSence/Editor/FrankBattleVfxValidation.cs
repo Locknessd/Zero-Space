@@ -103,7 +103,8 @@ namespace FrankRetarget.Editor
                     vfx.lightSwing, vfx.thrustSwing, vfx.groundImpact, vfx.landingText }
                     .Concat((vfx.bladeSlashVariants ?? Array.Empty<BattleVfxPlayer.WeaponSlashVariant>())
                         .Where(v => v != null && v.prefab).Select(v => v.prefab))
-                    .Concat(vfx.impactVariants.SelectMany(v => new[] { v.light, v.heavy }))
+                    .Concat(vfx.impactVariants.SelectMany(v => new[] { v.light, v.heavy, v.stab }.Where(p => p)))
+                    .Concat(vfx.shieldImpact ? new[] { vfx.shieldImpact } : Array.Empty<GameObject>())
                     .Concat(vfx.skillVariants.SelectMany(v => new[] { v.cast, v.projectile, v.impact })).Distinct())
                 {
                     if (!prefab || prefab.GetComponentsInChildren<ParticleSystem>(true).Length == 0)
@@ -160,9 +161,10 @@ namespace FrankRetarget.Editor
                         if ((id.EndsWith("fall") || id == "ground_impact") &&
                             Mathf.Abs(position.y - vfx.groundHeight - .035f) > .001f)
                             throw new Exception("Dust is not on the arena floor.");
-                        if (!root.GetComponentsInChildren<ParticleSystem>().Any(p => p.isPlaying))
+                        bool ribbon = vfx.weaponTrails && vfx.weaponTrails.Owns(root);
+                        if (!ribbon && !root.GetComponentsInChildren<ParticleSystem>().Any(p => p.isPlaying))
                             throw new Exception("Cue did not start any particle systems.");
-                        if (id == "blade_slash")
+                        if (id == "blade_slash" && !ribbon)
                         {
                             var variant = vfx.bladeSlashVariants?.FirstOrDefault(v => v != null && v.weapon == move.weapon && v.prefab);
                             var selected = variant != null ? variant.prefab : vfx.bladeSlash;
@@ -271,8 +273,9 @@ namespace FrankRetarget.Editor
                 exactPair.Cancel();
                 game.battleSfx.enabled = true;
                 report.AppendLine($"PASS whole-combo frame skip with audio disabled: {expected} effects; positions match exact cue sampling.");
-                if (vfx.PooledEffectCount > vfx.maxInstances) throw new Exception("Effect pool exceeded its cap.");
-                report.AppendLine($"PASS {cases} cases; pooled={vfx.PooledEffectCount}/{vfx.maxInstances}; shaders supported; duplicate/cancel checks passed.");
+                int poolLimit = vfx.maxInstances + (vfx.weaponTrails ? vfx.weaponTrails.maxTrails : 0);
+                if (vfx.PooledEffectCount > poolLimit) throw new Exception("Effect pool exceeded its cap.");
+                report.AppendLine($"PASS {cases} cases; pooled={vfx.PooledEffectCount}/{poolLimit}; shaders supported; duplicate/cancel checks passed.");
                 File.WriteAllText("Temp/FrankRetarget/battle-vfx-validation.txt", report.ToString());
             }
             catch (Exception exception)

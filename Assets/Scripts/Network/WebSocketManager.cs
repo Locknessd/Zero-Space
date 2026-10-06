@@ -1,23 +1,31 @@
-using System.Net.WebSockets;
 using System;
 using System.Collections.Concurrent;
-using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using SocketIOClient;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-/*
- * WebSocketManager supports two modes:
- * - If you install NativeWebSocket and define the scripting symbol `NATIVE_WEB_SOCKET`, the manager will use NativeWebSocket (recommended).
- * - Otherwise a lightweight stub implementation is used so the project compiles; it logs warnings and does not perform real networking.
- */
-
-
 public class WebSocketManager : MonoBehaviour
 {
+    public enum StartupMode
+    {
+        ClientInput,
+        Frontend
+    }
+
     public static WebSocketManager Instance { get; private set; }
+
+    [Header("Startup")]
+    [Tooltip("Client Input uses IDs entered in Unity. Frontend waits for FE. Applies on all platforms.")]
+    [SerializeField] private StartupMode _startupMode = StartupMode.ClientInput;
+
+    public StartupMode ActiveStartupMode => _startupMode;
+
+    public bool IsFrontendControlled => ActiveStartupMode == StartupMode.Frontend;
+    public bool IsWaitingForFrontend => IsFrontendControlled && !_frontendStartRequested;
+    public string CurrentMatchId => _currentMatchId;
+    public event Action OnFrontendStartRequested;
 
     [Header("Connection")]
     [Tooltip("WSS endpoint for the game backend.")]
@@ -39,10 +47,18 @@ public class WebSocketManager : MonoBehaviour
     public event Action<float, string> OnConnectionProgress;
     // Explicit connection error event: machine-readable code and human message
     public event Action<string, string> OnConnectionError;
+#if UNITY_WEBGL && !UNITY_EDITOR
+    private WebGLSocketIO _ws;
+#else
     private SocketIO _ws;
-    //private NativeWebSocket.WebSocket _ws;
+#endif
     private readonly ConcurrentQueue<string> _incomingMessages = new ConcurrentQueue<string>();
     private bool _isClosing;
+    private bool _destroyed;
+    private bool _frontendStartRequested;
+    private bool _frontendStartEventSent;
+    private string _frontendMatchId;
+    private string _frontendRequestId;
     private string _currentMatchId;
     private long _lastAppliedSequence = 0;
     private readonly System.Collections.Concurrent.ConcurrentQueue<(float, string)> _progressQueue = new System.Collections.Concurrent.ConcurrentQueue<(float, string)>();
@@ -86,8 +102,114 @@ public class WebSocketManager : MonoBehaviour
 
     private void Start()
     {
+        if (IsWaitingForFrontend)
+        {
+            EnqueueProgress(0f, "Waiting for frontend to start the game...");
+            return;
+        }
         _ = ConnectAsync();
     }
+
+    /// <summary>Called by FE with an existing match ID via unityInstance.SendMessage.</summary>
+    [UnityEngine.Scripting.Preserve]
+    public void StartMatchFromFrontend(string matchId)
+    {
+        StartGameFromFrontend(JsonConvert.SerializeObject(new FrontendStartOptions { matchId = matchId }));
+    }
+
+    /// <summary>Accepts JSON containing either matchId or requestId, plus optional connection settings.</summary>
+    [UnityEngine.Scripting.Preserve]
+    public void StartGameFromFrontend(string json)
+    {
+        if (!IsFrontendControlled)
+        {
+            EnqueueError("FRONTEND_START_DISABLED", "Select Frontend startup mode before calling the FE API.");
+            return;
+        }
+
+        try
+        {
+            var config = JsonConvert.DeserializeObject<FrontendStartOptions>(json);
+            string matchId = config?.matchId?.Trim();
+            string requestId = config?.requestId?.Trim();
+            bool hasMatchId = !string.IsNullOrEmpty(matchId);
+            bool hasRequestId = !string.IsNullOrEmpty(requestId);
+            if (!hasMatchId) matchId = null;
+            if (!hasRequestId) requestId = null;
+            if (config == null || hasMatchId == hasRequestId)
+            {
+                EnqueueError("FRONTEND_START_INVALID", "Provide exactly one non-empty matchId or requestId.");
+                return;
+            }
+
+            string serverUrl = config.serverUrl?.Trim();
+            if (!string.IsNullOrEmpty(serverUrl) &&
+                (!Uri.TryCreate(serverUrl, UriKind.Absolute, out var uri) ||
+                 (uri.Scheme != "http" && uri.Scheme != "https" && uri.Scheme != "ws" && uri.Scheme != "wss")))
+            {
+                EnqueueError("FRONTEND_START_INVALID", "serverUrl must be an absolute HTTP(S) or WS(S) URL.");
+                return;
+            }
+
+            if (_frontendStartRequested)
+            {
+                if (!string.Equals(_frontendMatchId, matchId, StringComparison.Ordinal) ||
+                    !string.Equals(_frontendRequestId, requestId, StringComparison.Ordinal))
+                {
+                    EnqueueError("FRONTEND_SESSION_ACTIVE", "A match is already selected. Reload Unity to start another.");
+                    return;
+                }
+                // Repeated FE calls during connection or gameplay must not restart or resubscribe the match.
+                if (_ws != null)
+                {
+#if UNITY_WEBGL && !UNITY_EDITOR
+                    if (!_ws.CanRetry) return;
+                    _ws.Dispose();
+                    _ws = null;
+#else
+                    return;
+#endif
+                }
+            }
+
+            if (!string.IsNullOrEmpty(serverUrl)) _serverUrl = serverUrl;
+            if (config.serviceToken != null) SetServiceToken(config.serviceToken);
+            _frontendMatchId = matchId;
+            _frontendRequestId = requestId;
+            startMatchRequestId = requestId ?? string.Empty;
+            if (!_frontendStartRequested)
+            {
+                _currentMatchId = matchId;
+                _lastAppliedSequence = 0;
+            }
+            _frontendStartRequested = true;
+            // Loading subscribes and buffers before the backend can send its first snapshot.
+            OnFrontendStartRequested?.Invoke();
+            _ = ConnectAsync();
+        }
+        catch (Exception ex)
+        {
+            EnqueueError("FRONTEND_START_INVALID", "Invalid frontend startup data: " + ex.Message);
+        }
+    }
+
+    [Serializable]
+    private sealed class FrontendStartOptions
+    {
+        public string matchId;
+        public string requestId;
+        public string serverUrl;
+        public string serviceToken;
+    }
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+    [UnityEngine.Scripting.Preserve]
+    public void OnWebGLSocketEvent(string json)
+    {
+        try { _ws?.HandleMessage(json); }
+        catch (Exception ex) { EnqueueError("SOCKET_MESSAGE_INVALID", ex.Message); }
+    }
+#endif
 
     void LogInfo(string message, bool important = false)
     {
@@ -160,7 +282,7 @@ public class WebSocketManager : MonoBehaviour
 
     public async Task ConnectAsync()
     {
-        if (_ws != null)
+        if (_destroyed || IsWaitingForFrontend || _ws != null)
             return;
 
         _isClosing = false;
@@ -177,8 +299,18 @@ public class WebSocketManager : MonoBehaviour
             Path = "/socket.io"
         };
 
+#if UNITY_WEBGL && !UNITY_EDITOR
+        options.Reconnection = _autoReconnect;
+        options.ReconnectionDelay = Math.Max(0, _reconnectDelay * 1000);
+        options.ReconnectionDelayMax = Math.Max(5000, (int)options.ReconnectionDelay);
+        _ws = new WebGLSocketIO(this, _serverUrl, options);
+#else
+        options.Reconnection = _autoReconnect;
         _ws = new SocketIO(_serverUrl, options);
+#endif
+        var socket = _ws;
 
+#if !UNITY_WEBGL || UNITY_EDITOR
         // Register a catch-all "OnAny" handler via reflection to log every incoming event
         try
         {
@@ -200,9 +332,11 @@ public class WebSocketManager : MonoBehaviour
         {
             Debug.LogWarning($"WebSocketManager: failed to register OnAny logger: {ex}");
         }
+#endif
 
         _ws.OnConnected += async (sender, e) =>
         {
+            if (_ws != socket || _isClosing) return;
             LogInfo("WebSocketManager: Connected.", true);
             EnqueueProgress(1f, "Connected");
             if (_connectProgressCts != null) { _connectProgressCts.Cancel(); _connectProgressCts.Dispose(); _connectProgressCts = null; }
@@ -212,16 +346,21 @@ public class WebSocketManager : MonoBehaviour
                 await SubscribeToMatch(_currentMatchId, _lastAppliedSequence);
             }
             // Optionally emit a test/start-match event after successful connect
-            if (emitStartMatchOnConnect && !string.IsNullOrEmpty(startMatchEventName))
+            bool shouldStartMatch = IsFrontendControlled
+                ? !string.IsNullOrEmpty(_frontendRequestId) &&
+                  (!_frontendStartEventSent || string.IsNullOrEmpty(_currentMatchId))
+                : emitStartMatchOnConnect;
+            if (shouldStartMatch && !string.IsNullOrEmpty(startMatchEventName))
             {
                 try
                 {
-                    if (!string.IsNullOrEmpty(startMatchRequestId))
+                    string effectiveRequestId = IsFrontendControlled ? _frontendRequestId : startMatchRequestId;
+                    if (!string.IsNullOrEmpty(effectiveRequestId))
                     {
                         // build payload programmatically to avoid inspector formatting issues
                         // sanitize common inspector paste mistakes like "startMatchRequestId = value"
-                        string rid = startMatchRequestId.Trim();
-                        int eq = rid.IndexOf('=');
+                        string rid = effectiveRequestId.Trim();
+                        int eq = IsFrontendControlled ? -1 : rid.IndexOf('=');
                         if (eq >= 0)
                         {
                             var right = rid.Substring(eq + 1).Trim();
@@ -238,6 +377,7 @@ public class WebSocketManager : MonoBehaviour
                         await EmitLoggedAsync(startMatchEventName, startMatchPayload);
                     }
                     EnqueueProgress(0.97f, $"Emitted:{startMatchEventName}");
+                    if (IsFrontendControlled) _frontendStartEventSent = true;
                 }
                 catch (Exception ex)
                 {
@@ -280,14 +420,29 @@ public class WebSocketManager : MonoBehaviour
 
         _ws.OnDisconnected += async (sender, e) =>
         {
+            if (_ws != socket) return;
             LogInfo($"WebSocketManager: Disconnected: {e}", true);
             EnqueueProgress(0f, $"Disconnected");
-            _ws = null;
-            if (_autoReconnect && !_isClosing)
+#if UNITY_WEBGL && !UNITY_EDITOR
+            // The browser Socket.IO client owns reconnection and preserves its callbacks.
+            await Task.CompletedTask;
+#else
+            // Socket.IO already reconnects on transport failures; only server disconnects need this call.
+            if (_autoReconnect && !_isClosing && e == DisconnectReason.IOServerDisconnect)
             {
                 await Task.Delay(TimeSpan.FromSeconds(_reconnectDelay));
-                _ = ConnectAsync();
+                if (_ws == socket && !_isClosing && !_destroyed)
+                {
+                    try { await socket.ConnectAsync(); }
+                    catch (Exception ex)
+                    {
+                        EnqueueError("SOCKET_CONNECT_FAILED", ex.Message);
+                        socket.Dispose();
+                        if (_ws == socket) _ws = null;
+                    }
+                }
             }
+#endif
         };
 
         // Snapshot: includes current state + optionally an array of events
@@ -295,10 +450,17 @@ public class WebSocketManager : MonoBehaviour
         {
             try
             {
-                var snapResp = response.GetValue<SnapshotResponse>();
+                // Read with Newtonsoft so public model fields are handled on both transports.
+                var snapshotData = JToken.Parse(response.ToString());
+                if (snapshotData.Type == JTokenType.Array) snapshotData = snapshotData.First;
+                if (snapshotData?.Type == JTokenType.String)
+                    snapshotData = JToken.Parse(snapshotData.Value<string>());
+                var snapResp = snapshotData?.ToObject<SnapshotResponse>();
+                if (snapResp == null) return;
                 if (!string.IsNullOrEmpty(snapResp.error))
                 {
                     Debug.LogError($"WebSocketManager: subscribe error: {snapResp.error}");
+                    EnqueueError(MapErrorToCode(snapResp.error), snapResp.error);
                     _incomingMessages.Enqueue(JsonConvert.SerializeObject(new { type = "error", error = snapResp.error }));
                     return;
                 }
@@ -394,6 +556,9 @@ public class WebSocketManager : MonoBehaviour
                 try
                 {
                     token = JToken.Parse(rawText);
+                    // Socket.IO arguments wrap a backend array in another array.
+                    if (token is JArray args && args.Count == 1 && args[0] is JArray)
+                        token = args[0];
                 }
                 catch
                 {
@@ -495,6 +660,7 @@ public class WebSocketManager : MonoBehaviour
             if (_connectProgressCts != null) { _connectProgressCts.Cancel(); _connectProgressCts.Dispose(); _connectProgressCts = null; }
             _connectProgressCts = new System.Threading.CancellationTokenSource();
             EnqueueProgress(0f, "Connecting...");
+#if !UNITY_WEBGL || UNITY_EDITOR
             var token = _connectProgressCts.Token;
             _ = Task.Run(async () =>
             {
@@ -506,6 +672,7 @@ public class WebSocketManager : MonoBehaviour
                     try { await Task.Delay(200, token).ConfigureAwait(false); } catch { break; }
                 }
             }, token);
+#endif
 
             await _ws.ConnectAsync();
         }
@@ -513,8 +680,10 @@ public class WebSocketManager : MonoBehaviour
         {
             Debug.LogError($"WebSocketManager: Connect failed: {ex}");
             EnqueueProgress(0f, $"Connect failed: {ex.Message}");
+            EnqueueError("SOCKET_CONNECT_FAILED", ex.Message);
             if (_connectProgressCts != null) { _connectProgressCts.Cancel(); _connectProgressCts.Dispose(); _connectProgressCts = null; }
-            _ws = null;
+            socket.Dispose();
+            if (_ws == socket) _ws = null;
         }
     }
 
@@ -523,6 +692,12 @@ public class WebSocketManager : MonoBehaviour
     /// </summary>
     public async Task SubscribeToMatch(string matchId, long afterSequence = 0)
     {
+        if (IsWaitingForFrontend) return;
+        if (IsFrontendControlled && !string.Equals(matchId, _currentMatchId, StringComparison.Ordinal))
+        {
+            EnqueueError("FRONTEND_MATCH_MISMATCH", "Only the match selected by the frontend may be subscribed.");
+            return;
+        }
         if (string.IsNullOrEmpty(matchId))
         {
             EnqueueProgress(0f, "ERROR:MATCH_SUBSCRIBE_INVALID:matchId and a non-negative afterSequence are required");
@@ -545,7 +720,8 @@ public class WebSocketManager : MonoBehaviour
         string payload = JsonConvert.SerializeObject(req);
         try
         {
-            await EmitLoggedAsync("meme_battle_subscribe", payload);
+            LogInfo($"WebSocketManager: Emit meme_battle_subscribe AS_STRINGIFIED_JSON payload={payload}", true);
+            await _ws.EmitAsync("meme_battle_subscribe", payload);
             EnqueueProgress(0.95f, "Subscribed, waiting for snapshot...");
         }
         catch (Exception ex)
@@ -649,20 +825,26 @@ public class WebSocketManager : MonoBehaviour
     public async Task DisconnectAsync()
     {
         _isClosing = true;
-        _autoReconnect = false;
+        if (_connectProgressCts != null)
+        {
+            _connectProgressCts.Cancel();
+            _connectProgressCts.Dispose();
+            _connectProgressCts = null;
+        }
 
         if (_ws != null)
         {
+            var socket = _ws;
+            _ws = null;
             try
             {
-                await _ws.DisconnectAsync();
+                await socket.DisconnectAsync();
             }
             catch (Exception ex)
             {
                 Debug.LogWarning($"WebSocketManager: Close exception: {ex}");
             }
-
-            _ws = null;
+            finally { socket.Dispose(); }
         }
     }
 
@@ -691,6 +873,9 @@ public class WebSocketManager : MonoBehaviour
 
     private async void OnDestroy()
     {
+        // Destroying a duplicate singleton must not touch the active connection.
+        if (Instance != this) return;
+        _destroyed = true;
         if (Instance == this) Instance = null;
         await DisconnectAsync();
     }
