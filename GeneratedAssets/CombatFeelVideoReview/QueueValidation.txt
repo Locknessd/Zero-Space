@@ -1,0 +1,36 @@
+OK: Controller imports
+OK: Six distinct override slots
+OK: Attack end callback wired
+OK: Hit end callback wired
+OK: GetUp end callback wired
+OK: Victory end callback wired
+OK: Both fighters initialize
+OK: Per-character override isolation
+OK: Heavy pair starts
+OK: Attack and Hit remain busy at time zero after waiting in Idle
+OK: Busy pair refuses re-entry
+OK: Attack end does not finish Hit/GetUp
+OK: GetUp completes victim sequence once
+OK: Stale callbacks ignored
+OK: Light pair starts after heavy
+OK: Null GetUp clears previous heavy GetUp
+OK: Lethal pair starts
+OK: Lethal hit finishes and holds without GetUp
+OK: Incomplete turn remains one stack
+OK: Duplicate delivery does not add a stack
+OK: Queue completes within validation frame budget
+OK: Backend stacks drain sequentially
+OK: Exactly one matched pair per backend turn
+OK: DAMAGE_APPLIED plus HP_CHANGED writes HP once per turn
+OK: Queue completes within validation frame budget
+OK: Late HP event does not replay combat
+OK: Queue completes within validation frame budget
+OK: Invalid pool faults queue without starting the next stack
+OK: BattleScene fighter references migrated
+OK: Mankey light pool
+OK: Mankey heavy pool
+OK: Mankey controller slots
+OK: Pepe light pool
+OK: Pepe heavy pool
+OK: Pepe controller slots
+PASS

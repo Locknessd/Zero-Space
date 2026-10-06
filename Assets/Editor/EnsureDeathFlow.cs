@@ -18,7 +18,7 @@ using UnityEngine;
 /// 2. Removes the old Idle-only "IsDead -> KB_TopKO" transitions so death is authored once.
 ///
 /// USAGE:
-/// Select one or more GameObjects that have a CharacterAnimatorBridge component, or select
+/// Select one or more GameObjects that have an Animator component, or select
 /// the .controller asset directly, then run the menu item.
 /// </summary>
 public static class EnsureDeathFlow
@@ -30,12 +30,8 @@ public static class EnsureDeathFlow
     {
         bool anyProcessed = false;
 
-        // Case 1: selected GameObjects with a CharacterAnimatorBridge.
         foreach (var go in Selection.gameObjects)
         {
-            var bridge = go.GetComponent<CharacterAnimatorBridge>();
-            if (bridge == null) continue;
-
             var animator = go.GetComponent<Animator>();
             if (animator == null)
             {
@@ -66,7 +62,7 @@ public static class EnsureDeathFlow
 
         if (!anyProcessed)
         {
-            Debug.LogWarning("EnsureDeathFlow: nothing processed. Select a GameObject with CharacterAnimatorBridge/Animator, or a .controller asset.");
+            Debug.LogWarning("EnsureDeathFlow: nothing processed. Select a GameObject with Animator, or a .controller asset.");
         }
     }
 

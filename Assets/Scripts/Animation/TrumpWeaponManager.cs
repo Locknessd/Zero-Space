@@ -57,6 +57,11 @@ public class TrumpWeaponManager : MonoBehaviour
     [Header("Animator Reference")]
     [SerializeField] private Animator characterAnimator;
 
+    // CharacterCombat owns this lock during an attack/hit exchange. The generic
+    // state-name resolver cannot infer the weapon from the shared Attack state,
+    // so it must not overwrite the explicit move.weapon selection.
+    public bool CombatWeaponLocked { get; private set; }
+
     public WeaponType ActiveWeapon
     {
         get => activeWeapon;
@@ -103,6 +108,46 @@ public class TrumpWeaponManager : MonoBehaviour
     {
         activeWeapon = type;
         ApplyWeaponVisibility(type);
+    }
+
+    public void EquipCombatWeapon(WeaponType type)
+    {
+        CombatWeaponLocked = true;
+        autoEquipWithAnimation = false;
+        EquipWeapon(type);
+        var selected = WeaponObject(type);
+        if (selected != null)
+        {
+            selected.SetActive(true);
+            if (selected.transform.IsChildOf(transform) && selected.transform.localPosition.sqrMagnitude > 100f)
+            {
+                selected.transform.localPosition = Vector3.zero;
+                selected.transform.localRotation = Quaternion.identity;
+            }
+            foreach (var renderer in selected.GetComponentsInChildren<Renderer>(true))
+                renderer.enabled = true;
+        }
+    }
+
+    private GameObject WeaponObject(WeaponType type)
+    {
+        switch (type)
+        {
+            case WeaponType.WarriorShield: return warriorShieldSet;
+            case WeaponType.GreatSword: return greatSwordSet;
+            case WeaponType.Spear: return spearSet;
+            case WeaponType.Katana: return katanaSet;
+            case WeaponType.DualDaggers: return dualDaggersSet;
+            case WeaponType.Assassin: return assassinSet;
+            case WeaponType.TwoHandedAxe: return twoHandedAxeSet;
+            default: return null;
+        }
+    }
+
+    public void ReleaseCombatWeapon()
+    {
+        CombatWeaponLocked = false;
+        EquipWeapon(defaultIdleWeapon);
     }
 
     /// <summary>
@@ -164,7 +209,7 @@ public class TrumpWeaponManager : MonoBehaviour
 
     private void CheckAnimatorStateAndAutoEquip()
     {
-        if (characterAnimator == null) return;
+        if (characterAnimator == null || CombatWeaponLocked) return;
 
         var state = characterAnimator.GetCurrentAnimatorStateInfo(0);
 

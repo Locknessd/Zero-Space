@@ -5,7 +5,7 @@ using UnityEngine;
 ///
 /// WHY THIS EXISTS
 /// The animation pipeline logs from several places (GameManager, CombatPositioningController,
-/// CharacterAnimatorBridge, AnimationEndAction). They used to carry three different prefixes
+/// CharacterCombat, AnimationEndAction). They used to carry three different prefixes
 /// ("Animation", "LATENCY", "[TurnStack]"), so collecting a useful trace meant searching the Console
 /// several times and pasting the results together.
 ///

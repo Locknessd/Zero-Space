@@ -15,19 +15,25 @@ public class GameManagerEditor : Editor
         var gm = target as GameManager;
         if (gm == null) return;
 
+        EditorGUILayout.LabelField("Pending stacks", gm.PendingEventCount.ToString());
+        if (!string.IsNullOrEmpty(gm.QueueError))
+            EditorGUILayout.HelpBox(gm.QueueError, MessageType.Error);
+        EditorGUI.BeginDisabledGroup(!Application.isPlaying);
         EditorGUILayout.BeginHorizontal();
-        if (GUILayout.Button("Trigger Q (Left attacks)"))
+        if (GUILayout.Button("Q: Left Light"))
         {
             gm.DebugTriggerQ();
             // mark dirty so logs reflect any changes
             EditorUtility.SetDirty(gm);
         }
-        if (GUILayout.Button("Trigger E (Right attacks)"))
+        if (GUILayout.Button("E: Right Heavy"))
         {
             gm.DebugTriggerE();
             EditorUtility.SetDirty(gm);
         }
         EditorGUILayout.EndHorizontal();
+        if (GUILayout.Button("Reset Combat Queue")) gm.ResetCombatQueue();
+        EditorGUI.EndDisabledGroup();
     }
 }
 #endif

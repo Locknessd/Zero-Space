@@ -1,0 +1,31 @@
+{
+  "checks": [
+    "All scene dependencies preserved after Resources folder renames",
+    "All scene dependency assets still exist",
+    "All optimized texture/audio/model GUIDs preserved",
+    "Moved folder GUIDs preserved",
+    "Source texture resolutions and untouched UI/effect import settings preserved",
+    "Audio channels, sample rates, durations and load behavior preserved; quality capped at 80%",
+    "Model vertex counts, skinning-related importer settings and FBX animation settings preserved",
+    "Release data compression is Brotli"
+  ],
+  "before": {
+    "dependencies": 1089,
+    "textures": 328,
+    "audio": 78,
+    "models": 97
+  },
+  "after": {
+    "dependencies": 876,
+    "textures": 248,
+    "audio": 78,
+    "models": 79
+  },
+  "animationKeysBefore": 8607946,
+  "animationKeysAfter": 7769296,
+  "animationSourceBytesBefore": 1189786282,
+  "animationSourceBytesAfter": 1087283442,
+  "webGLSupported": true,
+  "activeBuildTarget": "WebGL",
+  "note": "Dependency and animation source sizes are not a measurement of compressed WebGL build size."
+}

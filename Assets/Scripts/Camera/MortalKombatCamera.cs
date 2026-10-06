@@ -32,6 +32,7 @@ using UnityEngine;
 ///    the bottom of this file.
 /// </summary>
 [RequireComponent(typeof(Camera))]
+[DefaultExecutionOrder(12000)]
 public class MortalKombatCamera : MonoBehaviour
 {
     /// <summary>Which side of the arena the camera sits on. It always looks IN at the fighters.</summary>
@@ -50,7 +51,7 @@ public class MortalKombatCamera : MonoBehaviour
     public Transform targetLeft;
     [Tooltip("Right / Player 2 fighter transform")]
     public Transform targetRight;
-    [Tooltip("Auto-detect targets from the CharacterAnimatorBridge fighters if null")]
+    [Tooltip("Auto-detect targets from the CharacterCombat fighters if null")]
     public bool autoFindTargets = true;
 
     [Header("Position & Framing")]
@@ -392,10 +393,10 @@ public class MortalKombatCamera : MonoBehaviour
     /// </summary>
     public void FindFighterTargets()
     {
-        // Fighters are driven by CharacterAnimatorBridge now (one per side). Pick the left/right by
+        // Fighters are driven by CharacterCombat now (one per side). Pick the left/right by
         // world X so the camera frames them consistently regardless of scene ordering.
-        var bridges = Object.FindObjectsByType<CharacterAnimatorBridge>(FindObjectsSortMode.None);
-        CharacterAnimatorBridge left = null, right = null;
+        var bridges = Object.FindObjectsByType<CharacterCombat>(FindObjectsSortMode.None);
+        CharacterCombat left = null, right = null;
         foreach (var b in bridges)
         {
             if (b == null || b.Animator == null) continue;
@@ -824,8 +825,8 @@ public class MortalKombatCamera : MonoBehaviour
         Transform t = side == PlayerUI.Side.Left ? targetLeft : targetRight;
         if (t == null) return false;
 
-        CharacterAnimatorBridge bridge = t.GetComponent<CharacterAnimatorBridge>();
-        if (bridge == null) bridge = t.GetComponentInParent<CharacterAnimatorBridge>();
+        CharacterCombat bridge = t.GetComponent<CharacterCombat>();
+        if (bridge == null) bridge = t.GetComponentInParent<CharacterCombat>();
         if (bridge == null) return false;
 
         try { return bridge.IsIdleAndSettled; }
@@ -834,8 +835,8 @@ public class MortalKombatCamera : MonoBehaviour
 
     private void UpdateCameraPosition(float deltaTime)
     {
-        Vector3 leftPos = targetLeft != null ? targetLeft.position : targetRight.position;
-        Vector3 rightPos = targetRight != null ? targetRight.position : targetLeft.position;
+        Vector3 leftPos = VisualGroundPosition(targetLeft != null ? targetLeft : targetRight);
+        Vector3 rightPos = VisualGroundPosition(targetRight != null ? targetRight : targetLeft);
 
         // 1. Calculate midpoint between fighters
         Vector3 midpoint = (leftPos + rightPos) * 0.5f + midpointOffset;
@@ -1075,13 +1076,29 @@ public class MortalKombatCamera : MonoBehaviour
     /// </summary>
     private Vector3 ResolveAttackerPosition(Vector3 leftPos, Vector3 rightPos)
     {
-        if (_lastAttacker != null) return _lastAttacker.position;
+        if (_lastAttacker != null) return VisualGroundPosition(_lastAttacker);
 
         if (_attackFocusSide.HasValue)
             return _attackFocusSide.Value == PlayerUI.Side.Left ? leftPos : rightPos;
 
         // Unmapped attacker: frame the focal point between the two fighters.
         return (leftPos + rightPos) * 0.5f;
+    }
+
+    private static Vector3 VisualGroundPosition(Transform fighter)
+    {
+        Vector3 position = fighter.position;
+        var combat = fighter.GetComponent<CharacterCombat>();
+        if (combat != null && combat.SourcePlayback != null &&
+            (combat.SourcePlayback.Playing || combat.IsDead))
+            return combat.SourcePlayback.CameraPosition(combat);
+        var rig = combat != null ? combat.weaponRig : null;
+        if (rig != null && rig.ActiveDriver != null)
+        {
+            // Include authored jumps as well as lateral travel, relative to standing hip height.
+            position = rig.CameraGroundPosition;
+        }
+        return position;
     }
 
     /// <summary>

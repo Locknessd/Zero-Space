@@ -1,0 +1,6 @@
+PASS live HUD text: DOTween animations started; Vietnamese dialogue restored after damage; HP stayed immediate; positive HP did not show KO.
+PASS right KO after zero HP and death animation; duplicate DAMAGE_APPLIED suppressed.
+PASS duplicate HP/winner did not replay KO; input passed through; unscaled exit and queue reset cleared KO tweens.
+PASS second match resets KO latch; left-side death shows correct fighter; reset during KO entrance clears presentation.
+PASS winner-only event marks the loser dead, sets HP to zero and shows KO once even without a damage/HP event.
+PASS all UI/KO play checks; 22 text animations; 332 frames with KO deferred during lethal playback; both fighters, duplicate events, new match, interrupted overlay and winner-only death tested.

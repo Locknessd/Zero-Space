@@ -1,0 +1,123 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41c1075c8a1c0ac518343082b296b1ba, type: 3}
+  m_Name: UnarmedLibrary
+  m_EditorClassIdentifier: Assembly-CSharp::FrankRetarget.FrankUnarmedLibrary
+  pairs:
+  - label: Idle
+    sourceName: Idle
+    attacker: {fileID: 7400000, guid: 66d370eb375c863429ba606a0df0d549, type: 2}
+    receiver: {fileID: 7400000, guid: 66d370eb375c863429ba606a0df0d549, type: 2}
+    receiverOffset: {x: 0, y: 0, z: 1.0188267}
+    receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+  - label: Shoulder throw
+    sourceName: SEOI
+    attacker: {fileID: 7400000, guid: 033d20310b831db968212947ce43351c, type: 2}
+    receiver: {fileID: 7400000, guid: f3713dc051a9403f5b664f7c606f6d7f, type: 2}
+    receiverOffset: {x: 0, y: 0, z: 1.0188267}
+    receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+  - label: Brainbuster
+    sourceName: BRAIN
+    attacker: {fileID: 7400000, guid: e755ac112be2c3721964f7a4f368e28a, type: 2}
+    receiver: {fileID: 7400000, guid: 15c0f68f86e82a18c94f937cadf21519, type: 2}
+    receiverOffset: {x: 0, y: 0, z: 1.0188267}
+    receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+  - label: Atemi 1
+    sourceName: CmnAtemi
+    attacker: {fileID: 7400000, guid: e47354cd8b0fa220b9e0b4c75f9f0fba, type: 2}
+    receiver: {fileID: 7400000, guid: 692759a051faaf7e29c071c77fa3a3b0, type: 2}
+    receiverOffset: {x: 0, y: 0, z: 1.0188267}
+    receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+  - label: Atemi 2
+    sourceName: CmnAtemi2
+    attacker: {fileID: 7400000, guid: d082b73724850ba88a521877a9fcd7a1, type: 2}
+    receiver: {fileID: 7400000, guid: cc15ef8c89dae9f908ac3ce63d084646, type: 2}
+    receiverOffset: {x: 0, y: 0, z: 1.0188267}
+    receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+  - label: Atemi 3
+    sourceName: CmnAtemi3
+    attacker: {fileID: 7400000, guid: 190a2ce36ccea1dab9df22b479f3cf29, type: 2}
+    receiver: {fileID: 7400000, guid: 6515343bf93a0a6a0a3c71c82a093c52, type: 2}
+    receiverOffset: {x: 0, y: 0, z: 1.0188267}
+    receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+  - label: Fisherman suplex
+    sourceName: FISH
+    attacker: {fileID: 7400000, guid: 64d623722235473a69e246839265893a, type: 2}
+    receiver: {fileID: 7400000, guid: 69d93a8dc69d71b62ba083887b6cfcb4, type: 2}
+    receiverOffset: {x: 0, y: 0, z: 1.0188267}
+    receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+  - label: Flank throw
+    sourceName: FLANK
+    attacker: {fileID: 7400000, guid: 639221af9523ddee5aa6a8a5e94f7de0, type: 2}
+    receiver: {fileID: 7400000, guid: 303a99312dc6839d78b0c9bbc6f448af, type: 2}
+    receiverOffset: {x: 0, y: 0, z: 1.0188267}
+    receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+  - label: Hold
+    sourceName: HOLD
+    attacker: {fileID: 7400000, guid: 3c510cca4e748262e8816db80f3a4753, type: 2}
+    receiver: {fileID: 7400000, guid: 4238fdf2da237fa8dbe30342fd09c739, type: 2}
+    receiverOffset: {x: 0, y: 0, z: 1.0188267}
+    receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+  - label: Hold + lariat
+    sourceName: HOLD_LALI
+    attacker: {fileID: 7400000, guid: 90d69c8b3f7bcecfc914e57f13a85993, type: 2}
+    receiver: {fileID: 7400000, guid: adba18553225792c3aadd8952925e226, type: 2}
+    receiverOffset: {x: 0, y: 0, z: 1.0188267}
+    receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+  - label: Powerbomb
+    sourceName: JPBOM
+    attacker: {fileID: 7400000, guid: 05a7e52a5035427bf8b2153cfebf07cb, type: 2}
+    receiver: {fileID: 7400000, guid: deb24c5181d2dc1f2a2b1518acc1b6b8, type: 2}
+    receiverOffset: {x: 0, y: 0, z: 1.0188267}
+    receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+  - label: Dragon screw
+    sourceName: LC_DSCREW
+    attacker: {fileID: 7400000, guid: c92272fdcb65d6f38a470a1a673a6adc, type: 2}
+    receiver: {fileID: 7400000, guid: 8c0ba26c1b60d9c3586b41ed6fa78c36, type: 2}
+    receiverOffset: {x: 0, y: 0, z: 1.0188267}
+    receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+  - label: Throw escape
+    sourceName: NAGE_ESC
+    attacker: {fileID: 7400000, guid: 26ee13315980aaafaad9b2e569c8c796, type: 2}
+    receiver: {fileID: 7400000, guid: b4c86d50d2c87394a8c9bc5a647e813f, type: 2}
+    receiverOffset: {x: 0, y: 0, z: 1.0188267}
+    receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+  - label: Neck breaker
+    sourceName: NECK_BREAK
+    attacker: {fileID: 7400000, guid: 51760ed46683427dc8d758776c1ed5d2, type: 2}
+    receiver: {fileID: 7400000, guid: bc50ed3d70eb316338efe0ba16ce6c1f, type: 2}
+    receiverOffset: {x: 0, y: 0, z: 1.0188267}
+    receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+  - label: Four-way throw
+    sourceName: SIHO
+    attacker: {fileID: 7400000, guid: cdeb2e864984486d6904ade95e92a2b6, type: 2}
+    receiver: {fileID: 7400000, guid: 2154eb65618e305baa16b2ec9461c6dc, type: 2}
+    receiverOffset: {x: 0, y: 0, z: 1.0188267}
+    receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+  - label: Windmill throw
+    sourceName: B_FUSHA
+    attacker: {fileID: 7400000, guid: 76e9c5411407b62e39172a6f4375b4bd, type: 2}
+    receiver: {fileID: 7400000, guid: ce7a44ba3b2afc477be79759a8fd2010, type: 2}
+    receiverOffset: {x: 0, y: 0, z: 1.0188267}
+    receiverRotation: {x: 0, y: 0, z: 0, w: 1}
+  - label: German suplex
+    sourceName: GS1
+    attacker: {fileID: 7400000, guid: 741b03d2a229119b7a64175de4f7847e, type: 2}
+    receiver: {fileID: 7400000, guid: c1ecad49c8a22e856b31cde476c191a8, type: 2}
+    receiverOffset: {x: 0, y: 0, z: 1.0188267}
+    receiverRotation: {x: 0, y: 0, z: 0, w: 1}
+  - label: Giant swing
+    sourceName: GSWING
+    attacker: {fileID: 7400000, guid: 901d48ce9e32b3694a6d3672b7fae915, type: 2}
+    receiver: {fileID: 7400000, guid: 68e43d34d73ee9c30a770ab6c4246441, type: 2}
+    receiverOffset: {x: 0, y: 0, z: 1.0188267}
+    receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}

@@ -52,8 +52,12 @@ public class MemeBattleUI : MonoBehaviour
         [Tooltip("Health text, e.g. '850/1000'.")]
         public Text healthText;
 
-        [Tooltip("Speech bubble text used for dialogue, meme text and damage numbers.")]
+        [Tooltip("Speech bubble text used for dialogue and meme text.")]
         public Text speechBubbleText;
+        [Tooltip("Optional styled dialogue card for the battle HUD.")]
+        public BattleSpeechBubble speechBubble;
+        [Tooltip("Dedicated damage number above the health bar; older scenes fall back to the speech text.")]
+        public Text damageText;
 
         [Tooltip("GameObject shown briefly to display the meme result text.")]
         public GameObject memeResultObject;
@@ -68,7 +72,7 @@ public class MemeBattleUI : MonoBehaviour
     public FighterSlot right = new FighterSlot();
 
     [Header("Global Widgets")]
-    [Tooltip("Round / turn number label, e.g. 'ROUND 3'.")]
+    [Tooltip("Turn number label, e.g. 'Turn 3'.")]
     public Text roundNumberText;
     [Tooltip("Countdown timer label, e.g. '00:05'.")]
     public Text timerText;
@@ -80,6 +84,12 @@ public class MemeBattleUI : MonoBehaviour
     public GameObject resultPanel;
     [Tooltip("Optional victory/result text.")]
     public Text resultText;
+
+    [Header("Battle Text Animation")]
+    public BattleUiTextEffects textEffects;
+    public BattleKoPresentation knockout;
+    public BattleComicCutIn comicCutIn;
+    public BattleHudFeedback hudFeedback;
 
     [Header("Behavior")]
     [Tooltip("Default initial max HP shown before the server snapshot arrives.")]
@@ -102,6 +112,7 @@ public class MemeBattleUI : MonoBehaviour
     // Coroutines for temporary meme-result displays per side.
     private Coroutine _memeDisplayLeft;
     private Coroutine _memeDisplayRight;
+    private readonly long?[] _displayedHp = new long?[2];
 
     private void Awake()
     {
@@ -124,6 +135,11 @@ public class MemeBattleUI : MonoBehaviour
         if (Instance == this) Instance = null;
     }
 
+    private void OnDisable()
+    {
+        if (Application.isPlaying) ResetTransientEffects();
+    }
+
     private void Update()
     {
         UpdateTimer();
@@ -141,6 +157,9 @@ public class MemeBattleUI : MonoBehaviour
         var slot = GetSlot(side);
         if (slot?.nameText == null) return;
         slot.nameText.text = name ?? string.Empty;
+        if (slot.speechBubble && slot.speechBubble.speaker)
+            slot.speechBubble.speaker.text = (name ?? string.Empty).ToUpperInvariant();
+        textEffects?.Pop(slot.nameText);
         if (slot.root != null) slot.root.SetActive(true);
     }
 
@@ -152,18 +171,24 @@ public class MemeBattleUI : MonoBehaviour
     {
         var slot = GetSlot(side);
         if (slot == null) return;
+        int healthIndex = SideIndex(side);
+        bool changed = _displayedHp[healthIndex].HasValue && _displayedHp[healthIndex].Value != currentHp;
+        bool damaged = changed && currentHp < _displayedHp[healthIndex].Value;
+        _displayedHp[healthIndex] = currentHp;
 
         // Slider (0..1 by max). Animated separately per side.
         if (slot.hpSlider != null)
         {
             float target = maxHp > 0 ? Mathf.Clamp01((float)currentHp / maxHp) : 0f;
             StartSliderLerp(side, slot.hpSlider, target);
+            hudFeedback?.Health(side, target);
         }
 
         // Text, e.g. "850/1000".
         if (slot.healthText != null)
         {
             slot.healthText.text = $"{currentHp}/{maxHp}";
+            if (changed) textEffects?.Pop(slot.healthText, damaged);
         }
         else if (verboseLogging)
         {
@@ -171,6 +196,7 @@ public class MemeBattleUI : MonoBehaviour
         }
 
         if (verboseLogging) Debug.Log($"UIManager.UpdateHealth [{side}]: {currentHp}/{maxHp}");
+        knockout?.ObserveHealth(side, currentHp, slot.nameText ? slot.nameText.text : null);
     }
 
     /// <summary>
@@ -183,38 +209,35 @@ public class MemeBattleUI : MonoBehaviour
         slot.rageSlider.value = max > 0f ? Mathf.Clamp01(current / max) : 0f;
     }
 
-    // The speech bubble is ONE Text shared by the meme dialogue and the damage number. To stop them
-    // fighting each other, each side tracks its own "who owns the bubble right now":
-    //   - _dialogueText[side]  = the meme line currently displayed (empty when none)
-    //   - _damageHideRoutine[side] = the pending auto-clear for the damage number
-    // When the damage number's timer expires we restore the meme line (if any) instead of blanking the
-    // bubble, which is what used to erase the dialogue the moment a hit landed.
+    // BattleScene has a dedicated damage label. Other scenes retain their shared-label fallback.
     private readonly string[] _dialogueText = new string[2];
     private readonly Coroutine[] _damageHideRoutine = new Coroutine[2];
 
     private static int SideIndex(Side side) => side == Side.Left ? 0 : 1;
 
     /// <summary>
-    /// Shows a damage popup in the fighter's speech bubble briefly. When the popup expires the meme
-    /// dialogue (if one is set) is restored, so the damage number never permanently erases it.
+    /// Shows a damage popup above the HP bar, independently of the fighter's dialogue.
     /// </summary>
-    public void ShowDamage(Side side, int amount)
+    public void ShowDamage(Side side, long amount, bool critical = false)
     {
         var slot = GetSlot(side);
-        if (slot?.speechBubbleText == null) return;
+        if (slot == null || amount <= 0) return;
+        Text label = slot.damageText ? slot.damageText : slot.speechBubbleText;
+        if (!label) return;
 
         int i = SideIndex(side);
 
         // Restart the hide timer so a new damage number is not wiped by the PREVIOUS number's timer.
         if (_damageHideRoutine[i] != null) StopCoroutine(_damageHideRoutine[i]);
 
-        slot.speechBubbleText.text = $"-{amount}";
-        _damageHideRoutine[i] = StartCoroutine(HideDamageThenRestoreDialogue(side, slot.speechBubbleText, 1.5f));
+        label.text = $"-{amount}";
+        textEffects?.Damage(label, critical);
+        hudFeedback?.Damage(side, critical);
+        _damageHideRoutine[i] = StartCoroutine(HideDamageThenRestoreDialogue(side, label, slot.damageText ? 1.15f : 1.5f));
     }
 
     /// <summary>
-    /// Sets the fighter's dialogue / speech bubble text (used for meme text). Remembered so a damage
-    /// popup can restore it once its own timer expires.
+    /// Sets the fighter's dialogue / speech bubble text, without interrupting a dedicated damage popup.
     /// </summary>
     public void SetDialogue(Side side, string text)
     {
@@ -225,13 +248,15 @@ public class MemeBattleUI : MonoBehaviour
         _dialogueText[i] = text ?? string.Empty;
 
         // A damage popup that is currently counting down must NOT overwrite this dialogue.
-        if (_damageHideRoutine[i] != null)
+        if (!slot.damageText && _damageHideRoutine[i] != null)
         {
             StopCoroutine(_damageHideRoutine[i]);
             _damageHideRoutine[i] = null;
         }
 
-        slot.speechBubbleText.text = _dialogueText[i];
+        slot.speechBubble?.Show(_dialogueText[i], slot.nameText ? slot.nameText.text : null);
+        if (textEffects) textEffects.Reveal(slot.speechBubbleText, _dialogueText[i]);
+        else slot.speechBubbleText.text = _dialogueText[i];
     }
 
     /// <summary>
@@ -245,21 +270,26 @@ public class MemeBattleUI : MonoBehaviour
         int i = SideIndex(side);
         _dialogueText[i] = string.Empty;
 
-        if (_damageHideRoutine[i] != null)
+        if (!slot.damageText && _damageHideRoutine[i] != null)
         {
             StopCoroutine(_damageHideRoutine[i]);
             _damageHideRoutine[i] = null;
         }
 
+        textEffects?.Cancel(slot.speechBubbleText);
         slot.speechBubbleText.text = string.Empty;
+        slot.speechBubble?.Show(string.Empty, null);
     }
 
     /// <summary>
-    /// Shows the meme result text on a fighter for a short duration.
+    /// Shows the legacy world-space result when a scene has no styled HUD dialogue card.
     /// </summary>
     public void ShowMemeResult(Side side, string text, float duration = 2f)
     {
         var slot = GetSlot(side);
+        // ARGUMENT_SELECTED already writes to the styled HUD through SetDialogue.
+        // Replaying its old result popup would display the same speech twice.
+        if (slot != null && slot.speechBubble) return;
         if (slot?.memeResultObject == null || slot.memeResultText == null) return;
 
         if (side == Side.Left)
@@ -311,7 +341,8 @@ public class MemeBattleUI : MonoBehaviour
     /// </summary>
     public void SetTurnNumber(int turnNumber)
     {
-        if (roundNumberText != null) roundNumberText.text = $"ROUND {turnNumber}";
+        if (roundNumberText != null) roundNumberText.text = $"Turn {turnNumber}";
+        textEffects?.Pop(roundNumberText);
     }
 
     /// <summary>
@@ -329,6 +360,7 @@ public class MemeBattleUI : MonoBehaviour
     {
         if (multiplierText == null) return;
         multiplierText.text = multiplier.ToString("0.##") + "x";
+        textEffects?.Pop(multiplierText);
     }
 
     /// <summary>
@@ -375,6 +407,7 @@ public class MemeBattleUI : MonoBehaviour
     {
         if (resultText != null) resultText.text = text ?? string.Empty;
         if (resultPanel != null) resultPanel.SetActive(!string.IsNullOrEmpty(text));
+        if (!string.IsNullOrEmpty(text)) textEffects?.Pop(resultText);
     }
 
     /// <summary>
@@ -395,6 +428,8 @@ public class MemeBattleUI : MonoBehaviour
     /// </summary>
     public void ResetForNewMatch()
     {
+        ResetTransientEffects();
+        _displayedHp[0] = _displayedHp[1] = null;
         HideResult();
 
         for (int i = 0; i < 2; i++)
@@ -423,6 +458,28 @@ public class MemeBattleUI : MonoBehaviour
         return side == Side.Left ? left : right;
     }
 
+    public void ResetTransientEffects()
+    {
+        textEffects?.ResetEffects();
+        knockout?.ResetPresentation();
+        comicCutIn?.ResetPresentation();
+        hudFeedback?.ResetEffects();
+        if (_memeDisplayLeft != null) StopCoroutine(_memeDisplayLeft);
+        if (_memeDisplayRight != null) StopCoroutine(_memeDisplayRight);
+        _memeDisplayLeft = _memeDisplayRight = null;
+        for (int i = 0; i < 2; i++)
+        {
+            if (_damageHideRoutine[i] != null) StopCoroutine(_damageHideRoutine[i]);
+            _damageHideRoutine[i] = null;
+            var slot = GetSlot(i == 0 ? Side.Left : Side.Right);
+            if (slot?.speechBubbleText) slot.speechBubbleText.text = _dialogueText[i] ?? string.Empty;
+            if (slot?.damageText) slot.damageText.text = string.Empty;
+            if (slot?.speechBubble) slot.speechBubble.Show(_dialogueText[i], slot.nameText ? slot.nameText.text : null, false);
+            if (slot?.memeResultObject) slot.memeResultObject.SetActive(false);
+            if (slot?.memeResultText) slot.memeResultText.text = string.Empty;
+        }
+    }
+
     private void StartSliderLerp(Side side, Slider slider, float target)
     {
         if (slider == null) return;
@@ -446,24 +503,33 @@ public class MemeBattleUI : MonoBehaviour
         if (go == null || textField == null) yield break;
         textField.text = content ?? string.Empty;
         go.SetActive(true);
+        textEffects?.Pop(textField);
         yield return new WaitForSeconds(duration);
         go.SetActive(false);
         textField.text = string.Empty;
     }
 
     /// <summary>
-    /// Hides the damage number after <paramref name="delay"/> and restores whatever meme dialogue the
-    /// side had (empty when none). Restoring -- instead of blanking -- is what keeps the dialogue from
-    /// being erased by a hit landing on the same fighter.
+    /// Clears the dedicated damage label after its animation; shared-label scenes restore their dialogue.
     /// </summary>
     private IEnumerator HideDamageThenRestoreDialogue(Side side, Text text, float delay)
     {
-        yield return new WaitForSeconds(delay);
+        yield return new WaitForSecondsRealtime(delay);
 
         int i = SideIndex(side);
         _damageHideRoutine[i] = null;
 
-        if (text != null) text.text = _dialogueText[i] ?? string.Empty;
+        if (text != null)
+        {
+            if (GetSlot(side)?.damageText == text)
+            {
+                textEffects?.Cancel(text);
+                text.text = string.Empty;
+                yield break;
+            }
+            if (textEffects) textEffects.Reveal(text, _dialogueText[i]);
+            else text.text = _dialogueText[i] ?? string.Empty;
+        }
     }
 
     private void UpdateTimer()

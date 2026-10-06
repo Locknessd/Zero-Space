@@ -1,0 +1,41 @@
+PASS per-hit Mankey Light_1: 103 = 103; HP 1000 -> 897, exact contact frames.
+PASS live Mankey Light_1 lethal=False: 6 audio cues, 5 VFX, queue completed.
+PASS per-hit Mankey Light_3: 103 = 103; HP 897 -> 794, exact contact frames.
+PASS live Mankey Light_3 lethal=False: 5 audio cues, 5 VFX, queue completed.
+PASS per-hit Mankey Heavy_5: 20 + 20 + 21 + 21 + 21 = 103; HP 794 -> 691, exact contact frames.
+PASS live Mankey Heavy_5 lethal=False: 12 audio cues, 13 VFX, queue completed.
+PASS per-hit Mankey Heavy_6: 25 + 26 + 26 + 26 = 103; HP 691 -> 588, exact contact frames.
+PASS live Mankey Heavy_6 lethal=False: 10 audio cues, 11 VFX, queue completed.
+PASS per-hit Mankey Heavy_7: 17 + 17 + 17 + 17 + 17 + 18 = 103; HP 588 -> 485, exact contact frames.
+PASS live Mankey Heavy_7 lethal=False: 14 audio cues, 15 VFX, queue completed.
+PASS per-hit Mankey Heavy_2: 25 + 26 + 26 + 26 = 103; HP 485 -> 382, exact contact frames.
+PASS live Mankey Heavy_2 lethal=False: 11 audio cues, 13 VFX, queue completed.
+PASS per-hit Mankey Heavy_8: 14 + 14 + 15 + 15 + 15 + 15 + 15 = 103; HP 382 -> 279, exact contact frames.
+PASS live Mankey Heavy_8 lethal=False: 17 audio cues, 19 VFX, queue completed.
+PASS per-hit Mankey Heavy_Katana: 34 + 34 + 35 = 103; HP 279 -> 176, exact contact frames.
+PASS live Mankey Heavy_Katana lethal=False: 8 audio cues, 9 VFX, queue completed.
+PASS per-hit Mankey Heavy_Assassin: 51 + 52 = 103; HP 176 -> 73, exact contact frames.
+PASS live Mankey Heavy_Assassin lethal=False: 7 audio cues, 8 VFX, queue completed.
+PASS per-hit Pepe Light_1: 103 = 103; HP 1000 -> 897, exact contact frames.
+PASS live Pepe Light_1 lethal=False: 5 audio cues, 5 VFX, queue completed.
+PASS per-hit Pepe Light_3: 103 = 103; HP 897 -> 794, exact contact frames.
+PASS live Pepe Light_3 lethal=False: 5 audio cues, 5 VFX, queue completed.
+PASS per-hit Pepe Heavy_5: 20 + 20 + 21 + 21 + 21 = 103; HP 794 -> 691, exact contact frames.
+PASS live Pepe Heavy_5 lethal=False: 12 audio cues, 13 VFX, queue completed.
+PASS per-hit Pepe Heavy_6: 25 + 26 + 26 + 26 = 103; HP 691 -> 588, exact contact frames.
+PASS live Pepe Heavy_6 lethal=False: 10 audio cues, 11 VFX, queue completed.
+PASS per-hit Pepe Heavy_7: 17 + 17 + 17 + 17 + 17 + 18 = 103; HP 588 -> 485, exact contact frames.
+PASS live Pepe Heavy_7 lethal=False: 14 audio cues, 15 VFX, queue completed.
+PASS per-hit Pepe Heavy_2: 25 + 26 + 26 + 26 = 103; HP 485 -> 382, exact contact frames.
+PASS live Pepe Heavy_2 lethal=False: 11 audio cues, 13 VFX, queue completed.
+PASS per-hit Pepe Heavy_8: 14 + 14 + 15 + 15 + 15 + 15 + 15 = 103; HP 382 -> 279, exact contact frames.
+PASS live Pepe Heavy_8 lethal=False: 17 audio cues, 19 VFX, queue completed.
+PASS per-hit Pepe Heavy_Katana: 34 + 34 + 35 = 103; HP 279 -> 176, exact contact frames.
+PASS live Pepe Heavy_Katana lethal=False: 8 audio cues, 9 VFX, queue completed.
+PASS per-hit Pepe Heavy_Assassin: 51 + 52 = 103; HP 176 -> 73, exact contact frames.
+PASS live Pepe Heavy_Assassin lethal=False: 7 audio cues, 8 VFX, queue completed.
+PASS per-hit Mankey Heavy_5: 200 + 200 + 200 + 200 + 200 = 1000; HP 73 -> 0, exact contact frames.
+PASS live Mankey Heavy_5 lethal=True: 11 audio cues, 13 VFX, queue completed.
+PASS live hit-stop cancellation, slow-clock restoration, external pause, match reset and disable cleanup.
+PASS 71 native damage contact frames, duplicate DAMAGE_APPLIED/HP_CHANGED and late HP snapshots.
+PASS 18 server damage exchanges + duplicated lethal DAMAGE_APPLIED + duplicated WINNER_DECLARED; 193 AudioSource starts, 9916 frames with nonzero audio output, mixed peak 0.282; 213 VFX starts, 94 synchronized impact light cues, 782 held pose frames with clock restored, 5 comic panels; finished particles returned to pool; UI click played. Cinematic camera: 18 authored shots, 20714 frames with bodies/weapons inside the safe frame, recovery/KO/victory completed.

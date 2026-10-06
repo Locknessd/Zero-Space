@@ -1,0 +1,223 @@
+MeteorCharge/FireAccumulation(Clone) active=True pos=(0.00, 0.00, 0.00) size=2 shape=Cone:(0.00, 0.00, 0.00) life=0.85
+MeteorCharge/FireAccumulation(Clone)/Distortion active=False pos=(0.00, 0.00, 0.00) size=1.5 shape=Cone:(0.00, 0.00, 0.00) life=0.85
+MeteorCharge/FireAccumulation(Clone)/InsideSparks active=True pos=(0.00, 0.00, 0.00) size=0.07 shape=Sphere:(0.00, 0.00, 0.00) life=0.85
+MeteorCharge/FireAccumulation(Clone)/Arrow active=True pos=(-0.11, 0.00, -0.01) size=0.25 shape=Cone:(0.00, 0.00, 0.00) life=0.85
+MeteorCharge/FireAccumulation(Clone)/Sparks active=True pos=(0.00, 0.00, 0.00) size=0.07 shape=Sphere:(0.00, 0.00, 0.00) life=0.85
+MeteorCharge/FireAccumulation(Clone)/Fire active=True pos=(0.00, 0.00, 0.00) size=1.2 shape=Circle:(0.00, 0.00, 0.00) life=0.85
+MeteorCharge/Light bomb cast(Clone) active=True pos=(0.00, 1.00, 0.00) size=1.5 shape=Cone:(0.00, 0.00, 0.00) life=0.8
+MeteorCharge/Light bomb cast(Clone)/TrailsRound active=True pos=(0.00, 1.00, 0.00) size=0.5 shape=Sphere:(0.00, 0.00, 0.00) life=0.8
+MeteorCharge/Light bomb cast(Clone)/LightAccumulating active=True pos=(0.00, 1.00, 0.00) size=1 shape=Cone:(0.00, 0.00, 0.00) life=0.8
+MeteorCharge/Light bomb cast(Clone)/BigFlashLight active=True pos=(0.00, 1.00, 0.00) size=2 shape=Cone:(0.00, 0.00, 0.00) life=0.8
+MeteorCharge/Light bomb cast(Clone)/EndWave active=True pos=(0.00, 1.01, 0.00) size=1.5 shape=Sphere:(0.00, 0.00, 0.00) life=0.8
+MeteorCharge/Light bomb cast(Clone)/EndDissolve active=True pos=(0.00, 1.01, 0.00) size=1 shape=Sphere:(0.00, 0.00, 0.00) life=0.8
+MeteorCharge/Light bomb cast(Clone)/EndSideSmoke active=True pos=(0.00, 1.00, 0.00) size=0.8 shape=Sphere:(0.00, 0.00, 0.00) life=0.8
+MeteorArrow/Fire projectile(Clone) active=True pos=(0.00, 0.00, 0.00) size=0.4 shape=Box:(0.00, 0.00, 0.00) life=0.45
+MeteorArrow/Fire projectile(Clone)/SubFire active=True pos=(0.00, 0.00, -0.15) size=0.7 shape=Sphere:(0.00, 0.00, 0.00) life=0.2
+MeteorArrow/Fire projectile(Clone)/SubFire/SubSmoke active=True pos=(0.00, 0.00, -0.15) size=1 shape=Sphere:(0.00, 0.00, 0.00) life=0.3
+MeteorArrow/Light bomb(Clone) active=True pos=(0.00, 0.00, 0.00) size=4 shape=Sphere:(0.00, 1.10, 0.00) life=0.45
+MeteorArrow/Light bomb(Clone)/Glow active=True pos=(0.00, 0.17, 0.00) size=4 shape=Cone:(0.00, 0.00, 0.00) life=0.45
+MeteorArrow/Light bomb(Clone)/Aura active=True pos=(0.00, 0.17, 0.00) size=7 shape=Cone:(0.00, 0.00, 0.00) life=0.45
+MeteorArrow/Light bomb(Clone)/EnergyAccumulating active=True pos=(0.00, 0.17, 0.00) size=5 shape=Cone:(0.00, 0.00, 0.00) life=0.45
+MeteorArrow/Light bomb(Clone)/Smoke active=True pos=(0.00, 0.17, 0.00) size=3 shape=Sphere:(0.00, 0.00, 0.00) life=0.45
+MeteorArrow/Light bomb(Clone)/SideSmoke active=True pos=(0.00, 0.17, 0.00) size=3 shape=Sphere:(0.00, 0.00, 0.00) life=0.45
+MeteorArrow/Light bomb(Clone)/SideSmokeDissolve active=True pos=(0.00, 0.17, 0.00) size=3 shape=Sphere:(0.00, 0.00, 0.00) life=0.45
+MeteorArrow/Light bomb(Clone)/Trails active=True pos=(0.00, 0.17, 0.00) size=1.1 shape=Sphere:(0.00, 0.00, 0.00) life=0.45
+MeteorArrow/Light bomb(Clone)/Lightning active=True pos=(0.00, 0.17, 0.00) size=0.04 shape=Sphere:(0.00, 0.00, 0.00) life=0.45
+MeteorArrow/Light bomb(Clone)/EndLightning active=True pos=(0.00, 0.17, 0.00) size=0.04 shape=Circle:(0.00, 0.00, 0.00) life=0.45
+MeteorArrow/Light bomb(Clone)/EndSideSmoke active=True pos=(0.00, 0.17, 0.00) size=4 shape=Sphere:(0.00, 0.00, 0.00) life=0.3
+MeteorArrow/Light bomb(Clone)/EndDissolve active=True pos=(0.00, 0.17, 0.00) size=5 shape=Sphere:(0.00, 0.00, 0.00) life=0.3
+MeteorArrow/Light bomb(Clone)/EndWave active=True pos=(0.00, 0.17, 0.00) size=7 shape=Sphere:(0.00, 0.00, 0.00) life=0.3
+MeteorArrow/Light bomb(Clone)/Distortion(Delete for Mobile) active=False pos=(0.00, 0.17, 0.00) size=3 shape=Circle:(0.00, 0.00, 0.00) life=0.3
+MeteorImpact/FireArrow hit(Clone) active=True pos=(0.00, 1.00, 0.00) size=0.6 shape=Hemisphere:(0.00, 0.00, 0.00) life=0.48
+MeteorImpact/FireArrow hit(Clone)/SubFire active=True pos=(0.00, 1.00, 0.00) size=0.7 shape=Sphere:(0.00, 0.00, 0.00) life=0.4
+MeteorImpact/FireArrow hit(Clone)/SubSmoke active=True pos=(0.00, 1.00, 0.00) size=1 shape=Sphere:(0.00, 0.00, 0.00) life=0.48
+MeteorImpact/FireArrow hit(Clone)/SubSparks active=True pos=(0.00, 1.00, 0.00) size=0.07 shape=Sphere:(0.00, 0.00, 0.00) life=0.48
+MeteorImpact/FireArrow hit(Clone)/Fire active=True pos=(0.00, 1.00, 0.00) size=1.5 shape=Circle:(0.00, 0.00, 0.00) life=0.4
+MeteorImpact/FireArrow hit(Clone)/Distortion active=False pos=(0.00, 1.00, 0.00) size=3 shape=Hemisphere:(0.00, 0.00, 0.00) life=0.4
+MeteorImpact/FireArrow hit(Clone)/SparksLong active=True pos=(0.00, 1.00, 0.00) size=0.04 shape=Sphere:(0.00, 0.00, 0.00) life=0.4
+MeteorImpact/FireArrow hit(Clone)/Sparks active=True pos=(0.00, 1.00, 0.00) size=0.07 shape=Sphere:(0.00, 0.00, 0.00) life=0.48
+MeteorImpact/FireArrow hit(Clone)/Smoke active=True pos=(0.00, 1.00, 0.00) size=3 shape=Sphere:(0.00, 0.00, 0.00) life=0.48
+MeteorImpact/FireArrow hit(Clone)/DarkWave active=True pos=(0.00, 0.75, 0.00) size=3.5 shape=Cone:(0.00, 0.50, 0.00) life=0.48
+MeteorImpact/FireArrow hit(Clone)/Dissolve active=True pos=(0.00, 1.00, 0.00) size=4 shape=Cone:(0.00, 0.01, 0.00) life=0.35
+MeteorImpact/FireArrow hit(Clone)/Light active=True pos=(0.00, 1.00, 0.00) size=1 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+MeteorImpact/FireArrow hit(Clone)/FireGround active=True pos=(0.00, 1.00, 0.00) size=1.5 shape=Circle:(0.00, 0.00, 0.00) life=0.48
+MeteorImpact/CFXR3 Fire Explosion A (no smoke)(Clone) active=True pos=(0.00, 0.00, 0.00) size=1 shape=Sphere:(0.00, 0.00, 0.00) life=0.35
+MeteorImpact/CFXR3 Fire Explosion A (no smoke)(Clone)/Ember active=True pos=(0.00, 0.00, 0.00) size=0.075 shape=Sphere:(0.00, 0.00, 0.00) life=0.4
+MeteorImpact/CFXR3 Fire Explosion A (no smoke)(Clone)/Ring active=True pos=(0.00, 0.00, 0.00) size=2 shape=Cone:(0.00, 0.00, 0.00) life=0.3
+MeteorImpact/CFXR3 Fire Explosion A (no smoke)(Clone)/Flames delay active=True pos=(0.00, 0.00, 0.00) size=0.7 shape=Sphere:(0.00, 0.00, 0.00) life=0.5
+MeteorImpact/CFXR3 Fire Explosion A (no smoke)(Clone)/Sparks smoke active=False pos=(0.00, 0.00, 0.00) size=0.2 shape=Sphere:(0.00, 0.00, 0.00) life=0.5
+MeteorImpact/CFXR3 Fire Explosion A (no smoke)(Clone)/Sparks smoke/Sub smoke active=True pos=(0.00, 0.00, 0.00) size=3 shape=Sphere:(0.00, 0.00, 0.00) life=0.5
+MeteorImpact/CFXR3 Fire Explosion A (no smoke)(Clone)/Smoke active=False pos=(0.00, 0.00, 0.00) size=1 shape=Sphere:(0.00, 0.00, 0.00) life=0.5
+CelestialCharge/Light bomb cast(Clone) active=True pos=(0.00, 1.00, 0.00) size=1.5 shape=Cone:(0.00, 0.00, 0.00) life=0.72
+CelestialCharge/Light bomb cast(Clone)/TrailsRound active=True pos=(0.00, 1.00, 0.00) size=0.5 shape=Sphere:(0.00, 0.00, 0.00) life=0.72
+CelestialCharge/Light bomb cast(Clone)/LightAccumulating active=True pos=(0.00, 1.00, 0.00) size=1 shape=Cone:(0.00, 0.00, 0.00) life=0.72
+CelestialCharge/Light bomb cast(Clone)/BigFlashLight active=True pos=(0.00, 1.00, 0.00) size=2 shape=Cone:(0.00, 0.00, 0.00) life=0.72
+CelestialCharge/Light bomb cast(Clone)/EndWave active=True pos=(0.00, 1.02, 0.00) size=1.5 shape=Sphere:(0.00, 0.00, 0.00) life=0.72
+CelestialCharge/Light bomb cast(Clone)/EndDissolve active=True pos=(0.00, 1.02, 0.00) size=1 shape=Sphere:(0.00, 0.00, 0.00) life=0.72
+CelestialCharge/Light bomb cast(Clone)/EndSideSmoke active=True pos=(0.00, 1.00, 0.00) size=0.8 shape=Sphere:(0.00, 0.00, 0.00) life=0.72
+CelestialImpact/Energy strike(Clone) active=True pos=(0.00, 0.00, 0.00) size=1 shape=Sphere:(0.00, 1.00, 0.00) life=0.65
+CelestialImpact/Energy strike(Clone)/GlowingOrb0 active=True pos=(0.37, 0.25, -0.38) size=2.3 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb0/LightningTrails active=True pos=(0.37, 0.25, -0.38) size=0.03 shape=Sphere:(0.00, 0.00, 0.00) life=0.3
+CelestialImpact/Energy strike(Clone)/GlowingOrb0/Glow active=True pos=(0.37, 0.25, -0.38) size=1.15 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb0/Flare active=True pos=(0.37, 0.25, -0.38) size=4 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb0/Darkness active=True pos=(0.37, 0.25, -0.38) size=1.25 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb0/Distortion(Re-save shader if black) active=False pos=(0.37, 0.25, -0.38) size=2 shape=Sphere:(0.00, 0.00, 0.00) life=0.25
+CelestialImpact/Energy strike(Clone)/GlowingOrb0/Sparks active=True pos=(0.37, 0.25, -0.38) size=0.08 shape=Sphere:(0.00, 0.00, 0.00) life=0.65
+CelestialImpact/Energy strike(Clone)/GlowingOrb0/Smoke active=True pos=(0.37, 0.25, -0.38) size=2 shape=Sphere:(0.00, 0.00, 0.00) life=0.65
+CelestialImpact/Energy strike(Clone)/GlowingOrb0/ShockWave active=True pos=(0.37, 0.25, -0.38) size=2.7 shape=Cone:(0.00, 0.01, 0.00) life=0.3
+CelestialImpact/Energy strike(Clone)/GlowingOrb0/Flare active=True pos=(0.37, 0.25, -0.38) size=12 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb0/Lightning active=True pos=(0.37, 0.25, -0.38) size=2 shape=Circle:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb0/FlareBlack active=True pos=(0.37, 0.25, -0.38) size=10 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb1 active=True pos=(-0.06, 0.40, 0.58) size=2.3 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb1/LightningTrails active=True pos=(-0.06, 0.40, 0.58) size=0.03 shape=Sphere:(0.00, 0.00, 0.00) life=0.3
+CelestialImpact/Energy strike(Clone)/GlowingOrb1/Glow active=True pos=(-0.06, 0.40, 0.58) size=1.15 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb1/Flare active=True pos=(-0.06, 0.40, 0.58) size=4 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb1/Darkness active=True pos=(-0.06, 0.40, 0.58) size=1.25 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb1/Distortion(Re-save shader if black) active=False pos=(-0.06, 0.40, 0.58) size=2 shape=Sphere:(0.00, 0.00, 0.00) life=0.25
+CelestialImpact/Energy strike(Clone)/GlowingOrb1/Sparks active=True pos=(-0.06, 0.40, 0.58) size=0.08 shape=Sphere:(0.00, 0.00, 0.00) life=0.65
+CelestialImpact/Energy strike(Clone)/GlowingOrb1/Smoke active=True pos=(-0.06, 0.40, 0.58) size=2 shape=Sphere:(0.00, 0.00, 0.00) life=0.65
+CelestialImpact/Energy strike(Clone)/GlowingOrb1/Flare active=True pos=(-0.06, 0.40, 0.58) size=12 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb1/ShockWave active=True pos=(-0.06, 0.40, 0.58) size=2.7 shape=Cone:(0.00, 0.01, 0.00) life=0.3
+CelestialImpact/Energy strike(Clone)/GlowingOrb1/Lightning active=True pos=(-0.06, 0.40, 0.58) size=2 shape=Circle:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb1/FlareBlack active=True pos=(-0.06, 0.40, 0.58) size=10 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb1/Trail active=True pos=(-0.06, 0.40, 0.58) size=0.8 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb2 active=True pos=(-0.29, 0.29, -0.44) size=2.3 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb2/LightningTrails active=True pos=(-0.29, 0.29, -0.44) size=0.03 shape=Sphere:(0.00, 0.00, 0.00) life=0.3
+CelestialImpact/Energy strike(Clone)/GlowingOrb2/Glow active=True pos=(-0.29, 0.29, -0.44) size=1.15 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb2/Flare active=True pos=(-0.29, 0.29, -0.44) size=4 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb2/Darkness active=True pos=(-0.29, 0.29, -0.44) size=1.25 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb2/Distortion(Re-save shader if black) active=False pos=(-0.29, 0.29, -0.44) size=2 shape=Sphere:(0.00, 0.00, 0.00) life=0.25
+CelestialImpact/Energy strike(Clone)/GlowingOrb2/Sparks active=True pos=(-0.29, 0.29, -0.44) size=0.08 shape=Sphere:(0.00, 0.00, 0.00) life=0.65
+CelestialImpact/Energy strike(Clone)/GlowingOrb2/Smoke active=True pos=(-0.29, 0.29, -0.44) size=2 shape=Sphere:(0.00, 0.00, 0.00) life=0.65
+CelestialImpact/Energy strike(Clone)/GlowingOrb2/ShockWave active=True pos=(-0.29, 0.29, -0.44) size=2.7 shape=Cone:(0.00, 0.01, 0.00) life=0.3
+CelestialImpact/Energy strike(Clone)/GlowingOrb2/Flare active=True pos=(-0.29, 0.29, -0.44) size=12 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb2/Lightning active=True pos=(-0.29, 0.29, -0.44) size=2 shape=Circle:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb2/FlareBlack active=True pos=(-0.29, 0.29, -0.44) size=10 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb2/Trail active=True pos=(-0.29, 0.29, -0.44) size=0.8 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb3 active=True pos=(0.48, 0.29, 0.19) size=2.3 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb3/LightningTrails active=True pos=(0.48, 0.29, 0.19) size=0.03 shape=Sphere:(0.00, 0.00, 0.00) life=0.3
+CelestialImpact/Energy strike(Clone)/GlowingOrb3/Glow active=True pos=(0.48, 0.29, 0.19) size=1.15 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb3/Flare active=True pos=(0.48, 0.29, 0.19) size=4 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb3/Darkness active=True pos=(0.48, 0.29, 0.19) size=1.25 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb3/Distortion(Re-save shader if black) active=False pos=(0.48, 0.29, 0.19) size=2 shape=Sphere:(0.00, 0.00, 0.00) life=0.25
+CelestialImpact/Energy strike(Clone)/GlowingOrb3/Sparks active=True pos=(0.48, 0.29, 0.19) size=0.08 shape=Sphere:(0.00, 0.00, 0.00) life=0.65
+CelestialImpact/Energy strike(Clone)/GlowingOrb3/Smoke active=True pos=(0.48, 0.29, 0.19) size=2 shape=Sphere:(0.00, 0.00, 0.00) life=0.65
+CelestialImpact/Energy strike(Clone)/GlowingOrb3/ShockWave active=True pos=(0.48, 0.29, 0.19) size=2.7 shape=Cone:(0.00, 0.01, 0.00) life=0.3
+CelestialImpact/Energy strike(Clone)/GlowingOrb3/Flare active=True pos=(0.48, 0.29, 0.19) size=12 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb3/Lightning active=True pos=(0.48, 0.29, 0.19) size=2 shape=Circle:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb3/FlareBlack active=True pos=(0.48, 0.29, 0.19) size=10 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb3/Trail active=True pos=(0.48, 0.29, 0.19) size=0.8 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb4 active=True pos=(-0.55, 0.26, 0.14) size=2.3 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb4/LightningTrails active=True pos=(-0.55, 0.26, 0.14) size=0.03 shape=Sphere:(0.00, 0.00, 0.00) life=0.3
+CelestialImpact/Energy strike(Clone)/GlowingOrb4/Glow active=True pos=(-0.55, 0.26, 0.14) size=1.15 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb4/Flare active=True pos=(-0.55, 0.26, 0.14) size=4 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb4/Darkness active=True pos=(-0.55, 0.26, 0.14) size=1.25 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb4/Distortion(Re-save shader if black) active=False pos=(-0.55, 0.26, 0.14) size=2 shape=Sphere:(0.00, 0.00, 0.00) life=0.25
+CelestialImpact/Energy strike(Clone)/GlowingOrb4/Sparks active=True pos=(-0.55, 0.26, 0.14) size=0.08 shape=Sphere:(0.00, 0.00, 0.00) life=0.65
+CelestialImpact/Energy strike(Clone)/GlowingOrb4/Smoke active=True pos=(-0.55, 0.26, 0.14) size=2 shape=Sphere:(0.00, 0.00, 0.00) life=0.65
+CelestialImpact/Energy strike(Clone)/GlowingOrb4/ShockWave active=True pos=(-0.55, 0.26, 0.14) size=2.7 shape=Cone:(0.00, 0.01, 0.00) life=0.3
+CelestialImpact/Energy strike(Clone)/GlowingOrb4/Flare active=True pos=(-0.55, 0.26, 0.14) size=12 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb4/Lightning active=True pos=(-0.55, 0.26, 0.14) size=2 shape=Circle:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb4/FlareBlack active=True pos=(-0.55, 0.26, 0.14) size=10 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb4/Trail active=True pos=(-0.55, 0.26, 0.14) size=0.8 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb5 active=True pos=(0.28, 0.25, 0.43) size=2.3 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb5/LightningTrails active=True pos=(0.28, 0.25, 0.43) size=0.03 shape=Sphere:(0.00, 0.00, 0.00) life=0.3
+CelestialImpact/Energy strike(Clone)/GlowingOrb5/Glow active=True pos=(0.28, 0.25, 0.43) size=1.15 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb5/Flare active=True pos=(0.28, 0.25, 0.43) size=4 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb5/Darkness active=True pos=(0.28, 0.25, 0.43) size=1.25 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb5/Distortion(Re-save shader if black) active=False pos=(0.28, 0.25, 0.43) size=2 shape=Sphere:(0.00, 0.00, 0.00) life=0.25
+CelestialImpact/Energy strike(Clone)/GlowingOrb5/Sparks active=True pos=(0.28, 0.25, 0.43) size=0.08 shape=Sphere:(0.00, 0.00, 0.00) life=0.65
+CelestialImpact/Energy strike(Clone)/GlowingOrb5/Smoke active=True pos=(0.28, 0.25, 0.43) size=2 shape=Sphere:(0.00, 0.00, 0.00) life=0.65
+CelestialImpact/Energy strike(Clone)/GlowingOrb5/ShockWave active=True pos=(0.28, 0.25, 0.43) size=2.7 shape=Cone:(0.00, 0.01, 0.00) life=0.3
+CelestialImpact/Energy strike(Clone)/GlowingOrb5/Flare active=True pos=(0.28, 0.25, 0.43) size=12 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb5/Lightning active=True pos=(0.28, 0.25, 0.43) size=2 shape=Circle:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb5/FlareBlack active=True pos=(0.28, 0.25, 0.43) size=10 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb5/Trail active=True pos=(0.28, 0.25, 0.43) size=0.8 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb6 active=True pos=(-0.02, 0.23, -0.57) size=2.3 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb6/LightningTrails active=True pos=(-0.02, 0.23, -0.57) size=0.03 shape=Sphere:(0.00, 0.00, 0.00) life=0.3
+CelestialImpact/Energy strike(Clone)/GlowingOrb6/Glow active=True pos=(-0.02, 0.23, -0.57) size=1.15 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb6/Flare active=True pos=(-0.02, 0.23, -0.57) size=4 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb6/Darkness active=True pos=(-0.02, 0.23, -0.57) size=1.25 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb6/Distortion(Re-save shader if black) active=False pos=(-0.02, 0.23, -0.57) size=2 shape=Sphere:(0.00, 0.00, 0.00) life=0.25
+CelestialImpact/Energy strike(Clone)/GlowingOrb6/Sparks active=True pos=(-0.02, 0.23, -0.57) size=0.08 shape=Sphere:(0.00, 0.00, 0.00) life=0.65
+CelestialImpact/Energy strike(Clone)/GlowingOrb6/Smoke active=True pos=(-0.02, 0.23, -0.57) size=2 shape=Sphere:(0.00, 0.00, 0.00) life=0.65
+CelestialImpact/Energy strike(Clone)/GlowingOrb6/ShockWave active=True pos=(-0.02, 0.23, -0.57) size=2.7 shape=Cone:(0.00, 0.01, 0.00) life=0.3
+CelestialImpact/Energy strike(Clone)/GlowingOrb6/Flare active=True pos=(-0.02, 0.23, -0.57) size=12 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb6/Lightning active=True pos=(-0.02, 0.23, -0.57) size=2 shape=Circle:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb6/FlareBlack active=True pos=(-0.02, 0.23, -0.57) size=10 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb6/Trail active=True pos=(-0.02, 0.23, -0.57) size=0.8 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb7 active=True pos=(-0.36, 0.21, 0.44) size=2.3 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb7/LightningTrails active=True pos=(-0.36, 0.21, 0.44) size=0.03 shape=Sphere:(0.00, 0.00, 0.00) life=0.3
+CelestialImpact/Energy strike(Clone)/GlowingOrb7/Glow active=True pos=(-0.36, 0.21, 0.44) size=1.15 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb7/Flare active=True pos=(-0.36, 0.21, 0.44) size=4 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb7/Darkness active=True pos=(-0.36, 0.21, 0.44) size=1.25 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb7/Distortion(Re-save shader if black) active=False pos=(-0.36, 0.21, 0.44) size=2 shape=Sphere:(0.00, 0.00, 0.00) life=0.25
+CelestialImpact/Energy strike(Clone)/GlowingOrb7/Sparks active=True pos=(-0.36, 0.21, 0.44) size=0.08 shape=Sphere:(0.00, 0.00, 0.00) life=0.65
+CelestialImpact/Energy strike(Clone)/GlowingOrb7/Smoke active=True pos=(-0.36, 0.21, 0.44) size=2 shape=Sphere:(0.00, 0.00, 0.00) life=0.65
+CelestialImpact/Energy strike(Clone)/GlowingOrb7/ShockWave active=True pos=(-0.36, 0.21, 0.44) size=2.7 shape=Cone:(0.00, 0.01, 0.00) life=0.3
+CelestialImpact/Energy strike(Clone)/GlowingOrb7/Flare active=True pos=(-0.36, 0.21, 0.44) size=12 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb7/Lightning active=True pos=(-0.36, 0.21, 0.44) size=2 shape=Circle:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb7/FlareBlack active=True pos=(-0.36, 0.21, 0.44) size=10 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb7/Trail active=True pos=(-0.36, 0.21, 0.44) size=0.8 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb8 active=True pos=(0.52, 0.21, -0.16) size=2.3 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb8/LightningTrails active=True pos=(0.52, 0.21, -0.16) size=0.03 shape=Sphere:(0.00, 0.00, 0.00) life=0.3
+CelestialImpact/Energy strike(Clone)/GlowingOrb8/Glow active=True pos=(0.52, 0.21, -0.16) size=1.15 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb8/Flare active=True pos=(0.52, 0.21, -0.16) size=4 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb8/Darkness active=True pos=(0.52, 0.21, -0.16) size=1.25 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb8/Distortion(Re-save shader if black) active=False pos=(0.52, 0.21, -0.16) size=2 shape=Sphere:(0.00, 0.00, 0.00) life=0.25
+CelestialImpact/Energy strike(Clone)/GlowingOrb8/Sparks active=True pos=(0.52, 0.21, -0.16) size=0.08 shape=Sphere:(0.00, 0.00, 0.00) life=0.65
+CelestialImpact/Energy strike(Clone)/GlowingOrb8/Smoke active=True pos=(0.52, 0.21, -0.16) size=2 shape=Sphere:(0.00, 0.00, 0.00) life=0.65
+CelestialImpact/Energy strike(Clone)/GlowingOrb8/ShockWave active=True pos=(0.52, 0.21, -0.16) size=2.7 shape=Cone:(0.00, 0.01, 0.00) life=0.3
+CelestialImpact/Energy strike(Clone)/GlowingOrb8/Flare active=True pos=(0.52, 0.21, -0.16) size=12 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb8/Lightning active=True pos=(0.52, 0.21, -0.16) size=2 shape=Circle:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb8/FlareBlack active=True pos=(0.52, 0.21, -0.16) size=10 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb8/Trail active=True pos=(0.52, 0.21, -0.16) size=0.8 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb9 active=True pos=(-0.55, 0.24, -0.17) size=2.3 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb9/LightningTrails active=True pos=(-0.55, 0.24, -0.17) size=0.03 shape=Sphere:(0.00, 0.00, 0.00) life=0.3
+CelestialImpact/Energy strike(Clone)/GlowingOrb9/Glow active=True pos=(-0.55, 0.24, -0.17) size=1.15 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb9/Flare active=True pos=(-0.55, 0.24, -0.17) size=4 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb9/Darkness active=True pos=(-0.55, 0.24, -0.17) size=1.25 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb9/Distortion(Re-save shader if black) active=False pos=(-0.55, 0.24, -0.17) size=2 shape=Sphere:(0.00, 0.00, 0.00) life=0.25
+CelestialImpact/Energy strike(Clone)/GlowingOrb9/Sparks active=True pos=(-0.55, 0.24, -0.17) size=0.08 shape=Sphere:(0.00, 0.00, 0.00) life=0.65
+CelestialImpact/Energy strike(Clone)/GlowingOrb9/Smoke active=True pos=(-0.55, 0.24, -0.17) size=2 shape=Sphere:(0.00, 0.00, 0.00) life=0.65
+CelestialImpact/Energy strike(Clone)/GlowingOrb9/ShockWave active=True pos=(-0.55, 0.24, -0.17) size=2.7 shape=Cone:(0.00, 0.01, 0.00) life=0.3
+CelestialImpact/Energy strike(Clone)/GlowingOrb9/Flare active=True pos=(-0.55, 0.24, -0.17) size=12 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb9/Lightning active=True pos=(-0.55, 0.24, -0.17) size=2 shape=Circle:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb9/FlareBlack active=True pos=(-0.55, 0.24, -0.17) size=10 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb9/Trail active=True pos=(-0.55, 0.24, -0.17) size=0.8 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb10 active=True pos=(0.14, 0.24, 0.48) size=2.3 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb10/LightningTrails active=True pos=(0.14, 0.24, 0.48) size=0.03 shape=Sphere:(0.00, 0.00, 0.00) life=0.3
+CelestialImpact/Energy strike(Clone)/GlowingOrb10/Glow active=True pos=(0.14, 0.24, 0.48) size=1.15 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb10/Flare active=True pos=(0.14, 0.24, 0.48) size=4 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb10/Darkness active=True pos=(0.14, 0.24, 0.48) size=1.25 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb10/Distortion(Re-save shader if black) active=False pos=(0.14, 0.24, 0.48) size=2 shape=Sphere:(0.00, 0.00, 0.00) life=0.25
+CelestialImpact/Energy strike(Clone)/GlowingOrb10/Sparks active=True pos=(0.14, 0.24, 0.48) size=0.08 shape=Sphere:(0.00, 0.00, 0.00) life=0.65
+CelestialImpact/Energy strike(Clone)/GlowingOrb10/Smoke active=True pos=(0.14, 0.24, 0.48) size=2 shape=Sphere:(0.00, 0.00, 0.00) life=0.65
+CelestialImpact/Energy strike(Clone)/GlowingOrb10/ShockWave active=True pos=(0.14, 0.24, 0.48) size=2.7 shape=Cone:(0.00, 0.01, 0.00) life=0.3
+CelestialImpact/Energy strike(Clone)/GlowingOrb10/Flare active=True pos=(0.14, 0.24, 0.48) size=12 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb10/Lightning active=True pos=(0.14, 0.24, 0.48) size=2 shape=Circle:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb10/FlareBlack active=True pos=(0.14, 0.24, 0.48) size=10 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb10/Trail active=True pos=(0.14, 0.24, 0.48) size=0.8 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb11 active=True pos=(0.27, 0.24, -0.46) size=2.3 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb11/LightningTrails active=True pos=(0.27, 0.24, -0.46) size=0.03 shape=Sphere:(0.00, 0.00, 0.00) life=0.3
+CelestialImpact/Energy strike(Clone)/GlowingOrb11/Glow active=True pos=(0.27, 0.24, -0.46) size=1.15 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb11/Flare active=True pos=(0.27, 0.24, -0.46) size=4 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb11/Darkness active=True pos=(0.27, 0.24, -0.46) size=1.25 shape=Cone:(0.00, 0.00, 0.00) life=0.2
+CelestialImpact/Energy strike(Clone)/GlowingOrb11/Distortion(Re-save shader if black) active=False pos=(0.27, 0.24, -0.46) size=2 shape=Sphere:(0.00, 0.00, 0.00) life=0.25
+CelestialImpact/Energy strike(Clone)/GlowingOrb11/Sparks active=True pos=(0.27, 0.24, -0.46) size=0.08 shape=Sphere:(0.00, 0.00, 0.00) life=0.65
+CelestialImpact/Energy strike(Clone)/GlowingOrb11/Smoke active=True pos=(0.27, 0.24, -0.46) size=2 shape=Sphere:(0.00, 0.00, 0.00) life=0.65
+CelestialImpact/Energy strike(Clone)/GlowingOrb11/ShockWave active=True pos=(0.27, 0.24, -0.46) size=2.7 shape=Cone:(0.00, 0.01, 0.00) life=0.3
+CelestialImpact/Energy strike(Clone)/GlowingOrb11/Flare active=True pos=(0.27, 0.24, -0.46) size=12 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb11/Lightning active=True pos=(0.27, 0.24, -0.46) size=2 shape=Circle:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb11/FlareBlack active=True pos=(0.27, 0.24, -0.46) size=10 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/GlowingOrb11/Trail active=True pos=(0.27, 0.24, -0.46) size=0.8 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/Stunning explosion active=True pos=(0.00, 0.25, 0.00) size=4.3 shape=Cone:(0.00, 0.01, 0.00) life=0.3
+CelestialImpact/Energy strike(Clone)/Stunning explosion/Smoke active=True pos=(0.00, 0.25, 0.00) size=2 shape=Cone:(0.00, 0.00, 0.00) life=0.6
+CelestialImpact/Energy strike(Clone)/Stunning explosion/Sparks active=True pos=(0.00, 0.25, 0.00) size=0.15 shape=Sphere:(0.00, 0.00, 0.00) life=0.65
+CelestialImpact/Energy strike(Clone)/Stunning explosion/SparksLong active=True pos=(0.00, 0.25, 0.00) size=0.04 shape=Sphere:(0.00, 0.00, 0.00) life=0.5
+CelestialImpact/Energy strike(Clone)/Stunning explosion/Flash active=True pos=(0.00, 0.25, 0.00) size=8 shape=Box:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/Stunning explosion/LightningTrails active=True pos=(0.00, 0.25, 0.00) size=0.05 shape=Circle:(0.00, 0.00, 0.00) life=0.3
+CelestialImpact/Energy strike(Clone)/Stunning explosion/Distortion(Re-save shader if black) active=False pos=(0.00, 0.00, 0.00) size=2 shape=Sphere:(0.00, 0.00, 0.00) life=0.25
+CelestialImpact/Energy strike(Clone)/Stunning explosion/Flare active=True pos=(0.00, 0.25, 0.00) size=12 shape=Cone:(0.00, 0.00, 0.00) life=0.18
+CelestialImpact/Energy strike(Clone)/Stunning explosion/ShockWave active=True pos=(0.00, 0.25, 0.00) size=2.7 shape=Cone:(0.00, 0.01, 0.00) life=0.3
+CelestialImpact/Energy strike(Clone)/Craters active=True pos=(0.00, 0.00, 0.00) size=3 shape=Cone:(0.00, 0.01, 0.00) life=0.65

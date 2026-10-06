@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 579717377713784693}
   - component: {fileID: 579717377713784694}
   m_Layer: 0
-  m_Name: CFXR ScreenDistortion Noise Upward (Loop)
+  m_Name: CFXR ScreenDistortion Heat Upward (Loop)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 579717377713784695}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -600,7 +600,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
-    maxNumParticles: 20
+    maxNumParticles: 50
     size3D: 0
     rotation3D: 0
     gravityModifier:
