@@ -15,6 +15,10 @@ public sealed class BattleWeaponTrails : MonoBehaviour
         public Color color = new Color(1, .72f, .15f, .8f);
         [Range(.04f, .2f)] public float lifetime = .1f;
         [Range(0, .95f)] public float bladeStart = .2f;
+        [Range(0, .95f)] public float thrustBladeStart = .9f;
+        [Range(0, .2f)] public float thrustWidth;
+        [Range(.025f, .2f)] public float followThroughSeconds = .025f;
+        public Material material;
     }
 
     public Material material;
@@ -50,10 +54,13 @@ public sealed class BattleWeaponTrails : MonoBehaviour
     sealed class Strip
     {
         public Mesh mesh;
+        public MeshRenderer meshRenderer;
         public Renderer source;
         public readonly List<Vector3> inner = new List<Vector3>();
         public readonly List<Vector3> tip = new List<Vector3>();
         public int baseIndex, tipIndex;
+        public Vector3 thrustAxis;
+        public Vector3 thrustDirection;
     }
     sealed class Trail
     {
@@ -78,15 +85,16 @@ public sealed class BattleWeaponTrails : MonoBehaviour
     FrankBattlePairPlayback owner;
     CharacterCombat attacker;
     Style style;
+    Camera view;
     Mesh scratch;
     Transform poolRoot;
 
     public bool Owns(GameObject root) => root && pool.Exists(t => t.root == root);
 
-    public void Begin(FrankBattlePairPlayback playback, CharacterCombat source, BattleSfxBank.Move profile)
+    public void Begin(FrankBattlePairPlayback playback, CharacterCombat source, BattleSfxBank.Move profile, Camera camera = null)
     {
         Clear();
-        owner = playback; attacker = source;
+        owner = playback; attacker = source; view = camera;
         style = Array.Find(styles ?? Array.Empty<Style>(), s => s != null && s.weapon == playback.Move.weapon);
         windows.Clear(); assignedHits.Clear();
         if (!isActiveAndEnabled || !material || style == null || playback.Move.skill != BattleSkill.None ||
@@ -101,9 +109,15 @@ public sealed class BattleWeaponTrails : MonoBehaviour
                     !assignedHits.Contains(candidate)) { hit = candidate; break; }
             if (hit == null || (hit.contactSource != "Weapon" && hit.contactSource != "Shield")) continue;
             assignedHits.Add(hit);
+            float end = Mathf.Min(playback.Duration, hit.seconds + style.followThroughSeconds);
+            // A rapid combo needs the return motion too, but each new stroke owns
+            // its own sweep rather than extending the preceding ribbon into it.
+            foreach (var next in profile.cues)
+                if (next.seconds > hit.seconds && next.group != null && next.group.EndsWith("swing", StringComparison.Ordinal))
+                { end = Mathf.Min(end, next.seconds); break; }
             windows.Add(new Window { cue = cue, shield = hit.contactSource == "Shield",
                 start = Mathf.Max(0, cue.seconds - 1f / 30f),
-                end = Mathf.Min(playback.Duration, hit.seconds + .025f) });
+                end = end });
         }
     }
 
@@ -158,13 +172,17 @@ public sealed class BattleWeaponTrails : MonoBehaviour
             {
                 var strip = trail.strips[i];
                 strip.source = i < count ? i == 0 ? fastest : second : null;
+                strip.thrustAxis = Vector3.zero;
+                strip.thrustDirection = Vector3.zero;
                 strip.mesh.Clear();
+                strip.meshRenderer.sharedMaterial = !window.shield && style.material ? style.material : material;
                 if (!strip.source || !ReadGeometry(strip.source)) continue;
                 ChooseEndpoints(strip);
             }
             // Cache a short authored sweep once per cue. Frame updates only interpolate
             // these points, avoiding CPU skinning every frame in WebGL.
-            int steps = Mathf.Clamp(Mathf.CeilToInt((window.end - window.start) * 120), 2, 96);
+            int sampleRate = style.weapon == TrumpWeaponManager.WeaponType.Assassin ? 240 : 120;
+            int steps = Mathf.Clamp(Mathf.CeilToInt((window.end - window.start) * sampleRate), 2, 96);
             trail.sampleStep = (window.end - window.start) / steps;
             for (int sample = 0; sample <= steps; sample++)
             {
@@ -175,11 +193,25 @@ public sealed class BattleWeaponTrails : MonoBehaviour
                         var matrix = strip.source.transform.localToWorldMatrix;
                         Vector3 grip = matrix.MultiplyPoint3x4(geometry[strip.baseIndex]);
                         Vector3 tip = matrix.MultiplyPoint3x4(geometry[strip.tipIndex]);
-                        float start = window.shield ? .62f : cue.group == "thrust_swing" ? .9f : style.bladeStart;
+                        float start = window.shield ? .62f : cue.group == "thrust_swing" ? style.thrustBladeStart : style.bladeStart;
                         strip.inner.Add(Vector3.Lerp(grip, tip, start)); strip.tip.Add(tip);
                     }
                 SampledPoseCount++;
             }
+            if (cue.group == "thrust_swing" && style.thrustWidth > 0)
+                foreach (var strip in trail.strips)
+                {
+                    // A straight thrust sweeps a nearly zero-area, edge-on blade.
+                    // Give that motion a narrow visible streak without moving the
+                    // tip off the actual weapon or creating another particle cue.
+                    Vector3 forward = view ? view.transform.forward : Vector3.forward;
+                    if (strip.tip.Count > 0)
+                        strip.thrustDirection = (strip.tip[0] - strip.inner[0]).normalized;
+                    strip.thrustAxis = Vector3.Cross(forward, strip.thrustDirection).normalized;
+                    if (strip.thrustAxis.sqrMagnitude < .5f) strip.thrustAxis = view ? view.transform.up : Vector3.up;
+                    for (int i = 0; i < strip.inner.Count; i++)
+                        strip.inner[i] = WidenThrust(strip.inner[i], strip.tip[i], strip.thrustAxis, style.thrustWidth);
+                }
             trail.root.name = window.shield ? "Shield sweep" : style.weapon + " " + cue.group;
             trail.root.SetActive(true);
             Draw(trail, cue.seconds);
@@ -189,6 +221,12 @@ public sealed class BattleWeaponTrails : MonoBehaviour
     }
 
     static bool IsShield(Renderer r) => r.name.IndexOf("shield", StringComparison.OrdinalIgnoreCase) >= 0;
+    static Vector3 WidenThrust(Vector3 inner, Vector3 tip, Vector3 axis, float width)
+    {
+        float projected = Vector3.Dot(inner - tip, axis);
+        if (Mathf.Abs(projected) >= width) return inner;
+        return inner + axis * ((projected < 0 ? -width : width) - projected);
+    }
     static bool Usable(Renderer r) => r && r.enabled && r.gameObject.activeInHierarchy &&
         r.name.IndexOf("case", StringComparison.OrdinalIgnoreCase) < 0;
 
@@ -287,7 +325,7 @@ public sealed class BattleWeaponTrails : MonoBehaviour
         var renderer = child.AddComponent<MeshRenderer>(); renderer.sharedMaterial = material;
         renderer.shadowCastingMode = ShadowCastingMode.Off; renderer.receiveShadows = false;
         renderer.lightProbeUsage = LightProbeUsage.Off; renderer.reflectionProbeUsage = ReflectionProbeUsage.Off;
-        trail.strips.Add(new Strip { mesh = mesh });
+        trail.strips.Add(new Strip { mesh = mesh, meshRenderer = renderer });
     }
 
     public void Advance(float seconds)
@@ -345,8 +383,18 @@ public sealed class BattleWeaponTrails : MonoBehaviour
                     var matrix = strip.source.transform.localToWorldMatrix;
                     Vector3 grip = matrix.MultiplyPoint3x4(geometry[strip.baseIndex]);
                     tip = matrix.MultiplyPoint3x4(geometry[strip.tipIndex]);
-                    float start = trail.window.shield ? .62f : trail.window.cue.group == "thrust_swing" ? .9f : trail.style.bladeStart;
+                    float start = trail.window.shield ? .62f : trail.window.cue.group == "thrust_swing" ? trail.style.thrustBladeStart : trail.style.bladeStart;
                     inner = Vector3.Lerp(grip,tip,start);
+                    if (strip.thrustAxis.sqrMagnitude > .5f)
+                        inner = WidenThrust(inner, tip, strip.thrustAxis, trail.style.thrustWidth);
+                }
+                // The held part of a straight stab has almost no swept area.
+                // A small glint tail along the blade keeps it readable; its
+                // leading point still sits exactly on the sampled weapon tip.
+                if (strip.thrustDirection.sqrMagnitude > .5f)
+                {
+                    Vector3 tail = strip.thrustDirection * (trail.style.thrustWidth * Mathf.Clamp01((to - time) / life));
+                    inner -= tail; tip -= tail;
                 }
                 vertices.Add(inner); vertices.Add(tip);
                 Color color = trail.window.shield ? new Color(1, .88f, .48f, .65f) : trail.style.color;

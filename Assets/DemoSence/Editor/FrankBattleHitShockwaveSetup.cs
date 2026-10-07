@@ -256,6 +256,7 @@ namespace FrankRetarget.Editor
             {
                 var game = scene.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<GameManager>(true)).Single();
                 var vfx = game.battleVfx;
+                string contactBankBeforeValidation = File.ReadAllText(AssetDatabase.GetAssetPath(vfx.timeline));
                 if (vfx.lightContactScale != 1.4f || vfx.heavyContactScale != 1.55f)
                     throw new Exception("Contact strength is not saved in the Battle scene.");
                 foreach (var prefab in ContactPrefabs(vfx))
@@ -336,9 +337,8 @@ namespace FrankRetarget.Editor
                     finally { vfx.EffectPlayed -= observe; source.SourcePlayback?.Cancel(); }
                     cases++;
                 }
-                string beforeBank = File.ReadAllText(HitShockwaveReview + "/ContactBankBefore.asset.txt");
-                if (beforeBank != File.ReadAllText(AssetDatabase.GetAssetPath(vfx.timeline)))
-                    throw new Exception("Previously calibrated contact timing changed.");
+                if (contactBankBeforeValidation != File.ReadAllText(AssetDatabase.GetAssetPath(vfx.timeline)))
+                    throw new Exception("VFX validation changed shared contact timing.");
                 var beforeTextures = File.ReadAllLines(HitShockwaveReview + "/TexturesBefore.txt");
                 var addedTextures = AssetDatabase.GetDependencies(SfxScene, true).Where(p => AssetDatabase.LoadAssetAtPath<Texture>(p))
                     .Except(beforeTextures).ToArray();

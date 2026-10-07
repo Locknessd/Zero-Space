@@ -46196,30 +46196,58 @@ MonoBehaviour:
     color: {r: 1, g: 0.82, b: 0.3, a: 0.65}
     lifetime: 0.09
     bladeStart: 0.3
+    thrustBladeStart: 0.9
+    thrustWidth: 0
+    followThroughSeconds: 0.025
+    material: {fileID: 0}
   - weapon: 2
     color: {r: 1, g: 0.58, b: 0.08, a: 0.8}
     lifetime: 0.13
     bladeStart: 0.2
+    thrustBladeStart: 0.9
+    thrustWidth: 0
+    followThroughSeconds: 0.025
+    material: {fileID: 0}
   - weapon: 7
     color: {r: 1, g: 0.18, b: 0.06, a: 0.85}
     lifetime: 0.15
     bladeStart: 0.64
+    thrustBladeStart: 0.9
+    thrustWidth: 0
+    followThroughSeconds: 0.025
+    material: {fileID: 0}
   - weapon: 4
     color: {r: 1, g: 0.78, b: 0.5, a: 0.72}
     lifetime: 0.085
     bladeStart: 0.24
+    thrustBladeStart: 0.9
+    thrustWidth: 0
+    followThroughSeconds: 0.025
+    material: {fileID: 0}
   - weapon: 3
     color: {r: 0.22, g: 1, b: 0.82, a: 0.75}
     lifetime: 0.085
     bladeStart: 0.85
+    thrustBladeStart: 0.9
+    thrustWidth: 0
+    followThroughSeconds: 0.025
+    material: {fileID: 0}
   - weapon: 5
     color: {r: 0.18, g: 0.75, b: 1, a: 0.8}
     lifetime: 0.075
     bladeStart: 0.28
+    thrustBladeStart: 0.9
+    thrustWidth: 0
+    followThroughSeconds: 0.025
+    material: {fileID: 0}
   - weapon: 6
-    color: {r: 0.78, g: 0.35, b: 1, a: 0.78}
-    lifetime: 0.095
-    bladeStart: 0.26
+    color: {r: 0.82, g: 0.44, b: 1, a: 0.92}
+    lifetime: 0.16
+    bladeStart: 0.05
+    thrustBladeStart: 0.12
+    thrustWidth: 0.08
+    followThroughSeconds: 0.14
+    material: {fileID: 2100000, guid: e8949fa031786824f8fff8460140963d, type: 2}
   staticBlades:
   - mesh: {fileID: -1272481795433867914, guid: d8dd30cce5c56764b847fc7ea75a2ff3, type: 3}
     bladeBase: {x: 0.08226412, y: 0.13189182, z: -0.0167174}
@@ -67970,7 +67998,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -40, y: 0}
+  m_AnchoredPosition: {x: -39.99994, y: 0}
   m_SizeDelta: {x: 810, y: 210}
   m_Pivot: {x: 0, y: 1}
 --- !u!1001 &1511003603

@@ -182,13 +182,12 @@ namespace FrankRetarget.Editor
             try
             {
                 foreach (var attacker in fighters)
+                foreach (var move in attacker.heavyCombatMoves.Where(m => m.skill == BattleSkill.None))
                 foreach (bool lethal in new[] { false, true })
                 {
                     game.ResetCombatQueue();
                     Time.timeScale = 1;
                     var receiver = fighters.Single(f => f != attacker);
-                    var move = attacker.heavyCombatMoves.First(m => m.skill == BattleSkill.None &&
-                        vfx.timeline.FindMove(m).cues.Count(c => c.group == "heavy_hit" || c.group == "light_hit" || c.group == "stab_hit") >= 2);
                     attacker.transform.position = Vector3.zero;
                     receiver.transform.position = (attacker == game.leftCombat ? Vector3.right : Vector3.left) * move.attackRange;
                     int emitted = 0, slowBefore = feedback.SlowMotionCount;
@@ -235,7 +234,7 @@ namespace FrankRetarget.Editor
                     }
                     finally { vfx.ContactOccurred -= observe; vfx.EffectPlayed -= observeFlash; }
                 }
-                report.AppendLine("PASS both attackers, lethal/nonlethal: a frame crossing a whole combo pauses at each exact contact; carried time resumes every hit once; KO slow motion once; cancel restores time.");
+                report.AppendLine("PASS all seven Heavy weapons, both attackers, lethal/nonlethal (28 combos): a frame crossing a whole combo pauses at each exact contact; carried time resumes every hit once; KO slow motion once; cancel restores time.");
                 report.AppendLine("PASS contact core and both shockwave rings already have particles before hit-stop; rings use game time and remain visible on held contact poses.");
                 Time.timeScale = .5f; feedback.ResetFeedback();
                 Time.timeScale = 0; feedback.ResetFeedback();

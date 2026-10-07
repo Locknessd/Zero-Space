@@ -181,7 +181,7 @@ public sealed class BattleVfxPlayer : MonoBehaviour
         nextCue = 0;
         highWaterTime = -1;
         if (!weaponTrails) weaponTrails = GetComponent<BattleWeaponTrails>();
-        if (weaponTrails) weaponTrails.Begin(playback, source, profile);
+        if (weaponTrails) weaponTrails.Begin(playback, source, profile, battleCamera);
         SequenceBegan?.Invoke(source, move, isLethal);
         return true;
     }
