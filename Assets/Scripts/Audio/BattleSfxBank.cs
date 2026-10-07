@@ -25,6 +25,14 @@ public sealed class BattleSfxBank : ScriptableObject
     }
 
     [Serializable]
+    public sealed class ContactAnchor
+    {
+        public Avatar avatar;
+        public HumanBodyBones bone;
+        public Vector3 offset;
+    }
+
+    [Serializable]
     public sealed class Cue
     {
         [Min(0)] public float seconds;
@@ -36,8 +44,31 @@ public sealed class BattleSfxBank : ScriptableObject
         public HumanBodyBones contactBone = HumanBodyBones.Chest;
         public Vector3 contactOffset;
         public string contactSource;
+        public ContactAnchor[] avatarContacts = Array.Empty<ContactAnchor>();
         [Tooltip("A throw finisher deals its share of damage on the ground impact.")]
         public bool damageOnLanding;
+
+        public bool TryContactPosition(Animator receiver, out Vector3 position)
+        {
+            position = Vector3.zero;
+            if (!hasContactPoint || !receiver || !receiver.isHuman)
+                return false;
+            var bone = contactBone;
+            var offset = contactOffset;
+            foreach (var entry in avatarContacts ?? Array.Empty<ContactAnchor>())
+            {
+                if (entry == null || entry.avatar != receiver.avatar)
+                    continue;
+                bone = entry.bone;
+                offset = entry.offset;
+                break;
+            }
+            var anchor = receiver.GetBoneTransform(bone);
+            if (!anchor)
+                return false;
+            position = anchor.TransformPoint(offset);
+            return float.IsFinite(position.sqrMagnitude);
+        }
     }
 
     [Serializable]

@@ -42197,6 +42197,7 @@ MonoBehaviour:
   combatController: {fileID: 22100000, guid: 5c298ed36286c4b449e56c7a8cd4f6c7, type: 2}
   lightCombatMoves:
   - moveName: Light_1
+    actionDefinition: {fileID: 0}
     attackAnim: {fileID: 7400000, guid: 639221af9523ddee5aa6a8a5e94f7de0, type: 2}
     hitAnim: {fileID: 7400000, guid: 303a99312dc6839d78b0c9bbc6f448af, type: 2}
     getUpAnim: {fileID: 1783586326346866118, guid: 3f1b177ffbc845d495792ddeae5216ff,
@@ -42222,6 +42223,7 @@ MonoBehaviour:
       showWeapon: 0
       reactionDelay: 0
   - moveName: Light_3
+    actionDefinition: {fileID: 0}
     attackAnim: {fileID: 7400000, guid: 76e9c5411407b62e39172a6f4375b4bd, type: 2}
     hitAnim: {fileID: 7400000, guid: ce7a44ba3b2afc477be79759a8fd2010, type: 2}
     getUpAnim: {fileID: 1783586326346866118, guid: 3f1b177ffbc845d495792ddeae5216ff,
@@ -42246,8 +42248,83 @@ MonoBehaviour:
       pepeAttacks: 1
       showWeapon: 0
       reactionDelay: 0
+  - moveName: Vol10_CmnAtemi
+    actionDefinition: {fileID: 11400000, guid: eb981d1d55122cc95b7f7a19afee4080, type: 2}
+    attackAnim: {fileID: 7400000, guid: e47354cd8b0fa220b9e0b4c75f9f0fba, type: 2}
+    hitAnim: {fileID: 7400000, guid: 692759a051faaf7e29c071c77fa3a3b0, type: 2}
+    getUpAnim: {fileID: 1783586326346866118, guid: 3f1b177ffbc845d495792ddeae5216ff,
+      type: 3}
+    attackRange: 1.0188267
+    weapon: 0
+    skill: 0
+    sourcePair:
+      attackerDriver: {fileID: 8035043399380846674, guid: d3ff4cfc98ab527acb177b539dc6c053,
+        type: 3}
+      receiverDriver: {fileID: 7504886526908891812, guid: 4a3d9385b9050006dae07a46414f20ac,
+        type: 3}
+      attack: {fileID: 7400000, guid: e47354cd8b0fa220b9e0b4c75f9f0fba, type: 2}
+      reaction: {fileID: 7400000, guid: 692759a051faaf7e29c071c77fa3a3b0, type: 2}
+      getUp: {fileID: 1783586326346866118, guid: 3f1b177ffbc845d495792ddeae5216ff,
+        type: 3}
+      receiverOffset: {x: 0, y: 0, z: 1.0188267}
+      receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+      spacing: {fileID: 11400000, guid: a2d28f320db8a09cb8ffa36e8e6acd58, type: 2}
+      bodySpacing: 0.89931643
+      unarmedIndex: 3
+      pepeAttacks: 1
+      showWeapon: 0
+      reactionDelay: 0
+  - moveName: Vol10_CmnAtemi2
+    actionDefinition: {fileID: 11400000, guid: 846239f0308862f988f4d794a0d46cc9, type: 2}
+    attackAnim: {fileID: 7400000, guid: d082b73724850ba88a521877a9fcd7a1, type: 2}
+    hitAnim: {fileID: 7400000, guid: cc15ef8c89dae9f908ac3ce63d084646, type: 2}
+    getUpAnim: {fileID: 0}
+    attackRange: 1.0188267
+    weapon: 0
+    skill: 0
+    sourcePair:
+      attackerDriver: {fileID: 8035043399380846674, guid: d3ff4cfc98ab527acb177b539dc6c053,
+        type: 3}
+      receiverDriver: {fileID: 7504886526908891812, guid: 4a3d9385b9050006dae07a46414f20ac,
+        type: 3}
+      attack: {fileID: 7400000, guid: d082b73724850ba88a521877a9fcd7a1, type: 2}
+      reaction: {fileID: 7400000, guid: cc15ef8c89dae9f908ac3ce63d084646, type: 2}
+      getUp: {fileID: 0}
+      receiverOffset: {x: 0, y: 0, z: 1.0188267}
+      receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+      spacing: {fileID: 11400000, guid: a2d28f320db8a09cb8ffa36e8e6acd58, type: 2}
+      bodySpacing: 0.89931643
+      unarmedIndex: 4
+      pepeAttacks: 1
+      showWeapon: 0
+      reactionDelay: 0
+  - moveName: Vol10_CmnAtemi3
+    actionDefinition: {fileID: 11400000, guid: 5eb0c48359d0b8dbe8e3652d0c8ebf6b, type: 2}
+    attackAnim: {fileID: 7400000, guid: 190a2ce36ccea1dab9df22b479f3cf29, type: 2}
+    hitAnim: {fileID: 7400000, guid: 6515343bf93a0a6a0a3c71c82a093c52, type: 2}
+    getUpAnim: {fileID: 0}
+    attackRange: 1.0188267
+    weapon: 0
+    skill: 0
+    sourcePair:
+      attackerDriver: {fileID: 8035043399380846674, guid: d3ff4cfc98ab527acb177b539dc6c053,
+        type: 3}
+      receiverDriver: {fileID: 7504886526908891812, guid: 4a3d9385b9050006dae07a46414f20ac,
+        type: 3}
+      attack: {fileID: 7400000, guid: 190a2ce36ccea1dab9df22b479f3cf29, type: 2}
+      reaction: {fileID: 7400000, guid: 6515343bf93a0a6a0a3c71c82a093c52, type: 2}
+      getUp: {fileID: 0}
+      receiverOffset: {x: 0, y: 0, z: 1.0188267}
+      receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+      spacing: {fileID: 11400000, guid: a2d28f320db8a09cb8ffa36e8e6acd58, type: 2}
+      bodySpacing: 0.89931643
+      unarmedIndex: 5
+      pepeAttacks: 1
+      showWeapon: 0
+      reactionDelay: 0
   heavyCombatMoves:
   - moveName: Heavy_5
+    actionDefinition: {fileID: 0}
     attackAnim: {fileID: 7400000, guid: 55df8da958feec5379886b57b8fdaa22, type: 2}
     hitAnim: {fileID: 7400000, guid: 815993e08bc1e7bc6ad4c04db31399c9, type: 2}
     getUpAnim: {fileID: 1783586326346866118, guid: 3f1b177ffbc845d495792ddeae5216ff,
@@ -42273,6 +42350,7 @@ MonoBehaviour:
       showWeapon: 0
       reactionDelay: 0
   - moveName: Heavy_6
+    actionDefinition: {fileID: 0}
     attackAnim: {fileID: 7400000, guid: 32a144720df8bb1cfb3dc58b6eb1b05b, type: 2}
     hitAnim: {fileID: 7400000, guid: 29d1673c59917bf858ecdeda1c1d3ef3, type: 2}
     getUpAnim: {fileID: 1783586326346866118, guid: 3f1b177ffbc845d495792ddeae5216ff,
@@ -42298,6 +42376,7 @@ MonoBehaviour:
       showWeapon: 0
       reactionDelay: 0
   - moveName: Heavy_7
+    actionDefinition: {fileID: 0}
     attackAnim: {fileID: 7400000, guid: e3d0e60f2b1771925ac4af64e74863a1, type: 2}
     hitAnim: {fileID: 7400000, guid: 1a1eacea83607f6a3ae147efbbc23558, type: 2}
     getUpAnim: {fileID: 1783586326346866118, guid: 3f1b177ffbc845d495792ddeae5216ff,
@@ -42323,6 +42402,7 @@ MonoBehaviour:
       showWeapon: 0
       reactionDelay: 0
   - moveName: Heavy_2
+    actionDefinition: {fileID: 0}
     attackAnim: {fileID: 7400000, guid: 9c35a5274953fd6efbf06df0defbdf9c, type: 2}
     hitAnim: {fileID: 7400000, guid: 1ad661b136b91122291ed51469b56be9, type: 2}
     getUpAnim: {fileID: 1783586326346866118, guid: 3f1b177ffbc845d495792ddeae5216ff,
@@ -42348,6 +42428,7 @@ MonoBehaviour:
       showWeapon: 0
       reactionDelay: 0
   - moveName: Heavy_8
+    actionDefinition: {fileID: 0}
     attackAnim: {fileID: 7400000, guid: 1ad3d996a0d19d8e6a467d4df0bbfb72, type: 2}
     hitAnim: {fileID: 7400000, guid: 07afc81177a579c6c8735a0a421889f5, type: 2}
     getUpAnim: {fileID: 1783586326346866118, guid: 3f1b177ffbc845d495792ddeae5216ff,
@@ -42373,6 +42454,7 @@ MonoBehaviour:
       showWeapon: 0
       reactionDelay: 0
   - moveName: Heavy_Katana
+    actionDefinition: {fileID: 0}
     attackAnim: {fileID: 7400000, guid: 9361f4e2bb5ead06aa81604f8381a8b9, type: 2}
     hitAnim: {fileID: 7400000, guid: 6e79c206cc4f1995293b1d3ccf9566a6, type: 2}
     getUpAnim: {fileID: 1783586326346866118, guid: 3f1b177ffbc845d495792ddeae5216ff,
@@ -42398,6 +42480,7 @@ MonoBehaviour:
       showWeapon: 0
       reactionDelay: 0
   - moveName: Heavy_Assassin
+    actionDefinition: {fileID: 0}
     attackAnim: {fileID: 7400000, guid: db89ee44446186752998141b56ca836a, type: 2}
     hitAnim: {fileID: 7400000, guid: 18d676c4910c28d3f80d8b405eeedda0, type: 2}
     getUpAnim: {fileID: 1783586326346866118, guid: 3f1b177ffbc845d495792ddeae5216ff,
@@ -59298,6 +59381,7 @@ MonoBehaviour:
   combatController: {fileID: 22100000, guid: 5c298ed36286c4b449e56c7a8cd4f6c7, type: 2}
   lightCombatMoves:
   - moveName: Light_1
+    actionDefinition: {fileID: 0}
     attackAnim: {fileID: 7400000, guid: 639221af9523ddee5aa6a8a5e94f7de0, type: 2}
     hitAnim: {fileID: 7400000, guid: 303a99312dc6839d78b0c9bbc6f448af, type: 2}
     getUpAnim: {fileID: 1783586326346866118, guid: 3f1b177ffbc845d495792ddeae5216ff,
@@ -59323,6 +59407,7 @@ MonoBehaviour:
       showWeapon: 0
       reactionDelay: 0
   - moveName: Light_3
+    actionDefinition: {fileID: 0}
     attackAnim: {fileID: 7400000, guid: 76e9c5411407b62e39172a6f4375b4bd, type: 2}
     hitAnim: {fileID: 7400000, guid: ce7a44ba3b2afc477be79759a8fd2010, type: 2}
     getUpAnim: {fileID: 1783586326346866118, guid: 3f1b177ffbc845d495792ddeae5216ff,
@@ -59347,8 +59432,83 @@ MonoBehaviour:
       pepeAttacks: 0
       showWeapon: 0
       reactionDelay: 0
+  - moveName: Vol10_CmnAtemi
+    actionDefinition: {fileID: 11400000, guid: eb981d1d55122cc95b7f7a19afee4080, type: 2}
+    attackAnim: {fileID: 7400000, guid: e47354cd8b0fa220b9e0b4c75f9f0fba, type: 2}
+    hitAnim: {fileID: 7400000, guid: 692759a051faaf7e29c071c77fa3a3b0, type: 2}
+    getUpAnim: {fileID: 1783586326346866118, guid: 3f1b177ffbc845d495792ddeae5216ff,
+      type: 3}
+    attackRange: 1.0188267
+    weapon: 0
+    skill: 0
+    sourcePair:
+      attackerDriver: {fileID: 7504886526908891812, guid: 4a3d9385b9050006dae07a46414f20ac,
+        type: 3}
+      receiverDriver: {fileID: 8035043399380846674, guid: d3ff4cfc98ab527acb177b539dc6c053,
+        type: 3}
+      attack: {fileID: 7400000, guid: e47354cd8b0fa220b9e0b4c75f9f0fba, type: 2}
+      reaction: {fileID: 7400000, guid: 692759a051faaf7e29c071c77fa3a3b0, type: 2}
+      getUp: {fileID: 1783586326346866118, guid: 3f1b177ffbc845d495792ddeae5216ff,
+        type: 3}
+      receiverOffset: {x: 0, y: 0, z: 1.0188267}
+      receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+      spacing: {fileID: 11400000, guid: a2d28f320db8a09cb8ffa36e8e6acd58, type: 2}
+      bodySpacing: 0.89931643
+      unarmedIndex: 3
+      pepeAttacks: 0
+      showWeapon: 0
+      reactionDelay: 0
+  - moveName: Vol10_CmnAtemi2
+    actionDefinition: {fileID: 11400000, guid: 846239f0308862f988f4d794a0d46cc9, type: 2}
+    attackAnim: {fileID: 7400000, guid: d082b73724850ba88a521877a9fcd7a1, type: 2}
+    hitAnim: {fileID: 7400000, guid: cc15ef8c89dae9f908ac3ce63d084646, type: 2}
+    getUpAnim: {fileID: 0}
+    attackRange: 1.0188267
+    weapon: 0
+    skill: 0
+    sourcePair:
+      attackerDriver: {fileID: 7504886526908891812, guid: 4a3d9385b9050006dae07a46414f20ac,
+        type: 3}
+      receiverDriver: {fileID: 8035043399380846674, guid: d3ff4cfc98ab527acb177b539dc6c053,
+        type: 3}
+      attack: {fileID: 7400000, guid: d082b73724850ba88a521877a9fcd7a1, type: 2}
+      reaction: {fileID: 7400000, guid: cc15ef8c89dae9f908ac3ce63d084646, type: 2}
+      getUp: {fileID: 0}
+      receiverOffset: {x: 0, y: 0, z: 1.0188267}
+      receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+      spacing: {fileID: 11400000, guid: a2d28f320db8a09cb8ffa36e8e6acd58, type: 2}
+      bodySpacing: 0.89931643
+      unarmedIndex: 4
+      pepeAttacks: 0
+      showWeapon: 0
+      reactionDelay: 0
+  - moveName: Vol10_CmnAtemi3
+    actionDefinition: {fileID: 11400000, guid: 5eb0c48359d0b8dbe8e3652d0c8ebf6b, type: 2}
+    attackAnim: {fileID: 7400000, guid: 190a2ce36ccea1dab9df22b479f3cf29, type: 2}
+    hitAnim: {fileID: 7400000, guid: 6515343bf93a0a6a0a3c71c82a093c52, type: 2}
+    getUpAnim: {fileID: 0}
+    attackRange: 1.0188267
+    weapon: 0
+    skill: 0
+    sourcePair:
+      attackerDriver: {fileID: 7504886526908891812, guid: 4a3d9385b9050006dae07a46414f20ac,
+        type: 3}
+      receiverDriver: {fileID: 8035043399380846674, guid: d3ff4cfc98ab527acb177b539dc6c053,
+        type: 3}
+      attack: {fileID: 7400000, guid: 190a2ce36ccea1dab9df22b479f3cf29, type: 2}
+      reaction: {fileID: 7400000, guid: 6515343bf93a0a6a0a3c71c82a093c52, type: 2}
+      getUp: {fileID: 0}
+      receiverOffset: {x: 0, y: 0, z: 1.0188267}
+      receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+      spacing: {fileID: 11400000, guid: a2d28f320db8a09cb8ffa36e8e6acd58, type: 2}
+      bodySpacing: 0.89931643
+      unarmedIndex: 5
+      pepeAttacks: 0
+      showWeapon: 0
+      reactionDelay: 0
   heavyCombatMoves:
   - moveName: Heavy_5
+    actionDefinition: {fileID: 0}
     attackAnim: {fileID: 7400000, guid: 704a3636bd202b4a8a22c98bc3ff67e3, type: 2}
     hitAnim: {fileID: 7400000, guid: 51ecae1bd49859bfc96cfd34496401c5, type: 2}
     getUpAnim: {fileID: 1783586326346866118, guid: 3f1b177ffbc845d495792ddeae5216ff,
@@ -59374,6 +59534,7 @@ MonoBehaviour:
       showWeapon: 0
       reactionDelay: 0
   - moveName: Heavy_6
+    actionDefinition: {fileID: 0}
     attackAnim: {fileID: 7400000, guid: d7f6ec4fe18d56ed4b64b0a65410cdaa, type: 2}
     hitAnim: {fileID: 7400000, guid: 1154b9ff101932c3884ca761764f4480, type: 2}
     getUpAnim: {fileID: 1783586326346866118, guid: 3f1b177ffbc845d495792ddeae5216ff,
@@ -59399,6 +59560,7 @@ MonoBehaviour:
       showWeapon: 0
       reactionDelay: 0
   - moveName: Heavy_7
+    actionDefinition: {fileID: 0}
     attackAnim: {fileID: 7400000, guid: c3bf65b3b61bc4d9c853c894a6b5c888, type: 2}
     hitAnim: {fileID: 7400000, guid: 8adc83af964f26c6c811c3b7615a9531, type: 2}
     getUpAnim: {fileID: 1783586326346866118, guid: 3f1b177ffbc845d495792ddeae5216ff,
@@ -59424,6 +59586,7 @@ MonoBehaviour:
       showWeapon: 0
       reactionDelay: 0
   - moveName: Heavy_2
+    actionDefinition: {fileID: 0}
     attackAnim: {fileID: 7400000, guid: 0bdec02c684bfaf45a09de44c51a1302, type: 2}
     hitAnim: {fileID: 7400000, guid: d0ce6f3fc511d507b93b0a229c02337e, type: 2}
     getUpAnim: {fileID: 1783586326346866118, guid: 3f1b177ffbc845d495792ddeae5216ff,
@@ -59449,6 +59612,7 @@ MonoBehaviour:
       showWeapon: 0
       reactionDelay: 0
   - moveName: Heavy_8
+    actionDefinition: {fileID: 0}
     attackAnim: {fileID: 7400000, guid: e762c1dee3c6fd4158d7c574da543530, type: 2}
     hitAnim: {fileID: 7400000, guid: aa01adb79aec1d8bfa373f7930b47d9f, type: 2}
     getUpAnim: {fileID: 1783586326346866118, guid: 3f1b177ffbc845d495792ddeae5216ff,
@@ -59474,6 +59638,7 @@ MonoBehaviour:
       showWeapon: 0
       reactionDelay: 0
   - moveName: Heavy_Katana
+    actionDefinition: {fileID: 0}
     attackAnim: {fileID: 7400000, guid: 6b18ba42872719f6c9bc12b0c3f51ade, type: 2}
     hitAnim: {fileID: 7400000, guid: 19e297da04baab5319e5ceca78ac7a21, type: 2}
     getUpAnim: {fileID: 1783586326346866118, guid: 3f1b177ffbc845d495792ddeae5216ff,
@@ -59499,6 +59664,7 @@ MonoBehaviour:
       showWeapon: 0
       reactionDelay: 0
   - moveName: Heavy_Assassin
+    actionDefinition: {fileID: 0}
     attackAnim: {fileID: 7400000, guid: 010f31f1d8757e445be14398d53c516f, type: 2}
     hitAnim: {fileID: 7400000, guid: bc06abf1e92694a14a3ffae80be7bc78, type: 2}
     getUpAnim: {fileID: 1783586326346866118, guid: 3f1b177ffbc845d495792ddeae5216ff,

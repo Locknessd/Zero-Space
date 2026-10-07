@@ -78,7 +78,7 @@ namespace FrankRetarget.Editor
                         }
                         if (!heard.SequenceEqual(expected)) throw new Exception("Cue order/count mismatch for " + move.moveName);
                         tick.Invoke(pair, null);
-                        if (!lethal)
+                        if (!lethal && move.sourcePair.getUp)
                         {
                             expected.Add("getup");
                             audio.BeginRecovery(pair);
@@ -112,7 +112,8 @@ namespace FrankRetarget.Editor
                         audio.BeginRecovery(pair);
                         if (heard.Count != beforeCancelTick) throw new Exception("Audio fired after cancellation");
                         report.AppendLine($"PASS {attacker.name} {move.moveName} lethal={lethal}: {profile.cues.Length} ordered motion cues, " +
-                            (lethal ? "one knockout and no getup" : "one getup and unchanged PlaybackId") + "; no replay, cancellation clean.");
+                            (lethal ? "one knockout and no getup" : move.sourcePair.getUp
+                                ? "one getup and unchanged PlaybackId" : "no getup assigned") + "; no replay, cancellation clean.");
                         cases++;
                     }
                     finally { audio.CuePlayed -= onCue; foreach (var f in fighters) f.ResetCombat(); }

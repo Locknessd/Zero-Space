@@ -83,7 +83,8 @@ namespace FrankRetarget.Editor
             observed = 0; portions.Clear(); playbackId = source.PlaybackId + 1; turn = "damage-" + step;
             var damage = new JObject { ["actorCharacterId"] = left ? "bot_a" : "bot_b", ["targetCharacterId"] = left ? "bot_b" : "bot_a",
                 ["hpBeforeAtomic"] = before, ["hpAfterAtomic"] = after, ["damageAtomic"] = total,
-                ["animationId"] = move.weapon == TrumpWeaponManager.WeaponType.None ? "attack_light" : "attack_heavy" };
+                ["animationId"] = move.actionDefinition ? move.moveName :
+                    move.weapon == TrumpWeaponManager.WeaponType.None ? "attack_light" : "attack_heavy" };
             string json = Event("damage-" + step, "DAMAGE_APPLIED", damage);
             game.ApplyRawMessage(json); game.ApplyRawMessage(json);
             string hp = Event("hp-" + step, "HP_CHANGED", new JObject { ["characterId"] = left ? "bot_b" : "bot_a", ["hpBeforeAtomic"] = before, ["hpAfterAtomic"] = after });

@@ -8,6 +8,7 @@ public class CombatTripletData
 {
     [Header("Thông tin cơ bản")]
     public string moveName;
+    public CombatActionDefinition actionDefinition;
 
     [Header("Bộ 3 Animation")]
     public AnimationClip attackAnim;

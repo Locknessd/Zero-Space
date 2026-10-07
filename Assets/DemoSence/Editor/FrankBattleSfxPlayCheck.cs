@@ -298,7 +298,7 @@ namespace FrankRetarget.Editor
                 if (game.battleSfx.enableContactLayers)
                     expected = expected.SelectMany(id => new[] { id }.Concat(
                         game.battleSfx.bank.FindGroup(id)?.layers ?? Array.Empty<string>())).ToList();
-                if (!lethal) expected.Add("getup");
+                if (!lethal && move.sourcePair.getUp) expected.Add("getup");
                 if (step == 0) expected.Insert(0, "fight_start");
                 // KO UI uses an unscaled clock and may enter during the lethal reaction.
                 if (!heard.Where(id => id != "ko_impact").SequenceEqual(expected)) throw new Exception("Live cue mismatch " + attacker.name + " " + move.moveName + ": " + string.Join(",", heard));

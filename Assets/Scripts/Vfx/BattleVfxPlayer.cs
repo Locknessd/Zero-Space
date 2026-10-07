@@ -430,10 +430,9 @@ public sealed class BattleVfxPlayer : MonoBehaviour
 
     Vector3 ContactPoint(BattleSfxBank.Cue cue)
     {
-        if (cue.hasContactPoint)
+        if (cue.TryContactPosition(receiver.Animator, out var authoredContact))
         {
-            var anchor = BoneTransform(receiver, cue.contactBone);
-            if (anchor) return anchor.TransformPoint(cue.contactOffset) + CameraOffset(.015f);
+            return authoredContact + CameraOffset(.015f);
         }
         if (sequenceSkill != null) return BonePosition(receiver, HumanBodyBones.Chest) + CameraOffset(.35f);
         Vector3 contact = BonePosition(receiver, HumanBodyBones.Chest);

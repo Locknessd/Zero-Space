@@ -46,6 +46,7 @@ public partial class GameManager : MonoBehaviour
         public Action apply;
         public PlayerUI.Side? localAttacker;
         public bool heavy;
+        public string selectedActionId;
     }
 
     private sealed class TurnHealthUpdate
@@ -264,7 +265,8 @@ public partial class GameManager : MonoBehaviour
         stack.apply?.Invoke();
         if (stack.localAttacker.HasValue)
         {
-            yield return RunExchange(stack.localAttacker.Value, stack.heavy, false, null);
+            var selected = FindCombatAction(stack.localAttacker.Value, stack.selectedActionId);
+            yield return RunExchange(stack.localAttacker.Value, stack.heavy, false, null, selected);
             yield break;
         }
 
@@ -309,7 +311,8 @@ public partial class GameManager : MonoBehaviour
 
         if (hasExchange)
         {
-            yield return RunExchange(attacker.Value, IsHeavy(animationId), hpAfter == 0, health);
+            yield return RunExchange(attacker.Value, IsHeavy(animationId), hpAfter == 0, health,
+                FindCombatAction(attacker.Value, animationId));
             if (QueueError == null && stack.key != null)
             {
                 _playedTurns.Add(stack.key);
@@ -453,6 +456,11 @@ public partial class GameManager : MonoBehaviour
     public void PlaySingleAnimation(PlayerUI.Side side, string animationId, float crossFade = -1f)
     {
         if (string.IsNullOrEmpty(animationId)) return;
+        if (FindCombatAction(side, animationId) != null)
+        {
+            EnqueueCombatAction(side, animationId);
+            return;
+        }
         if (animationId.IndexOf("attack", StringComparison.OrdinalIgnoreCase) >= 0)
             EnqueueLocalAttack(side, IsHeavy(animationId));
         else if (animationId.Equals("victory", StringComparison.OrdinalIgnoreCase))
