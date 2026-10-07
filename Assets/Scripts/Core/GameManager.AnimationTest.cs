@@ -14,7 +14,6 @@ public partial class GameManager
 
     Coroutine animationTestRoutine;
     TestFighterState[] animationTestFighters;
-    float animationTestOriginalClock;
 
     sealed class TestFighterState
     {
@@ -61,7 +60,7 @@ public partial class GameManager
         public void RestoreMatch(MemeBattleUI ui)
         {
             RestorePosition();
-            if (!fighter) return;
+            if (!fighter || !fighter.Animator) return;
             if (dead)
             {
                 fighter.Animator.enabled = true;
@@ -83,7 +82,6 @@ public partial class GameManager
             leftCombat.IsBusy || rightCombat.IsBusy || !leftCombat.Initialize() || !rightCombat.Initialize()) return false;
         var feedback = GetComponent<BattleImpactFeedback>();
         if (feedback && (feedback.IsHolding || feedback.IsSlowing)) return false;
-        animationTestOriginalClock = Time.timeScale;
         animationTestFighters = new[]
         {
             new TestFighterState(leftCombat, UI, MemeBattleUI.Side.Left),
@@ -159,20 +157,26 @@ public partial class GameManager
         animationTestRoutine = null;
         IsAnimationTestPlaying = false;
         ClearDamagePresentation();
-        battleSfx?.ResetForMatch();
-        battleVfx?.ResetForMatch();
-        leftCombat?.ResetCombat();
-        rightCombat?.ResetCombat();
-        UI?.ResetTransientEffects();
-        UI?.HideResult();
+        if (battleSfx) battleSfx.ResetForMatch();
+        if (battleVfx) battleVfx.ResetForMatch();
+        if (leftCombat) leftCombat.ResetCombat();
+        if (rightCombat) rightCombat.ResetCombat();
+        if (UI)
+        {
+            UI.ResetTransientEffects();
+            UI.HideResult();
+        }
         QueueError = null;
-        Time.timeScale = 1;
         if (animationTestFighters != null)
             foreach (var fighter in animationTestFighters) fighter.RestorePosition();
-        positioningController?.FinishExchange(leftCombat, rightCombat);
+        if (positioningController && leftCombat && rightCombat)
+            positioningController.FinishExchange(leftCombat, rightCombat);
         long full = Math.Max(10, UI ? UI.defaultInitialMaxHpAtomic : defaultInitialMaxHpAtomic);
-        UI?.UpdateHealth(MemeBattleUI.Side.Left, full, full);
-        UI?.UpdateHealth(MemeBattleUI.Side.Right, full, full);
+        if (UI)
+        {
+            UI.UpdateHealth(MemeBattleUI.Side.Left, full, full);
+            UI.UpdateHealth(MemeBattleUI.Side.Right, full, full);
+        }
     }
 
     public void EndAnimationTestMode()
@@ -183,9 +187,8 @@ public partial class GameManager
         if (animationTestFighters != null)
             foreach (var fighter in animationTestFighters) fighter.RestoreMatch(UI);
         // Restoring an already defeated fighter's HUD must not replay its old KO.
-        UI?.knockout?.ResetPresentation();
+        if (UI && UI.knockout) UI.knockout.ResetPresentation();
         animationTestFighters = null;
-        Time.timeScale = animationTestOriginalClock;
         // Queued socket events resume in Update; no test event is sent to the server.
     }
 }

@@ -45,10 +45,16 @@ namespace FrankRetarget.Editor
                 var pair = game.leftCombat.SourcePlayback; var profile = vfx.timeline.FindMove(heavy);
                 if (shake.ShakeCount != initialShake) throw new Exception("Shake began during windup.");
                 lighting.RefreshLighting(.2f);
-                if (Mathf.Abs(lighting.key.intensity - originalKey * .9f) > .001f || Mathf.Abs(lighting.fill.intensity - originalFill * .82f) > .001f)
+                float keyFactor = lighting.combatDimming ? .9f : 1;
+                float fillFactor = lighting.combatDimming ? lighting.combatExposure : 1;
+                if (Mathf.Abs(lighting.key.intensity - originalKey * keyFactor) > .001f ||
+                    Mathf.Abs(lighting.fill.intensity - originalFill * fillFactor) > .001f)
                     throw new Exception("Combat dimming did not reach its authored level.");
                 int finishers = 0; Action<string, GameObject> observe = (id, root) => { if (vfx.IsFinishingContact) finishers++; };
+                BattleVfxPlayer.Impact lastImpact = default;
+                Action<BattleVfxPlayer.Impact> observeContact = impact => lastImpact = impact;
                 vfx.EffectPlayed += observe;
+                vfx.ContactOccurred += observeContact;
                 try
                 {
                     foreach (var cue in profile.cues)
@@ -60,15 +66,30 @@ namespace FrankRetarget.Editor
                         if (played != vfx.PlayedEffectCount) throw new Exception("Repeated Begin replayed a contact.");
                     }
                 }
-                finally { vfx.EffectPlayed -= observe; }
+                finally
+                {
+                    vfx.EffectPlayed -= observe;
+                    vfx.ContactOccurred -= observeContact;
+                }
                 int expectedShake = profile.cues.Count(c => c.group == "light_hit" || c.group == "stab_hit" ||
                     c.group == "heavy_hit" || c.group == "body_fall" || c.group == "knockout_fall");
                 if (shake.ShakeCount - initialShake != expectedShake || finishers != 1) throw new Exception("Shake/finishing contact count mismatch.");
-                shake.ApplyShake(); Vector3 first = camera.transform.position; shake.ApplyShake();
-                if (Vector3.Distance(first, camera.transform.position) > .00001f || Vector3.Distance(first, cameraPosition) > .065f)
-                    throw new Exception("Camera shake accumulated or exceeded its limit.");
-                shake.AdvanceShake(.3f); shake.ApplyShake();
-                if (Vector3.Distance(cameraPosition, camera.transform.position) > .00001f || Quaternion.Angle(cameraRotation, camera.transform.rotation) > .001f)
+                Vector3 beforeImpulse = camera.WorldToViewportPoint(shake.ImpulsePosition);
+                shake.ApplyShake();
+                Vector3 first = camera.transform.position;
+                Vector3 afterImpulse = camera.WorldToViewportPoint(shake.ImpulsePosition);
+                shake.ApplyShake();
+                Vector2 pixelOffset = new Vector2((afterImpulse.x - beforeImpulse.x) * camera.aspect,
+                    afterImpulse.y - beforeImpulse.y) * 1080;
+                bool exceedsLimit = shake.screenSpaceImpulse
+                    ? pixelOffset.magnitude > shake.maximumPixels + .1f
+                    : Vector3.Distance(first, cameraPosition) > .065f;
+                if (Vector3.Distance(first, camera.transform.position) > .00001f || exceedsLimit)
+                    throw new Exception($"Camera shake accumulated or exceeded its limit: {pixelOffset.magnitude:F3}px.");
+                shake.AdvanceShake(.3f);
+                shake.ApplyShake();
+                if (Vector3.Distance(cameraPosition, camera.transform.position) > .00001f ||
+                    Quaternion.Angle(cameraRotation, camera.transform.rotation) > .001f)
                     throw new Exception("Shake left camera drift.");
                 pair.Cancel(); lighting.RefreshLighting(.4f);
                 if (Mathf.Abs(lighting.key.intensity - originalKey) > .001f || Mathf.Abs(lighting.fill.intensity - originalFill) > .001f || vfx.ActiveEffectCount != 0)

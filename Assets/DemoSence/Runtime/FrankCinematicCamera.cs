@@ -9,7 +9,7 @@ namespace FrankRetarget
     /// </summary>
     [DisallowMultipleComponent]
     [DefaultExecutionOrder(13500)]
-    public sealed class FrankCinematicCamera : MonoBehaviour
+    public sealed partial class FrankCinematicCamera : MonoBehaviour
     {
         [Header("Demo")]
         public FrankCombinationTester tester;
@@ -18,6 +18,16 @@ namespace FrankRetarget
         [Min(1f)] public float battleIdleDistance = 5f;
         [Range(.65f, 1.2f)] public float battleDistanceScale = 1f;
         public bool keepBattleCameraInFront = true;
+        [Header("Battle readability")]
+        [Tooltip("Keep battle takes near the fighting plane; demo takes retain authored angles.")]
+        public bool readableBattleFraming = true;
+        [Range(4f, 25f)] public float battleMaximumPitch = 12f;
+        [Range(0f, 25f)] public float battleMaximumYaw = 12f;
+        [Tooltip("Maximum authored radius in world units before scene scaling. Visibility fitting can expand for launches and separation.")]
+        [Range(4f, 10f)] public float battleMaximumAuthoredDistance = 6.8f;
+        [Range(0f, 1f)] public float battleActionCenterBlend = .75f;
+        [Tooltip("Shot entry and return blend in presentation seconds.")]
+        [Range(.15f, .65f)] public float battleTransitionSeconds = .36f;
         [Header("Cinematography")]
         public FrankCameraLibrary library;
         public bool cinematic = true;
@@ -31,6 +41,7 @@ namespace FrankRetarget
 
         readonly List<Vector3> framingPoints = new List<Vector3>(128);
         readonly List<FramingRenderer> framingRenderers = new List<FramingRenderer>();
+        readonly HashSet<Renderer> uniqueRenderers = new HashSet<Renderer>();
         FrankTestDriver cachedMankeyDriver, cachedPepeDriver;
         FrankTestActor cachedMankey, cachedPepe;
         FrankCameraLibrary cachedLibrary;
@@ -130,6 +141,14 @@ namespace FrankRetarget
                 battleRotation = playback.AttackerActor.transform.rotation;
             }
             if (!playing) { battlePlayback = null; battlePlaybackId = -1; }
+            CollectFramingPoints(framingPoints);
+            Vector3 actionCenter = (battle.leftCombat.transform.position + battle.rightCombat.transform.position) * .5f + Vector3.up;
+            if (framingPoints.Count > 0)
+            {
+                var bounds = new Bounds(framingPoints[0], Vector3.zero);
+                foreach (var point in framingPoints) bounds.Encapsulate(point);
+                actionCenter = bounds.center;
+            }
             ActiveShot = key == null ? null : library.Find(key);
             FrankCameraLibrary.Frame frame;
             float time = 0;
@@ -142,35 +161,40 @@ namespace FrankRetarget
                 // Battle's backdrop is behind the X lane. Reflect the viewing side,
                 // keeping the authored elevation, distance and lens for either attacker.
                 if (keepBattleCameraInFront) offset.z = Mathf.Abs(offset.z);
+                if (readableBattleFraming)
+                {
+                    float radius = Mathf.Min(offset.magnitude, battleMaximumAuthoredDistance);
+                    float yaw = Mathf.Clamp(Mathf.Atan2(offset.x, Mathf.Abs(offset.z)) * Mathf.Rad2Deg,
+                        -battleMaximumYaw, battleMaximumYaw) * Mathf.Deg2Rad;
+                    float pitch = Mathf.Clamp(Mathf.Atan2(offset.y, new Vector2(offset.x, offset.z).magnitude) * Mathf.Rad2Deg,
+                        4f, battleMaximumPitch) * Mathf.Deg2Rad;
+                    float side = offset.z < 0 ? -1 : 1;
+                    offset = new Vector3(Mathf.Sin(yaw) * Mathf.Cos(pitch), Mathf.Sin(pitch),
+                        side * Mathf.Cos(yaw) * Mathf.Cos(pitch)) * radius;
+                    frame.focus = Vector3.Lerp(frame.focus, actionCenter, battleActionCenterBlend);
+                }
                 frame.position = frame.focus + offset;
             }
             else
             {
                 key = "battle/idle";
-                CollectFramingPoints(framingPoints);
-                Vector3 focus = (battle.leftCombat.transform.position + battle.rightCombat.transform.position) * .5f + Vector3.up;
-                if (framingPoints.Count > 0)
-                {
-                    var bounds = new Bounds(framingPoints[0], Vector3.zero);
-                    foreach (var point in framingPoints) bounds.Encapsulate(point);
-                    focus = bounds.center;
-                }
+                Vector3 focus = actionCenter;
                 frame = new FrankCameraLibrary.Frame { focus = focus, position = focus + new Vector3(0, .65f, battleIdleDistance), fov = 42 };
             }
             // Dolly along the existing viewing ray: preserve each take's angle and lens.
             // ApplyFrame still fits the actual bodies and weapons when a take needs more room.
             frame.position = frame.focus + (frame.position - frame.focus) * battleDistanceScale;
             return ApplyFrame(battleCamera, frame, key, time, newSequence || key != currentKey,
-                deltaTime, immediate, false);
+                deltaTime, immediate, false, true);
         }
 
         void LateUpdate()
         {
-            if (battle) Apply(Time.deltaTime);
+            if (battle) Apply(Time.timeScale <= 0 ? 0 : Time.unscaledDeltaTime);
         }
 
         bool ApplyFrame(Camera camera, FrankCameraLibrary.Frame frame, string key, float time,
-            bool changed, float deltaTime, bool immediate, bool relativeTransition)
+            bool changed, float deltaTime, bool immediate, bool relativeTransition, bool framingReady = false)
         {
             camera.aspect = Mathf.Max(.05f, (float)camera.pixelWidth / Mathf.Max(1, camera.pixelHeight));
             // Preserve the baked motion envelope on narrow windows instead of chasing
@@ -191,6 +215,8 @@ namespace FrankRetarget
                 float angle = Quaternion.Angle(LookRotation(transitionFrom.position, transitionFrom.focus), LookRotation(frame.position, frame.focus));
                 float radiusRatio = Vector3.Distance(transitionFrom.position, transitionFrom.focus) / Mathf.Max(.1f, Vector3.Distance(frame.position, frame.focus));
                 activeTransitionDuration = Mathf.Clamp(transitionDuration + angle * .009f + Mathf.Abs(Mathf.Log(radiusRatio)) * .22f + Vector3.Distance(transitionFrom.focus, frame.focus) * .045f, .65f, 1.45f);
+                if (battle && readableBattleFraming)
+                    activeTransitionDuration = Mathf.Clamp(battleTransitionSeconds + angle * .002f, .15f, .65f);
                 transitionTime = 0;
                 transitioning = true;
                 SafetyDolly = 0;
@@ -225,7 +251,7 @@ namespace FrankRetarget
             camera.farClipPlane = Mathf.Max(200, camera.farClipPlane);
             frame.fov = Mathf.Clamp(frame.fov, 20, 75);
             frame.position.y = Mathf.Max(minimumHeight, frame.position.y);
-            CollectFramingPoints(framingPoints);
+            if (!framingReady) CollectFramingPoints(framingPoints);
             var rotation = LookRotation(frame.position, frame.focus);
             float wanted = RequiredDolly(frame, rotation, camera.aspect, Mathf.Clamp(viewportMargin, .05f, .15f));
             float hardMinimum = RequiredDolly(frame, rotation, camera.aspect, .05f);
@@ -253,177 +279,5 @@ namespace FrankRetarget
             return true;
         }
 
-        static Quaternion LookRotation(Vector3 position, Vector3 focus)
-        {
-            Vector3 direction = focus - position;
-            return direction.sqrMagnitude > .000001f ? Quaternion.LookRotation(direction, Vector3.up) : Quaternion.identity;
-        }
-
-        float RequiredDolly(FrankCameraLibrary.Frame frame, Quaternion rotation, float aspect, float margin)
-        {
-            float vertical = Mathf.Tan(frame.fov * Mathf.Deg2Rad * .5f) * (1 - margin * 2);
-            float horizontal = vertical * aspect;
-            Quaternion inverse = Quaternion.Inverse(rotation);
-            float dolly = 0;
-            foreach (Vector3 point in framingPoints)
-            {
-                Vector3 local = inverse * (point - frame.position);
-                dolly = Mathf.Max(dolly, Mathf.Max(Mathf.Abs(local.x) / horizontal - local.z,
-                    Mathf.Max(Mathf.Abs(local.y) / vertical - local.z, .08f - local.z)));
-            }
-            return dolly;
-        }
-
-        /// <summary>
-        /// Current visible body and weapon bounds, reusable by the shot builder and validators.
-        /// Baked target meshes avoid stale import bounds when the Animator is manually evaluated.
-        /// </summary>
-        public void CollectFramingPoints(List<Vector3> points)
-        {
-            points.Clear();
-            if (battle)
-            {
-                RefreshBattleRenderers();
-                AppendRendererPoints(points);
-                return;
-            }
-            if (!tester) return;
-            if (!cacheReady || cachedMankey != tester.mankey || cachedPepe != tester.pepe ||
-                cachedMankeyDriver != (tester.mankey ? tester.mankey.activeDriver : null) ||
-                cachedPepeDriver != (tester.pepe ? tester.pepe.activeDriver : null))
-                RefreshRenderers();
-            AppendRendererPoints(points);
-        }
-
-        void AppendRendererPoints(List<Vector3> points)
-        {
-            foreach (var entry in framingRenderers)
-            {
-                var renderer = entry.renderer;
-                if (!renderer || !renderer.enabled || !renderer.gameObject.activeInHierarchy) continue;
-                if (renderer is SkinnedMeshRenderer skin && skin.sharedMesh)
-                {
-                    skin.BakeMesh(entry.baked, true);
-                    AppendBounds(points, entry.baked.bounds, skin.transform);
-                }
-                else AppendBounds(points, renderer.bounds, null);
-            }
-        }
-
-        void RefreshBattleRenderers()
-        {
-            var left = battle.leftCombat;
-            var right = battle.rightCombat;
-            var playback = left ? left.SourcePlayback : null;
-            if (!playback && right) playback = right.SourcePlayback;
-            var attack = playback ? playback.AttackerActor : null;
-            var reaction = playback ? playback.ReceiverActor : null;
-            if (cacheReady && cachedBattleLeft == left && cachedBattleRight == right &&
-                cachedBattleAttack == attack && cachedBattleReaction == reaction) return;
-            ReleaseMeshes();
-            cachedBattleLeft = left;
-            cachedBattleRight = right;
-            cachedBattleAttack = attack;
-            cachedBattleReaction = reaction;
-            if (left) AddRenderers(left.gameObject);
-            if (right) AddRenderers(right.gameObject);
-            if (attack) AddRenderers(attack.gameObject);
-            if (reaction) AddRenderers(reaction.gameObject);
-            cacheReady = true;
-        }
-
-        void RefreshRenderers()
-        {
-            ReleaseMeshes();
-            cachedMankey = tester.mankey;
-            cachedPepe = tester.pepe;
-            cachedMankeyDriver = cachedMankey ? cachedMankey.activeDriver : null;
-            cachedPepeDriver = cachedPepe ? cachedPepe.activeDriver : null;
-            if (cachedMankey) AddRenderers(cachedMankey.gameObject);
-            if (cachedPepe) AddRenderers(cachedPepe.gameObject);
-            cacheReady = true;
-        }
-
-        void AddRenderers(GameObject actor)
-        {
-            if (!actor) return;
-            foreach (var renderer in actor.GetComponentsInChildren<Renderer>(true))
-            {
-                if (!(renderer is SkinnedMeshRenderer) && !(renderer is MeshRenderer)) continue;
-                var entry = new FramingRenderer { renderer = renderer };
-                if (renderer is SkinnedMeshRenderer)
-                    entry.baked = new Mesh { name = "Cinematic framing mesh", hideFlags = HideFlags.HideAndDontSave };
-                framingRenderers.Add(entry);
-            }
-        }
-
-        static void AppendBounds(List<Vector3> points, Bounds bounds, Transform localToWorld)
-        {
-            Vector3 center = bounds.center, extents = bounds.extents;
-            for (int i = 0; i < 8; i++)
-            {
-                Vector3 corner = center + Vector3.Scale(extents,
-                    new Vector3((i & 1) == 0 ? -1 : 1, (i & 2) == 0 ? -1 : 1, (i & 4) == 0 ? -1 : 1));
-                if (localToWorld) corner = localToWorld.TransformPoint(corner);
-                if (float.IsFinite(corner.x) && float.IsFinite(corner.y) && float.IsFinite(corner.z)) points.Add(corner);
-            }
-        }
-
-        public static FrankCameraLibrary.Frame Sample(FrankCameraLibrary.Shot shot, float time)
-        {
-            var frames = shot.frames;
-            if (frames.Length == 1 || time <= frames[0].time) return frames[0];
-            int last = frames.Length - 1;
-            if (time >= frames[last].time) return frames[last];
-            int lo = 0, hi = last;
-            while (hi - lo > 1)
-            {
-                int mid = (lo + hi) / 2;
-                if (frames[mid].time <= time) lo = mid; else hi = mid;
-            }
-            var a = frames[Mathf.Max(0, lo - 1)];
-            var b = frames[lo];
-            var c = frames[hi];
-            var d = frames[Mathf.Min(last, hi + 1)];
-            float interval = Mathf.Max(.000001f, c.time - b.time);
-            float u = Mathf.Clamp01((time - b.time) / interval);
-            float u2 = u * u, u3 = u2 * u;
-            float h0 = 2 * u3 - 3 * u2 + 1, h1 = u3 - 2 * u2 + u;
-            float h2 = -2 * u3 + 3 * u2, h3 = u3 - u2;
-            float m0 = interval / Mathf.Max(.000001f, c.time - a.time);
-            float m1 = interval / Mathf.Max(.000001f, d.time - b.time);
-            return new FrankCameraLibrary.Frame
-            {
-                time = time,
-                position = h0 * b.position + h1 * (c.position - a.position) * m0 + h2 * c.position + h3 * (d.position - b.position) * m1,
-                focus = h0 * b.focus + h1 * (c.focus - a.focus) * m0 + h2 * c.focus + h3 * (d.focus - b.focus) * m1,
-                fov = Mathf.Clamp(h0 * b.fov + h1 * (c.fov - a.fov) * m0 + h2 * c.fov + h3 * (d.fov - b.fov) * m1,
-                    Mathf.Min(b.fov, c.fov), Mathf.Max(b.fov, c.fov))
-            };
-        }
-
-        public void ResetView()
-        {
-            initialized = false;
-            ActiveShot = null;
-            currentKey = null;
-            battlePlayback = null;
-            battlePlaybackId = -1;
-            transitioning = false;
-            SafetyDolly = 0;
-        }
-
-        void ReleaseMeshes()
-        {
-            foreach (var entry in framingRenderers)
-                if (entry.baked)
-                {
-                    if (Application.isPlaying) Destroy(entry.baked);
-                    else DestroyImmediate(entry.baked);
-                }
-            framingRenderers.Clear();
-        }
-
-        void OnDestroy() { ReleaseMeshes(); }
     }
 }

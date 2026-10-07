@@ -126,7 +126,11 @@ namespace FrankRetarget
             activeDriver.pose.isAttacker=attacking;
             activeDriver.pose.transferFingers=true;
             foreach(var limb in activeDriver.pose.limbs)limb.alignGrip=weapons&&limb.sourceKnuckle;
-            foreach(var renderer in activeDriver.pose.weaponRenderers)renderer.enabled=weapons;
+            foreach (var renderer in activeDriver.pose.weaponRenderers)
+            {
+                renderer.enabled = weapons;
+                if (renderer is SkinnedMeshRenderer skin) skin.updateWhenOffscreen = true;
+            }
             StartGraph();
         }
         void StartGraph()

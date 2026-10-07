@@ -62,17 +62,20 @@ namespace FrankRetarget.Editor
                         // Irregular steps cross timestamps; repeats and reverse seeking must not replay cues.
                         for (float time = 0; time < duration; time += .173f)
                         {
-                            pair.EvaluateAt(time);
-                            audio.AdvanceSequence(pair, time);
+                            pair.AdvanceTo(time);
                             int count = heard.Count;
-                            audio.AdvanceSequence(pair, time);
-                            audio.AdvanceSequence(pair, Mathf.Max(0, time - .3f));
+                            pair.AdvanceTo(time);
+                            pair.AdvanceTo(Mathf.Max(0, time - .3f));
                             if (heard.Count != count) throw new Exception("Duplicate cue on repeated/backwards sample");
                         }
-                        pair.EvaluateAt(duration);
-                        audio.AdvanceSequence(pair, duration);
+                        pair.AdvanceTo(duration);
                         var expected = new List<string> { "fight_start" };
-                        expected.AddRange(profile.cues.Select(c => lethal && c.finalLanding ? "knockout_fall" : c.group));
+                        foreach (var cue in profile.cues)
+                        {
+                            string id = lethal && cue.finalLanding ? "knockout_fall" : cue.group;
+                            expected.Add(id);
+                            if (audio.enableContactLayers) expected.AddRange(bank.FindGroup(id).layers);
+                        }
                         if (!heard.SequenceEqual(expected)) throw new Exception("Cue order/count mismatch for " + move.moveName);
                         tick.Invoke(pair, null);
                         if (!lethal)

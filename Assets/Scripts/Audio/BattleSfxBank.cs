@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Audio;
 
 [CreateAssetMenu(menuName = "Battle/SFX Bank")]
 public sealed class BattleSfxBank : ScriptableObject
@@ -12,6 +13,15 @@ public sealed class BattleSfxBank : ScriptableObject
         public Vector2 pitch = Vector2.one;
         public AudioClip[] clips = Array.Empty<AudioClip>();
         public float[] clipGains = Array.Empty<float>();
+        [Tooltip("Optional trim in seconds for each variant, applied before playback.")]
+        public float[] startOffsets = Array.Empty<float>();
+        public AudioMixerGroup output;
+        [Range(1, 8)] public int maxConcurrent = 3;
+        [Tooltip("Lower numbers have higher priority. Zero uses the cue family default.")]
+        [Range(0, 256)] public int priority;
+        [Range(0, 2)] public float gainVariationDb = .65f;
+        [Tooltip("Additional cue groups aligned to this cue, with no delayed playback. One layer level only.")]
+        public string[] layers = Array.Empty<string>();
     }
 
     [Serializable]
@@ -39,6 +49,7 @@ public sealed class BattleSfxBank : ScriptableObject
         public Cue[] cues = Array.Empty<Cue>();
     }
 
+    public AudioMixer mixer;
     public Group[] groups = Array.Empty<Group>();
     public Move[] moves = Array.Empty<Move>();
 

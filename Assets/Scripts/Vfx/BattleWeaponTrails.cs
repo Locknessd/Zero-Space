@@ -37,7 +37,17 @@ public sealed class BattleWeaponTrails : MonoBehaviour
     [Tooltip("Calibrated blade endpoints use only a few bone transforms, including meshes without Read/Write.")]
     public StaticBlade[] staticBlades = Array.Empty<StaticBlade>();
     [Range(8, 32)] public int maxTrails = 16;
-    public int ActiveTrailCount => pool.FindAll(t => t.root && t.root.activeSelf).Count;
+    [Tooltip("Clear cached world ribbons if a fighter root jumps this far in one update, in metres.")]
+    [Min(.25f)] public float discontinuityDistance = 2.5f;
+    public int ActiveTrailCount
+    {
+        get
+        {
+            int count = 0;
+            foreach (var trail in pool) if (trail.root && trail.root.activeSelf) count++;
+            return count;
+        }
+    }
     public int PooledTrailCount => pool.Count;
     public int SampledPoseCount { get; private set; }
 
@@ -80,13 +90,19 @@ public sealed class BattleWeaponTrails : MonoBehaviour
     Style style;
     Mesh scratch;
     Transform poolRoot;
+    Vector3 lastRootPosition;
+    int playbackId = -1;
 
     public bool Owns(GameObject root) => root && pool.Exists(t => t.root == root);
 
     public void Begin(FrankBattlePairPlayback playback, CharacterCombat source, BattleSfxBank.Move profile)
     {
         Clear();
-        owner = playback; attacker = source;
+        if (!playback || !source || profile?.cues == null) return;
+        owner = playback;
+        attacker = source;
+        playbackId = playback.PlaybackId;
+        lastRootPosition = source.transform.position;
         style = Array.Find(styles ?? Array.Empty<Style>(), s => s != null && s.weapon == playback.Move.weapon);
         windows.Clear(); assignedHits.Clear();
         if (!isActiveAndEnabled || !material || style == null || playback.Move.skill != BattleSkill.None ||
@@ -163,7 +179,7 @@ public sealed class BattleWeaponTrails : MonoBehaviour
                 ChooseEndpoints(strip);
             }
             // Cache a short authored sweep once per cue. Frame updates only interpolate
-            // these points, avoiding CPU skinning every frame in WebGL.
+            // these points, avoiding repeated CPU skinning during normal playback.
             int steps = Mathf.Clamp(Mathf.CeilToInt((window.end - window.start) * 120), 2, 96);
             trail.sampleStep = (window.end - window.start) / steps;
             for (int sample = 0; sample <= steps; sample++)
@@ -245,10 +261,13 @@ public sealed class BattleWeaponTrails : MonoBehaviour
 
     Vector3 Grip(Renderer renderer)
     {
-        var animator = attacker.Animator;
+        var animator = attacker ? attacker.Animator : null;
+        if (!animator || !animator.isHuman) return renderer.bounds.center;
         var left = animator.GetBoneTransform(HumanBodyBones.LeftHand);
         var right = animator.GetBoneTransform(HumanBodyBones.RightHand);
         Vector3 center = renderer.transform.TransformPoint(geometry[0]);
+        if (!left) return right ? right.position : center;
+        if (!right) return left.position;
         return (left.position - center).sqrMagnitude < (right.position - center).sqrMagnitude ? left.position : right.position;
     }
 
@@ -292,7 +311,18 @@ public sealed class BattleWeaponTrails : MonoBehaviour
 
     public void Advance(float seconds)
     {
-        if (!isActiveAndEnabled) return;
+        if (!isActiveAndEnabled || !float.IsFinite(seconds)) return;
+        if (owner && attacker)
+        {
+            float limit = Mathf.Max(.25f, discontinuityDistance);
+            if (owner.PlaybackId != playbackId ||
+                (attacker.transform.position - lastRootPosition).sqrMagnitude > limit * limit)
+            {
+                Clear();
+                return;
+            }
+            lastRootPosition = attacker.transform.position;
+        }
         float displayed = owner && owner.Playing ? owner.SampleTime : seconds;
         bool sample = owner && owner.Playing && Mathf.Abs(displayed-seconds) > .000001f;
         try
@@ -348,9 +378,14 @@ public sealed class BattleWeaponTrails : MonoBehaviour
                     float start = trail.window.shield ? .62f : trail.window.cue.group == "thrust_swing" ? .9f : trail.style.bladeStart;
                     inner = Vector3.Lerp(grip,tip,start);
                 }
-                vertices.Add(inner); vertices.Add(tip);
+                float freshness = Mathf.Clamp01(1 - (seconds - time) / life);
+                // Collapse the old ribbon toward its sampled tip for a clean tail.
+                // The leading edge and every sampled blade tip stay on the real weapon path.
+                inner = Vector3.Lerp(tip, inner, Mathf.SmoothStep(.08f, 1, freshness));
+                vertices.Add(inner);
+                vertices.Add(tip);
                 Color color = trail.window.shield ? new Color(1, .88f, .48f, .65f) : trail.style.color;
-                color.a *= Mathf.Clamp01(1 - (seconds - time) / life);
+                color.a *= freshness * freshness;
                 colors.Add(color); colors.Add(color);
                 uvs.Add(new Vector2(0, time)); uvs.Add(new Vector2(1, time));
             }
@@ -377,7 +412,18 @@ public sealed class BattleWeaponTrails : MonoBehaviour
 
     public void Clear()
     {
-        foreach (var trail in pool) if (trail.root) trail.root.SetActive(false);
+        foreach (var trail in pool)
+        {
+            if (trail.root) trail.root.SetActive(false);
+            foreach (var strip in trail.strips)
+            {
+                strip.inner.Clear();
+                strip.tip.Clear();
+                strip.source = null;
+                strip.mesh.Clear();
+            }
+        }
+        playbackId = -1;
         boneCache.Clear();
         owner = null; attacker = null;
     }

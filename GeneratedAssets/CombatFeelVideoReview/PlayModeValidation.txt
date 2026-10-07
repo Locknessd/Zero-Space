@@ -1,3 +1,4 @@
-PASS both attackers, lethal/nonlethal: a frame crossing a whole combo pauses at each exact contact; carried time resumes every hit once; KO slow motion once; cancel restores time.
+PASS both attackers, lethal/nonlethal: a frame crossing a whole combo holds each exact participant pose without changing global time; carried time resumes every hit once; KO slow motion once; cancel clears the local clock.
+PASS overlapping max holds; menu pause during hold; unchanged pose, sample and physics timestep; cancel/reset/disable/fighter-disable cleanup; paused KO envelope; paused preview stop/exit.
 PASS resetting feedback preserves an external pause.
 PASS real Left Light + Right Heavy FIFO playback, four completion callbacks, GetUp recovery and no stuck time scale.

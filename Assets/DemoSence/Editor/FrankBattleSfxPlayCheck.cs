@@ -120,14 +120,14 @@ namespace FrankRetarget.Editor
                 if (damageMode) FrankBattleDamagePlayProbe.Tick();
                 if (game && game.GetComponent<BattleImpactFeedback>() is BattleImpactFeedback impact)
                 {
-                    if (impact.IsSlowing && !impact.IsHolding && !game.uiManager.knockout.HasShown && Mathf.Approximately(Time.timeScale, impact.knockoutSpeed))
+                    if (impact.IsSlowing && !impact.IsHolding && !game.uiManager.knockout.HasShown && Time.timeScale == 1)
                         observedKoSlow = true;
                     if (game.uiManager.knockout.HasShown && (impact.IsSlowing || impact.IsHolding))
                         throw new Exception("KO lettering appeared before the finishing slow motion completed.");
                     var playback = game.leftCombat.SourcePlayback && game.leftCombat.SourcePlayback.Playing ? game.leftCombat.SourcePlayback : game.rightCombat.SourcePlayback;
                     if (impact.IsHolding)
                     {
-                        if (Time.timeScale != 0) throw new Exception("Hit-stop did not pause the shared battle clock.");
+                        if (Time.timeScale != 1 || !playback || !playback.IsContactHeld) throw new Exception("Hit-stop did not hold the participant clock independently.");
                         if (wasHolding && heldPlayback == playback && playback && Mathf.Abs(heldSample - playback.SampleTime) > .001f)
                             throw new Exception("Source pose advanced during hit-stop.");
                         heldFrames++;
@@ -231,7 +231,7 @@ namespace FrankRetarget.Editor
                         // Exercise cancellation through actual VFX, including a pre-existing slow/pause clock.
                         Time.timeScale = .5f;
                         game.battleVfx.PlayHit(game.rightCombat);
-                        if (!impactCheck.IsHolding || Time.timeScale != 0) throw new Exception("Slow-clock contact did not hold.");
+                        if (impactCheck.IsHolding || Time.timeScale != .5f) throw new Exception("Standalone VFX preview changed the external clock.");
                         game.battleVfx.ClearEffects();
                         if (impactCheck.IsHolding || Time.timeScale != .5f) throw new Exception("Cancelled contact lost the original slow clock.");
                         Time.timeScale = 0;
@@ -249,12 +249,12 @@ namespace FrankRetarget.Editor
                         impactCheck.enabled = true;
                         int slowCount = impactCheck.SlowMotionCount;
                         impactCheck.BeginKnockoutSlowMotion(); impactCheck.BeginKnockoutSlowMotion();
-                        if (!impactCheck.IsSlowing || !Mathf.Approximately(Time.timeScale, impactCheck.knockoutSpeed) || impactCheck.SlowMotionCount != slowCount + 1)
-                            throw new Exception("KO without a finishing animation failed or repeated slow motion.");
+                        if (!impactCheck.IsSlowing || Time.timeScale != 1 || impactCheck.SlowMotionCount != slowCount + 1)
+                            throw new Exception("KO fallback envelope failed, changed global time or repeated.");
                         impactCheck.ResetFeedback();
                         if (Time.timeScale != 1) throw new Exception("Fallback KO cancellation left the clock slowed.");
                         game.battleVfx.ClearEffects();
-                        report.AppendLine("PASS live hit-stop cancellation, slow-clock restoration, external pause, match reset and disable cleanup.");
+                        report.AppendLine("PASS participant hit-stop, standalone preview clock isolation, external pause, match reset and disable cleanup.");
                     }
                     if (damageMode) report.AppendLine($"PASS {FrankBattleDamagePlayProbe.CheckedHits} native damage contact frames, duplicate DAMAGE_APPLIED/HP_CHANGED and late HP snapshots.");
                     Finish(true, $"PASS {total} " + (damageMode ? "server damage exchanges" : "local exchanges") + " + duplicated lethal DAMAGE_APPLIED + duplicated WINNER_DECLARED; " +
@@ -295,6 +295,9 @@ namespace FrankRetarget.Editor
                 if (EditorApplication.timeSinceStartup - stepBegan > 35) throw new Exception("Stalled at " + move.moveName);
                 if (game.IsEventQueueBusy || attacker.IsBusy || receiver.IsBusy) return;
                 var expected = game.battleSfx.bank.FindMove(move).cues.Select(c => lethal && c.finalLanding ? "knockout_fall" : c.group).ToList();
+                if (game.battleSfx.enableContactLayers)
+                    expected = expected.SelectMany(id => new[] { id }.Concat(
+                        game.battleSfx.bank.FindGroup(id)?.layers ?? Array.Empty<string>())).ToList();
                 if (!lethal) expected.Add("getup");
                 if (step == 0) expected.Insert(0, "fight_start");
                 // KO UI uses an unscaled clock and may enter during the lethal reaction.

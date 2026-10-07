@@ -93,7 +93,7 @@ public class CharacterCombat : MonoBehaviour
 
     public bool Initialize()
     {
-        if (_overrideController != null) return true;
+        if (_overrideController != null) return animator != null;
         if (animator == null) animator = GetComponent<Animator>();
         if (animator == null) return ConfigurationError("Chưa gán Animator.");
         var controller = ResolveCombatController();
@@ -247,7 +247,7 @@ public class CharacterCombat : MonoBehaviour
 
         if (move.sourcePair != null && move.sourcePair.Valid)
         {
-            SourcePlayback?.Cancel();
+            if (SourcePlayback) SourcePlayback.Cancel();
             targetCombat.SourcePlayback?.Cancel();
             var pairPlayer = GetComponent<FrankRetarget.FrankBattlePairPlayback>();
             if (!pairPlayer) pairPlayer = gameObject.AddComponent<FrankRetarget.FrankBattlePairPlayback>();
@@ -350,7 +350,7 @@ public class CharacterCombat : MonoBehaviour
 
     public void ResetCombat()
     {
-        SourcePlayback?.Cancel();
+        if (SourcePlayback) SourcePlayback.Cancel();
         if (IsBusy) Finish(false);
         if (weaponRig != null) weaponRig.Release();
         IsDead = false;
@@ -371,7 +371,7 @@ public class CharacterCombat : MonoBehaviour
 
     private void OnDisable()
     {
-        SourcePlayback?.Cancel();
+        if (SourcePlayback) SourcePlayback.Cancel();
         if (IsBusy) Finish(false);
         if (weaponRig != null) weaponRig.Release();
     }

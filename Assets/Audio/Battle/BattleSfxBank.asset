@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5be01484388ad4b41a633befbbbbc6c4, type: 3}
   m_Name: BattleSfxBank
   m_EditorClassIdentifier: Assembly-CSharp::BattleSfxBank
+  mixer: {fileID: 24100000, guid: b5bc0c50c57e405ead4840fa135adc66, type: 2}
   groups:
   - id: light_swing
     volume: 0.4
@@ -24,6 +25,15 @@ MonoBehaviour:
     - 1
     - 1
     - 1
+    startOffsets:
+    - 0
+    - 0
+    - 0
+    output: {fileID: 24300003, guid: b5bc0c50c57e405ead4840fa135adc66, type: 2}
+    maxConcurrent: 3
+    priority: 0
+    gainVariationDb: 0.65
+    layers: []
   - id: light_hit
     volume: 0.65
     pitch: {x: 0.97, y: 1.03}
@@ -35,6 +45,15 @@ MonoBehaviour:
     - 1
     - 1
     - 1
+    startOffsets:
+    - 0
+    - 0
+    - 0
+    output: {fileID: 24300002, guid: b5bc0c50c57e405ead4840fa135adc66, type: 2}
+    maxConcurrent: 3
+    priority: 0
+    gainVariationDb: 0.65
+    layers: []
   - id: heavy_swing
     volume: 0.5
     pitch: {x: 0.92, y: 1}
@@ -44,6 +63,14 @@ MonoBehaviour:
     clipGains:
     - 1
     - 1
+    startOffsets:
+    - 0
+    - 0
+    output: {fileID: 24300003, guid: b5bc0c50c57e405ead4840fa135adc66, type: 2}
+    maxConcurrent: 3
+    priority: 0
+    gainVariationDb: 0.65
+    layers: []
   - id: blade_swing
     volume: 0.4
     pitch: {x: 0.98, y: 1.06}
@@ -55,6 +82,15 @@ MonoBehaviour:
     - 1
     - 1
     - 1
+    startOffsets:
+    - 0
+    - 0
+    - 0
+    output: {fileID: 24300003, guid: b5bc0c50c57e405ead4840fa135adc66, type: 2}
+    maxConcurrent: 3
+    priority: 0
+    gainVariationDb: 0.65
+    layers: []
   - id: thrust_swing
     volume: 0.38
     pitch: {x: 0.98, y: 1.04}
@@ -64,6 +100,14 @@ MonoBehaviour:
     clipGains:
     - 1
     - 1
+    startOffsets:
+    - 0
+    - 0
+    output: {fileID: 24300003, guid: b5bc0c50c57e405ead4840fa135adc66, type: 2}
+    maxConcurrent: 3
+    priority: 0
+    gainVariationDb: 0.65
+    layers: []
   - id: heavy_hit
     volume: 0.72
     pitch: {x: 0.94, y: 1.02}
@@ -73,6 +117,15 @@ MonoBehaviour:
     clipGains:
     - 1
     - 1
+    startOffsets:
+    - 0
+    - 0
+    output: {fileID: 24300002, guid: b5bc0c50c57e405ead4840fa135adc66, type: 2}
+    maxConcurrent: 3
+    priority: 0
+    gainVariationDb: 0.65
+    layers:
+    - heavy_weight
   - id: stab_hit
     volume: 0.52
     pitch: {x: 0.97, y: 1.03}
@@ -80,6 +133,13 @@ MonoBehaviour:
     - {fileID: 8300000, guid: f2a102080ce374f48b72cd4d88260446, type: 3}
     clipGains:
     - 1
+    startOffsets:
+    - 0
+    output: {fileID: 24300002, guid: b5bc0c50c57e405ead4840fa135adc66, type: 2}
+    maxConcurrent: 3
+    priority: 0
+    gainVariationDb: 0.65
+    layers: []
   - id: body_fall
     volume: 0.6
     pitch: {x: 0.95, y: 1.02}
@@ -91,6 +151,15 @@ MonoBehaviour:
     - 1
     - 1
     - 1
+    startOffsets:
+    - 0
+    - 0
+    - 0
+    output: {fileID: 24300002, guid: b5bc0c50c57e405ead4840fa135adc66, type: 2}
+    maxConcurrent: 3
+    priority: 0
+    gainVariationDb: 0.65
+    layers: []
   - id: getup
     volume: 0.22
     pitch: {x: 0.98, y: 1.02}
@@ -100,6 +169,14 @@ MonoBehaviour:
     clipGains:
     - 1
     - 1
+    startOffsets:
+    - 0
+    - 0
+    output: {fileID: 24300003, guid: b5bc0c50c57e405ead4840fa135adc66, type: 2}
+    maxConcurrent: 3
+    priority: 0
+    gainVariationDb: 0.65
+    layers: []
   - id: knockout_fall
     volume: 0.72
     pitch: {x: 0.96, y: 1}
@@ -107,6 +184,13 @@ MonoBehaviour:
     - {fileID: 8300000, guid: bf2c565d18d998547a04be6469a5f0f5, type: 3}
     clipGains:
     - 1
+    startOffsets:
+    - 0
+    output: {fileID: 24300002, guid: b5bc0c50c57e405ead4840fa135adc66, type: 2}
+    maxConcurrent: 3
+    priority: 0
+    gainVariationDb: 0.65
+    layers: []
   - id: footstep
     volume: 0.25
     pitch: {x: 0.97, y: 1.03}
@@ -118,6 +202,15 @@ MonoBehaviour:
     - 1
     - 1
     - 1
+    startOffsets:
+    - 0
+    - 0
+    - 0
+    output: {fileID: 24300003, guid: b5bc0c50c57e405ead4840fa135adc66, type: 2}
+    maxConcurrent: 3
+    priority: 0
+    gainVariationDb: 0.65
+    layers: []
   - id: metal_clash
     volume: 0.45
     pitch: {x: 0.97, y: 1.03}
@@ -127,6 +220,14 @@ MonoBehaviour:
     clipGains:
     - 1
     - 1
+    startOffsets:
+    - 0
+    - 0
+    output: {fileID: 24300002, guid: b5bc0c50c57e405ead4840fa135adc66, type: 2}
+    maxConcurrent: 3
+    priority: 0
+    gainVariationDb: 0.65
+    layers: []
   - id: shield_block
     volume: 0.5
     pitch: {x: 0.98, y: 1.02}
@@ -134,6 +235,13 @@ MonoBehaviour:
     - {fileID: 8300000, guid: e0e4bb727bf81154b9e2520efd7fa807, type: 3}
     clipGains:
     - 1
+    startOffsets:
+    - 0
+    output: {fileID: 24300002, guid: b5bc0c50c57e405ead4840fa135adc66, type: 2}
+    maxConcurrent: 3
+    priority: 0
+    gainVariationDb: 0.65
+    layers: []
   - id: blade_cut
     volume: 0.25
     pitch: {x: 0.98, y: 1.02}
@@ -141,6 +249,13 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 54948a65450c73748a63e7ff370b89cd, type: 3}
     clipGains:
     - 1
+    startOffsets:
+    - 0
+    output: {fileID: 24300002, guid: b5bc0c50c57e405ead4840fa135adc66, type: 2}
+    maxConcurrent: 3
+    priority: 0
+    gainVariationDb: 0.65
+    layers: []
   - id: hurt_voice
     volume: 0.3
     pitch: {x: 1, y: 1}
@@ -150,6 +265,14 @@ MonoBehaviour:
     clipGains:
     - 1
     - 1
+    startOffsets:
+    - 0
+    - 0
+    output: {fileID: 24300004, guid: b5bc0c50c57e405ead4840fa135adc66, type: 2}
+    maxConcurrent: 3
+    priority: 0
+    gainVariationDb: 0.65
+    layers: []
   - id: fight_start
     volume: 0.65
     pitch: {x: 1, y: 1}
@@ -157,6 +280,13 @@ MonoBehaviour:
     - {fileID: 8300000, guid: f7a05fe7e8e53e74292b5f5ee0414a7a, type: 3}
     clipGains:
     - 1
+    startOffsets:
+    - 0
+    output: {fileID: 24300004, guid: b5bc0c50c57e405ead4840fa135adc66, type: 2}
+    maxConcurrent: 3
+    priority: 0
+    gainVariationDb: 0
+    layers: []
   - id: victory
     volume: 0.65
     pitch: {x: 1, y: 1}
@@ -164,6 +294,13 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 71670545a8e88cd4f9c24d076464b621, type: 3}
     clipGains:
     - 1
+    startOffsets:
+    - 0
+    output: {fileID: 24300004, guid: b5bc0c50c57e405ead4840fa135adc66, type: 2}
+    maxConcurrent: 3
+    priority: 0
+    gainVariationDb: 0
+    layers: []
   - id: ui_click
     volume: 0.3
     pitch: {x: 1, y: 1}
@@ -173,6 +310,14 @@ MonoBehaviour:
     clipGains:
     - 1
     - 1
+    startOffsets:
+    - 0
+    - 0
+    output: {fileID: 24300005, guid: b5bc0c50c57e405ead4840fa135adc66, type: 2}
+    maxConcurrent: 3
+    priority: 0
+    gainVariationDb: 0.65
+    layers: []
   - id: comic_fall
     volume: 0.16
     pitch: {x: 0.97, y: 1.03}
@@ -180,6 +325,13 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 3c51018e47c793b4f85e9b3244613354, type: 3}
     clipGains:
     - 1
+    startOffsets:
+    - 0
+    output: {fileID: 24300002, guid: b5bc0c50c57e405ead4840fa135adc66, type: 2}
+    maxConcurrent: 3
+    priority: 0
+    gainVariationDb: 0.65
+    layers: []
   - id: ko_impact
     volume: 0.55
     pitch: {x: 1, y: 1}
@@ -187,6 +339,33 @@ MonoBehaviour:
     - {fileID: 8300000, guid: e67cff986718a9e4eb4351bde47599e2, type: 3}
     clipGains:
     - 1
+    startOffsets:
+    - 0
+    output: {fileID: 24300002, guid: b5bc0c50c57e405ead4840fa135adc66, type: 2}
+    maxConcurrent: 3
+    priority: 0
+    gainVariationDb: 0.65
+    layers: []
+  - id: heavy_weight
+    volume: 0.18
+    pitch: {x: 0.97, y: 1.02}
+    clips:
+    - {fileID: 8300000, guid: c07d2250506899947b965fbe5977cf1a, type: 3}
+    - {fileID: 8300000, guid: 18f116a1dddafde449a53113a2339024, type: 3}
+    - {fileID: 8300000, guid: b3c6865916bbf1f45a30fa4e3f53a463, type: 3}
+    clipGains:
+    - 1
+    - 1
+    - 1
+    startOffsets:
+    - 0
+    - 0
+    - 0
+    output: {fileID: 24300002, guid: b5bc0c50c57e405ead4840fa135adc66, type: 2}
+    maxConcurrent: 2
+    priority: 96
+    gainVariationDb: 0.65
+    layers: []
   moves:
   - label: Mankey Light_1
     attack: {fileID: 7400000, guid: 639221af9523ddee5aa6a8a5e94f7de0, type: 2}
@@ -569,7 +748,7 @@ MonoBehaviour:
       finalLanding: 0
       hasContactPoint: 1
       contactBone: 10
-      contactOffset: {x: 0.32591102, y: 2.0283606, z: 0.5245284}
+      contactOffset: {x: 0.6616697, y: 2.2827914, z: 1.8086146}
       contactSource: RightFoot
       damageOnLanding: 0
     - seconds: 2.83

@@ -147,7 +147,7 @@ namespace FrankRetarget.Editor
                         foreach (var contact in times)
                         {
                             expected += contact.Count();
-                            if (!feedback.IsHolding || Time.timeScale != 0 || Mathf.Abs(pair.SampleTime - contact.Key) > .0001f || emitted != expected)
+                            if (!feedback.IsHolding || !pair.IsContactHeld || Time.timeScale != 1 || Mathf.Abs(pair.SampleTime - contact.Key) > .0001f || emitted != expected)
                                 throw new Exception($"Slow frame did not stop at exactly one contact pose: {attacker.name}/{move.moveName}, lethal={lethal}, expectedTime={contact.Key}, actualTime={pair.SampleTime}, scale={Time.timeScale}, holding={feedback.IsHolding}, contacts={emitted}/{expected}.");
                             tick.Invoke(pair, null);
                             if (emitted != expected || Mathf.Abs(pair.SampleTime - contact.Key) > .0001f)
@@ -162,7 +162,8 @@ namespace FrankRetarget.Editor
                     }
                     finally { vfx.ContactOccurred -= observe; }
                 }
-                report.AppendLine("PASS both attackers, lethal/nonlethal: a frame crossing a whole combo pauses at each exact contact; carried time resumes every hit once; KO slow motion once; cancel restores time.");
+                report.AppendLine("PASS both attackers, lethal/nonlethal: a frame crossing a whole combo holds each exact participant pose without changing global time; carried time resumes every hit once; KO slow motion once; cancel clears the local clock.");
+                TestPauseLifecycle(feedback, tick);
                 Time.timeScale = .5f; feedback.ResetFeedback();
                 Time.timeScale = 0; feedback.ResetFeedback();
                 if (Time.timeScale != 0) throw new Exception("Feedback reset overwrote an external pause.");
@@ -175,6 +176,72 @@ namespace FrankRetarget.Editor
                 game.battleSfx.masterVolume = volume;
                 game.ResetCombatQueue();
             }
+        }
+
+        static void TestPauseLifecycle(BattleImpactFeedback feedback, MethodInfo tick)
+        {
+            var attacker = game.leftCombat;
+            var receiver = game.rightCombat;
+            var move = attacker.heavyCombatMoves.First(m => m.skill == BattleSkill.None);
+            float fixedStep = Time.fixedDeltaTime;
+            var contactCallback = typeof(BattleImpactFeedback).GetMethod("Contact", BindingFlags.Instance | BindingFlags.NonPublic);
+            foreach (string cleanup in new[] { "cancel", "reset", "disable", "fighter-disable" })
+            {
+                game.ResetCombatQueue();
+                Time.timeScale = 1;
+                attacker.transform.position = Vector3.zero;
+                receiver.transform.position = Vector3.right * move.attackRange;
+                if (!attacker.ExecuteAttack(move, receiver)) throw new Exception("Pause test attack rejected.");
+                var pair = attacker.SourcePlayback;
+                pair.AdvanceTo(pair.Duration);
+                if (!feedback.IsHolding || !pair.IsContactHeld || Time.timeScale != 1)
+                    throw new Exception("Contact must hold participants without owning global time.");
+                float sample = pair.SampleTime;
+                Vector3 hips = receiver.Animator.GetBoneTransform(HumanBodyBones.Hips).position;
+                // A second request extends by max rather than summing two holds.
+                var impact = new BattleVfxPlayer.Impact(pair, attacker, receiver, move,
+                    BattleVfxPlayer.ContactKind.Heavy, hips, sample, false);
+                float expectedHold = Mathf.Max(feedback.RemainingHold, feedback.heavyHold);
+                contactCallback.Invoke(feedback, new object[] { impact });
+                if (!Mathf.Approximately(feedback.RemainingHold, expectedHold))
+                    throw new Exception("Overlapping holds accumulated instead of extending to max.");
+                Time.timeScale = 0;
+                feedback.AdvanceFeedback(.5f);
+                tick.Invoke(pair, null);
+                if (Time.timeScale != 0 || feedback.IsHolding || pair.SampleTime != sample ||
+                    receiver.Animator.GetBoneTransform(HumanBodyBones.Hips).position != hips)
+                    throw new Exception("A hold expiry resumed menu pause or advanced participant state.");
+                if (cleanup == "cancel") pair.Cancel();
+                else if (cleanup == "reset") game.ResetCombatQueue();
+                else if (cleanup == "disable") feedback.enabled = false;
+                else attacker.gameObject.SetActive(false);
+                if (Time.timeScale != 0 || Time.fixedDeltaTime != fixedStep || feedback.IsHolding)
+                    throw new Exception("Cleanup changed menu pause or physics timestep: " + cleanup);
+                feedback.enabled = true;
+                attacker.gameObject.SetActive(true);
+                pair.Cancel();
+                Time.timeScale = 1;
+            }
+            game.ResetCombatQueue();
+            Time.timeScale = 1;
+            feedback.BeginKnockoutSlowMotion();
+            Time.timeScale = 0;
+            feedback.AdvanceFeedback(feedback.knockoutSeconds + feedback.knockoutRecovery + 1);
+            if (!feedback.IsSlowing || Time.timeScale != 0)
+                throw new Exception("Menu pause consumed the KO slow-motion envelope.");
+            feedback.ResetFeedback();
+            if (Time.timeScale != 0 || Time.fixedDeltaTime != fixedStep)
+                throw new Exception("KO cleanup resumed pause or altered the physics timestep.");
+            Time.timeScale = 1;
+            game.enabled = true;
+            if (!game.BeginAnimationTestMode()) throw new Exception("Preview cleanup test could not begin.");
+            Time.timeScale = 0;
+            game.StopAnimationTest();
+            game.EndAnimationTestMode();
+            game.enabled = false;
+            if (Time.timeScale != 0) throw new Exception("Stopping a preview resumed a paused game.");
+            Time.timeScale = 1;
+            report.AppendLine("PASS overlapping max holds; menu pause during hold; unchanged pose, sample and physics timestep; cancel/reset/disable/fighter-disable cleanup; paused KO envelope; paused preview stop/exit.");
         }
 
         static void Write(string suffix = "") => File.WriteAllText(FrankRetargetBuilder.FeelReview + "/PlayModeValidation.txt", report + suffix);

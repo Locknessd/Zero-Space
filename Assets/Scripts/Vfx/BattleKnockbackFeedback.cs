@@ -107,7 +107,7 @@ public sealed class BattleKnockbackFeedback : MonoBehaviour
     }
     void OnEnable() => Bind();
     // Remove the previous visual offset before source playback preserves its final root X.
-    void Update() { RestoreOffset(); AdvanceRecoil(Time.deltaTime); }
+    void Update() { RestoreOffset(); AdvanceRecoil(Time.deltaTime * (owner ? owner.PresentationRate : 1)); }
     // Retargeted bones have settled; the cinematic camera evaluates afterwards.
     void LateUpdate() => ApplyRecoil();
     void OnDisable() { Unbind(); ResetRecoil(); }

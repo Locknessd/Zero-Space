@@ -32,6 +32,8 @@ namespace FrankRetarget
         public int PlaybackId => attacker ? attacker.PlaybackId : -1;
         public float Duration => Mathf.Max(pair.attack.length, pair.reactionDelay + pair.reaction.length);
         public bool Playing { get; private set; }
+        public float PresentationRate => impactFeedback ? impactFeedback.PlaybackRate(this) : 1f;
+        public bool IsContactHeld => Playing && PresentationRate <= 0;
         public event Action<FrankBattlePairPlayback, float> TimelineAdvanced;
         FrankBattlePair pair;
         CharacterCombat attacker, receiver;
@@ -45,6 +47,7 @@ namespace FrankRetarget
         float attackHipHeight, hitHipHeight;
         BattleSfxPlayer battleSfx;
         BattleVfxPlayer battleVfx;
+        BattleImpactFeedback impactFeedback;
         float[] contactTimes = Array.Empty<float>();
         int nextContact;
         float timelineHighWater;
@@ -141,6 +144,7 @@ namespace FrankRetarget
                 battleSfx = source.battleSfx;
                 if (battleSfx) battleSfx.BeginSequence(this, move, lethal);
                 battleVfx = source.battleVfx;
+                impactFeedback = battleVfx ? battleVfx.GetComponent<BattleImpactFeedback>() : null;
                 var timeline = battleSfx ? battleSfx.bank : battleVfx ? battleVfx.timeline : null;
                 var profile = timeline ? timeline.FindMove(move) : null;
                 var contacts = new SortedSet<float>(BattleHitDamageSequence.ContactTimes(profile, Duration));
@@ -203,9 +207,24 @@ namespace FrankRetarget
             ConstrainLightHipsDepth();
         }
 
+        void Update()
+        {
+            // Source poses are sampled manually; GetUp returns to the Animator.
+            // Set its speed before Unity evaluates animation so recovery uses the same clock.
+            if (Playing && waitingForGetUp && receiver && receiver.Animator)
+                receiver.Animator.speed = PresentationRate;
+        }
+
         void LateUpdate()
         {
-            if (!Playing || Application.isPlaying && Time.timeScale <= 0) return;
+            if (!Playing) return;
+            if (Application.isPlaying && (Time.timeScale <= 0 || IsContactHeld))
+            {
+                // The source Animator can refresh native weapon bones between manual samples.
+                // Reassert the held pose without advancing time or redispatching contact events.
+                if (!waitingForGetUp) EvaluateAt(SampleTime);
+                return;
+            }
             if (waitingForGetUp)
             {
                 ConstrainLightHipsDepth();
@@ -219,7 +238,7 @@ namespace FrankRetarget
             if (Time.deltaTime <= 0) return;
             float carriedDelta = deferredDelta;
             deferredDelta = 0;
-            AdvanceTo(SampleTime + Time.deltaTime + carriedDelta);
+            AdvanceTo(SampleTime + Time.deltaTime * PresentationRate + carriedDelta);
         }
 
         // Health, impact audio and VFX all observe the same contact pose. A slow
@@ -227,7 +246,7 @@ namespace FrankRetarget
         public void AdvanceTo(float seconds)
         {
             if (!Playing || waitingForGetUp || !float.IsFinite(seconds) || seconds <= timelineHighWater ||
-                Application.isPlaying && Time.timeScale <= 0) return;
+                Application.isPlaying && (Time.timeScale <= 0 || IsContactHeld)) return;
             float displayedTime = Mathf.Clamp(seconds, 0, Duration);
             float settledTime = displayedTime;
             deferredDelta = 0;
@@ -242,7 +261,7 @@ namespace FrankRetarget
                     if (battleSfx) battleSfx.AdvanceSequence(this, SampleTime);
                     if (battleVfx) battleVfx.AdvanceSequence(this, SampleTime);
                     if (!Playing) return;
-                    if (Application.isPlaying && Time.timeScale <= 0)
+                    if (Application.isPlaying && (Time.timeScale <= 0 || IsContactHeld))
                     {
                         // Hold the actual contact pose, including a slow frame crossing
                         // several hits. Resume the unconsumed time after the hold ends.
@@ -285,6 +304,7 @@ namespace FrankRetarget
                     CombatPositioningController.Instance?.ConstrainDepthNow();
                     ConstrainLightHipsDepth();
                     waitingForGetUp = true;
+                    receiver.Animator.speed = PresentationRate;
                     return;
                 }
             }
@@ -309,6 +329,7 @@ namespace FrankRetarget
                 hitModel = null;
                 if (hasReceiverFinalX) PreserveRootX(receiver ? receiver.Animator : null, receiverFinalX);
             }
+            if (receiver && receiver.Animator && !receiver.IsDead) receiver.Animator.speed = 1f;
             attacker.CompleteSourceSequence(true);
             if (receiver && receiver.IsBusy) receiver.CompleteSourceSequence(true);
             // A lethal reaction keeps hitActor and hitModel alive so the receiver
@@ -347,6 +368,7 @@ namespace FrankRetarget
             attackModel?.Restore();
             hitModel?.Restore();
             attackModel = hitModel = null;
+            if (receiver && receiver.Animator && !receiver.IsDead) receiver.Animator.speed = 1f;
             if (interrupted)
             {
                 if (attacker) attacker.CompleteSourceSequence(false);

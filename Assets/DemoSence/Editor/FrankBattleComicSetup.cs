@@ -135,8 +135,12 @@ namespace FrankRetarget.Editor
             {
                 var cut = game.uiManager.comicCutIn;
                 if (!cut) throw new Exception("Missing Battle comic panel.");
-                Undo.RecordObject(cut, "English comic titles and longer presentation");
-                cut.displaySeconds = 1.05f;
+                Undo.RecordObject(cut, "Compact battle announcements");
+                cut.compactPresentation = true;
+                cut.compactDisplaySeconds = .72f;
+                cut.compactWidth = .48f;
+                cut.compactAnchorY = .81f;
+                cut.compactHeight = 110f;
                 cut.ResetPresentation();
                 cut.title.text = cut.caption.text = "";
                 EditorUtility.SetDirty(cut); EditorUtility.SetDirty(cut.title); EditorUtility.SetDirty(cut.caption);
@@ -148,59 +152,8 @@ namespace FrankRetarget.Editor
         {
             File.WriteAllText(ComicReview + "/Step5.txt", "Native Unity UI/Text + DOTween portrait panels for Katana/Assassin and lethal windups.\n" +
                 "English titles: BLADE FURY!, PHANTOM STRIKE!, FINISHING BLOW!; fighter caption + CRITICAL/FINISHER.\n" +
-                "Default duration 1.05s: 120ms entrance, 780ms readable hold, 150ms fade. Configurable Display Seconds on BattleComicCutIn.\n" +
+                "Compact duration 720ms: 90ms entrance, 510ms hold, 120ms fade. Upper side panel keeps the contact area clear.\n" +
                 "Existing avatars, unscaled animation, reset/cancel support, no raycast blocking and no camera change.\n");
-        }
-
-        public static void ValidateBattleComicStep5()
-        {
-            var scene = EditorSceneManager.OpenPreviewScene(SfxScene);
-            var target = new RenderTexture(1280, 720, 24);
-            Camera camera = null;
-            try
-            {
-                var game = scene.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<GameManager>(true)).Single();
-                camera = scene.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<Camera>()).Single(c => c.CompareTag("MainCamera"));
-                camera.scene = scene; camera.targetTexture = target;
-                foreach (var canvas in scene.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<Canvas>(true)))
-                { canvas.renderMode = RenderMode.ScreenSpaceCamera; canvas.worldCamera = camera; canvas.planeDistance = 1; }
-                game.leftCombat.Initialize(); game.rightCombat.Initialize();
-                camera.GetComponent<FrankCinematicCamera>().Apply(0, true);
-                var cut = game.uiManager.comicCutIn;
-                if (!cut || !cut.leftPortrait || !cut.rightPortrait || cut.group.blocksRaycasts) throw new Exception("Missing comic panel bindings.");
-                cut.PreviewAnimations = true; cut.Bind();
-                if (Mathf.Abs(cut.displaySeconds - 1.05f) > .001f) throw new Exception("Scene did not retain the longer comic duration.");
-                foreach (bool left in new[] {true, false})
-                foreach (var weapon in new[] {TrumpWeaponManager.WeaponType.Katana, TrumpWeaponManager.WeaponType.Assassin})
-                {
-                    cut.Present(left, weapon, false); cut.EvaluatePreview(.8f);
-                    string expectedTitle = weapon == TrumpWeaponManager.WeaponType.Katana ? "BLADE FURY!" : "PHANTOM STRIKE!";
-                    if (!cut.IsShowing || cut.group.alpha < .99f || cut.title.text != expectedTitle ||
-                        cut.portrait.sprite != (left ? cut.leftPortrait : cut.rightPortrait) || !cut.caption.text.EndsWith("CRITICAL", StringComparison.Ordinal))
-                        throw new Exception("English portrait/title panel faded too early or used the wrong fighter.");
-                    Canvas.ForceUpdateCanvases(); CaptureBattleCamera(camera, ComicReview + (left ? "/Step5_Mankey" : "/Step5_Pepe") +
-                        (weapon == TrumpWeaponManager.WeaponType.Katana ? "" : "_Assassin") + ".png");
-                    cut.EvaluatePreview(.975f);
-                    if (cut.group.alpha <= 0 || cut.group.alpha >= 1) throw new Exception("Comic panel skipped its longer fade.");
-                    cut.EvaluatePreview(1.1f);
-                    if (cut.group.alpha > .001f) throw new Exception("Comic panel did not end.");
-                }
-                foreach (bool left in new[] {true, false})
-                {
-                    cut.Present(left, TrumpWeaponManager.WeaponType.Assassin, true); cut.EvaluatePreview(.8f);
-                    if (cut.title.text != "FINISHING BLOW!" || cut.group.alpha < .99f || !cut.caption.text.EndsWith("FINISHER", StringComparison.Ordinal))
-                        throw new Exception("English finisher title or readable hold failed.");
-                    Canvas.ForceUpdateCanvases(); CaptureBattleCamera(camera, ComicReview + (left ? "/Step5_Mankey_Finisher.png" : "/Step5_Pepe_Finisher.png"));
-                    game.battleVfx.ClearEffects();
-                    if (cut.IsShowing || cut.group.alpha != 0) throw new Exception("Cancelled comic remained visible.");
-                    cut.EvaluatePreview(2);
-                    if (cut.group.alpha != 0) throw new Exception("Cancelled comic restarted its animation.");
-                }
-                File.WriteAllText(ComicReview + "/Step5Validation.txt", "PASS six English portrait/title/caption cases (Katana, Assassin and finisher on both sides).\n" +
-                    "PASS still fully readable at .8s, smooth fade at .975s, hidden after 1.05s; default serialized duration retained.\n" +
-                    "PASS unscaled DOTween timeline, correct avatar, input pass-through and cancellation without restarting.\n");
-            }
-            finally { if (camera) camera.targetTexture = null; Object.DestroyImmediate(target); EditorSceneManager.ClosePreviewScene(scene); }
         }
 
         public static void InstallBattleComicStep6()

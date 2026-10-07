@@ -1,0 +1,23 @@
+COMPLETED sustained real-combat review
+Unity=6000.5.9f1; Playing=True; paused=False; compiling=False
+GPU=NVIDIA GeForce RTX 4090/PCIe/SSE2; API=OpenGLCore; CPU=13th Gen Intel(R) Core(TM) i9-13900K; RAM=62970 MB
+Pipeline=BattleHigh (UnityEngine.Rendering.Universal.UniversalRenderPipelineAsset); Quality=High Quality; VSync=0; frameCap=-1; resolution=1920x1080; focus=False; scale=1; fixedStep=0.01999999
+EnterPlayModeOptions=False/None
+Scene=Assets/ErbGameArt/Sword slash FX/Demo scene/Slash demo mesh-path(old).unity; dirty=True; roots=5
+Scene=Assets/Scenes/BattleScene.unity; dirty=False; roots=18
+Battle=GameManager; queue=False; error=; test=True; moves=Light_1,Light_3,Heavy_5,Heavy_6,Heavy_7,Heavy_2,Heavy_8,Heavy_Katana,Heavy_Assassin
+Moves started=18; frames measured=26745; warmup excluded=10 s
+Frame ms median=3.96; p95=5.88; p99=8.21; max=207.74
+Frames over 16.67 ms=7; average ms=4.11
+Peak active VFX=4; peak voices=3; pooled voices=13
+Unity allocated memory start=1272363777; end=1277093950; delta=4730173
+GC Allocated In Frame: average=13952.32; peak=369281; unit=Bytes
+Draw Calls Count: unavailable in this Editor recorder
+SetPass Calls Count: average=50.86; peak=69; unit=Count
+Triangles Count: average=99682.31; peak=130985; unit=Count
+Main Thread: average=4111395.83; peak=207253586; unit=TimeNanoseconds
+GPU Frame Time: average=0.00; peak=0; unit=TimeNanoseconds
+Peak particles in the prewarmed battle pools=1471
+Recorder counters include Editor work. Particle count covers cached battle pools.
+Editor Game view measurements, no Deep Profile. Includes Editor and capture overhead; not a player-build benchmark.
+GPU timing and transparent overdraw are not measured by this counter run.

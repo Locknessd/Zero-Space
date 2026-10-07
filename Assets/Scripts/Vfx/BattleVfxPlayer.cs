@@ -19,14 +19,17 @@ public sealed class BattleVfxPlayer : MonoBehaviour
         public readonly Vector3 position;
         public readonly float seconds;
         public readonly bool finishing;
+        public readonly BattleSfxBank.Cue cue;
+        public readonly ulong eventId;
 
         public Impact(FrankBattlePairPlayback playback, CharacterCombat attacker,
             CharacterCombat receiver, CombatTripletData move, ContactKind kind,
-            Vector3 position, float seconds, bool finishing)
+            Vector3 position, float seconds, bool finishing, BattleSfxBank.Cue cue = null, ulong eventId = 0)
         {
             this.playback = playback; this.attacker = attacker; this.receiver = receiver;
             this.move = move; this.kind = kind; this.position = position;
             this.seconds = seconds; this.finishing = finishing;
+            this.cue = cue; this.eventId = eventId;
         }
     }
 
@@ -80,8 +83,15 @@ public sealed class BattleVfxPlayer : MonoBehaviour
     public event Action EffectsCleared;
     public event Action<CharacterCombat, CombatTripletData, bool> SequenceBegan;
     public int PlayedEffectCount { get; private set; }
-    public int ActiveEffectCount => instances.FindAll(i => i.root && i.root.activeSelf).Count +
-        (weaponTrails ? weaponTrails.ActiveTrailCount : 0);
+    public int ActiveEffectCount
+    {
+        get
+        {
+            int count = weaponTrails ? weaponTrails.ActiveTrailCount : 0;
+            foreach (var instance in instances) if (instance.root && instance.root.activeSelf) count++;
+            return count;
+        }
+    }
     public int PooledEffectCount => instances.Count + (weaponTrails ? weaponTrails.PooledTrailCount : 0);
     public bool IsFinishingContact { get; private set; }
     public int ContactCount { get; private set; }
@@ -125,6 +135,7 @@ public sealed class BattleVfxPlayer : MonoBehaviour
     GameObject sequenceLightHit, sequenceHeavyHit, sequenceStabHit;
     float sequenceImpactScale, finishingTime;
     int ownerPlaybackId = -1;
+    uint presentationSequence;
     SkillVariant sequenceSkill;
     static readonly HumanBodyBones[] ContactBones = { HumanBodyBones.Head, HumanBodyBones.Chest,
         HumanBodyBones.Hips, HumanBodyBones.LeftUpperLeg, HumanBodyBones.RightUpperLeg };
@@ -138,6 +149,7 @@ public sealed class BattleVfxPlayer : MonoBehaviour
         if (profile == null) return false;
         if (owner == playback && ownerPlaybackId == playback.PlaybackId && sequence != null) return true;
         owner = playback;
+        presentationSequence++;
         ownerPlaybackId = playback.PlaybackId;
         sequence = profile;
         attacker = source;
@@ -235,13 +247,13 @@ public sealed class BattleVfxPlayer : MonoBehaviour
                     Vector3 lightPoint = ContactPoint(cue);
                     Spawn(ContactPrefab(cue, false), lightPoint, ContactRotation(cue), sequenceImpactScale, "light_hit");
                     ContactCount++;
-                    PublishContact(ContactKind.Light, lightPoint, cue.seconds);
+                    PublishContact(ContactKind.Light, lightPoint, cue);
                     break;
                 case "heavy_hit":
                     Vector3 heavyPoint = ContactPoint(cue);
                     Spawn(ContactPrefab(cue, true), heavyPoint, ContactRotation(cue), sequenceImpactScale, "heavy_hit");
                     ContactCount++;
-                    PublishContact(ContactKind.Heavy, heavyPoint, cue.seconds);
+                    PublishContact(ContactKind.Heavy, heavyPoint, cue);
                     break;
                 case "body_fall":
                 case "knockout_fall":
@@ -257,7 +269,7 @@ public sealed class BattleVfxPlayer : MonoBehaviour
                     // Older scenes without a ground impact retain feedback on an unarmed throw.
                     if (unarmed && cue.finalLanding && !groundImpact)
                         Spawn(lightHit, ground + Vector3.up * .12f, FacingCamera(), .8f, "light_hit");
-                    PublishContact(ContactKind.Ground, ground, cue.seconds);
+                    PublishContact(ContactKind.Ground, ground, cue);
                     break;
                 case "light_swing":
                     PlaySwing(lightSwing, false, .9f, "light_swing", cue);
@@ -317,11 +329,11 @@ public sealed class BattleVfxPlayer : MonoBehaviour
         return facing * Quaternion.Euler(0, 0, angle);
     }
 
-    void PublishContact(ContactKind kind, Vector3 position, float seconds)
+    void PublishContact(ContactKind kind, Vector3 position, BattleSfxBank.Cue cue)
     {
         if (!owner || !receiver) return;
         ContactOccurred?.Invoke(new Impact(owner, attacker, receiver, owner.Move, kind,
-            position, seconds, IsFinishingContact));
+            position, cue.seconds, IsFinishingContact, cue, ((ulong)presentationSequence << 32) | (uint)nextCue));
     }
 
     static bool IsVisualCue(string group) => group == "light_hit" || group == "heavy_hit" ||
@@ -536,6 +548,7 @@ public sealed class BattleVfxPlayer : MonoBehaviour
             {
                 var main = particles.main; main.loop = false; main.playOnAwake = false;
                 main.stopAction = ParticleSystemStopAction.None;
+                main.useUnscaledTime = true;
             }
             instances.Add(instance);
         }
@@ -569,7 +582,7 @@ public sealed class BattleVfxPlayer : MonoBehaviour
         foreach (var instance in instances)
         {
             if (!instance.root || !instance.root.activeSelf) continue;
-            instance.age += Time.deltaTime;
+            instance.age += Time.unscaledDeltaTime;
             if (instance.flightTarget)
             {
                 if (instance.flightOwner) instance.age = Mathf.Max(0, instance.flightOwner.SampleTime - instance.flightBirth);
