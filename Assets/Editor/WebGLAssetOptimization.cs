@@ -364,6 +364,15 @@ public static class WebGLAssetOptimization
     [MenuItem("Tools/WebGL/Build Release Desktop")]
     public static void BuildDesktop() => BuildRelease(WebGLTextureSubtarget.DXT, "Build/WebGL-Desktop");
 
+    // GameCI starts Unity with -buildTarget WebGL before invoking this method.
+    public static void BuildDesktopCI()
+    {
+        var loadingScene = File.ReadAllText("Assets/Scenes/LoadingScene.unity");
+        if (!Regex.IsMatch(loadingScene, @"(?m)^\s*_startupMode: 1\s*$"))
+            throw new InvalidOperationException("LoadingScene must use Startup Mode = Frontend for CI deployment.");
+        BuildDesktop();
+    }
+
     [MenuItem("Tools/WebGL/Build Release Mobile")]
     public static void BuildMobile() => BuildRelease(WebGLTextureSubtarget.ASTC, "Build/WebGL-Mobile");
 
