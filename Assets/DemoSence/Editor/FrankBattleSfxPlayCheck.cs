@@ -113,7 +113,7 @@ namespace FrankRetarget.Editor
                 if (audioFailure != null) throw new Exception(audioFailure);
                 if (vfxFailure != null) throw new Exception(vfxFailure);
                 if (began == 0) began = EditorApplication.timeSinceStartup;
-                if (EditorApplication.timeSinceStartup - began > 300) throw new Exception("SFX play check timed out");
+                if (EditorApplication.timeSinceStartup - began > 600) throw new Exception("SFX play check timed out");
                 if (Time.frameCount == frame || EditorApplication.timeSinceStartup - began < 1) return;
                 frame = Time.frameCount;
                 Application.runInBackground = true;
@@ -157,7 +157,7 @@ namespace FrankRetarget.Editor
                     game.enableLocalInputTesting = false;
                     damageMode = SessionState.GetBool(Key + ".damage", false);
                     if (damageMode) game.ApplyRawMessage(Message("damage-created", "MATCH_CREATED", new JObject
-                        { ["characterIds"] = new JArray("Mankey", "Pepe"), ["initialHpAtomic"] = 2000 }, null));
+                        { ["characterIds"] = new JArray("Mankey", "Pepe"), ["initialHpAtomic"] = 10000 }, null));
                     if (!game.battleSfx) throw new Exception("No BattleSfxPlayer in saved scene");
                     game.battleSfx.CuePlayed += OnCue;
                     if (!game.battleVfx) throw new Exception("No BattleVfxPlayer in saved scene");
@@ -216,8 +216,16 @@ namespace FrankRetarget.Editor
                         throw new Exception("The KO lettering did not produce exactly one timed impact.");
                     game.battleSfx.PlayUiClick();
                     if (!heard.Contains("ui_click") || outputFrames == 0) throw new Exception("Missing UI cue or nonzero audio output");
-                    int authoredShots = moves.SelectMany(m => m).Count(m => cameraDirector && cameraDirector.library.Find(FrankCinematicCamera.BattleKey(m)) != null);
-                    if (cameraDirector && cameraShots.Count != authoredShots) throw new Exception("Live cinematic camera did not play every authored battle shot");
+                    if (cameraDirector)
+                    {
+                        var authoredShots = moves.SelectMany(m => m)
+                            .Select(m => cameraDirector.library.Find(FrankCinematicCamera.BattleKey(m)))
+                            .Where(shot => shot != null).Select(shot => shot.key).ToHashSet();
+                        if (!authoredShots.SetEquals(cameraShots))
+                            throw new Exception("Live cinematic shot coverage differs: missing=" +
+                                string.Join(",", authoredShots.Except(cameraShots)) + "; unexpected=" +
+                                string.Join(",", cameraShots.Except(authoredShots)));
+                    }
                     var impactCheck = game.GetComponent<BattleImpactFeedback>();
                     if (impactCheck && (impactCheck.IsHolding || Time.timeScale != 1 || heldFrames == 0)) throw new Exception("Hit-stop did not hold and restore the clock.");
                     if (impactCheck && impactCheck.knockoutSlowMotion && (impactCheck.SlowMotionCount != 1 || impactCheck.IsSlowing || !observedKoSlow))
@@ -285,6 +293,8 @@ namespace FrankRetarget.Editor
                         string message = Message("damage", "DAMAGE_APPLIED", payload, "lethal-turn");
                         game.ApplyRawMessage(message); game.ApplyRawMessage(message);
                     }
+                    else if (move.actionDefinition)
+                        game.EnqueueCombatAction(side == 0 ? PlayerUI.Side.Left : PlayerUI.Side.Right, move.moveName);
                     else if (side == 0 && !heavy) game.DebugTriggerQ();
                     else if (side == 1 && heavy) game.DebugTriggerE();
                     else game.EnqueueLocalAttack(side == 0 ? PlayerUI.Side.Left : PlayerUI.Side.Right, heavy);
@@ -298,7 +308,9 @@ namespace FrankRetarget.Editor
                 if (game.battleSfx.enableContactLayers)
                     expected = expected.SelectMany(id => new[] { id }.Concat(
                         game.battleSfx.bank.FindGroup(id)?.layers ?? Array.Empty<string>())).ToList();
-                if (!lethal && move.sourcePair.getUp) expected.Add("getup");
+                var continuation = move.grapple ? move.grapple.For(move.grappleOutcome) : null;
+                var recovery = continuation != null ? continuation.getUp : move.sourcePair.getUp;
+                if (!lethal && recovery || move.sourcePair.attackerGetUp) expected.Add("getup");
                 if (step == 0) expected.Insert(0, "fight_start");
                 // KO UI uses an unscaled clock and may enter during the lethal reaction.
                 if (!heard.Where(id => id != "ko_impact").SequenceEqual(expected)) throw new Exception("Live cue mismatch " + attacker.name + " " + move.moveName + ": " + string.Join(",", heard));

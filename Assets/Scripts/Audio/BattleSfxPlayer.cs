@@ -128,9 +128,9 @@ public sealed partial class BattleSfxPlayer : MonoBehaviour
         if (enableHurtVoices && (id == "heavy_hit" || id == "stab_hit" || id == "light_hit")) PlayGroup("hurt_voice");
     }
 
-    public void BeginRecovery(FrankBattlePairPlayback playback)
+    public void BeginRecovery(FrankBattlePairPlayback playback, bool allowLethalAttacker = false)
     {
-        if (owner != playback || lethal || recoveryPlayed) return;
+        if (owner != playback || lethal && !allowLethalAttacker || recoveryPlayed) return;
         recoveryPlayed = true;
         PlayGroup("getup");
     }

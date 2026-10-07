@@ -78,8 +78,12 @@ namespace FrankRetarget.Editor
             bool left = source == game.leftCombat; slot = left ? game.uiManager.right : game.uiManager.left;
             var healthLabel = slot.healthText.text.Split('/');
             before = long.Parse(healthLabel[0]); maximum = long.Parse(healthLabel[1]);
-            total = lethal ? 1000 : 103; after = lethal ? 0 : before - total;
-            contacts = BattleHitDamageSequence.ContactTimes(game.battleSfx.bank.FindMove(move), Mathf.Max(move.sourcePair.attack.length, move.sourcePair.reactionDelay + move.sourcePair.reaction.length));
+            var continuation = move.grapple ? move.grapple.For(move.grappleOutcome) : null;
+            float duration = continuation != null ? move.grapple.decisionSeconds + continuation.Duration :
+                Mathf.Max(move.sourcePair.attack.length, move.sourcePair.reactionDelay + move.sourcePair.reaction.length);
+            contacts = BattleHitDamageSequence.ContactTimes(game.battleSfx.bank.FindMove(move), duration);
+            total = contacts.Length == 0 ? 0 : lethal ? before + 100 : 103;
+            after = lethal ? 0 : before - total;
             observed = 0; portions.Clear(); playbackId = source.PlaybackId + 1; turn = "damage-" + step;
             var damage = new JObject { ["actorCharacterId"] = left ? "bot_a" : "bot_b", ["targetCharacterId"] = left ? "bot_b" : "bot_a",
                 ["hpBeforeAtomic"] = before, ["hpAfterAtomic"] = after, ["damageAtomic"] = total,
@@ -96,7 +100,8 @@ namespace FrankRetarget.Editor
             if (failure != null) throw new Exception(failure);
             if (!source || playback || source.PlaybackId != playbackId || !source.SourcePlayback || !source.SourcePlayback.Playing) return;
             playback = source.SourcePlayback;
-            if (playback.SampleTime >= contacts[0]) throw new Exception("Probe attached after the first hit.");
+            if (contacts.Length > 0 && playback.SampleTime >= contacts[0])
+                throw new Exception("Probe attached after the first hit.");
             playback.TimelineAdvanced += Observe;
         }
 
@@ -104,6 +109,12 @@ namespace FrankRetarget.Editor
         {
             try
             {
+                if (contacts.Length == 0)
+                {
+                    if (slot.healthText.text != before + "/" + maximum)
+                        throw new Exception("A non-damaging interaction changed health.");
+                    return;
+                }
                 int reached = contacts.Count(c => c <= time);
                 long lost = before - after;
                 long cumulative = lost / contacts.Length * reached + Math.Max(0, reached - (contacts.Length - lost % contacts.Length));

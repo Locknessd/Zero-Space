@@ -20,6 +20,7 @@ public class CombatTripletData
     public TrumpWeaponManager.WeaponType weapon;
     public BattleSkill skill;
     public FrankRetarget.FrankBattlePair sourcePair;
+    public FrankRetarget.FrankPairGrounding grounding;
     public FrankRetarget.FrankGrappleDefinition grapple;
     public FrankRetarget.FrankGrappleOutcome grappleOutcome;
     public bool requiresExplicitSelection;

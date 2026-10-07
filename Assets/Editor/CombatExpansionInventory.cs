@@ -40,7 +40,7 @@ namespace FrankRetarget.Editor
         [Serializable]
         public sealed class MoveRecord
         {
-            public string fighter, pool, id, attack, reaction, recovery, avatar;
+            public string fighter, pool, id, attack, reaction, recovery, attackerRecovery, avatar;
             public string attackerDriver, receiverDriver;
             public string[] continuationAttacks, continuationReactions, continuationRecoveries;
             public float range, reactionDelay;
@@ -120,6 +120,8 @@ namespace FrankRetarget.Editor
                             roles.Add(prefix + ":receiver");
                         if (move.recovery == identity)
                             roles.Add(prefix + ":recovery");
+                        if (move.attackerRecovery == identity)
+                            roles.Add(prefix + ":attacker-recovery");
                         if (Array.IndexOf(move.continuationAttacks, identity) >= 0)
                             roles.Add(prefix + ":continuation-attacker");
                         if (Array.IndexOf(move.continuationReactions, identity) >= 0)
@@ -191,6 +193,7 @@ namespace FrankRetarget.Editor
                     attack = Identity(pair?.attack ? pair.attack : move.attackAnim),
                     reaction = Identity(pair?.reaction ? pair.reaction : move.hitAnim),
                     recovery = Identity(pair?.getUp ? pair.getUp : move.getUpAnim),
+                    attackerRecovery = Identity(pair?.attackerGetUp),
                     continuationAttacks = phases.Select(p => Identity(p.attack)).ToArray(),
                     continuationReactions = phases.Select(p => Identity(p.reaction)).ToArray(),
                     continuationRecoveries = phases.Select(p => Identity(p.getUp)).ToArray(),

@@ -49,10 +49,28 @@ namespace FrankRetarget.Editor
         [MenuItem("Tools/Battle/Combat Expansion/Study required Vol10 interactions")]
         public static void StudyRequired()
         {
+            Study("Vol10Study", new[] { 3, 4, 5, 8, 9, 12 });
+        }
+
+        [MenuItem("Tools/Battle/Combat Expansion/Study remaining Vol10 interactions")]
+        public static void StudyRemaining()
+        {
+            Study("Vol10RemainingStudy", new[] { 1, 2, 6, 10, 11, 13, 14, 16, 17 });
+        }
+
+        public static void StudyInstalledThrows()
+        {
+            Study("Vol10ThrowStudy", new[] { 1, 2, 6, 10, 11, 13, 14, 16, 17 }, true);
+        }
+
+        static void Study(string folder, int[] indices, bool installed = false)
+        {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
                 throw new InvalidOperationException("Exit Play Mode before sampling the isolated preview.");
-            string output = CombatExpansionInventory.Output + "/Vol10Study";
+            string output = CombatExpansionInventory.Output + "/" + folder;
             Directory.CreateDirectory(output);
+            var positioning = CombatPositioningController.Instance;
+            var positioningProperty = typeof(CombatPositioningController).GetProperty("Instance");
             var scene = EditorSceneManager.OpenPreviewScene(CombatExpansionInventory.Battle);
             var csv = new StringBuilder("fighter,move,seconds,role,bone,x,y,z\n");
             var cameraTarget = RenderTexture.GetTemporary(480, 320, 24);
@@ -61,6 +79,7 @@ namespace FrankRetarget.Editor
             var previous = RenderTexture.active;
             try
             {
+                positioningProperty.SetValue(null, null);
                 var game = scene.GetRootGameObjects()
                     .SelectMany(r => r.GetComponentsInChildren<GameManager>(true)).Single();
                 var camera = scene.GetRootGameObjects()
@@ -84,12 +103,13 @@ namespace FrankRetarget.Editor
                 using var skinSnapshot = new CombatExpansionPreviewSkin(fighters.Select(f => f.gameObject).ToArray());
                 times.AppendLine("Each sheet is chronological left to right, top to bottom; exact seconds follow.\n");
                 foreach (var source in fighters)
-                foreach (int index in new[] { 3, 4, 5, 8, 9, 12 })
+                foreach (int index in indices)
                 {
                     var target = fighters.Single(f => f != source);
                     foreach (var fighter in fighters)
                         fighter.ResetCombat();
-                    var move = MakeMove(source, target, index);
+                    var move = installed ? source.heavyCombatMoves.Single(m => m.sourcePair?.unarmedIndex == index)
+                        : MakeMove(source, target, index);
                     float direction = source == fighters[0] ? 1 : -1;
                     source.Animator.transform.position = Vector3.left * direction * move.attackRange * .5f;
                     target.Animator.transform.position = Vector3.right * direction * move.attackRange * .5f;
@@ -140,6 +160,7 @@ namespace FrankRetarget.Editor
                 Object.DestroyImmediate(sheet);
                 RenderTexture.ReleaseTemporary(cameraTarget);
                 EditorSceneManager.ClosePreviewScene(scene);
+                positioningProperty.SetValue(null, positioning);
             }
         }
 

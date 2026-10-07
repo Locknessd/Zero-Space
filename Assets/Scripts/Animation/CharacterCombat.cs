@@ -84,6 +84,28 @@ public class CharacterCombat : MonoBehaviour
         if (IsBusy) Finish(succeeded);
     }
 
+    internal bool PrepareSourceCompletion(FrankRetarget.FrankBattlePairPlayback playback,
+        int playbackId, bool succeeded)
+    {
+        if (!IsBusy || SourcePlayback != playback || PlaybackId != playbackId) return false;
+        IsBusy = false;
+        LastSequenceSucceeded = succeeded;
+        _expectedState = 0;
+        _hasGetUp = false;
+        if (weaponRig != null) weaponRig.Release();
+        return true;
+    }
+
+    internal void InvalidateSourceRecovery(FrankRetarget.FrankBattlePairPlayback playback, int playbackId)
+    {
+        if (SourcePlayback == playback && PlaybackId == playbackId) _expectedState = 0;
+    }
+
+    internal void PublishSourceCompletion(int playbackId, bool succeeded)
+    {
+        if (PlaybackId == playbackId) SequenceEnded?.Invoke(this, playbackId, succeeded);
+    }
+
     private void Awake()
     {
         if (animator == null) animator = GetComponent<Animator>();
@@ -250,6 +272,10 @@ public class CharacterCombat : MonoBehaviour
         if (move.grapple && Mathf.Abs(attackDistance - move.attackRange) > .15f)
             return false;
 
+        if (move.sourcePair != null && move.sourcePair.maximumAlignmentError > 0 &&
+            Mathf.Abs(attackDistance - move.attackRange) > move.sourcePair.maximumAlignmentError)
+            return false;
+
         if (move.sourcePair != null && move.sourcePair.Valid)
         {
             if (SourcePlayback) SourcePlayback.Cancel();
@@ -317,6 +343,12 @@ public class CharacterCombat : MonoBehaviour
     public void NotifyAnimationEnded(int stateHash, int playbackId, bool completed)
     {
         if (!IsBusy || playbackId != PlaybackId || stateHash != _expectedState) return;
+        if (SourcePlayback && SourcePlayback.Playing &&
+            stateHash == UnityEngine.Animator.StringToHash("Base Layer.GetUp"))
+        {
+            SourcePlayback.NotifySourceRecoveryEnded(this, playbackId, completed);
+            return;
+        }
         if (completed && stateHash == UnityEngine.Animator.StringToHash("Base Layer.Hit") && _hasGetUp)
         {
             _expectedState = UnityEngine.Animator.StringToHash("Base Layer.GetUp");

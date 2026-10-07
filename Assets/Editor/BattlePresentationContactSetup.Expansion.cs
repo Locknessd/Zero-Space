@@ -4,6 +4,28 @@ using UnityEngine;
 
 public static partial class BattlePresentationContactSetup
 {
+    public static float MeasureGroundClearance(CharacterCombat receiver)
+    {
+        float lowest = float.PositiveInfinity;
+        foreach (var skin in receiver.Animator.GetComponentsInChildren<SkinnedMeshRenderer>())
+        {
+            if (!Visible(skin) || !skin.sharedMesh || skin.sharedMesh.vertexCount < 1000)
+                continue;
+            var baked = new Mesh { hideFlags = HideFlags.HideAndDontSave };
+            try
+            {
+                skin.BakeMesh(baked, false);
+                foreach (var vertex in RenderedVertices(skin, baked, new List<string>()))
+                    lowest = Mathf.Min(lowest, vertex.y);
+            }
+            finally
+            {
+                Object.DestroyImmediate(baked);
+            }
+        }
+        return lowest;
+    }
+
     /// <summary>Uses the same evaluated triangle geometry as existing battle contact validation.</summary>
     public static bool TryMeasureContact(FrankBattlePairPlayback pair, CharacterCombat source,
         CharacterCombat receiver, string striker, out HumanBodyBones anchor, out Vector3 offset,

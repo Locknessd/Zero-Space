@@ -189,12 +189,67 @@ interruption cases across both fighters and screen directions. Evidence is recor
 39 runtime/13 Editor warnings. Normal-speed choreography, per-action lethal and authoritative-damage
 replay, and remaining abnormal-state/presentation checks are still required.
 
+## Remaining Vol10 throws: saved implementation, validation in progress
+
+Both fighters now register `Vol10_SEOI`, `Vol10_BRAIN`, `Vol10_FISH`, `Vol10_JPBOM`,
+`Vol10_LC_DSCREW`, `Vol10_NECK_BREAK`, `Vol10_SIHO`, `Vol10_GS1` and `Vol10_GSWING` in their
+heavy-action pools. Exact action IDs use the ordinary local/server queue and the existing browser.
+Existing Light_1/FLANK and Light_3/B_FUSHA registrations are reused. This accounts for all 17 non-idle
+pairs in the Vol10 library as registrations; it does not finish their final quality gates or the whole
+Frank demo dependency graph.
+
+`Vol10RemainingStudy` records the original 18 actual-fighter source previews and the observed role,
+landing and recovery mapping. `Vol10ThrowStudy` captures the saved adapted pairs. Every action keeps
+its authored `_N`/`_Y` pairing, restrained nondamaging grip cue, heavy movement whoosh, damaging ground
+contact and surviving-victim GetUp. Giant swing has two authored damaging landings: initial takedown
+and final release. Other settling bounces are not additional hits. Each saved action asset records its
+source references, contact seconds, region, continuation and presentation mapping.
+
+The brainbuster leaves both actors supine. The shared paired player now supports an optional attacker
+GetUp and waits for both required recoveries before completion callbacks or equipment restoration.
+An accepted lethal receiver retains its terminal source pose while the attacker recovers. Other moves
+keep their existing recovery assignments. New throws use a 0.12-second entry blend, a 0.15-metre maximum
+alignment error, and one depth correction after spacing; existing action defaults are preserved.
+
+`FrankPairGrounding` stores per-action, per-avatar, per-role vertical pose corrections sampled from
+actual skinned surfaces at approximately 240 Hz. These correct visible floor penetration on inverted
+poses without changing contact clocks or adding another root-motion controller. Maximum sampled lift
+is 0.639 m; the larger corrections concern the cartoon rigs' large heads and curved
+bodies. The source graph reconstructs the pose before each correction, so repeated sampling does not
+accumulate displacement. `ThrowGrounding.csv` records every measured source clearance and lift.
+The initial 60 Hz bake failed denser validation with up to 0.143 m of penetration during fast
+rotation. The revised 240 Hz bake passed a separate 361 Hz check across 36 configurations, both avatars
+and directions; the worst sampled clearance was -0.0144 m, within the 0.025 m tolerance. Evidence is
+`ThrowGroundingValidation.csv` and `.txt`. This is sampled clearance evidence, not a continuous-time
+proof. Grip continuity, normal-speed choreography and recovery transitions remain visual gates.
+
+The actual `CombatExpansionThrowPlayCheck` passed all 70 cases: 18 initial range guards, 44 queued
+actions including existing Light_1/Heavy_6 around the nine new throws, four lethal brainbusters and
+four interruptions during dual recovery. Queued cases cover both fighters and both screen directions.
+The checks observed contact identity/counts, source-clock timing, audio/VFX/lighting/hit-stop/camera
+response, equipment suppression/restoration, unchanged local-test health, and recovery/cleanup.
+Evidence is in `ThrowPlayMode.txt`. The existing 40-case grapple suite also passed after the shared
+recovery changes. Runtime and Editor compilation returned zero errors with the
+existing 39/13 warnings.
+
+The subsequent authoritative replay passed all 48 registered normal exchanges plus the lethal case
+from a fresh saved-scene copy, including nondamaging release/escape outcomes. It checked 101 native
+damage contact frames, duplicate/late health messages, 338 audio starts, 321 VFX starts, 124 impact-light
+cues, 44 distinct authored camera shots, KO/UI feedback, pause/cancel/reset cleanup and bounded pools.
+Evidence is in `ThrowAuthoritativeDamagePlayMode.txt`. The camera coverage assertion compares distinct
+shot keys because the hold outcomes intentionally reuse the same authored camera shot.
+Per-action abnormal-state coverage, normal-speed visual review and the other remaining presentation
+gates are still required.
+
 ## Outstanding scope and gates
 
 - Complete source-role/canonical-duplicate coverage, original scene pair/controller traces and all
   required final coverage classifications.
-- Integrate remaining distinct Frank demo content without duplicate registrations.
-- Finish hold/escape visual and authoritative-damage validation beyond the saved gameplay lifecycle.
+- Finish verification of the saved Vol10 throws and trace remaining distinct Frank demo content without duplicates.
+- Finish hold/escape visual and abnormal-state validation beyond the saved gameplay lifecycle.
+- Correct the F8 browser's nondamaging release/escape preview: its fallback can still display synthetic
+  HP loss, and the lethal preview toggle needs a damage-contact guard. Authoritative replay is separate
+  and passed with unchanged health for these outcomes.
 - Integrate every applicable double-axe combo, correct dual attachments, inspect every contact, and
   configure explicit reactions and complete feedback. No double-axe combo is yet integrated here.
 - Integrate actual Samurai pairs with owned unarmed-victim equipment state and all required lifecycle

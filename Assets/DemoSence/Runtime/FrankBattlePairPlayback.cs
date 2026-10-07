@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace FrankRetarget
@@ -10,6 +9,10 @@ namespace FrankRetarget
         public FrankTestDriver attackerDriver, receiverDriver;
         public AnimationClip attack, reaction;
         public AnimationClip getUp;
+        public AnimationClip attackerGetUp;
+        [Min(0)] public float entryBlendSeconds;
+        public bool constrainDepthAfterSpacing;
+        [Min(0)] public float maximumAlignmentError;
         public Vector3 receiverOffset;
         public Quaternion receiverRotation = Quaternion.identity;
         public FrankPairSpacing spacing;
@@ -40,7 +43,6 @@ namespace FrankRetarget
         FrankTestActor attackActor, hitActor;
         SavedModel attackModel, hitModel;
         bool lethal;
-        bool waitingForGetUp;
         bool lightDepthLocked;
         float lockedAttackHipsDepth;
         float lockedHitHipsDepth;
@@ -105,7 +107,7 @@ namespace FrankRetarget
             attacker = source;
             receiver = target;
             lethal = isLethal;
-            waitingForGetUp = false;
+            ResetRecovery();
             lightDepthLocked = pair.unarmedIndex >= 0;
             float initialAttackHipsDepth = source.Animator.GetBoneTransform(HumanBodyBones.Hips).position.z;
             float initialHitHipsDepth = target.Animator.GetBoneTransform(HumanBodyBones.Hips).position.z;
@@ -130,20 +132,22 @@ namespace FrankRetarget
             try
             {
                 AcquireEquipment(source, target);
-                float entryBlend = IsGrapple ? Move.grapple.entryBlendSeconds : 0;
+                float entryBlend = IsGrapple ? Move.grapple.entryBlendSeconds : pair.entryBlendSeconds;
                 attackActor = Actor(source, pair.attackerDriver, pair.attack, true,
                     pair.showWeapon || move.weapon != TrumpWeaponManager.WeaponType.None, pair.unarmedIndex >= 0, entryBlend);
                 hitActor = Actor(target, pair.receiverDriver, pair.reaction, false, false, pair.unarmedIndex >= 0, entryBlend);
                 // Grapples constrain the complete pair after spacing. Applying a
                 // pelvis lock before optional spacing would move the hands twice
                 // when the baked separation passes through zero.
-                if (lightDepthLocked && !IsGrapple)
+                if (lightDepthLocked && !IsGrapple && !pair.constrainDepthAfterSpacing)
                 {
                     attackActor.Pose.LockTargetHipsDepth(lockedAttackHipsDepth);
                     hitActor.Pose.LockTargetHipsDepth(lockedHitHipsDepth);
                 }
                 attacker.BeginSourceSequence(this, false);
                 receiver.BeginSourceSequence(this, lethal);
+                attackPlaybackId = attacker.PlaybackId;
+                hitPlaybackId = receiver.PlaybackId;
                 InitializeGrapple();
                 Playing = true;
                 SampleTime = 0;
@@ -189,7 +193,7 @@ namespace FrankRetarget
 
         public void EvaluateAt(float seconds)
         {
-            if (!Playing) return;
+            if (!Playing || waitingForGetUp) return;
             SampleTime = Mathf.Clamp(seconds, 0, Duration);
             attackActor.Evaluate(SampleTime);
             hitActor.Evaluate(Mathf.Max(0, SampleTime - pair.reactionDelay));
@@ -204,19 +208,18 @@ namespace FrankRetarget
             }
             CombatPositioningController.Instance?.ConstrainDepthNow();
             ConstrainLightHipsDepth();
-        }
-
-        void Update()
-        {
-            // Source poses are sampled manually; GetUp returns to the Animator.
-            // Set its speed before Unity evaluates animation so recovery uses the same clock.
-            if (Playing && waitingForGetUp && receiver && receiver.Animator)
-                receiver.Animator.speed = PresentationRate;
+            if (Move.grounding)
+                Move.grounding.Apply(SampleTime, attacker.Animator, receiver.Animator);
         }
 
         void LateUpdate()
         {
             if (!Playing) return;
+            if (!ParticipantsValid() || recoveryFailed)
+            {
+                Cancel();
+                return;
+            }
             if (Application.isPlaying && (Time.timeScale <= 0 || IsContactHeld))
             {
                 // The source Animator can refresh native weapon bones between manual samples.
@@ -227,9 +230,7 @@ namespace FrankRetarget
             if (waitingForGetUp)
             {
                 ConstrainLightHipsDepth();
-                // AnimationEndAction finishes GetUp and clears IsBusy. Keep this
-                // playback alive until that callback has completed the recovery.
-                if (receiver && !receiver.IsBusy) CompleteAfterGetUp();
+                if (!attackRecoveryPending && !hitRecoveryPending) CompleteNow();
                 return;
             }
             // Leave the terminal pose visible for a frame, as in the demo's clamped Evaluate.
@@ -277,104 +278,6 @@ namespace FrankRetarget
                 if (battleVfx) battleVfx.AdvanceSequence(this, SampleTime);
             }
             finally { if (Playing) EvaluateAt(settledTime); }
-        }
-
-        void CompleteSourceMotion()
-        {
-            float attackFinalX = 0f;
-            float receiverFinalX = 0f;
-            bool hasAttackFinalX = TryGetHipsX(attackActor, out attackFinalX);
-            bool hasReceiverFinalX = false;
-            if (!lethal)
-                hasReceiverFinalX = TryGetHipsX(hitActor, out receiverFinalX);
-            ClearActor(ref attackActor);
-            attackModel?.Restore();
-            attackModel = null;
-            if (hasAttackFinalX) PreserveRootX(attacker ? attacker.Animator : null, attackFinalX);
-            if (!lethal && RecoveryClip && receiver)
-            {
-                ClearActor(ref hitActor);
-                hitModel?.Restore();
-                hitModel = null;
-                if (hasReceiverFinalX) PreserveRootX(receiver.Animator, receiverFinalX);
-                if (receiver.BeginSourceGetUp(RecoveryClip))
-                {
-                    if (battleSfx) battleSfx.BeginRecovery(this);
-                    CombatPositioningController.Instance?.ConstrainDepthNow();
-                    ConstrainLightHipsDepth();
-                    waitingForGetUp = true;
-                    receiver.Animator.speed = PresentationRate;
-                    return;
-                }
-            }
-            CompleteNow(receiverFinalX, hasReceiverFinalX);
-        }
-
-        void CompleteAfterGetUp()
-        {
-            waitingForGetUp = false;
-            CompleteNow(0f, false);
-        }
-
-        void CompleteNow(float receiverFinalX, bool hasReceiverFinalX)
-        {
-            Playing = false;
-            if (battleSfx) battleSfx.EndSequence(this);
-            if (battleVfx) battleVfx.EndSequence(this);
-            if (!lethal)
-            {
-                ClearActor(ref hitActor);
-                hitModel?.Restore();
-                hitModel = null;
-                if (hasReceiverFinalX) PreserveRootX(receiver ? receiver.Animator : null, receiverFinalX);
-            }
-            if (receiver && receiver.Animator && !receiver.IsDead) receiver.Animator.speed = 1f;
-            ReleaseEquipment();
-            attacker.CompleteSourceSequence(true);
-            if (receiver && receiver.IsBusy) receiver.CompleteSourceSequence(true);
-            // A lethal reaction keeps hitActor and hitModel alive so the receiver
-            // remains in the authored final death pose. ResetCombat/Cancel clears it.
-        }
-
-        static bool TryGetHipsX(FrankTestActor actor, out float x)
-        {
-            x = 0f;
-            if (!actor || actor.Pose == null || !actor.Pose.targetHips) return false;
-            x = actor.Pose.targetHips.position.x;
-            return float.IsFinite(x);
-        }
-
-        static void PreserveRootX(Animator animator, float finalHipsX)
-        {
-            if (!animator || !float.IsFinite(finalHipsX)) return;
-            var hips = animator.GetBoneTransform(HumanBodyBones.Hips);
-            if (!hips) return;
-            float delta = finalHipsX - hips.position.x;
-            if (Mathf.Abs(delta) <= 0.00001f) return;
-            Vector3 root = animator.transform.position;
-            root.x += delta;
-            animator.transform.position = root;
-        }
-
-        public void Cancel()
-        {
-            if (battleSfx) battleSfx.EndSequence(this, true);
-            if (battleVfx) battleVfx.EndSequence(this, true);
-            bool interrupted = Playing;
-            Playing = false;
-            waitingForGetUp = false;
-            ClearActor(ref attackActor);
-            ClearActor(ref hitActor);
-            attackModel?.Restore();
-            hitModel?.Restore();
-            attackModel = hitModel = null;
-            if (receiver && receiver.Animator && !receiver.IsDead) receiver.Animator.speed = 1f;
-            ReleaseEquipment();
-            if (interrupted)
-            {
-                if (attacker) attacker.CompleteSourceSequence(false);
-                if (receiver) receiver.CompleteSourceSequence(false);
-            }
         }
 
         void ConstrainLightHipsDepth()

@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dcfa8577ab5249259fa110adbb5792e, type: 3}
+  m_Name: Vol10_NECK_BREAK
+  m_EditorClassIdentifier: Assembly-CSharp::CombatActionDefinition
+  actionId: Vol10_NECK_BREAK
+  displayName: Neck breaker
+  gameplayTrigger: Heavy exchange selection, exact server animationId, EnqueueCombatAction(side,
+    ID), and the existing animation browser.
+  entryAndInterruption: Living available participants, normal lane approach to authored
+    range; maximum 0.15m alignment error; authored receiver orientation and 0.12s
+    entry blend. Unarmed source actors and owned equipment state. Cancel/reset/disable/death
+    releases both roles.
+  recovery: Attacker stands through its authored clip; surviving victim uses existing
+    GetUp. Accepted lethal victim retains its authored final pose.
+  presentation: Grip cloth/dust, heavy movement whoosh, grounded body impact, shared
+    hit-stop, flash, impact light and camera impulse. Final landing accent; no unarmed
+    weapon trail. Health distributes only accepted server totals; local previews
+    do not invent damage.
+  contacts:
+  - strikeId: Vol10_NECK_BREAK/0
+    attack: {fileID: 7400000, guid: 51760ed46683427dc8d758776c1ed5d2, type: 2}
+    reaction: {fileID: 7400000, guid: bc50ed3d70eb316338efe0ba16ce6c1f, type: 2}
+    seconds: 0.3
+    activeWindowSeconds: {x: 0.28333333, y: 0.3166667}
+    strikingLimb: 17
+    targetRegion: Head-and-shoulder control; back landing
+    directionInVictimSpace: {x: 0, y: 0, z: 1}
+    reactionPolicy: 0
+    result: 4
+    presentationGroup: grapple_grip
+    nonDamagingInteraction: 1
+    continuation: Authored paired receiver track continues on the existing accepted
+      exchange clock. Capture is non-damaging; impact damage occurs only at the listed
+      ground contacts. No reaction restarts, extra armor, unconditional kills, or
+      separate cosmetic damage.
+  - strikeId: Vol10_NECK_BREAK/1
+    attack: {fileID: 7400000, guid: 51760ed46683427dc8d758776c1ed5d2, type: 2}
+    reaction: {fileID: 7400000, guid: bc50ed3d70eb316338efe0ba16ce6c1f, type: 2}
+    seconds: 0.78333336
+    activeWindowSeconds: {x: 0.7666667, y: 0.8}
+    strikingLimb: 0
+    targetRegion: Head-and-shoulder control; back landing
+    directionInVictimSpace: {x: 0, y: -1, z: 0}
+    reactionPolicy: 0
+    result: 2
+    presentationGroup: body_fall
+    nonDamagingInteraction: 0
+    continuation: Authored paired receiver track continues on the existing accepted
+      exchange clock. Capture is non-damaging; impact damage occurs only at the listed
+      ground contacts. No reaction restarts, extra armor, unconditional kills, or
+      separate cosmetic damage.
