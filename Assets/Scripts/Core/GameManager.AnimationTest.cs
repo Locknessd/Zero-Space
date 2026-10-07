@@ -137,7 +137,7 @@ public partial class GameManager
         long after = before - damage;
         var bank = battleSfx ? battleSfx.bank : battleVfx ? battleVfx.timeline : null;
         float[] times = playback && playback.Playing
-            ? BattleHitDamageSequence.ContactTimes(bank ? bank.FindMove(move) : null, playback.Duration) : Array.Empty<float>();
+            ? BattleHitDamageSequence.ContactTimes(playback.PresentationProfile(bank), playback.Duration) : Array.Empty<float>();
         void Present(long hp, long portion)
         {
             UI?.UpdateHealth(side, hp, before);

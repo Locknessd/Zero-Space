@@ -1,5 +1,5 @@
 {
-    "utc": "2026-10-07T19:07:48.6861770Z",
+    "utc": "2026-10-07T21:07:32.2213310Z",
     "unityVersion": "6000.5.9f1",
     "battlePath": "Assets/Scenes/BattleScene.unity",
     "verifiedSources": [
@@ -2119,7 +2119,10 @@
             "sourceScopes": [
                 "Assets/DemoSence/Frank_Damages_Mankey_Pepe.unity"
             ],
-            "registeredRoles": [],
+            "registeredRoles": [
+                "Mankey/Light/Vol10_HOLD_LALI:continuation-attacker",
+                "Pepe/Light/Vol10_HOLD_LALI:continuation-attacker"
+            ],
             "events": [],
             "verification": "Pending motion preview and BattleScene validation"
         },
@@ -2141,7 +2144,10 @@
             "sourceScopes": [
                 "Assets/DemoSence/Frank_Damages_Mankey_Pepe.unity"
             ],
-            "registeredRoles": [],
+            "registeredRoles": [
+                "Mankey/Light/Vol10_HOLD_LALI:continuation-receiver",
+                "Pepe/Light/Vol10_HOLD_LALI:continuation-receiver"
+            ],
             "events": [],
             "verification": "Pending motion preview and BattleScene validation"
         },
@@ -2163,7 +2169,14 @@
             "sourceScopes": [
                 "Assets/DemoSence/Frank_Damages_Mankey_Pepe.unity"
             ],
-            "registeredRoles": [],
+            "registeredRoles": [
+                "Mankey/Light/Vol10_HOLD:attacker",
+                "Mankey/Light/Vol10_HOLD_LALI:attacker",
+                "Mankey/Light/Vol10_NAGE_ESC:attacker",
+                "Pepe/Light/Vol10_HOLD:attacker",
+                "Pepe/Light/Vol10_HOLD_LALI:attacker",
+                "Pepe/Light/Vol10_NAGE_ESC:attacker"
+            ],
             "events": [],
             "verification": "Pending motion preview and BattleScene validation"
         },
@@ -2185,7 +2198,14 @@
             "sourceScopes": [
                 "Assets/DemoSence/Frank_Damages_Mankey_Pepe.unity"
             ],
-            "registeredRoles": [],
+            "registeredRoles": [
+                "Mankey/Light/Vol10_HOLD:receiver",
+                "Mankey/Light/Vol10_HOLD_LALI:receiver",
+                "Mankey/Light/Vol10_NAGE_ESC:receiver",
+                "Pepe/Light/Vol10_HOLD:receiver",
+                "Pepe/Light/Vol10_HOLD_LALI:receiver",
+                "Pepe/Light/Vol10_NAGE_ESC:receiver"
+            ],
             "events": [],
             "verification": "Pending motion preview and BattleScene validation"
         },
@@ -2317,7 +2337,12 @@
             "sourceScopes": [
                 "Assets/DemoSence/Frank_Damages_Mankey_Pepe.unity"
             ],
-            "registeredRoles": [],
+            "registeredRoles": [
+                "Mankey/Light/Vol10_HOLD_LALI:continuation-attacker",
+                "Mankey/Light/Vol10_NAGE_ESC:continuation-attacker",
+                "Pepe/Light/Vol10_HOLD_LALI:continuation-attacker",
+                "Pepe/Light/Vol10_NAGE_ESC:continuation-attacker"
+            ],
             "events": [],
             "verification": "Pending motion preview and BattleScene validation"
         },
@@ -2339,7 +2364,12 @@
             "sourceScopes": [
                 "Assets/DemoSence/Frank_Damages_Mankey_Pepe.unity"
             ],
-            "registeredRoles": [],
+            "registeredRoles": [
+                "Mankey/Light/Vol10_HOLD_LALI:continuation-receiver",
+                "Mankey/Light/Vol10_NAGE_ESC:continuation-receiver",
+                "Pepe/Light/Vol10_HOLD_LALI:continuation-receiver",
+                "Pepe/Light/Vol10_NAGE_ESC:continuation-receiver"
+            ],
             "events": [],
             "verification": "Pending motion preview and BattleScene validation"
         },
@@ -10253,6 +10283,9 @@
             "avatar": "59dc3f26824c72872aa4cf6baeec671e:9000000",
             "attackerDriver": "4a3d9385b9050006dae07a46414f20ac:7504886526908891812",
             "receiverDriver": "d3ff4cfc98ab527acb177b539dc6c053:8035043399380846674",
+            "continuationAttacks": [],
+            "continuationReactions": [],
+            "continuationRecoveries": [],
             "range": 0.9162476062774658,
             "reactionDelay": 0.0,
             "paired": true,
@@ -10270,6 +10303,9 @@
             "avatar": "59dc3f26824c72872aa4cf6baeec671e:9000000",
             "attackerDriver": "4a3d9385b9050006dae07a46414f20ac:7504886526908891812",
             "receiverDriver": "d3ff4cfc98ab527acb177b539dc6c053:8035043399380846674",
+            "continuationAttacks": [],
+            "continuationReactions": [],
+            "continuationRecoveries": [],
             "range": 0.9162476062774658,
             "reactionDelay": 0.0,
             "paired": true,
@@ -10287,6 +10323,9 @@
             "avatar": "59dc3f26824c72872aa4cf6baeec671e:9000000",
             "attackerDriver": "4a3d9385b9050006dae07a46414f20ac:7504886526908891812",
             "receiverDriver": "d3ff4cfc98ab527acb177b539dc6c053:8035043399380846674",
+            "continuationAttacks": [],
+            "continuationReactions": [],
+            "continuationRecoveries": [],
             "range": 1.0188267230987549,
             "reactionDelay": 0.0,
             "paired": true,
@@ -10304,6 +10343,9 @@
             "avatar": "59dc3f26824c72872aa4cf6baeec671e:9000000",
             "attackerDriver": "4a3d9385b9050006dae07a46414f20ac:7504886526908891812",
             "receiverDriver": "d3ff4cfc98ab527acb177b539dc6c053:8035043399380846674",
+            "continuationAttacks": [],
+            "continuationReactions": [],
+            "continuationRecoveries": [],
             "range": 1.0188267230987549,
             "reactionDelay": 0.0,
             "paired": true,
@@ -10321,6 +10363,84 @@
             "avatar": "59dc3f26824c72872aa4cf6baeec671e:9000000",
             "attackerDriver": "4a3d9385b9050006dae07a46414f20ac:7504886526908891812",
             "receiverDriver": "d3ff4cfc98ab527acb177b539dc6c053:8035043399380846674",
+            "continuationAttacks": [],
+            "continuationReactions": [],
+            "continuationRecoveries": [],
+            "range": 1.0188267230987549,
+            "reactionDelay": 0.0,
+            "paired": true,
+            "valid": true,
+            "hasPresentation": true,
+            "presentationCues": 2
+        },
+        {
+            "fighter": "Mankey",
+            "pool": "Light",
+            "id": "Vol10_HOLD",
+            "attack": "3c510cca4e748262e8816db80f3a4753:7400000",
+            "reaction": "4238fdf2da237fa8dbe30342fd09c739:7400000",
+            "recovery": "",
+            "avatar": "59dc3f26824c72872aa4cf6baeec671e:9000000",
+            "attackerDriver": "4a3d9385b9050006dae07a46414f20ac:7504886526908891812",
+            "receiverDriver": "d3ff4cfc98ab527acb177b539dc6c053:8035043399380846674",
+            "continuationAttacks": [],
+            "continuationReactions": [],
+            "continuationRecoveries": [],
+            "range": 1.0188267230987549,
+            "reactionDelay": 0.0,
+            "paired": true,
+            "valid": true,
+            "hasPresentation": true,
+            "presentationCues": 2
+        },
+        {
+            "fighter": "Mankey",
+            "pool": "Light",
+            "id": "Vol10_HOLD_LALI",
+            "attack": "3c510cca4e748262e8816db80f3a4753:7400000",
+            "reaction": "4238fdf2da237fa8dbe30342fd09c739:7400000",
+            "recovery": "",
+            "avatar": "59dc3f26824c72872aa4cf6baeec671e:9000000",
+            "attackerDriver": "4a3d9385b9050006dae07a46414f20ac:7504886526908891812",
+            "receiverDriver": "d3ff4cfc98ab527acb177b539dc6c053:8035043399380846674",
+            "continuationAttacks": [
+                "90d69c8b3f7bcecfc914e57f13a85993:7400000",
+                "26ee13315980aaafaad9b2e569c8c796:7400000"
+            ],
+            "continuationReactions": [
+                "adba18553225792c3aadd8952925e226:7400000",
+                "b4c86d50d2c87394a8c9bc5a647e813f:7400000"
+            ],
+            "continuationRecoveries": [
+                "3f1b177ffbc845d495792ddeae5216ff:1783586326346866118",
+                ""
+            ],
+            "range": 1.0188267230987549,
+            "reactionDelay": 0.0,
+            "paired": true,
+            "valid": true,
+            "hasPresentation": true,
+            "presentationCues": 4
+        },
+        {
+            "fighter": "Mankey",
+            "pool": "Light",
+            "id": "Vol10_NAGE_ESC",
+            "attack": "3c510cca4e748262e8816db80f3a4753:7400000",
+            "reaction": "4238fdf2da237fa8dbe30342fd09c739:7400000",
+            "recovery": "",
+            "avatar": "59dc3f26824c72872aa4cf6baeec671e:9000000",
+            "attackerDriver": "4a3d9385b9050006dae07a46414f20ac:7504886526908891812",
+            "receiverDriver": "d3ff4cfc98ab527acb177b539dc6c053:8035043399380846674",
+            "continuationAttacks": [
+                "26ee13315980aaafaad9b2e569c8c796:7400000"
+            ],
+            "continuationReactions": [
+                "b4c86d50d2c87394a8c9bc5a647e813f:7400000"
+            ],
+            "continuationRecoveries": [
+                ""
+            ],
             "range": 1.0188267230987549,
             "reactionDelay": 0.0,
             "paired": true,
@@ -10338,6 +10458,9 @@
             "avatar": "59dc3f26824c72872aa4cf6baeec671e:9000000",
             "attackerDriver": "f2a3b959f50255d44b663f44a38062cb:3885139517672796748",
             "receiverDriver": "96b4e6395233e5f8f869cfc9604ca226:6764489514500738859",
+            "continuationAttacks": [],
+            "continuationReactions": [],
+            "continuationRecoveries": [],
             "range": 1.8649064302444459,
             "reactionDelay": 0.0,
             "paired": true,
@@ -10355,6 +10478,9 @@
             "avatar": "59dc3f26824c72872aa4cf6baeec671e:9000000",
             "attackerDriver": "3c736fd1cfe052646aab4342b585c5c7:5693976535927615062",
             "receiverDriver": "56e66501fab29e811b4f328baef836cb:4744129416762995835",
+            "continuationAttacks": [],
+            "continuationReactions": [],
+            "continuationRecoveries": [],
             "range": 1.8828927278518677,
             "reactionDelay": 0.0,
             "paired": true,
@@ -10372,6 +10498,9 @@
             "avatar": "59dc3f26824c72872aa4cf6baeec671e:9000000",
             "attackerDriver": "6d4481110d049714bbbda957307bc2ef:1653908615768287857",
             "receiverDriver": "982dc7909beb60d75b4e337b7b180863:4783197437115711824",
+            "continuationAttacks": [],
+            "continuationReactions": [],
+            "continuationRecoveries": [],
             "range": 2.7983968257904054,
             "reactionDelay": 0.0,
             "paired": true,
@@ -10389,6 +10518,9 @@
             "avatar": "59dc3f26824c72872aa4cf6baeec671e:9000000",
             "attackerDriver": "2540c63759778844794f1ad9719165e8:7957119653134181812",
             "receiverDriver": "be9739f6c1ef4c8faafbe2a571345670:8178279276764037037",
+            "continuationAttacks": [],
+            "continuationReactions": [],
+            "continuationRecoveries": [],
             "range": 1.1067825555801392,
             "reactionDelay": 0.0,
             "paired": true,
@@ -10406,6 +10538,9 @@
             "avatar": "59dc3f26824c72872aa4cf6baeec671e:9000000",
             "attackerDriver": "5966d2653b9df7141b51baabe8c4ad54:5163707076589726611",
             "receiverDriver": "56bb3d27ffef63fb9a6e7bb88c242655:3769186581484096935",
+            "continuationAttacks": [],
+            "continuationReactions": [],
+            "continuationRecoveries": [],
             "range": 1.8963823318481446,
             "reactionDelay": 0.0,
             "paired": true,
@@ -10423,6 +10558,9 @@
             "avatar": "59dc3f26824c72872aa4cf6baeec671e:9000000",
             "attackerDriver": "0711591f28d6feb489f44f9106235d31:5537883003245558870",
             "receiverDriver": "1c0419535adb0843eb49a36ea89be3ea:6634405970164516564",
+            "continuationAttacks": [],
+            "continuationReactions": [],
+            "continuationRecoveries": [],
             "range": 1.5726284980773926,
             "reactionDelay": 0.0,
             "paired": true,
@@ -10440,6 +10578,9 @@
             "avatar": "59dc3f26824c72872aa4cf6baeec671e:9000000",
             "attackerDriver": "2f8c2cb893aeff146849e0fed6810b98:8502610207841598105",
             "receiverDriver": "597f385fbe49436f996c606e2d2b65e0:8640919574781362934",
+            "continuationAttacks": [],
+            "continuationReactions": [],
+            "continuationRecoveries": [],
             "range": 1.9233620166778565,
             "reactionDelay": 0.0,
             "paired": true,
@@ -10457,6 +10598,9 @@
             "avatar": "757d9d3f1766533aa895e81a07aa5197:9000000",
             "attackerDriver": "d3ff4cfc98ab527acb177b539dc6c053:8035043399380846674",
             "receiverDriver": "4a3d9385b9050006dae07a46414f20ac:7504886526908891812",
+            "continuationAttacks": [],
+            "continuationReactions": [],
+            "continuationRecoveries": [],
             "range": 0.9162476062774658,
             "reactionDelay": 0.0,
             "paired": true,
@@ -10474,6 +10618,9 @@
             "avatar": "757d9d3f1766533aa895e81a07aa5197:9000000",
             "attackerDriver": "d3ff4cfc98ab527acb177b539dc6c053:8035043399380846674",
             "receiverDriver": "4a3d9385b9050006dae07a46414f20ac:7504886526908891812",
+            "continuationAttacks": [],
+            "continuationReactions": [],
+            "continuationRecoveries": [],
             "range": 0.9162476062774658,
             "reactionDelay": 0.0,
             "paired": true,
@@ -10491,6 +10638,9 @@
             "avatar": "757d9d3f1766533aa895e81a07aa5197:9000000",
             "attackerDriver": "d3ff4cfc98ab527acb177b539dc6c053:8035043399380846674",
             "receiverDriver": "4a3d9385b9050006dae07a46414f20ac:7504886526908891812",
+            "continuationAttacks": [],
+            "continuationReactions": [],
+            "continuationRecoveries": [],
             "range": 1.0188267230987549,
             "reactionDelay": 0.0,
             "paired": true,
@@ -10508,6 +10658,9 @@
             "avatar": "757d9d3f1766533aa895e81a07aa5197:9000000",
             "attackerDriver": "d3ff4cfc98ab527acb177b539dc6c053:8035043399380846674",
             "receiverDriver": "4a3d9385b9050006dae07a46414f20ac:7504886526908891812",
+            "continuationAttacks": [],
+            "continuationReactions": [],
+            "continuationRecoveries": [],
             "range": 1.0188267230987549,
             "reactionDelay": 0.0,
             "paired": true,
@@ -10525,6 +10678,84 @@
             "avatar": "757d9d3f1766533aa895e81a07aa5197:9000000",
             "attackerDriver": "d3ff4cfc98ab527acb177b539dc6c053:8035043399380846674",
             "receiverDriver": "4a3d9385b9050006dae07a46414f20ac:7504886526908891812",
+            "continuationAttacks": [],
+            "continuationReactions": [],
+            "continuationRecoveries": [],
+            "range": 1.0188267230987549,
+            "reactionDelay": 0.0,
+            "paired": true,
+            "valid": true,
+            "hasPresentation": true,
+            "presentationCues": 2
+        },
+        {
+            "fighter": "Pepe",
+            "pool": "Light",
+            "id": "Vol10_HOLD",
+            "attack": "3c510cca4e748262e8816db80f3a4753:7400000",
+            "reaction": "4238fdf2da237fa8dbe30342fd09c739:7400000",
+            "recovery": "",
+            "avatar": "757d9d3f1766533aa895e81a07aa5197:9000000",
+            "attackerDriver": "d3ff4cfc98ab527acb177b539dc6c053:8035043399380846674",
+            "receiverDriver": "4a3d9385b9050006dae07a46414f20ac:7504886526908891812",
+            "continuationAttacks": [],
+            "continuationReactions": [],
+            "continuationRecoveries": [],
+            "range": 1.0188267230987549,
+            "reactionDelay": 0.0,
+            "paired": true,
+            "valid": true,
+            "hasPresentation": true,
+            "presentationCues": 2
+        },
+        {
+            "fighter": "Pepe",
+            "pool": "Light",
+            "id": "Vol10_HOLD_LALI",
+            "attack": "3c510cca4e748262e8816db80f3a4753:7400000",
+            "reaction": "4238fdf2da237fa8dbe30342fd09c739:7400000",
+            "recovery": "",
+            "avatar": "757d9d3f1766533aa895e81a07aa5197:9000000",
+            "attackerDriver": "d3ff4cfc98ab527acb177b539dc6c053:8035043399380846674",
+            "receiverDriver": "4a3d9385b9050006dae07a46414f20ac:7504886526908891812",
+            "continuationAttacks": [
+                "90d69c8b3f7bcecfc914e57f13a85993:7400000",
+                "26ee13315980aaafaad9b2e569c8c796:7400000"
+            ],
+            "continuationReactions": [
+                "adba18553225792c3aadd8952925e226:7400000",
+                "b4c86d50d2c87394a8c9bc5a647e813f:7400000"
+            ],
+            "continuationRecoveries": [
+                "3f1b177ffbc845d495792ddeae5216ff:1783586326346866118",
+                ""
+            ],
+            "range": 1.0188267230987549,
+            "reactionDelay": 0.0,
+            "paired": true,
+            "valid": true,
+            "hasPresentation": true,
+            "presentationCues": 4
+        },
+        {
+            "fighter": "Pepe",
+            "pool": "Light",
+            "id": "Vol10_NAGE_ESC",
+            "attack": "3c510cca4e748262e8816db80f3a4753:7400000",
+            "reaction": "4238fdf2da237fa8dbe30342fd09c739:7400000",
+            "recovery": "",
+            "avatar": "757d9d3f1766533aa895e81a07aa5197:9000000",
+            "attackerDriver": "d3ff4cfc98ab527acb177b539dc6c053:8035043399380846674",
+            "receiverDriver": "4a3d9385b9050006dae07a46414f20ac:7504886526908891812",
+            "continuationAttacks": [
+                "26ee13315980aaafaad9b2e569c8c796:7400000"
+            ],
+            "continuationReactions": [
+                "b4c86d50d2c87394a8c9bc5a647e813f:7400000"
+            ],
+            "continuationRecoveries": [
+                ""
+            ],
             "range": 1.0188267230987549,
             "reactionDelay": 0.0,
             "paired": true,
@@ -10542,6 +10773,9 @@
             "avatar": "757d9d3f1766533aa895e81a07aa5197:9000000",
             "attackerDriver": "ce0dfe7cb469d25498eef5bd817469e2:6950283849112158615",
             "receiverDriver": "eea812d605b429a4d9f0a363c4181222:1768601860426351976",
+            "continuationAttacks": [],
+            "continuationReactions": [],
+            "continuationRecoveries": [],
             "range": 1.8649064302444459,
             "reactionDelay": 0.0,
             "paired": true,
@@ -10559,6 +10793,9 @@
             "avatar": "757d9d3f1766533aa895e81a07aa5197:9000000",
             "attackerDriver": "2f10972ceb05ab64e955577c4818c330:8446213007304597090",
             "receiverDriver": "a57beca1e0b7d74288bdad1fa3c31ca7:7048239281332157073",
+            "continuationAttacks": [],
+            "continuationReactions": [],
+            "continuationRecoveries": [],
             "range": 1.8828927278518677,
             "reactionDelay": 0.0,
             "paired": true,
@@ -10576,6 +10813,9 @@
             "avatar": "757d9d3f1766533aa895e81a07aa5197:9000000",
             "attackerDriver": "95d8bfa20ef0ac44e98c7e455755d227:3325289682089800405",
             "receiverDriver": "803bb27ee49a3ec36a9d2e35b92d7b59:5565284448948192907",
+            "continuationAttacks": [],
+            "continuationReactions": [],
+            "continuationRecoveries": [],
             "range": 2.7983968257904054,
             "reactionDelay": 0.0,
             "paired": true,
@@ -10593,6 +10833,9 @@
             "avatar": "757d9d3f1766533aa895e81a07aa5197:9000000",
             "attackerDriver": "23dabdbf3deff564286cad8325b66eb1:4387300194120957746",
             "receiverDriver": "d758666da9f0b046689e7e908a0156f8:949663818623985497",
+            "continuationAttacks": [],
+            "continuationReactions": [],
+            "continuationRecoveries": [],
             "range": 1.1067825555801392,
             "reactionDelay": 0.0,
             "paired": true,
@@ -10610,6 +10853,9 @@
             "avatar": "757d9d3f1766533aa895e81a07aa5197:9000000",
             "attackerDriver": "aa0bf593cbb26a64d970dd8935c1d1b6:8114078721016791534",
             "receiverDriver": "38d1e8c8f93ac7a33bbfe33616855d86:3150105877192995260",
+            "continuationAttacks": [],
+            "continuationReactions": [],
+            "continuationRecoveries": [],
             "range": 1.8963823318481446,
             "reactionDelay": 0.0,
             "paired": true,
@@ -10627,6 +10873,9 @@
             "avatar": "757d9d3f1766533aa895e81a07aa5197:9000000",
             "attackerDriver": "91c881efcefad1f4ca01af4559cdf331:392682462489292698",
             "receiverDriver": "37891ef1aae30c7c7a1993d6cf16037a:6652774990121523312",
+            "continuationAttacks": [],
+            "continuationReactions": [],
+            "continuationRecoveries": [],
             "range": 1.5726284980773926,
             "reactionDelay": 0.0,
             "paired": true,
@@ -10644,6 +10893,9 @@
             "avatar": "757d9d3f1766533aa895e81a07aa5197:9000000",
             "attackerDriver": "b75e6259643d9e2428340240b96c7fd9:4760453788418361956",
             "receiverDriver": "a472f2c9b2fa41d9ea31447021fe3d64:8410350746579071745",
+            "continuationAttacks": [],
+            "continuationReactions": [],
+            "continuationRecoveries": [],
             "range": 1.9233620166778565,
             "reactionDelay": 0.0,
             "paired": true,

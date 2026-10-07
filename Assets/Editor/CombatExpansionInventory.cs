@@ -42,6 +42,7 @@ namespace FrankRetarget.Editor
         {
             public string fighter, pool, id, attack, reaction, recovery, avatar;
             public string attackerDriver, receiverDriver;
+            public string[] continuationAttacks, continuationReactions, continuationRecoveries;
             public float range, reactionDelay;
             public bool paired, valid, hasPresentation;
             public int presentationCues;
@@ -119,6 +120,12 @@ namespace FrankRetarget.Editor
                             roles.Add(prefix + ":receiver");
                         if (move.recovery == identity)
                             roles.Add(prefix + ":recovery");
+                        if (Array.IndexOf(move.continuationAttacks, identity) >= 0)
+                            roles.Add(prefix + ":continuation-attacker");
+                        if (Array.IndexOf(move.continuationReactions, identity) >= 0)
+                            roles.Add(prefix + ":continuation-receiver");
+                        if (Array.IndexOf(move.continuationRecoveries, identity) >= 0)
+                            roles.Add(prefix + ":continuation-recovery");
                     }
                     clips.Add(new ClipRecord
                     {
@@ -171,6 +178,11 @@ namespace FrankRetarget.Editor
                 var pair = move.sourcePair;
                 var bank = fighter.battleSfx ? fighter.battleSfx.bank : null;
                 var presentation = bank ? bank.FindMove(move) : null;
+                var phases = !move.grapple ? Array.Empty<FrankGrappleDefinition.Continuation>() :
+                    move.grappleOutcome == FrankGrappleOutcome.Throw
+                        ? new[] { move.grapple.throwing, move.grapple.escaping }
+                        : new[] { move.grapple.For(move.grappleOutcome) };
+                phases = phases.Where(p => p != null).ToArray();
                 records.Add(new MoveRecord
                 {
                     fighter = fighter.name,
@@ -179,6 +191,9 @@ namespace FrankRetarget.Editor
                     attack = Identity(pair?.attack ? pair.attack : move.attackAnim),
                     reaction = Identity(pair?.reaction ? pair.reaction : move.hitAnim),
                     recovery = Identity(pair?.getUp ? pair.getUp : move.getUpAnim),
+                    continuationAttacks = phases.Select(p => Identity(p.attack)).ToArray(),
+                    continuationReactions = phases.Select(p => Identity(p.reaction)).ToArray(),
+                    continuationRecoveries = phases.Select(p => Identity(p.getUp)).ToArray(),
                     attackerDriver = Identity(pair?.attackerDriver),
                     receiverDriver = Identity(pair?.receiverDriver),
                     avatar = Identity(fighter.Animator ? fighter.Animator.avatar : null),

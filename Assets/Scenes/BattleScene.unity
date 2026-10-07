@@ -42222,6 +42222,9 @@ MonoBehaviour:
       pepeAttacks: 1
       showWeapon: 0
       reactionDelay: 0
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
   - moveName: Light_3
     actionDefinition: {fileID: 0}
     attackAnim: {fileID: 7400000, guid: 76e9c5411407b62e39172a6f4375b4bd, type: 2}
@@ -42248,6 +42251,9 @@ MonoBehaviour:
       pepeAttacks: 1
       showWeapon: 0
       reactionDelay: 0
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
   - moveName: Vol10_CmnAtemi
     actionDefinition: {fileID: 11400000, guid: eb981d1d55122cc95b7f7a19afee4080, type: 2}
     attackAnim: {fileID: 7400000, guid: e47354cd8b0fa220b9e0b4c75f9f0fba, type: 2}
@@ -42274,6 +42280,9 @@ MonoBehaviour:
       pepeAttacks: 1
       showWeapon: 0
       reactionDelay: 0
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
   - moveName: Vol10_CmnAtemi2
     actionDefinition: {fileID: 11400000, guid: 846239f0308862f988f4d794a0d46cc9, type: 2}
     attackAnim: {fileID: 7400000, guid: d082b73724850ba88a521877a9fcd7a1, type: 2}
@@ -42298,6 +42307,9 @@ MonoBehaviour:
       pepeAttacks: 1
       showWeapon: 0
       reactionDelay: 0
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
   - moveName: Vol10_CmnAtemi3
     actionDefinition: {fileID: 11400000, guid: 5eb0c48359d0b8dbe8e3652d0c8ebf6b, type: 2}
     attackAnim: {fileID: 7400000, guid: 190a2ce36ccea1dab9df22b479f3cf29, type: 2}
@@ -42322,6 +42334,90 @@ MonoBehaviour:
       pepeAttacks: 1
       showWeapon: 0
       reactionDelay: 0
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
+  - moveName: Vol10_HOLD
+    actionDefinition: {fileID: 11400000, guid: 8de5d901d65abebacadbfcee3736bb5a, type: 2}
+    attackAnim: {fileID: 7400000, guid: 3c510cca4e748262e8816db80f3a4753, type: 2}
+    hitAnim: {fileID: 7400000, guid: 4238fdf2da237fa8dbe30342fd09c739, type: 2}
+    getUpAnim: {fileID: 0}
+    attackRange: 1.0188267
+    weapon: 0
+    skill: 0
+    sourcePair:
+      attackerDriver: {fileID: 8035043399380846674, guid: d3ff4cfc98ab527acb177b539dc6c053,
+        type: 3}
+      receiverDriver: {fileID: 7504886526908891812, guid: 4a3d9385b9050006dae07a46414f20ac,
+        type: 3}
+      attack: {fileID: 7400000, guid: 3c510cca4e748262e8816db80f3a4753, type: 2}
+      reaction: {fileID: 7400000, guid: 4238fdf2da237fa8dbe30342fd09c739, type: 2}
+      getUp: {fileID: 0}
+      receiverOffset: {x: 0, y: 0, z: 1.0188267}
+      receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+      spacing: {fileID: 11400000, guid: a2d28f320db8a09cb8ffa36e8e6acd58, type: 2}
+      bodySpacing: 0.89931643
+      unarmedIndex: 8
+      pepeAttacks: 1
+      showWeapon: 0
+      reactionDelay: 0
+    grapple: {fileID: 11400000, guid: d679559392692565087ab4c56ae28448, type: 2}
+    grappleOutcome: 0
+    requiresExplicitSelection: 1
+  - moveName: Vol10_HOLD_LALI
+    actionDefinition: {fileID: 11400000, guid: 5d36dc55933fab7788b80dcf6e02245b, type: 2}
+    attackAnim: {fileID: 7400000, guid: 3c510cca4e748262e8816db80f3a4753, type: 2}
+    hitAnim: {fileID: 7400000, guid: 4238fdf2da237fa8dbe30342fd09c739, type: 2}
+    getUpAnim: {fileID: 0}
+    attackRange: 1.0188267
+    weapon: 0
+    skill: 0
+    sourcePair:
+      attackerDriver: {fileID: 8035043399380846674, guid: d3ff4cfc98ab527acb177b539dc6c053,
+        type: 3}
+      receiverDriver: {fileID: 7504886526908891812, guid: 4a3d9385b9050006dae07a46414f20ac,
+        type: 3}
+      attack: {fileID: 7400000, guid: 3c510cca4e748262e8816db80f3a4753, type: 2}
+      reaction: {fileID: 7400000, guid: 4238fdf2da237fa8dbe30342fd09c739, type: 2}
+      getUp: {fileID: 0}
+      receiverOffset: {x: 0, y: 0, z: 1.0188267}
+      receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+      spacing: {fileID: 11400000, guid: a2d28f320db8a09cb8ffa36e8e6acd58, type: 2}
+      bodySpacing: 0.89931643
+      unarmedIndex: 8
+      pepeAttacks: 1
+      showWeapon: 0
+      reactionDelay: 0
+    grapple: {fileID: 11400000, guid: d679559392692565087ab4c56ae28448, type: 2}
+    grappleOutcome: 1
+    requiresExplicitSelection: 1
+  - moveName: Vol10_NAGE_ESC
+    actionDefinition: {fileID: 11400000, guid: 07f75ed57ed5f1bd5aaffb1269703aa8, type: 2}
+    attackAnim: {fileID: 7400000, guid: 3c510cca4e748262e8816db80f3a4753, type: 2}
+    hitAnim: {fileID: 7400000, guid: 4238fdf2da237fa8dbe30342fd09c739, type: 2}
+    getUpAnim: {fileID: 0}
+    attackRange: 1.0188267
+    weapon: 0
+    skill: 0
+    sourcePair:
+      attackerDriver: {fileID: 8035043399380846674, guid: d3ff4cfc98ab527acb177b539dc6c053,
+        type: 3}
+      receiverDriver: {fileID: 7504886526908891812, guid: 4a3d9385b9050006dae07a46414f20ac,
+        type: 3}
+      attack: {fileID: 7400000, guid: 3c510cca4e748262e8816db80f3a4753, type: 2}
+      reaction: {fileID: 7400000, guid: 4238fdf2da237fa8dbe30342fd09c739, type: 2}
+      getUp: {fileID: 0}
+      receiverOffset: {x: 0, y: 0, z: 1.0188267}
+      receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+      spacing: {fileID: 11400000, guid: a2d28f320db8a09cb8ffa36e8e6acd58, type: 2}
+      bodySpacing: 0.89931643
+      unarmedIndex: 8
+      pepeAttacks: 1
+      showWeapon: 0
+      reactionDelay: 0
+    grapple: {fileID: 11400000, guid: d679559392692565087ab4c56ae28448, type: 2}
+    grappleOutcome: 2
+    requiresExplicitSelection: 1
   heavyCombatMoves:
   - moveName: Heavy_5
     actionDefinition: {fileID: 0}
@@ -42349,6 +42445,9 @@ MonoBehaviour:
       pepeAttacks: 1
       showWeapon: 0
       reactionDelay: 0
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
   - moveName: Heavy_6
     actionDefinition: {fileID: 0}
     attackAnim: {fileID: 7400000, guid: 32a144720df8bb1cfb3dc58b6eb1b05b, type: 2}
@@ -42375,6 +42474,9 @@ MonoBehaviour:
       pepeAttacks: 1
       showWeapon: 0
       reactionDelay: 0
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
   - moveName: Heavy_7
     actionDefinition: {fileID: 0}
     attackAnim: {fileID: 7400000, guid: e3d0e60f2b1771925ac4af64e74863a1, type: 2}
@@ -42401,6 +42503,9 @@ MonoBehaviour:
       pepeAttacks: 1
       showWeapon: 0
       reactionDelay: 0
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
   - moveName: Heavy_2
     actionDefinition: {fileID: 0}
     attackAnim: {fileID: 7400000, guid: 9c35a5274953fd6efbf06df0defbdf9c, type: 2}
@@ -42427,6 +42532,9 @@ MonoBehaviour:
       pepeAttacks: 1
       showWeapon: 0
       reactionDelay: 0
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
   - moveName: Heavy_8
     actionDefinition: {fileID: 0}
     attackAnim: {fileID: 7400000, guid: 1ad3d996a0d19d8e6a467d4df0bbfb72, type: 2}
@@ -42453,6 +42561,9 @@ MonoBehaviour:
       pepeAttacks: 1
       showWeapon: 0
       reactionDelay: 0
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
   - moveName: Heavy_Katana
     actionDefinition: {fileID: 0}
     attackAnim: {fileID: 7400000, guid: 9361f4e2bb5ead06aa81604f8381a8b9, type: 2}
@@ -42479,6 +42590,9 @@ MonoBehaviour:
       pepeAttacks: 1
       showWeapon: 0
       reactionDelay: 0
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
   - moveName: Heavy_Assassin
     actionDefinition: {fileID: 0}
     attackAnim: {fileID: 7400000, guid: db89ee44446186752998141b56ca836a, type: 2}
@@ -42505,6 +42619,9 @@ MonoBehaviour:
       pepeAttacks: 1
       showWeapon: 0
       reactionDelay: 0
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
   targetAttackClip: {fileID: 7400002, guid: fa94eee224779fd478087a0594d47928, type: 2}
   targetHitClip: {fileID: 7400003, guid: fa94eee224779fd478087a0594d47928, type: 2}
   targetGetUpClip: {fileID: 7400004, guid: fa94eee224779fd478087a0594d47928, type: 2}
@@ -59406,6 +59523,9 @@ MonoBehaviour:
       pepeAttacks: 0
       showWeapon: 0
       reactionDelay: 0
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
   - moveName: Light_3
     actionDefinition: {fileID: 0}
     attackAnim: {fileID: 7400000, guid: 76e9c5411407b62e39172a6f4375b4bd, type: 2}
@@ -59432,6 +59552,9 @@ MonoBehaviour:
       pepeAttacks: 0
       showWeapon: 0
       reactionDelay: 0
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
   - moveName: Vol10_CmnAtemi
     actionDefinition: {fileID: 11400000, guid: eb981d1d55122cc95b7f7a19afee4080, type: 2}
     attackAnim: {fileID: 7400000, guid: e47354cd8b0fa220b9e0b4c75f9f0fba, type: 2}
@@ -59458,6 +59581,9 @@ MonoBehaviour:
       pepeAttacks: 0
       showWeapon: 0
       reactionDelay: 0
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
   - moveName: Vol10_CmnAtemi2
     actionDefinition: {fileID: 11400000, guid: 846239f0308862f988f4d794a0d46cc9, type: 2}
     attackAnim: {fileID: 7400000, guid: d082b73724850ba88a521877a9fcd7a1, type: 2}
@@ -59482,6 +59608,9 @@ MonoBehaviour:
       pepeAttacks: 0
       showWeapon: 0
       reactionDelay: 0
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
   - moveName: Vol10_CmnAtemi3
     actionDefinition: {fileID: 11400000, guid: 5eb0c48359d0b8dbe8e3652d0c8ebf6b, type: 2}
     attackAnim: {fileID: 7400000, guid: 190a2ce36ccea1dab9df22b479f3cf29, type: 2}
@@ -59506,6 +59635,90 @@ MonoBehaviour:
       pepeAttacks: 0
       showWeapon: 0
       reactionDelay: 0
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
+  - moveName: Vol10_HOLD
+    actionDefinition: {fileID: 11400000, guid: 8de5d901d65abebacadbfcee3736bb5a, type: 2}
+    attackAnim: {fileID: 7400000, guid: 3c510cca4e748262e8816db80f3a4753, type: 2}
+    hitAnim: {fileID: 7400000, guid: 4238fdf2da237fa8dbe30342fd09c739, type: 2}
+    getUpAnim: {fileID: 0}
+    attackRange: 1.0188267
+    weapon: 0
+    skill: 0
+    sourcePair:
+      attackerDriver: {fileID: 7504886526908891812, guid: 4a3d9385b9050006dae07a46414f20ac,
+        type: 3}
+      receiverDriver: {fileID: 8035043399380846674, guid: d3ff4cfc98ab527acb177b539dc6c053,
+        type: 3}
+      attack: {fileID: 7400000, guid: 3c510cca4e748262e8816db80f3a4753, type: 2}
+      reaction: {fileID: 7400000, guid: 4238fdf2da237fa8dbe30342fd09c739, type: 2}
+      getUp: {fileID: 0}
+      receiverOffset: {x: 0, y: 0, z: 1.0188267}
+      receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+      spacing: {fileID: 11400000, guid: a2d28f320db8a09cb8ffa36e8e6acd58, type: 2}
+      bodySpacing: 0.89931643
+      unarmedIndex: 8
+      pepeAttacks: 0
+      showWeapon: 0
+      reactionDelay: 0
+    grapple: {fileID: 11400000, guid: d679559392692565087ab4c56ae28448, type: 2}
+    grappleOutcome: 0
+    requiresExplicitSelection: 1
+  - moveName: Vol10_HOLD_LALI
+    actionDefinition: {fileID: 11400000, guid: 5d36dc55933fab7788b80dcf6e02245b, type: 2}
+    attackAnim: {fileID: 7400000, guid: 3c510cca4e748262e8816db80f3a4753, type: 2}
+    hitAnim: {fileID: 7400000, guid: 4238fdf2da237fa8dbe30342fd09c739, type: 2}
+    getUpAnim: {fileID: 0}
+    attackRange: 1.0188267
+    weapon: 0
+    skill: 0
+    sourcePair:
+      attackerDriver: {fileID: 7504886526908891812, guid: 4a3d9385b9050006dae07a46414f20ac,
+        type: 3}
+      receiverDriver: {fileID: 8035043399380846674, guid: d3ff4cfc98ab527acb177b539dc6c053,
+        type: 3}
+      attack: {fileID: 7400000, guid: 3c510cca4e748262e8816db80f3a4753, type: 2}
+      reaction: {fileID: 7400000, guid: 4238fdf2da237fa8dbe30342fd09c739, type: 2}
+      getUp: {fileID: 0}
+      receiverOffset: {x: 0, y: 0, z: 1.0188267}
+      receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+      spacing: {fileID: 11400000, guid: a2d28f320db8a09cb8ffa36e8e6acd58, type: 2}
+      bodySpacing: 0.89931643
+      unarmedIndex: 8
+      pepeAttacks: 0
+      showWeapon: 0
+      reactionDelay: 0
+    grapple: {fileID: 11400000, guid: d679559392692565087ab4c56ae28448, type: 2}
+    grappleOutcome: 1
+    requiresExplicitSelection: 1
+  - moveName: Vol10_NAGE_ESC
+    actionDefinition: {fileID: 11400000, guid: 07f75ed57ed5f1bd5aaffb1269703aa8, type: 2}
+    attackAnim: {fileID: 7400000, guid: 3c510cca4e748262e8816db80f3a4753, type: 2}
+    hitAnim: {fileID: 7400000, guid: 4238fdf2da237fa8dbe30342fd09c739, type: 2}
+    getUpAnim: {fileID: 0}
+    attackRange: 1.0188267
+    weapon: 0
+    skill: 0
+    sourcePair:
+      attackerDriver: {fileID: 7504886526908891812, guid: 4a3d9385b9050006dae07a46414f20ac,
+        type: 3}
+      receiverDriver: {fileID: 8035043399380846674, guid: d3ff4cfc98ab527acb177b539dc6c053,
+        type: 3}
+      attack: {fileID: 7400000, guid: 3c510cca4e748262e8816db80f3a4753, type: 2}
+      reaction: {fileID: 7400000, guid: 4238fdf2da237fa8dbe30342fd09c739, type: 2}
+      getUp: {fileID: 0}
+      receiverOffset: {x: 0, y: 0, z: 1.0188267}
+      receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+      spacing: {fileID: 11400000, guid: a2d28f320db8a09cb8ffa36e8e6acd58, type: 2}
+      bodySpacing: 0.89931643
+      unarmedIndex: 8
+      pepeAttacks: 0
+      showWeapon: 0
+      reactionDelay: 0
+    grapple: {fileID: 11400000, guid: d679559392692565087ab4c56ae28448, type: 2}
+    grappleOutcome: 2
+    requiresExplicitSelection: 1
   heavyCombatMoves:
   - moveName: Heavy_5
     actionDefinition: {fileID: 0}
@@ -59533,6 +59746,9 @@ MonoBehaviour:
       pepeAttacks: 0
       showWeapon: 0
       reactionDelay: 0
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
   - moveName: Heavy_6
     actionDefinition: {fileID: 0}
     attackAnim: {fileID: 7400000, guid: d7f6ec4fe18d56ed4b64b0a65410cdaa, type: 2}
@@ -59559,6 +59775,9 @@ MonoBehaviour:
       pepeAttacks: 0
       showWeapon: 0
       reactionDelay: 0
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
   - moveName: Heavy_7
     actionDefinition: {fileID: 0}
     attackAnim: {fileID: 7400000, guid: c3bf65b3b61bc4d9c853c894a6b5c888, type: 2}
@@ -59585,6 +59804,9 @@ MonoBehaviour:
       pepeAttacks: 0
       showWeapon: 0
       reactionDelay: 0
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
   - moveName: Heavy_2
     actionDefinition: {fileID: 0}
     attackAnim: {fileID: 7400000, guid: 0bdec02c684bfaf45a09de44c51a1302, type: 2}
@@ -59611,6 +59833,9 @@ MonoBehaviour:
       pepeAttacks: 0
       showWeapon: 0
       reactionDelay: 0
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
   - moveName: Heavy_8
     actionDefinition: {fileID: 0}
     attackAnim: {fileID: 7400000, guid: e762c1dee3c6fd4158d7c574da543530, type: 2}
@@ -59637,6 +59862,9 @@ MonoBehaviour:
       pepeAttacks: 0
       showWeapon: 0
       reactionDelay: 0
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
   - moveName: Heavy_Katana
     actionDefinition: {fileID: 0}
     attackAnim: {fileID: 7400000, guid: 6b18ba42872719f6c9bc12b0c3f51ade, type: 2}
@@ -59663,6 +59891,9 @@ MonoBehaviour:
       pepeAttacks: 0
       showWeapon: 0
       reactionDelay: 0
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
   - moveName: Heavy_Assassin
     actionDefinition: {fileID: 0}
     attackAnim: {fileID: 7400000, guid: 010f31f1d8757e445be14398d53c516f, type: 2}
@@ -59689,6 +59920,9 @@ MonoBehaviour:
       pepeAttacks: 0
       showWeapon: 0
       reactionDelay: 0
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
   targetAttackClip: {fileID: 7400002, guid: fa94eee224779fd478087a0594d47928, type: 2}
   targetHitClip: {fileID: 7400003, guid: fa94eee224779fd478087a0594d47928, type: 2}
   targetGetUpClip: {fileID: 7400004, guid: fa94eee224779fd478087a0594d47928, type: 2}

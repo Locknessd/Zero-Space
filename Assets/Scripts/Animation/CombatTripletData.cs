@@ -20,7 +20,10 @@ public class CombatTripletData
     public TrumpWeaponManager.WeaponType weapon;
     public BattleSkill skill;
     public FrankRetarget.FrankBattlePair sourcePair;
+    public FrankRetarget.FrankGrappleDefinition grapple;
+    public FrankRetarget.FrankGrappleOutcome grappleOutcome;
+    public bool requiresExplicitSelection;
 
     public bool IsValid => attackAnim != null && hitAnim != null &&
-                           float.IsFinite(attackRange) && attackRange > 0f;
+                           float.IsFinite(attackRange) && attackRange > 0f && (!grapple || grapple.Valid);
 }

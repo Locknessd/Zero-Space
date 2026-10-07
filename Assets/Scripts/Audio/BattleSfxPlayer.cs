@@ -88,7 +88,7 @@ public sealed partial class BattleSfxPlayer : MonoBehaviour
         if (owner == playback && ownerPlaybackId == playback.PlaybackId && sequence != null) return;
         owner = playback;
         ownerPlaybackId = playback.PlaybackId;
-        sequence = bank.FindMove(move);
+        sequence = playback.PresentationProfile(bank);
         nextCue = 0;
         confirmedEvents.Clear();
         BindContactEvents();
@@ -109,6 +109,15 @@ public sealed partial class BattleSfxPlayer : MonoBehaviour
             var cue = sequence.cues[nextCue++];
             if (!UsesContactEvents || !IsContactCue(cue)) PlayTimelineCue(cue);
         }
+    }
+
+    public void ReplaceSequence(FrankBattlePairPlayback playback, BattleSfxBank.Move profile, float seconds)
+    {
+        if (owner != playback || ownerPlaybackId != playback.PlaybackId || profile == null) return;
+        sequence = profile;
+        nextCue = 0;
+        while (nextCue < sequence.cues.Length && sequence.cues[nextCue].seconds <= seconds) nextCue++;
+        highWaterTime = seconds;
     }
 
     void PlayTimelineCue(BattleSfxBank.Cue cue)

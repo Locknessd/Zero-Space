@@ -1,0 +1,121 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff3014001167a7fc6a77f8350aa93ce0, type: 3}
+  m_Name: Vol10_Grapple
+  m_EditorClassIdentifier: Assembly-CSharp::FrankRetarget.FrankGrappleDefinition
+  escapeWindowSeconds: {x: 0.15, y: 0.55}
+  decisionSeconds: 0.65
+  blendSeconds: 0.12
+  entryBlendSeconds: 0.12
+  releasePresentation:
+    label: Vol10_HOLD
+    attack: {fileID: 7400000, guid: 3c510cca4e748262e8816db80f3a4753, type: 2}
+    reaction: {fileID: 7400000, guid: 4238fdf2da237fa8dbe30342fd09c739, type: 2}
+    cues:
+    - seconds: 0.1
+      group: grapple_grip
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource:
+      avatarContacts: []
+      damageOnLanding: 0
+    - seconds: 0.9
+      group: grapple_release
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource:
+      avatarContacts: []
+      damageOnLanding: 0
+  throwing:
+    attack: {fileID: 7400000, guid: 90d69c8b3f7bcecfc914e57f13a85993, type: 2}
+    reaction: {fileID: 7400000, guid: adba18553225792c3aadd8952925e226, type: 2}
+    getUp: {fileID: 1783586326346866118, guid: 3f1b177ffbc845d495792ddeae5216ff, type: 3}
+    unarmedIndex: 9
+    presentation:
+      label: Vol10_HOLD_LALI
+      attack: {fileID: 7400000, guid: 90d69c8b3f7bcecfc914e57f13a85993, type: 2}
+      reaction: {fileID: 7400000, guid: adba18553225792c3aadd8952925e226, type: 2}
+      cues:
+      - seconds: 0.1
+        group: grapple_grip
+        finalLanding: 0
+        hasContactPoint: 0
+        contactBone: 8
+        contactOffset: {x: 0, y: 0, z: 0}
+        contactSource:
+        avatarContacts: []
+        damageOnLanding: 0
+      - seconds: 1.3
+        group: heavy_swing
+        finalLanding: 0
+        hasContactPoint: 0
+        contactBone: 8
+        contactOffset: {x: 0, y: 0, z: 0}
+        contactSource:
+        avatarContacts: []
+        damageOnLanding: 0
+      - seconds: 1.5
+        group: heavy_hit
+        finalLanding: 0
+        hasContactPoint: 1
+        contactBone: 16
+        contactOffset: {x: 0.13909116, y: -0.0026899087, z: -0.0037069232}
+        contactSource: LeftLowerArm
+        avatarContacts:
+        - avatar: {fileID: 9000000, guid: 757d9d3f1766533aa895e81a07aa5197, type: 3}
+          bone: 16
+          offset: {x: 0.078241505, y: 0.18276894, z: 1.5211108}
+        - avatar: {fileID: 9000000, guid: 59dc3f26824c72872aa4cf6baeec671e, type: 3}
+          bone: 16
+          offset: {x: 0.13909116, y: -0.0026899087, z: -0.0037069232}
+        damageOnLanding: 0
+      - seconds: 1.75
+        group: body_fall
+        finalLanding: 1
+        hasContactPoint: 0
+        contactBone: 8
+        contactOffset: {x: 0, y: 0, z: 0}
+        contactSource:
+        avatarContacts: []
+        damageOnLanding: 1
+  escaping:
+    attack: {fileID: 7400000, guid: 26ee13315980aaafaad9b2e569c8c796, type: 2}
+    reaction: {fileID: 7400000, guid: b4c86d50d2c87394a8c9bc5a647e813f, type: 2}
+    getUp: {fileID: 0}
+    unarmedIndex: 12
+    presentation:
+      label: Vol10_NAGE_ESC
+      attack: {fileID: 7400000, guid: 26ee13315980aaafaad9b2e569c8c796, type: 2}
+      reaction: {fileID: 7400000, guid: b4c86d50d2c87394a8c9bc5a647e813f, type: 2}
+      cues:
+      - seconds: 0.1
+        group: grapple_grip
+        finalLanding: 0
+        hasContactPoint: 0
+        contactBone: 8
+        contactOffset: {x: 0, y: 0, z: 0}
+        contactSource:
+        avatarContacts: []
+        damageOnLanding: 0
+      - seconds: 0.77
+        group: grapple_break
+        finalLanding: 0
+        hasContactPoint: 0
+        contactBone: 8
+        contactOffset: {x: 0, y: 0, z: 0}
+        contactSource:
+        avatarContacts: []
+        damageOnLanding: 0

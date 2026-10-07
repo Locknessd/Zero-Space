@@ -88,6 +88,7 @@ public sealed class BattleSfxBank : ScriptableObject
 
     public Move FindMove(CombatTripletData move)
     {
+        if (move != null && move.grapple) return move.grapple.Presentation(move.grappleOutcome);
         if (move?.sourcePair == null) return null;
         return Array.Find(moves, m => m != null && m.attack == move.sourcePair.attack &&
             m.reaction == move.sourcePair.reaction);

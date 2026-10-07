@@ -6,7 +6,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Battle/Combat Action Definition")]
 public sealed class CombatActionDefinition : ScriptableObject
 {
-    public enum Result { StandingRecoil, Stagger, Knockdown, Release }
+    public enum Result { StandingRecoil, Stagger, Knockdown, Release, Hold, Escape }
     public enum ReactionPolicy { AuthoredPairContinuation, BlendFromCurrentPose, StrongerStateOverride }
 
     [Serializable]
@@ -23,6 +23,7 @@ public sealed class CombatActionDefinition : ScriptableObject
         public ReactionPolicy reactionPolicy;
         public Result result;
         public string presentationGroup;
+        public bool nonDamagingInteraction;
         [TextArea] public string continuation;
     }
 
@@ -68,7 +69,7 @@ public sealed class CombatActionDefinition : ScriptableObject
                 yield return contact.strikeId + ": missing routed contact audio.";
             if (profile != null && !Array.Exists(profile.cues, cue => cue != null &&
                 Mathf.Abs(cue.seconds - contact.seconds) < .0001f && cue.group == contact.presentationGroup &&
-                cue.hasContactPoint))
+                (cue.hasContactPoint || cue.damageOnLanding || contact.nonDamagingInteraction)))
                 yield return contact.strikeId + ": missing positioned presentation cue on the shared clock.";
             if (string.IsNullOrWhiteSpace(contact.targetRegion) || string.IsNullOrWhiteSpace(contact.continuation))
                 yield return contact.strikeId + ": contact response policy is incomplete.";

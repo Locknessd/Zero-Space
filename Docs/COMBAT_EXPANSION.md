@@ -150,13 +150,51 @@ Animator on an accepted lethal receiver, which remains driven by its retained te
 This is shared interaction support. The Samurai execution clips still need their own integration and
 verification; equipment support alone does not satisfy that collection.
 
+## Saved hold and escape implementation
+
+Both BattleScene fighters now register `Vol10_HOLD`, `Vol10_HOLD_LALI` and `Vol10_NAGE_ESC`.
+They share the actual `HOLD_N/Y` entry; the lariat continues with `HOLD_LALI_N/Y`, and escape
+continues with `NAGE_ESC_N/Y`. All six source files are project `.anim` assets under
+`Assets/DemoSence/Vol10/Clips`. Shared entry reuse is intentional, not another qualifying punch/kick combo.
+
+- R/T queue a local left/right hold-to-lariat using the ordinary gameplay queue.
+- The held defender presses Q/E, or AI calls `RequestThrowEscape(side, playbackId)`.
+  The valid window is 0.15–0.55 seconds on the monotonic paired clock. A successful request selects
+  escape; early, late, duplicate, paused, wrong-role and stale-playback requests fail.
+- Both actors keep their original playback IDs, source actors and equipment owners. Entry blends
+  over 0.12 seconds; the chosen continuation starts at 0.65 seconds with a 0.12-second source blend.
+- Without an accepted escape request, the hold continues into the lariat.
+  `Vol10_HOLD` explicitly releases; `Vol10_NAGE_ESC`
+  selects the resolved escape lifecycle. These actions remain available by exact registry ID and
+  through the existing animation browser. They are excluded from random attack selection.
+- Server-resolved exchanges disable local escape decisions. This client does not add a server escape
+  protocol or rewrite accepted health; resolved release/escape IDs represent non-damaging outcomes.
+
+The shared grapple asset contains distinct grip, release and break profiles using routed existing
+audio and restrained movement dust. These are non-damaging interactions, with no hurt flash or hit-stop.
+The lariat has a left-forearm contact at 1.50 action seconds (0.85 source seconds) and a damaging landing
+at 1.75 seconds. It reuses heavy-hit and landing sound/VFX, hit-stop, flash, lighting and camera feedback.
+Surviving thrown receivers enter the existing GetUp state. Presentation replacement skips already
+consumed cues; input cannot restart the clock or duplicate the grip cue.
+
+`GrappleContactCalibration.csv` measures the actual composite forearm contact against victim mesh
+triangles: approximately 0 m for Mankey and 0.035 m for Pepe. `GrappleStudy` contains 12 chronological
+sheets and 60 Hz trajectories for both roles/directions. Inspection found an existing depth-correction
+discontinuity in the escape adaptation; grapples now lock depth once after spacing. The flagged receiver
+hand step fell from 0.350 m to below 0.077 m per 60 Hz sample. This correction is scoped to grapples.
+
+The final Play Mode run after the depth correction passed all 40 queue, escape, authority and
+interruption cases across both fighters and screen directions. Evidence is recorded in
+`GrapplePlayMode.txt`. Runtime and Editor compilation passed with zero errors and the existing
+39 runtime/13 Editor warnings. Normal-speed choreography, per-action lethal and authoritative-damage
+replay, and remaining abnormal-state/presentation checks are still required.
+
 ## Outstanding scope and gates
 
 - Complete source-role/canonical-duplicate coverage, original scene pair/controller traces and all
   required final coverage classifications.
 - Integrate remaining distinct Frank demo content without duplicate registrations.
-- Implement Hold acquisition/maintenance/release and real throw-escape windows, success/failure and
-  synchronized cleanup; their clips are currently previewed only.
+- Finish hold/escape visual and authoritative-damage validation beyond the saved gameplay lifecycle.
 - Integrate every applicable double-axe combo, correct dual attachments, inspect every contact, and
   configure explicit reactions and complete feedback. No double-axe combo is yet integrated here.
 - Integrate actual Samurai pairs with owned unarmed-victim equipment state and all required lifecycle

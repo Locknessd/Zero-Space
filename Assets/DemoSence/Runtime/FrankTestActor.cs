@@ -6,7 +6,7 @@ using UnityEngine.Playables;
 
 namespace FrankRetarget
 {
-    public sealed class FrankTestActor : MonoBehaviour
+    public sealed partial class FrankTestActor : MonoBehaviour
     {
         public string characterName;
         public Animator character;
@@ -150,9 +150,12 @@ namespace FrankRetarget
             // Imported looping clips wrap at exactly length. The tester owns looping;
             // hold the last pose when paused at the end so the camera can settle.
             double t=Mathf.Clamp(time,0,Mathf.Max(0,clip.length-.00001f));
-            playable.SetTime(t);graph.Evaluate(0);
+            playable.SetTime(t);
+            SampleContinuation(time);
+            graph.Evaluate(0);
             if(equipped){equipped.ApplyGrasp();equipped.Follow();}
             Pose.ApplyPose();
+            BlendEntryPose(time);
         }
         public void Clear()
         {

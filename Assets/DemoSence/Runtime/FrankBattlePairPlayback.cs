@@ -30,7 +30,7 @@ namespace FrankRetarget
         public float SampleTime { get; private set; }
         public CombatTripletData Move { get; private set; }
         public int PlaybackId => attacker ? attacker.PlaybackId : -1;
-        public float Duration => Mathf.Max(pair.attack.length, pair.reactionDelay + pair.reaction.length);
+        public float Duration => MotionDuration;
         public bool Playing { get; private set; }
         public float PresentationRate => impactFeedback ? impactFeedback.PlaybackRate(this) : 1f;
         public bool IsContactHeld => Playing && PresentationRate <= 0;
@@ -130,15 +130,21 @@ namespace FrankRetarget
             try
             {
                 AcquireEquipment(source, target);
-                attackActor = Actor(source, pair.attackerDriver, pair.attack, true, pair.showWeapon || move.weapon != TrumpWeaponManager.WeaponType.None, pair.unarmedIndex >= 0);
-                hitActor = Actor(target, pair.receiverDriver, pair.reaction, false, false, pair.unarmedIndex >= 0);
-                if (lightDepthLocked)
+                float entryBlend = IsGrapple ? Move.grapple.entryBlendSeconds : 0;
+                attackActor = Actor(source, pair.attackerDriver, pair.attack, true,
+                    pair.showWeapon || move.weapon != TrumpWeaponManager.WeaponType.None, pair.unarmedIndex >= 0, entryBlend);
+                hitActor = Actor(target, pair.receiverDriver, pair.reaction, false, false, pair.unarmedIndex >= 0, entryBlend);
+                // Grapples constrain the complete pair after spacing. Applying a
+                // pelvis lock before optional spacing would move the hands twice
+                // when the baked separation passes through zero.
+                if (lightDepthLocked && !IsGrapple)
                 {
                     attackActor.Pose.LockTargetHipsDepth(lockedAttackHipsDepth);
                     hitActor.Pose.LockTargetHipsDepth(lockedHitHipsDepth);
                 }
                 attacker.BeginSourceSequence(this, false);
                 receiver.BeginSourceSequence(this, lethal);
+                InitializeGrapple();
                 Playing = true;
                 SampleTime = 0;
                 EvaluateAt(0);
@@ -147,18 +153,8 @@ namespace FrankRetarget
                 battleVfx = source.battleVfx;
                 impactFeedback = battleVfx ? battleVfx.GetComponent<BattleImpactFeedback>() : null;
                 var timeline = battleSfx ? battleSfx.bank : battleVfx ? battleVfx.timeline : null;
-                var profile = timeline ? timeline.FindMove(move) : null;
-                var contacts = new SortedSet<float>(BattleHitDamageSequence.ContactTimes(profile, Duration));
-                // Floor feedback also needs its exact pose; damage still uses its
-                // separate hit/damaging-landing timeline in BattleHitDamageSequence.
-                if (profile != null)
-                    foreach (var cue in profile.cues)
-                        if ((cue.group == "body_fall" || cue.group == "knockout_fall") &&
-                            float.IsFinite(cue.seconds) && cue.seconds >= 0 && cue.seconds <= Duration)
-                            contacts.Add(cue.seconds);
-                contactTimes = new float[contacts.Count];
-                contacts.CopyTo(contactTimes);
-                nextContact = 0;
+                var profile = PresentationProfile(timeline);
+                BuildContactTimes(profile);
                 timelineHighWater = -1;
                 deferredDelta = 0;
                 bool hasVfxTimeline = battleVfx && battleVfx.BeginSequence(this, source, target, move, lethal);
@@ -176,7 +172,8 @@ namespace FrankRetarget
             }
         }
 
-        static FrankTestActor Actor(CharacterCombat combat, FrankTestDriver driver, AnimationClip clip, bool attacking, bool weapons, bool unarmed)
+        static FrankTestActor Actor(CharacterCombat combat, FrankTestDriver driver, AnimationClip clip,
+            bool attacking, bool weapons, bool unarmed, float entryBlend = 0)
         {
             var root = new GameObject(combat.name + (attacking ? " source attack" : " source reaction"));
             UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(root, combat.gameObject.scene);
@@ -184,6 +181,7 @@ namespace FrankRetarget
             var actor = root.AddComponent<FrankTestActor>();
             actor.characterName = combat.name;
             actor.character = combat.Animator;
+            actor.PrepareEntryBlend(entryBlend);
             try { actor.ConfigureSource(driver, clip, attacking, weapons, unarmed, preserveCharacterScale: true); }
             catch { actor.Clear(); Destroy(root); throw; }
             return actor;
@@ -197,7 +195,7 @@ namespace FrankRetarget
             hitActor.Evaluate(Mathf.Max(0, SampleTime - pair.reactionDelay));
             if (pair.spacing && pair.unarmedIndex >= 0 && pair.bodySpacing > 0)
             {
-                Vector3 separation = pair.spacing.Separation(pair.unarmedIndex, pair.pepeAttacks, SampleTime) * pair.bodySpacing;
+                Vector3 separation = PairSeparation(SampleTime) * pair.bodySpacing;
                 // Battle is a single X lane. Keep the authored spacing correction in
                 // the lane plane so it cannot reintroduce depth travel after the pose
                 // has been retargeted.
@@ -293,13 +291,13 @@ namespace FrankRetarget
             attackModel?.Restore();
             attackModel = null;
             if (hasAttackFinalX) PreserveRootX(attacker ? attacker.Animator : null, attackFinalX);
-            if (!lethal && pair.getUp && receiver)
+            if (!lethal && RecoveryClip && receiver)
             {
                 ClearActor(ref hitActor);
                 hitModel?.Restore();
                 hitModel = null;
                 if (hasReceiverFinalX) PreserveRootX(receiver.Animator, receiverFinalX);
-                if (receiver.BeginSourceGetUp(pair.getUp))
+                if (receiver.BeginSourceGetUp(RecoveryClip))
                 {
                     if (battleSfx) battleSfx.BeginRecovery(this);
                     CombatPositioningController.Instance?.ConstrainDepthNow();

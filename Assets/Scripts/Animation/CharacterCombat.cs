@@ -223,7 +223,8 @@ public class CharacterCombat : MonoBehaviour
         CombatTripletData selected = null;
         int eligible = 0;
         foreach (var move in pool)
-            if (move != null && move.IsValid && UnityEngine.Random.Range(0, ++eligible) == 0) selected = move;
+            if (move != null && !move.requiresExplicitSelection && move.IsValid &&
+                UnityEngine.Random.Range(0, ++eligible) == 0) selected = move;
         return selected;
     }
 
@@ -244,6 +245,10 @@ public class CharacterCombat : MonoBehaviour
                                          targetCombat.Animator.transform.position.x);
         if (attackDistance > move.attackRange + 0.01f)
             return ConfigurationError("Mục tiêu ngoài tầm: " + move.moveName);
+        // A direct grapple entry must already fit its shared source frame. The
+        // normal queue approaches this range before acquiring either participant.
+        if (move.grapple && Mathf.Abs(attackDistance - move.attackRange) > .15f)
+            return false;
 
         if (move.sourcePair != null && move.sourcePair.Valid)
         {

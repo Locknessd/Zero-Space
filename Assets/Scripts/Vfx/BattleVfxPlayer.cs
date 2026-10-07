@@ -145,7 +145,7 @@ public sealed class BattleVfxPlayer : MonoBehaviour
     {
         if (!isActiveAndEnabled || !timeline)
             return false;
-        var profile = timeline.FindMove(move);
+        var profile = playback.PresentationProfile(timeline);
         if (profile == null) return false;
         if (owner == playback && ownerPlaybackId == playback.PlaybackId && sequence != null) return true;
         owner = playback;
@@ -213,11 +213,26 @@ public sealed class BattleVfxPlayer : MonoBehaviour
                 {
                     playback.EvaluateAt(Mathf.Max(0, cue.seconds - 1f / 30f));
                     RememberStrikePoints();
+                    if (Enum.TryParse(cue.contactSource, out HumanBodyBones sourceBone))
+                    {
+                        var sourceAnchor = BoneTransform(attacker, sourceBone);
+                        if (sourceAnchor) previousPoints[sourceAnchor] = sourceAnchor.position;
+                    }
                 }
                 playback.EvaluateAt(cue.seconds);
                 IsFinishingContact = lethal && Mathf.Abs(cue.seconds - finishingTime) < .001f;
                 switch (cue.group)
                 {
+                case "grapple_grip":
+                case "grapple_release":
+                case "grapple_break":
+                    // A grip or break is not damage: restrained movement dust, with
+                    // no hurt flash, hit-stop, health cue or full-strength impact.
+                    var feet = BonePosition(receiver, HumanBodyBones.LeftFoot);
+                    feet.y = groundHeight + .025f;
+                    Spawn(landingDust, feet, Quaternion.identity, cue.group == "grapple_grip" ? .25f : .4f,
+                        cue.group);
+                    break;
                 case "skill_cast":
                     if (sequenceSkill != null)
                     {
@@ -336,10 +351,24 @@ public sealed class BattleVfxPlayer : MonoBehaviour
             position, cue.seconds, IsFinishingContact, cue, ((ulong)presentationSequence << 32) | (uint)nextCue));
     }
 
+    public void ReplaceSequence(FrankBattlePairPlayback playback, BattleSfxBank.Move profile, float seconds)
+    {
+        if (owner != playback || ownerPlaybackId != playback.PlaybackId || profile == null) return;
+        sequence = profile;
+        nextCue = 0;
+        while (nextCue < sequence.cues.Length && sequence.cues[nextCue].seconds <= seconds) nextCue++;
+        highWaterTime = seconds;
+        finishingTime = -1;
+        foreach (var cue in profile.cues)
+            if (cue.group == "light_hit" || cue.group == "heavy_hit" || cue.group == "stab_hit" || cue.damageOnLanding)
+                finishingTime = cue.seconds;
+    }
+
     static bool IsVisualCue(string group) => group == "light_hit" || group == "heavy_hit" ||
         group == "stab_hit" || group == "body_fall" || group == "knockout_fall" ||
         group == "light_swing" || group == "thrust_swing" || group == "blade_swing" || group == "heavy_swing" ||
-        group == "skill_cast" || group == "skill_shot";
+        group == "skill_cast" || group == "skill_shot" || group == "grapple_grip" ||
+        group == "grapple_release" || group == "grapple_break";
 
     void RememberStrikePoints()
     {

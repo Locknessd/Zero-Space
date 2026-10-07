@@ -47,13 +47,17 @@ public static partial class BattlePresentationContactSetup
         {
             if (!Enum.TryParse(selection, out HumanBodyBones bone) ||
                 (bone != HumanBodyBones.LeftHand && bone != HumanBodyBones.RightHand &&
-                bone != HumanBodyBones.LeftFoot && bone != HumanBodyBones.RightFoot))
+                bone != HumanBodyBones.LeftFoot && bone != HumanBodyBones.RightFoot &&
+                bone != HumanBodyBones.LeftLowerArm && bone != HumanBodyBones.RightLowerArm))
                 throw new InvalidOperationException("Unsupported authored striker: " + selection);
             var anchor = fighter.Animator.GetBoneTransform(bone);
             if (!anchor) throw new InvalidOperationException("Missing striker bone: " + selection);
+            var excluded = bone == HumanBodyBones.LeftLowerArm
+                ? fighter.Animator.GetBoneTransform(HumanBodyBones.LeftHand)
+                : bone == HumanBodyBones.RightLowerArm ? fighter.Animator.GetBoneTransform(HumanBodyBones.RightHand) : null;
             foreach (var skin in fighter.Animator.GetComponentsInChildren<SkinnedMeshRenderer>())
                 if (Visible(skin) && skin.sharedMesh && skin.sharedMesh.vertexCount >= 1000)
-                    AddMesh(result, skin, anchor, geometry);
+                    AddMesh(result, skin, anchor, geometry, excluded);
         }
         result.Build();
         return result;
@@ -61,7 +65,7 @@ public static partial class BattlePresentationContactSetup
 
     static bool Visible(Renderer renderer) => renderer && renderer.enabled && renderer.gameObject.activeInHierarchy;
 
-    static void AddMesh(Surface surface, Renderer renderer, Transform limb, List<string> geometry)
+    static void AddMesh(Surface surface, Renderer renderer, Transform limb, List<string> geometry, Transform excluded = null)
     {
         Mesh baked = null;
         try
@@ -80,7 +84,7 @@ public static partial class BattlePresentationContactSetup
                 mesh = baked;
                 matrix = Matrix4x4.identity;
                 rendered = RenderedVertices(skin, baked, geometry);
-                if (limb) selected = LimbVertices(skin, limb);
+                if (limb) selected = LimbVertices(skin, limb, excluded);
             }
             else
             {
@@ -118,13 +122,14 @@ public static partial class BattlePresentationContactSetup
         }
     }
 
-    static bool[] LimbVertices(SkinnedMeshRenderer skin, Transform limb)
+    static bool[] LimbVertices(SkinnedMeshRenderer skin, Transform limb, Transform excluded)
     {
         var bones = skin.bones;
         var weights = skin.sharedMesh.boneWeights;
         if (weights.Length != skin.sharedMesh.vertexCount)
             throw new InvalidOperationException("Limb mesh has no readable vertex weights: " + skin.name);
-        var allowed = bones.Select(b => b && (b == limb || b.IsChildOf(limb))).ToArray();
+        var allowed = bones.Select(b => b && (b == limb || b.IsChildOf(limb)) &&
+            (!excluded || b != excluded && !b.IsChildOf(excluded))).ToArray();
         var result = new bool[weights.Length];
         for (int i = 0; i < weights.Length; i++)
         {

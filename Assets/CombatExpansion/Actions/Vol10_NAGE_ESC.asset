@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dcfa8577ab5249259fa110adbb5792e, type: 3}
+  m_Name: Vol10_NAGE_ESC
+  m_EditorClassIdentifier: Assembly-CSharp::CombatActionDefinition
+  actionId: Vol10_NAGE_ESC
+  displayName: Resolved throw escape
+  gameplayTrigger: Exact action registry ID; R/T starts a local left/right hold-to-lariat.
+    Defender Q/E or RequestThrowEscape(side, playbackId) escapes between 0.15 and
+    0.55 pair seconds. Server-resolved exchanges select their outcome by ID and never
+    accept a local override.
+  entryAndInterruption: Living available grounded actors in range; existing approach;
+    shared clock and equipment leases. Reset, disable, unexpected death and cancellation
+    release both participants.
+  recovery: Release/escape separate into idle; the lariat's surviving victim uses
+    existing GetUp. No new armor, invulnerability or instant-kill rule.
+  presentation: Restrained grip/break movement dust and routed cloth/whoosh audio;
+    no damage, hurt flash or hit-stop on a grip/break. Lariat uses heavy contact
+    and damaging landing feedback. Shared lighting, camera and presentation cleanup
+    remain active.
+  contacts:
+  - strikeId: Vol10_NAGE_ESC/grapple_grip
+    attack: {fileID: 7400000, guid: 3c510cca4e748262e8816db80f3a4753, type: 2}
+    reaction: {fileID: 7400000, guid: 4238fdf2da237fa8dbe30342fd09c739, type: 2}
+    seconds: 0.1
+    activeWindowSeconds: {x: 0.083333336, y: 0.11666667}
+    strikingLimb: 15
+    targetRegion: Paired grip and grounded foot support
+    directionInVictimSpace: {x: 0, y: 0, z: -1}
+    reactionPolicy: 0
+    result: 4
+    presentationGroup: grapple_grip
+    nonDamagingInteraction: 1
+    continuation: Both roles retain one clock and playback identity. The selected
+      source pair continues through release, escape or lariat landing without restarting
+      the victim reaction.
+  - strikeId: Vol10_NAGE_ESC/grapple_break
+    attack: {fileID: 7400000, guid: 26ee13315980aaafaad9b2e569c8c796, type: 2}
+    reaction: {fileID: 7400000, guid: b4c86d50d2c87394a8c9bc5a647e813f, type: 2}
+    seconds: 0.77
+    activeWindowSeconds: {x: 0.75333333, y: 0.78666663}
+    strikingLimb: 15
+    targetRegion: Paired grip and grounded foot support
+    directionInVictimSpace: {x: 0, y: 0, z: -1}
+    reactionPolicy: 0
+    result: 5
+    presentationGroup: grapple_break
+    nonDamagingInteraction: 1
+    continuation: Both roles retain one clock and playback identity. The selected
+      source pair continues through release, escape or lariat landing without restarting
+      the victim reaction.

@@ -366,6 +366,63 @@ MonoBehaviour:
     priority: 96
     gainVariationDb: 0.65
     layers: []
+  - id: grapple_grip
+    volume: 0.132
+    pitch: {x: 0.98, y: 1.02}
+    clips:
+    - {fileID: 8300000, guid: 70dadeb75246c914bbb53b26adad1959, type: 3}
+    - {fileID: 8300000, guid: 3784f4ed02d3a734eb816e82044ae415, type: 3}
+    clipGains:
+    - 1
+    - 1
+    startOffsets:
+    - 0
+    - 0
+    output: {fileID: 24300003, guid: b5bc0c50c57e405ead4840fa135adc66, type: 2}
+    maxConcurrent: 2
+    priority: 100
+    gainVariationDb: 0.65
+    layers: []
+  - id: grapple_release
+    volume: 0.24000001
+    pitch: {x: 0.96, y: 1.04}
+    clips:
+    - {fileID: 8300000, guid: 05f46f537dd45bc48a9b81a3bf5a439a, type: 3}
+    - {fileID: 8300000, guid: 738149f56e86a894a85842bee7fa4840, type: 3}
+    - {fileID: 8300000, guid: 87f5e79a4d8e19a459f6b5d8307b0c8c, type: 3}
+    clipGains:
+    - 1
+    - 1
+    - 1
+    startOffsets:
+    - 0
+    - 0
+    - 0
+    output: {fileID: 24300003, guid: b5bc0c50c57e405ead4840fa135adc66, type: 2}
+    maxConcurrent: 2
+    priority: 100
+    gainVariationDb: 0.65
+    layers: []
+  - id: grapple_break
+    volume: 0.24000001
+    pitch: {x: 0.96, y: 1.04}
+    clips:
+    - {fileID: 8300000, guid: 05f46f537dd45bc48a9b81a3bf5a439a, type: 3}
+    - {fileID: 8300000, guid: 738149f56e86a894a85842bee7fa4840, type: 3}
+    - {fileID: 8300000, guid: 87f5e79a4d8e19a459f6b5d8307b0c8c, type: 3}
+    clipGains:
+    - 1
+    - 1
+    - 1
+    startOffsets:
+    - 0
+    - 0
+    - 0
+    output: {fileID: 24300003, guid: b5bc0c50c57e405ead4840fa135adc66, type: 2}
+    maxConcurrent: 2
+    priority: 100
+    gainVariationDb: 0.65
+    layers: []
   moves:
   - label: Mankey Light_1
     attack: {fileID: 7400000, guid: 639221af9523ddee5aa6a8a5e94f7de0, type: 2}

@@ -198,6 +198,8 @@ public partial class GameManager : MonoBehaviour
         {
             if (IsKeyDown(KeyCode.Q)) DebugTriggerQ();
             if (IsKeyDown(KeyCode.E)) DebugTriggerE();
+            if (IsKeyDown(KeyCode.R)) EnqueueCombatAction(PlayerUI.Side.Left, "Vol10_HOLD_LALI");
+            if (IsKeyDown(KeyCode.T)) EnqueueCombatAction(PlayerUI.Side.Right, "Vol10_HOLD_LALI");
         }
         if (!_running && QueueError == null && _queue.Count > 0 && _queue.Peek().ready)
         {
@@ -368,6 +370,7 @@ public partial class GameManager : MonoBehaviour
                 Fault("Không thể bắt đầu đòn " + move.moveName + ".");
                 yield break;
             }
+            attacker.SourcePlayback?.AllowLocalEscape(health == null && !IsAnimationTestMode);
             if (IsAnimationTestMode) BeginAnimationTestDamage(side, move, attacker.SourcePlayback, lethal);
             else BeginTurnDamage(health, move, attacker.SourcePlayback);
             MortalKombatCamera.Instance?.OnCharacterAttack(attacker.Animator.transform);
@@ -443,8 +446,8 @@ public partial class GameManager : MonoBehaviour
     private static bool IsHeavy(string animationId) =>
         !string.IsNullOrEmpty(animationId) && animationId.IndexOf("heavy", StringComparison.OrdinalIgnoreCase) >= 0;
 
-    public void DebugTriggerQ() => EnqueueLocalAttack(PlayerUI.Side.Left, false);
-    public void DebugTriggerE() => EnqueueLocalAttack(PlayerUI.Side.Right, true);
+    public void DebugTriggerQ() => EscapeOrEnqueue(PlayerUI.Side.Left, false);
+    public void DebugTriggerE() => EscapeOrEnqueue(PlayerUI.Side.Right, true);
 
     public void EnqueueLocalAttack(PlayerUI.Side side, bool heavy)
     {
@@ -668,7 +671,7 @@ public partial class GameManager : MonoBehaviour
         long total = health.damage > 0 ? health.damage : Math.Max(0, before - health.hpAfter);
         var bank = battleSfx ? battleSfx.bank : battleVfx ? battleVfx.timeline : null;
         float[] contacts = playback && playback.Playing && playback.Move == move
-            ? BattleHitDamageSequence.ContactTimes(bank ? bank.FindMove(move) : null, playback.Duration) : Array.Empty<float>();
+            ? BattleHitDamageSequence.ContactTimes(playback.PresentationProfile(bank), playback.Duration) : Array.Empty<float>();
         long maxHp = ResolveMaxHpFor(health.targetId, before, health.hpAfter);
         void Present(long hp, long damage)
         {
@@ -809,6 +812,8 @@ public partial class GameManager : MonoBehaviour
     private PropertyInfo _keyboardCurrentProp;
     private PropertyInfo _keyQProp;
     private PropertyInfo _keyEProp;
+    private PropertyInfo _keyRProp;
+    private PropertyInfo _keyTProp;
     private PropertyInfo _wasPressedProp;
 
     bool IsKeyDown(KeyCode key)
@@ -843,6 +848,8 @@ public partial class GameManager : MonoBehaviour
                         _keyboardCurrentProp = _keyboardType.GetProperty("current", BindingFlags.Public | BindingFlags.Static);
                         _keyQProp = _keyboardType.GetProperty("qKey");
                         _keyEProp = _keyboardType.GetProperty("eKey");
+                        _keyRProp = _keyboardType.GetProperty("rKey");
+                        _keyTProp = _keyboardType.GetProperty("tKey");
                         var keyControlType = Type.GetType("UnityEngine.InputSystem.Controls.KeyControl, Unity.InputSystem") ?? Type.GetType("UnityEngine.InputSystem.Controls.KeyControl, UnityEngine.InputSystem");
                         if (keyControlType != null) _wasPressedProp = keyControlType.GetProperty("wasPressedThisFrame", BindingFlags.Public | BindingFlags.Instance);
                     }
@@ -853,7 +860,11 @@ public partial class GameManager : MonoBehaviour
                 if (current == null) return false;
 
                 PropertyInfo keyProp = null;
-                if (key == KeyCode.Q) keyProp = _keyQProp; else if (key == KeyCode.E) keyProp = _keyEProp; else return false;
+                if (key == KeyCode.Q) keyProp = _keyQProp;
+                else if (key == KeyCode.E) keyProp = _keyEProp;
+                else if (key == KeyCode.R) keyProp = _keyRProp;
+                else if (key == KeyCode.T) keyProp = _keyTProp;
+                else return false;
                 if (keyProp == null || _wasPressedProp == null) return false;
                 var keyControl = keyProp.GetValue(current);
                 var val = _wasPressedProp.GetValue(keyControl);
