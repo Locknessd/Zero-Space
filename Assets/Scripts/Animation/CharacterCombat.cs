@@ -339,6 +339,7 @@ public class CharacterCombat : MonoBehaviour
     public void MarkDead()
     {
         IsDead = true;
+        SourcePlayback?.CancelIfUnexpectedDeath(this);
         _hasGetUp = false;
         if (Initialize())
         {
@@ -354,6 +355,8 @@ public class CharacterCombat : MonoBehaviour
         if (IsBusy) Finish(false);
         if (weaponRig != null) weaponRig.Release();
         IsDead = false;
+        foreach (var equipment in GetComponentsInChildren<TrumpWeaponManager>(true))
+            equipment.ResetUnarmedPresentation();
         _hasGetUp = false;
         PlaybackId++;
         LastSequenceSucceeded = true;

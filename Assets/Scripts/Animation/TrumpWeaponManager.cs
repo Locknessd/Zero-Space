@@ -12,7 +12,7 @@ using UnityEngine;
 /// </summary>
 [DisallowMultipleComponent]
 [ExecuteAlways]
-public class TrumpWeaponManager : MonoBehaviour
+public partial class TrumpWeaponManager : MonoBehaviour
 {
     public enum WeaponType
     {
@@ -64,7 +64,7 @@ public class TrumpWeaponManager : MonoBehaviour
 
     public WeaponType ActiveWeapon
     {
-        get => activeWeapon;
+        get => IsUnarmedPresentation ? WeaponType.None : activeWeapon;
         set => EquipWeapon(value);
     }
 
@@ -93,7 +93,7 @@ public class TrumpWeaponManager : MonoBehaviour
 
     private void Update()
     {
-        if (!Application.isPlaying || !autoEquipWithAnimation || characterAnimator == null)
+        if (IsUnarmedPresentation || !Application.isPlaying || !autoEquipWithAnimation || characterAnimator == null)
         {
             return;
         }
@@ -106,6 +106,7 @@ public class TrumpWeaponManager : MonoBehaviour
     /// </summary>
     public void EquipWeapon(WeaponType type)
     {
+        unarmedPresentationHeld = false;
         activeWeapon = type;
         ApplyWeaponVisibility(type);
     }
@@ -115,6 +116,12 @@ public class TrumpWeaponManager : MonoBehaviour
         CombatWeaponLocked = true;
         autoEquipWithAnimation = false;
         EquipWeapon(type);
+        if (IsUnarmedPresentation) return;
+        PrepareCombatWeapon(type);
+    }
+
+    private void PrepareCombatWeapon(WeaponType type)
+    {
         var selected = WeaponObject(type);
         if (selected != null)
         {
@@ -182,6 +189,12 @@ public class TrumpWeaponManager : MonoBehaviour
 
     private void ApplyWeaponVisibility(WeaponType type)
     {
+        if (IsUnarmedPresentation)
+        {
+            HideUnarmedWeaponHierarchy();
+            return;
+        }
+
         SetObjectActive(warriorShieldSet, type == WeaponType.WarriorShield);
         SetObjectActive(greatSwordSet, type == WeaponType.GreatSword);
         SetObjectActive(spearSet, type == WeaponType.Spear);
@@ -209,7 +222,7 @@ public class TrumpWeaponManager : MonoBehaviour
 
     private void CheckAnimatorStateAndAutoEquip()
     {
-        if (characterAnimator == null || CombatWeaponLocked) return;
+        if (IsUnarmedPresentation || characterAnimator == null || CombatWeaponLocked) return;
 
         var state = characterAnimator.GetCurrentAnimatorStateInfo(0);
 

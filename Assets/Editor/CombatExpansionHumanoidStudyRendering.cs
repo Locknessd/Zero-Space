@@ -44,6 +44,7 @@ namespace FrankRetarget.Editor
 
             public void WriteSheet(string path, StudyRecord record)
             {
+                using var skinSnapshot = new CombatExpansionPreviewSkin(character.gameObject, driver.gameObject);
                 int frames = Mathf.Max(12, Mathf.CeilToInt(Duration * 6) + 1);
                 frames = Mathf.CeilToInt(frames / 4f) * 4;
                 int rows = frames / 4;
@@ -69,6 +70,7 @@ namespace FrankRetarget.Editor
                         float seconds = Duration * frame / (frames - 1);
                         record.sheetSeconds[frame] = seconds;
                         Evaluate(seconds);
+                        skinSnapshot.Sample();
                         int x = frame % 4 * tileWidth;
                         int y = (rows - 1 - frame / 4) * tileHeight;
                         for (int view = 0; view < 2; view++)

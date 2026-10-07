@@ -81,6 +81,7 @@ namespace FrankRetarget.Editor
                     fighter.Initialize();
                 }
                 var times = new StringBuilder("Motion study only; no gameplay integration claim.\n");
+                using var skinSnapshot = new CombatExpansionPreviewSkin(fighters.Select(f => f.gameObject).ToArray());
                 times.AppendLine("Each sheet is chronological left to right, top to bottom; exact seconds follow.\n");
                 foreach (var source in fighters)
                 foreach (int index in new[] { 3, 4, 5, 8, 9, 12 })
@@ -110,6 +111,7 @@ namespace FrankRetarget.Editor
                         {
                             float seconds = pair.Duration * frame / 11;
                             pair.EvaluateAt(seconds);
+                            skinSnapshot.Sample();
                             framing.Apply(0, true);
                             camera.Render();
                             RenderTexture.active = cameraTarget;

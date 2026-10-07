@@ -23,7 +23,7 @@ namespace FrankRetarget
 
     // Uses the demo's actual actor/driver playback, with one clock for both roles.
     [DefaultExecutionOrder(13000)]
-    public sealed class FrankBattlePairPlayback : MonoBehaviour
+    public sealed partial class FrankBattlePairPlayback : MonoBehaviour
     {
         public FrankTestActor AttackerActor => attackActor;
         public FrankTestActor ReceiverActor => hitActor;
@@ -129,6 +129,7 @@ namespace FrankRetarget
             }
             try
             {
+                AcquireEquipment(source, target);
                 attackActor = Actor(source, pair.attackerDriver, pair.attack, true, pair.showWeapon || move.weapon != TrumpWeaponManager.WeaponType.None, pair.unarmedIndex >= 0);
                 hitActor = Actor(target, pair.receiverDriver, pair.reaction, false, false, pair.unarmedIndex >= 0);
                 if (lightDepthLocked)
@@ -330,6 +331,7 @@ namespace FrankRetarget
                 if (hasReceiverFinalX) PreserveRootX(receiver ? receiver.Animator : null, receiverFinalX);
             }
             if (receiver && receiver.Animator && !receiver.IsDead) receiver.Animator.speed = 1f;
+            ReleaseEquipment();
             attacker.CompleteSourceSequence(true);
             if (receiver && receiver.IsBusy) receiver.CompleteSourceSequence(true);
             // A lethal reaction keeps hitActor and hitModel alive so the receiver
@@ -369,6 +371,7 @@ namespace FrankRetarget
             hitModel?.Restore();
             attackModel = hitModel = null;
             if (receiver && receiver.Animator && !receiver.IsDead) receiver.Animator.speed = 1f;
+            ReleaseEquipment();
             if (interrupted)
             {
                 if (attacker) attacker.CompleteSourceSequence(false);

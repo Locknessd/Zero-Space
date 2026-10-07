@@ -48,8 +48,15 @@ outcomes remain to be completed after motion inspection.
 
 `CombatExpansionHumanoidStudy` provides separate punch, kick, axe-combo and reaction study commands.
 `PrepareDrivers` completed in the Editor and generated 72 calibrated source drivers for both fighters.
-The full humanoid motion-study commands have not yet run; preparation does not establish motion quality,
-grip alignment or gameplay coverage. Run `PrepareDrivers` before the individual study commands.
+All four study commands have now run: 102 punch records, 78 kick records, 66 axe-combo records and
+74 reaction records, covering 160 exact clip identities on both fighters. Each record has a 60 Hz
+trajectory and a chronological two-view image sheet. These remain source studies; they do not establish
+victim contact, grip approval or gameplay coverage. Run `PrepareDrivers` before the study commands.
+
+The original multi-pose sheets exposed stale skinned-body rendering within a single Editor frame.
+`CombatExpansionPreviewSkin` now creates fresh CPU skin snapshots for each image sample; both the Vol10
+and humanoid sheets were regenerated. The facial-bone audit found no local eye/jaw drift, and corrected
+captures show the body and facial geometry together. No runtime facial rig change was made.
 
 ## Saved first integrations: Atemi1–3
 
@@ -103,8 +110,45 @@ to two fighters with different scale and proportions. Existing cues keep their e
 - Current fresh Console output contains the pre-existing native graphicsApiMask dependency error;
   final project-error accounting remains part of the final regression pass.
 
-The queue test intentionally used local gameplay actions. Health did not change because there was no
-server damage outcome; authoritative damage/UI validation for exact named IDs is still pending.
+The first queue test intentionally used local gameplay actions without server health changes. The
+subsequent `FrankRetargetBuilder.BattleDamagePlayCheck` passed all 24 registered nonlethal exchanges
+plus the lethal case, using exact action IDs for the new Atemis and the existing category route for
+older moves. The isolated scene was copied from the saved BattleScene and restored after the test.
+
+- 77 native damage contact frames checked against actual health text and slider values.
+- Duplicate damage/HP events, late HP snapshots, lethal damage and winner announcements checked.
+- 242 AudioSource starts, 227 VFX starts, 100 synchronized impact-light cues and 1157 held-pose frames.
+- Camera safe-frame checks, KO slow motion, UI, pause/cancel/reset cleanup and bounded pools passed.
+- Separate damage arithmetic checks passed 95 profile/total combinations, including tiny and 64-bit totals.
+
+Evidence: `AtemiAuthoritativeDamagePlayMode.txt` and `AuthoritativeDamageValidation.txt` under
+`GeneratedAssets/CombatExpansion`. This does not replace the remaining per-action abnormal-state and
+normal-speed choreography review.
+
+## Owned equipment state for paired actions
+
+`TrumpWeaponManager` now supports overlapping temporary unarmed owners. A lease deactivates both weapon
+sets and loose katana props, including collider/script hierarchies, and clears trails/particles. Explicit
+gear changes during a lease update the requested equipment while keeping the visible hierarchy inactive.
+Cleanup restores the latest request; stale tokens cannot restore an older weapon. Nonrestoring exits
+remain unarmed until reset or a new authoritative equip request.
+
+The shared paired player acquires this state on both base equipment managers: its source rig supplies
+the attacker's authored weapon, and the receiver's source rig remains unarmed. Completion, cancellation,
+disable and death release ownership according to actor state. Round reset invalidates previous tokens.
+An unexpected actor death now cancels the owned pair, while its accepted lethal receiver outcome retains
+the authored final pose. The isolated Editor equipment lifecycle validator passed. The actual-fighter
+Play Mode check also passed all 20 cases: ordinary and lethal completion, newer equipment, overlapping
+ownership, cancellation, either actor disabled, either actor dying, and round reset, on both fighter
+roles. It uses temporary equipment fixtures and the registered Atemi2 pair. Evidence is recorded in
+`EquipmentValidation.txt` and `EquipmentPlayMode.txt`.
+
+The final source/Editor compile returned zero errors and the same 39 runtime/13 Editor warnings.
+The lifecycle checks ran after an explicit script refresh; the test allows the deliberate disabled
+Animator on an accepted lethal receiver, which remains driven by its retained terminal source pose.
+
+This is shared interaction support. The Samurai execution clips still need their own integration and
+verification; equipment support alone does not satisfy that collection.
 
 ## Outstanding scope and gates
 
