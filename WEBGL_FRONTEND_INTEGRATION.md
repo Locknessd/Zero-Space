@@ -60,6 +60,24 @@ Mỗi Unity instance xử lý một trận; reload instance để chuyển sang 
 Khi kết nối bị từ chối hoặc thư viện không tải được, có thể gọi lại cùng ID với cấu hình đã sửa.
 Sau khi mất kết nối, Unity đăng ký lại Match ID hiện tại với sequence cuối đã nhận.
 
+## Event trong lúc tải BattleScene
+
+FE gọi hàm khởi động một lần như các ví dụ trên. Unity giữ event tại `WebSocketManager`
+xuyên suốt thời gian tải scene ở cả Client Input và Frontend. Game chỉ nhận và phát hàng đợi
+khi hai nhân vật, UI đã khởi tạo và màn hình loading đã đóng. Không có thời gian tải tối đa
+hoặc giới hạn số event khiến lịch sử bị bỏ đi.
+
+Trận đã `FINISHED` vẫn phát đủ lịch sử rồi mới hiện kết quả. Event được phát theo `sequence`,
+bỏ qua bản gửi trùng; event trực tiếp đến trước lịch sử sẽ chờ phần sequence còn thiếu.
+`snapshot.latestSequence` mô tả trạng thái BE, không thay thế việc nhận từng event.
+Sau start result có Match ID, Unity đăng ký lấy phần lịch sử chưa nhận.
+
+BE cần trả đầy đủ `events` sau `afterSequence` trong phản hồi `meme_battle_snapshot`,
+với sequence liên tiếp bắt đầu từ 1 cho từng trận. Unity không thể tái tạo lượt đánh chỉ từ
+snapshot HP cuối trận nếu BE không gửi lịch sử tương ứng.
+
+Thay đổi này cần build lại WebGL để FE nhận bản sửa; API gọi từ FE giữ nguyên.
+
 ## Socket.IO trên WebGL
 
 WebGL dùng cầu nối `Assets/Plugins/WebGL/ZeroSpaceSocketIO.jslib` với Socket.IO trình duyệt,

@@ -72,6 +72,11 @@ public sealed class BattleVfxPlayer : MonoBehaviour
     public GameObject groundImpact;
     public GameObject landingText;
     [Range(.25f, 2f)] public float effectScale = 1f;
+    [Header("Contact strength")]
+    [Tooltip("Additional size for light hits and thrust contacts.")]
+    [Range(.5f, 2f)] public float lightContactScale = 1.4f;
+    [Tooltip("Additional size for heavy hits; ground impacts keep their own size.")]
+    [Range(.5f, 2f)] public float heavyContactScale = 1.55f;
     public float groundHeight;
     [Min(4)] public int maxInstances = 48;
 
@@ -233,13 +238,15 @@ public sealed class BattleVfxPlayer : MonoBehaviour
                 case "light_hit":
                 case "stab_hit":
                     Vector3 lightPoint = ContactPoint(cue);
-                    Spawn(ContactPrefab(cue, false), lightPoint, ContactRotation(cue), sequenceImpactScale, "light_hit");
+                    Spawn(ContactPrefab(cue, false), lightPoint, ContactRotation(cue),
+                        sequenceImpactScale * lightContactScale, "light_hit");
                     ContactCount++;
                     PublishContact(ContactKind.Light, lightPoint, cue.seconds);
                     break;
                 case "heavy_hit":
                     Vector3 heavyPoint = ContactPoint(cue);
-                    Spawn(ContactPrefab(cue, true), heavyPoint, ContactRotation(cue), sequenceImpactScale, "heavy_hit");
+                    Spawn(ContactPrefab(cue, true), heavyPoint, ContactRotation(cue),
+                        sequenceImpactScale * heavyContactScale, "heavy_hit");
                     ContactCount++;
                     PublishContact(ContactKind.Heavy, heavyPoint, cue.seconds);
                     break;
@@ -413,7 +420,7 @@ public sealed class BattleVfxPlayer : MonoBehaviour
     public void PlayHit(CharacterCombat target)
     {
         if (isActiveAndEnabled && target && lightHit)
-            Spawn(lightHit, BonePosition(target, HumanBodyBones.Chest), FacingCamera(), 1, "light_hit");
+            Spawn(lightHit, BonePosition(target, HumanBodyBones.Chest), FacingCamera(), lightContactScale, "light_hit");
     }
 
     Vector3 ContactPoint(BattleSfxBank.Cue cue)
@@ -552,10 +559,16 @@ public sealed class BattleVfxPlayer : MonoBehaviour
         instance.followLocalPoint = follow ? follow.InverseTransformPoint(position) : Vector3.zero;
         instance.followSeconds = .18f;
         instance.root.SetActive(true);
+        bool contact = cue == "light_hit" || cue == "heavy_hit";
         foreach (var particles in instance.particles)
         {
             particles.Stop(false, ParticleSystemStopBehavior.StopEmittingAndClear);
-            if (particles.gameObject.activeInHierarchy) particles.Play(false);
+            if (!particles.gameObject.activeInHierarchy) continue;
+            // Contact is evaluated late in the frame, after Shuriken's update.
+            // Emit the zero-time burst now, before ContactOccurred starts hit-stop.
+            // Otherwise the held contact pose has no flash until simulation resumes.
+            if (contact) particles.Simulate(.001f, false, true, false);
+            particles.Play(false);
         }
         PlayedEffectCount++;
         EffectPlayed?.Invoke(cue, instance.root);
