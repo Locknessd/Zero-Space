@@ -1,0 +1,91 @@
+name: Build WebGL and deploy R2
+
+on:
+  push:
+    branches: [dev]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Finish publishing a complete release before another run can publish latest.json.
+concurrency:
+  group: webgl-r2-dev
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-22.04
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Check configuration
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+          R2_PUBLIC_URL: ${{ secrets.R2_PUBLIC_URL }}
+        shell: bash
+        run: |
+          for name in UNITY_LICENSE UNITY_EMAIL UNITY_PASSWORD R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY R2_ENDPOINT R2_BUCKET R2_PUBLIC_URL; do
+            if [ -z "${!name}" ]; then
+              echo "::error::Missing configuration: $name"
+              exit 1
+            fi
+          done
+
+      - uses: actions/cache@v4
+        with:
+          path: Library
+          key: unity-WebGL-${{ hashFiles('ProjectSettings/ProjectVersion.txt', 'Packages/**', 'Assets/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            unity-WebGL-
+
+      - name: Build WebGL Desktop
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          unityVersion: 6000.4.0f1
+          targetPlatform: WebGL
+          buildMethod: WebGLAssetOptimization.BuildDesktopCI
+          versioning: None
+
+      - name: Save build and diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: webgl-${{ github.sha }}
+          retention-days: 7
+          if-no-files-found: warn
+          path: |
+            Build/WebGL-Desktop/
+            BuildOptimization/Build-DXT.txt
+            artifacts/
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install upload dependency
+        run: python -m pip install boto3==1.40.0
+
+      - name: Upload release and publish manifest
+        env:
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+          R2_PUBLIC_URL: ${{ secrets.R2_PUBLIC_URL }}
+          R2_PREFIX: ${{ secrets.R2_PREFIX }}
+        run: python scripts/deploy_r2.py
