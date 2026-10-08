@@ -35,11 +35,21 @@ namespace FrankRetarget.Editor
                 Require(manager.IsUnarmedPresentation && manager.ActiveWeapon == TrumpWeaponManager.WeaponType.None,
                     "Base equipment escaped presentation suppression.");
                 foreach (var root in WeaponObjects(manager).Where(item => item))
+                    // Unity searches the queried root even when includeInactive is false.
+                    // Preserved enabled flags on an inactive weapon cannot cause hits or emission.
                     Require(!root.activeInHierarchy &&
-                        !root.GetComponentsInChildren<Collider>(false).Any(c => c.enabled) &&
-                        !root.GetComponentsInChildren<Collider2D>(false).Any(c => c.enabled) &&
-                        !root.GetComponentsInChildren<TrailRenderer>(false).Any(t => t.emitting),
-                        "Suppressed equipment retained a visible prop, collider or emitting trail.");
+                        !root.GetComponentsInChildren<Collider>(true)
+                            .Any(c => c.enabled && c.gameObject.activeInHierarchy) &&
+                        !root.GetComponentsInChildren<Collider2D>(true)
+                            .Any(c => c.enabled && c.gameObject.activeInHierarchy) &&
+                        !root.GetComponentsInChildren<TrailRenderer>(true)
+                            .Any(t => t.emitting && t.enabled && t.gameObject.activeInHierarchy),
+                        $"Suppressed equipment: manager={manager.name} root={root.name} " +
+                        $"active={root.activeInHierarchy} " +
+                        "colliders=" + string.Join(",", root.GetComponentsInChildren<Collider>(false).Select(c =>
+                            c.name + ":enabled=" + c.enabled + ":active=" + c.gameObject.activeInHierarchy)) + " " +
+                        "trails=" + string.Join(",", root.GetComponentsInChildren<TrailRenderer>(false).Select(t =>
+                            t.name + ":emitting=" + t.emitting + ":active=" + t.gameObject.activeInHierarchy)) + ".");
             }
             if (!GreatSword || pair.IsRecovering)
                 return;

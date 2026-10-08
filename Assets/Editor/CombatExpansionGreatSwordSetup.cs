@@ -121,7 +121,8 @@ namespace FrankRetarget.Editor
             var result = (previous ?? Array.Empty<BattleSfxBank.Move>()).ToList();
             foreach (var profile in additions)
             {
-                result.RemoveAll(p => p != null && p.attack == profile.attack && p.reaction == profile.reaction);
+                result.RemoveAll(p => p != null && (p.label == profile.label ||
+                    p.attack == profile.attack && p.reaction == profile.reaction));
                 result.Add(profile);
             }
             return result.ToArray();
@@ -180,6 +181,10 @@ namespace FrankRetarget.Editor
                 move.sourcePair.attack != move.attackAnim || move.sourcePair.reaction != move.hitAnim ||
                 spec.landingSeconds > Mathf.Min(move.attackAnim.length, move.hitAnim.length))
                 throw new InvalidOperationException("Incomplete grounded GreatSword source pair " + spec.index);
+            float duration = Mathf.Max(move.attackAnim.length, move.hitAnim.length);
+            if (move.grounding.tracks == null || move.grounding.tracks.Length != 4 ||
+                move.grounding.tracks.Any(track => track == null || Mathf.Abs(track.duration - duration) > .0001f))
+                throw new InvalidOperationException("Rebake grounding for the current source duration: " + move.moveName);
         }
 
         static bool Finite(Vector3 value) =>

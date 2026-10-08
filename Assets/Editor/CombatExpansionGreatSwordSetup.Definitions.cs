@@ -12,6 +12,13 @@ namespace FrankRetarget.Editor
             var action = ScriptableObject.CreateInstance<CombatActionDefinition>();
             action.actionId = move.moveName;
             action.displayName = spec.displayName;
+            if (spec.index == 0)
+                action.authoredAttackSources = new[]
+                {
+                    NativeClip("610fba6d346a64f4583237c3ef4f7e46"),
+                    NativeClip("12987da400bbe864aae42fdf303bc647"),
+                    NativeClip("ed2751f54f474b74397a144408a8fe03")
+                };
             action.gameplayTrigger = "Heavy exchange queue, exact server animationId, " +
                 "EnqueueCombatAction(side, ID), and the existing animation browser.";
             action.entryAndInterruption = "Living available participants approach the authored range in the " +
@@ -22,6 +29,9 @@ namespace FrankRetarget.Editor
             action.recovery = "The native authored receiver track continues through knockdown. " +
                 "A surviving victim uses the grounded existing getup recovery and its automatic recovery sound; " +
                 "an accepted lethal victim holds the authored final pose. Attacker completes its source clip.";
+            if (spec.index == 0)
+                action.recovery += " The authored attacker variant preserves the original Ambush then appends " +
+                    "native backward-step start and stop motion before the surviving victim gets up.";
             action.presentation = "Exact source-second shared sound and VFX cues with measured per-victim-avatar " +
                 "Weapon anchors; established GreatSword weapon variant and trail routing, routed audio, hitstop, " +
                 "impact light, flash, cinematic camera impulse and final landing accent. " +
@@ -67,6 +77,13 @@ namespace FrankRetarget.Editor
                     "survivors recover through getup and accepted lethal victims retain their final pose."
             }).ToArray();
             return action;
+        }
+
+        static AnimationClip NativeClip(string guid)
+        {
+            return AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GUIDToAssetPath(guid))
+                .OfType<AnimationClip>().Single(clip => AssetDatabase.TryGetGUIDAndLocalFileIdentifier(clip,
+                    out string sourceGuid, out long localId) && sourceGuid == guid && localId == 7400000);
         }
 
         static CombatActionDefinition SaveDefinition(CombatActionDefinition prepared)
