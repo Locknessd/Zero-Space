@@ -12,6 +12,8 @@ namespace FrankRetarget
         public FrankReactionTrack reactions;
         public AnimationClip getUp;
         public AnimationClip attackerGetUp;
+        public FrankPairGrounding recoveryGrounding;
+        [Min(0)] public float recoveryBlendSeconds;
         [Min(0)] public float entryBlendSeconds;
         public bool constrainDepthAfterSpacing;
         [Min(0)] public float maximumAlignmentError;
@@ -121,7 +123,7 @@ namespace FrankRetarget
             receiver = target;
             lethal = isLethal;
             ResetRecovery();
-            lightDepthLocked = pair.unarmedIndex >= 0;
+            lightDepthLocked = pair.unarmedIndex >= 0 || pair.constrainDepthAfterSpacing;
             float initialAttackHipsDepth = source.Animator.GetBoneTransform(HumanBodyBones.Hips).position.z;
             float initialHitHipsDepth = target.Animator.GetBoneTransform(HumanBodyBones.Hips).position.z;
             source.weaponRig?.Release();
@@ -218,6 +220,7 @@ namespace FrankRetarget
             SampleTime = Mathf.Clamp(seconds, 0, Duration);
             attackActor.Evaluate(SampleTime);
             hitActor.Evaluate(pair.reactions ? SampleTime : Mathf.Max(0, SampleTime - pair.reactionDelay));
+            Vector3 originalAttackHips = attackActor.Pose.targetHips.position;
             if (pair.spacing && pair.unarmedIndex >= 0 && pair.bodySpacing > 0)
             {
                 Vector3 separation = PairSeparation(SampleTime) * pair.bodySpacing;
@@ -230,8 +233,10 @@ namespace FrankRetarget
             CombatPositioningController.Instance?.ConstrainDepthNow();
             ConstrainLightHipsDepth();
             if (Move.grounding)
-                Move.grounding.Apply(SampleTime, attacker.Animator, receiver.Animator, attackActor);
+                Move.grounding.Apply(SampleTime, attacker.Animator, receiver.Animator);
             ApplyReceiverFloorLift();
+            attackActor.ApplySourceWeaponDisplacement(attackActor.Pose.targetHips.position - originalAttackHips);
+            attackActor.ApplySourceWeaponEntryGrip(SampleTime);
         }
 
         void ApplyReceiverFloorLift()
@@ -270,10 +275,16 @@ namespace FrankRetarget
                 // The source Animator can refresh native weapon bones between manual samples.
                 // Reassert the held pose without advancing time or redispatching contact events.
                 if (!waitingForGetUp) EvaluateAt(SampleTime);
+                else
+                {
+                    EvaluateRecoveryPose();
+                    ConstrainLightHipsDepth();
+                }
                 return;
             }
             if (waitingForGetUp)
             {
+                EvaluateRecoveryPose();
                 ConstrainLightHipsDepth();
                 if (!attackRecoveryPending && !hitRecoveryPending) CompleteNow();
                 return;

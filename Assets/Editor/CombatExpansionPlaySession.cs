@@ -26,6 +26,7 @@ namespace FrankRetarget.Editor
         public static void BeginGrapples() => Begin("Grapples", "GrapplePlayMode.txt");
         public static void BeginThrows() => Begin("Throws", "ThrowPlayMode.txt");
         public static void BeginGreatSwordRecovery() => Begin("GreatSwordRecovery", "GreatSwordRecoveryPlayMode.txt");
+        public static void BeginGreatSword() => Begin("GreatSword", "GreatSwordPlayMode.txt");
 
         static void Begin(string suite, string report)
         {
@@ -129,6 +130,8 @@ namespace FrankRetarget.Editor
                         CombatExpansionThrowPlayCheck.Begin();
                     else if (suite == "GreatSwordRecovery")
                         CombatExpansionGreatSwordRecoveryPlayCheck.Begin();
+                    else if (suite == "GreatSword")
+                        CombatExpansionGreatSwordPlayCheck.Begin();
                     else
                         throw new InvalidOperationException("Unknown lifecycle suite: " + suite);
                     SessionState.SetInt(Key + ".phase", 3);
