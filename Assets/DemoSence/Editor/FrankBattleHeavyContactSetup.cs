@@ -123,7 +123,7 @@ namespace FrankRetarget.Editor
             public readonly string[] names = { "Weapon", "Shield", "LeftHand", "RightHand", "LeftFoot", "RightFoot" };
             public readonly float[] distances = new float[6];
             public readonly Vector3[] points = new Vector3[6];
-            public void Sample(FrankBattlePairPlayback pair,CharacterCombat attacker,ContactBody body,bool surfaces=false)
+            public void Sample(FrankBattlePairPlayback pair,CharacterCombat attacker,ContactBody body,bool surfaces=false,Func<Renderer,bool> weaponFilter=null)
             {
                 for(int i=0;i<distances.Length;i++)distances[i]=float.PositiveInfinity;
                 var renderers=pair.AttackerActor.Pose.weaponRenderers;
@@ -131,6 +131,7 @@ namespace FrankRetarget.Editor
                 {
                     if(!renderer || !renderer.enabled || !renderer.gameObject.activeInHierarchy ||
                         renderer.name.IndexOf("case",StringComparison.OrdinalIgnoreCase)>=0)continue;
+                    if(weaponFilter!=null && !weaponFilter(renderer))continue;
                     int kind=renderer.name.IndexOf("shield",StringComparison.OrdinalIgnoreCase)>=0?1:0;
                     Mesh mesh;
                     if(renderer is SkinnedMeshRenderer skin){scratch.Clear();skin.BakeMesh(scratch,true);mesh=scratch;}
@@ -407,6 +408,7 @@ namespace FrankRetarget.Editor
         [MenuItem("Tools/Battle/Apply reviewed heavy contact timing")]
         public static void InstallBattleHeavyContacts()
         {
+            if (File.Exists(AllHeavyReview + "/ApprovedSelection.csv")) { InstallAllReviewedHeavyContacts(); return; }
             var selections=File.ReadAllLines(HeavyContactReview+"/ContactSelection.csv").Skip(1).Where(l=>!string.IsNullOrWhiteSpace(l)).Select(l=>l.Split(',')).ToArray();
             var report=new StringBuilder();
             var scene=EditorSceneManager.OpenPreviewScene(SfxScene);

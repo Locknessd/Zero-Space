@@ -9,6 +9,7 @@ Shader "Battle/Weapon Ribbon"
         Cull Off
         Pass
         {
+            Name "Ribbon"
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag

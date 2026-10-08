@@ -1,5 +1,11 @@
 # Heavy contact alignment
 
+Spear and Assassin were reviewed again on 2026-10-07: both now have eight weapon
+contacts per fighter, with Assassin retaining its additional damaging landing.
+The earlier contact-selection CSVs below describe the previous calibration.
+See [the completed Spear/Assassin review](../BattleSpecialContactReview/README.md)
+for the missing strokes, refined timing, body-surface anchors and current checks.
+
 Battle's seven heavy moves for each fighter now use reviewed contact cues for impact VFX, hit audio and damage. Contact poses were sampled at 120 Hz on the rendered body and weapon meshes with the current Mankey 0.7 and Meme/Pepe 0.1 scales.
 
 Each impact stores a point on the receiver's mesh relative to an animated bone. Runtime playback evaluates the exact contact pose, updates HP and the damage popup, then plays the impact. A frame crossing several contacts processes each one once and restores the displayed pose. The impact's camera offset is 1.5 cm instead of the former 35 cm.

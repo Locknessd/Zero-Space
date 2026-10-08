@@ -24,25 +24,24 @@ public class LoaddingManager : MonoBehaviour
     bool _subscribed = false;
     bool _hasReachedFull = false;
     [Header("Auto Subscribe")]
-    [Tooltip("If set, LoaddingManager will subscribe to this matchId as soon as socket connects and buffer incoming messages until Battle scene GameManager is ready.")]
+    [Tooltip("If set, LoaddingManager will subscribe to this matchId as soon as socket connects. WebSocketManager retains incoming battle messages until GameManager is ready.")]
     public string autoSubscribeMatchId = "";
 
-    private System.Collections.Generic.List<string> _bufferedMessages = new System.Collections.Generic.List<string>();
-    private System.Action<string> _bufferHandler;
-    private bool _isBuffering = false;
+    private System.Action<string> _messageHandler;
     private bool _matchStarted = false;
     private AsyncOperation _loadOp = null;
     private bool _sceneReady = false;
     private bool _preloadStarted = false;
     private bool _persistAcrossScenes = false;
 
-    public bool IsBufferingMessages => _isBuffering;
+    public bool IsLoadingBattleScene => _preloadStarted;
+    public bool IsBattlePresentationReady { get; private set; }
 
     void Start()
     {
         if (loadingPanel != null) loadingPanel.SetActive(true);
         TrySubscribe();
-        // If auto-subscribe configured, persist across scene load so we can buffer messages
+        // WebSocketManager owns the persistent battle inbox for both startup modes.
         if (WebSocketManager.Instance != null && WebSocketManager.Instance.IsFrontendControlled)
         {
             if (WebSocketManager.Instance.IsWaitingForFrontend)
@@ -63,10 +62,7 @@ public class LoaddingManager : MonoBehaviour
 
     private void PrepareFrontendStart()
     {
-        if (_isBuffering) return;
         PersistAcrossScenes();
-        _isBuffering = true;
-        _bufferedMessages.Clear();
         _status = "Connecting...";
     }
 
@@ -89,16 +85,19 @@ public class LoaddingManager : MonoBehaviour
             WebSocketManager.Instance.OnConnectionError += HandleConnectionError;
             WebSocketManager.Instance.OnFrontendStartRequested += PrepareFrontendStart;
             // Always listen for raw messages to detect match start (even without autoSubscribeMatchId)
-            if (_bufferHandler == null)
+            if (_messageHandler == null)
             {
-                _bufferHandler = (msg) => { BufferAndDetectStart(msg); };
-                WebSocketManager.Instance.OnRawMessageReceived += _bufferHandler;
+                _messageHandler = (msg) => { DetectMatchStart(msg); };
+                WebSocketManager.Instance.OnRawMessageReceived += _messageHandler;
             }
             _subscribed = true;
             // FE may call immediately after createUnityInstance, before this component's Start.
             if (WebSocketManager.Instance.IsFrontendControlled && !WebSocketManager.Instance.IsWaitingForFrontend)
                 PrepareFrontendStart();
             if (WebSocketManager.Instance.IsConnected()) HandleConnectionProgress(1f, "Connected");
+            // If the socket dispatched before this listener registered, its retained state
+            // still activates the scene. The battle inbox remains owned by WebSocketManager.
+            if (WebSocketManager.Instance.HasBattleState) OnMatchStartedDetected();
         }
     }
 
@@ -109,9 +108,9 @@ public class LoaddingManager : MonoBehaviour
             WebSocketManager.Instance.OnConnectionProgress -= HandleConnectionProgress;
             WebSocketManager.Instance.OnConnectionError -= HandleConnectionError;
             WebSocketManager.Instance.OnFrontendStartRequested -= PrepareFrontendStart;
-            if (_bufferHandler != null)
+            if (_messageHandler != null)
             {
-                WebSocketManager.Instance.OnRawMessageReceived -= _bufferHandler;
+                WebSocketManager.Instance.OnRawMessageReceived -= _messageHandler;
             }
         }
     }
@@ -133,12 +132,12 @@ public class LoaddingManager : MonoBehaviour
         {
             _hasReachedFull = true;
             Debug.Log($"LoaddingManager: reached full progress (hasReachedFull=true)");
-            // Start buffering/subscribe if configured
+            // Subscribe the configured client-input match; the socket already retains messages.
             if (!string.IsNullOrEmpty(autoSubscribeMatchId) &&
                 (WebSocketManager.Instance == null || !WebSocketManager.Instance.IsFrontendControlled))
             {
-                Debug.Log($"LoaddingManager: autoSubscribeMatchId present, starting buffer+subscribe={autoSubscribeMatchId}");
-                StartBufferAndSubscribe();
+                Debug.Log($"LoaddingManager: autoSubscribeMatchId present, subscribing={autoSubscribeMatchId}");
+                SubscribeConfiguredMatch();
             }
             // begin preloading the target scene (allow activation only after start_result)
             if (loadSceneOnConnected && !string.IsNullOrEmpty(targetSceneName) && !_preloadStarted)
@@ -156,13 +155,10 @@ public class LoaddingManager : MonoBehaviour
         }
     }
 
-    async void StartBufferAndSubscribe()
+    async void SubscribeConfiguredMatch()
     {
-        if (_isBuffering) return;
         if (WebSocketManager.Instance == null) return;
-        _isBuffering = true;
-        _bufferedMessages.Clear();
-        // _bufferHandler already set in TrySubscribe, no need to create again
+        // _messageHandler already set in TrySubscribe, no need to create again
         try
         {
             await WebSocketManager.Instance.SubscribeToMatch(autoSubscribeMatchId, 0);
@@ -174,14 +170,9 @@ public class LoaddingManager : MonoBehaviour
         }
     }
 
-    void BufferAndDetectStart(string msg)
+    void DetectMatchStart(string msg)
     {
         if (string.IsNullOrEmpty(msg)) return;
-        // Only buffer if we're in buffering mode (autoSubscribeMatchId scenario)
-        if (_isBuffering)
-        {
-            _bufferedMessages.Add(msg);
-        }
         try
         {
             var j = JObject.Parse(msg);
@@ -364,6 +355,7 @@ public class LoaddingManager : MonoBehaviour
 
     System.Collections.IEnumerator PreloadAndForward(string sceneName)
     {
+        PersistAcrossScenes();
         var op = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName, UnityEngine.SceneManagement.LoadSceneMode.Single);
         if (op == null) yield break;
         // don't activate until both scene ready and match started
@@ -374,8 +366,6 @@ public class LoaddingManager : MonoBehaviour
         // wait until scene is loaded to the activation point (progress >= 0.9)
         while (op.progress < 0.9f)
         {
-            // log occasionally to show progress
-            Debug.Log($"LoaddingManager: Preload progress={op.progress}");
             yield return null;
         }
         _sceneReady = true;
@@ -389,36 +379,14 @@ public class LoaddingManager : MonoBehaviour
             yield return null;
         }
 
-        // wait a frame for scene objects to initialize
-        yield return null;
-        yield return null;
+        // Actual readiness replaces a fixed two-frame delay. The socket keeps every event
+        // while GameManager and its fighters initialize, with no loading timeout.
+        while (GameManager.Instance == null || !GameManager.Instance.IsReadyForBattleEvents)
+            yield return null;
 
-        // try to find GameManager instance
-        GameManager gm = GameManager.Instance ?? UnityEngine.Object.FindObjectOfType<GameManager>();
-        if (gm != null && _isBuffering && _bufferedMessages.Count > 0)
-        {
-            // forward buffered messages
-            foreach (var m in _bufferedMessages)
-            {
-                try
-                {
-                    gm.ApplyRawMessage(m);
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogError($"LoaddingManager: forwarding buffered message exception: {ex}");
-                }
-            }
-        }
-
-        // cleanup buffer subscription
-        if (_isBuffering && WebSocketManager.Instance != null && _bufferHandler != null)
-        {
-            WebSocketManager.Instance.OnRawMessageReceived -= _bufferHandler;
-        }
-        _isBuffering = false;
-        _bufferHandler = null;
-        _bufferedMessages.Clear();
+        if (hideDelay > 0f) yield return new WaitForSecondsRealtime(hideDelay);
+        HidePanel();
+        IsBattlePresentationReady = true;
 
         // destroy loading manager if it was moved to DontDestroyOnLoad
         if (_persistAcrossScenes) Destroy(gameObject);
@@ -445,8 +413,6 @@ public class LoaddingManager : MonoBehaviour
         // allow activation
         Debug.Log("LoaddingManager: Activating scene now.");
         _loadOp.allowSceneActivation = true;
-        // hide panel shortly after activation begins
-        Invoke(nameof(HidePanel), hideDelay);
     }
 
     void HidePanel()

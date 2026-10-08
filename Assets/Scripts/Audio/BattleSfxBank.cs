@@ -5,6 +5,7 @@ using UnityEngine.Audio;
 [CreateAssetMenu(menuName = "Battle/SFX Bank")]
 public sealed class BattleSfxBank : ScriptableObject
 {
+    public enum Fighter { Both, Mankey, Pepe }
     [Serializable]
     public sealed class Group
     {
@@ -75,6 +76,8 @@ public sealed class BattleSfxBank : ScriptableObject
     public sealed class Move
     {
         public string label;
+        [Tooltip("Optional character timing for a shared animation pair; Both keeps the common timeline.")]
+        public Fighter fighter;
         public AnimationClip attack;
         public AnimationClip reaction;
         public Cue[] cues = Array.Empty<Cue>();
@@ -90,7 +93,18 @@ public sealed class BattleSfxBank : ScriptableObject
     {
         if (move != null && move.grapple) return move.grapple.Presentation(move.grappleOutcome);
         if (move?.sourcePair == null) return null;
-        return Array.Find(moves, m => m != null && m.attack == move.sourcePair.attack &&
-            m.reaction == move.sourcePair.reaction);
+        Fighter fighter = move.sourcePair.pepeAttacks ? Fighter.Pepe : Fighter.Mankey;
+        return Array.Find(moves, m => m != null && m.fighter == fighter && MatchesActionName(m, move) &&
+            m.attack == move.sourcePair.attack && m.reaction == move.sourcePair.reaction) ??
+            Array.Find(moves, m => m != null && m.fighter == Fighter.Both && MatchesActionName(m, move) &&
+                m.attack == move.sourcePair.attack && m.reaction == move.sourcePair.reaction) ??
+            Array.Find(moves, m => m != null && m.fighter == fighter && m.attack == move.sourcePair.attack &&
+            m.reaction == move.sourcePair.reaction) ??
+            Array.Find(moves, m => m != null && m.fighter == Fighter.Both && m.attack == move.sourcePair.attack &&
+                m.reaction == move.sourcePair.reaction);
     }
+
+    private static bool MatchesActionName(Move presentation, CombatTripletData move) =>
+        !string.IsNullOrEmpty(move.moveName) && (presentation.label == move.moveName ||
+            (presentation.label != null && presentation.label.EndsWith(" " + move.moveName, StringComparison.Ordinal)));
 }

@@ -464,6 +464,7 @@ MonoBehaviour:
       contactSource: 
       avatarContacts: []
       damageOnLanding: 0
+    fighter: 0
   - label: Mankey Light_3
     attack: {fileID: 7400000, guid: 76e9c5411407b62e39172a6f4375b4bd, type: 2}
     reaction: {fileID: 7400000, guid: ce7a44ba3b2afc477be79759a8fd2010, type: 2}
@@ -504,45 +505,58 @@ MonoBehaviour:
       contactSource: 
       avatarContacts: []
       damageOnLanding: 0
+    fighter: 0
   - label: Mankey Heavy_5
     attack: {fileID: 7400000, guid: 704a3636bd202b4a8a22c98bc3ff67e3, type: 2}
     reaction: {fileID: 7400000, guid: 51ecae1bd49859bfc96cfd34496401c5, type: 2}
     cues:
-    - seconds: 1.34833
-      group: light_swing
-      finalLanding: 0
-      hasContactPoint: 0
-      contactBone: 8
-      contactOffset: {x: 0, y: 0, z: 0}
-      contactSource: 
-      avatarContacts: []
-      damageOnLanding: 0
-    - seconds: 1.47833
-      group: heavy_hit
-      finalLanding: 0
-      hasContactPoint: 1
-      contactBone: 0
-      contactOffset: {x: -0.28895608, y: -0.08484477, z: 1.4064969}
-      contactSource: Shield
-      avatarContacts: []
-      damageOnLanding: 0
-    - seconds: 2.03667
+    - seconds: 1.334583
       group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 2.26667
+    - seconds: 1.464583
+      group: heavy_hit
+      finalLanding: 0
+      hasContactPoint: 1
+      contactBone: 30
+      contactOffset: {x: -0.1324793, y: 0.1009691, z: -0.0612222}
+      contactSource: Shield
+      damageOnLanding: 0
+    - seconds: 2.033333
+      group: blade_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource: 
+      damageOnLanding: 0
+    - seconds: 2.263333
       group: light_hit
       finalLanding: 0
       hasContactPoint: 1
-      contactBone: 7
-      contactOffset: {x: -0.47211665, y: 0.25540596, z: -1.093931}
+      contactBone: 15
+      contactOffset: {x: 0.3878635, y: -0.4035408, z: -0.2286616}
       contactSource: Weapon
-      avatarContacts: []
+      damageOnLanding: 0
+    - seconds: 2.53
+      group: blade_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource:
+      damageOnLanding: 0
+    - seconds: 2.605
+      group: light_hit
+      finalLanding: 0
+      hasContactPoint: 1
+      contactBone: 20
+      contactOffset: {x: -0.315682, y: -0.6489249, z: 0.6881883}
+      contactSource: Weapon
       damageOnLanding: 0
     - seconds: 2.895
       group: blade_swing
@@ -551,52 +565,62 @@ MonoBehaviour:
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
     - seconds: 3.125
       group: heavy_hit
       finalLanding: 0
       hasContactPoint: 1
       contactBone: 54
-      contactOffset: {x: -0.83876175, y: -0.04304099, z: 1.4091737}
+      contactOffset: {x: -0.8387617, y: -0.043041, z: 1.409174}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 3.32333
+    - seconds: 3.4225
       group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 3.55333
+    - seconds: 3.6525
       group: light_hit
       finalLanding: 0
       hasContactPoint: 1
       contactBone: 54
-      contactOffset: {x: 0.03256609, y: -0.089856386, z: 1.4047077}
+      contactOffset: {x: 0.0082507, y: -0.0855394, z: 1.402208}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 3.98667
+    - seconds: 3.984583
       group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 4.21667
+    - seconds: 4.214583
       group: heavy_hit
       finalLanding: 0
       hasContactPoint: 1
       contactBone: 10
-      contactOffset: {x: -0.65017843, y: 0.7902473, z: 1.4634627}
+      contactOffset: {x: -1.114738, y: 1.248891, z: 1.278374}
       contactSource: Weapon
-      avatarContacts: []
+      damageOnLanding: 0
+    - seconds: 4.716667
+      group: blade_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource:
+      damageOnLanding: 0
+    - seconds: 4.791667
+      group: heavy_hit
+      finalLanding: 0
+      hasContactPoint: 1
+      contactBone: 10
+      contactOffset: {x: 1.218778, y: 2.201339, z: 1.029485}
+      contactSource: Weapon
       damageOnLanding: 0
     - seconds: 4.97
       group: body_fall
@@ -605,83 +629,75 @@ MonoBehaviour:
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
+    fighter: 0
   - label: Mankey Heavy_6
     attack: {fileID: 7400000, guid: d7f6ec4fe18d56ed4b64b0a65410cdaa, type: 2}
     reaction: {fileID: 7400000, guid: 1154b9ff101932c3884ca761764f4480, type: 2}
     cues:
-    - seconds: 1.2466699
-      group: heavy_swing
+    - seconds: 1.244167
+      group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 1.43667
+    - seconds: 1.434167
       group: heavy_hit
       finalLanding: 0
       hasContactPoint: 1
       contactBone: 5
-      contactOffset: {x: 0.49216086, y: -0.44914293, z: 1.1783123}
+      contactOffset: {x: 0.3849026, y: -0.5101446, z: 0.7601526}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 2.04667
-      group: heavy_swing
+    - seconds: 2.0425
+      group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 2.23667
+    - seconds: 2.2325
       group: heavy_hit
       finalLanding: 0
       hasContactPoint: 1
       contactBone: 10
-      contactOffset: {x: 1.058151, y: 2.5858703, z: 1.3184386}
+      contactOffset: {x: 1.059655, y: 1.741146, z: -0.5723172}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 2.6633298
-      group: heavy_swing
+    - seconds: 2.64375
+      group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 2.85333
+    - seconds: 2.83375
       group: heavy_hit
       finalLanding: 0
       hasContactPoint: 1
       contactBone: 7
-      contactOffset: {x: -0.033013035, y: 0.44085735, z: -1.0515337}
+      contactOffset: {x: 0.2080287, y: 0.0951626, z: -1.094243}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 4.09333
-      group: heavy_swing
+    - seconds: 4.130417
+      group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 4.28333
+    - seconds: 4.320417
       group: heavy_hit
       finalLanding: 0
       hasContactPoint: 1
-      contactBone: 10
-      contactOffset: {x: 0.21740511, y: 1.6011318, z: 1.7914016}
+      contactBone: 8
+      contactOffset: {x: 0.7499672, y: 0.4937238, z: -1.006545}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
     - seconds: 5.07
       group: body_fall
@@ -690,119 +706,139 @@ MonoBehaviour:
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
+    fighter: 0
   - label: Mankey Heavy_7
     attack: {fileID: 7400000, guid: c3bf65b3b61bc4d9c853c894a6b5c888, type: 2}
     reaction: {fileID: 7400000, guid: 8adc83af964f26c6c811c3b7615a9531, type: 2}
     cues:
-    - seconds: 1.09833
+    - seconds: 1.086667
       group: thrust_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 1.20333
+    - seconds: 1.191667
       group: stab_hit
       finalLanding: 0
       hasContactPoint: 1
-      contactBone: 7
-      contactOffset: {x: 0.23967355, y: -0.46150333, z: -1.1177169}
+      contactBone: 1
+      contactOffset: {x: -0.8251968, y: 0.3111964, z: 0.5849103}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 2.51667
+    - seconds: 2.064583
       group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 2.74667
+    - seconds: 2.139583
       group: light_hit
       finalLanding: 0
       hasContactPoint: 1
-      contactBone: 16
-      contactOffset: {x: -0.0043620975, y: 0.046155833, z: 0.41504797}
+      contactBone: 13
+      contactOffset: {x: -0.5402431, y: 0.1932883, z: -0.1837745}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 3.08667
+    - seconds: 2.3425
       group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 3.31667
+    - seconds: 2.4175
+      group: light_hit
+      finalLanding: 0
+      hasContactPoint: 1
+      contactBone: 2
+      contactOffset: {x: -0.5056641, y: 1.655862, z: 0.5974468}
+      contactSource: Weapon
+      damageOnLanding: 0
+    - seconds: 2.51
+      group: blade_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource:
+      damageOnLanding: 0
+    - seconds: 2.74
+      group: light_hit
+      finalLanding: 0
+      hasContactPoint: 1
+      contactBone: 1
+      contactOffset: {x: 0.6914478, y: 0.1987966, z: -0.3121594}
+      contactSource: Weapon
+      damageOnLanding: 0
+    - seconds: 3.085833
+      group: blade_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource:
+      damageOnLanding: 0
+    - seconds: 3.315833
       group: light_hit
       finalLanding: 0
       hasContactPoint: 1
       contactBone: 10
-      contactOffset: {x: 0.020944435, y: 2.929292, z: 1.3574263}
+      contactOffset: {x: -0.4953551, y: 2.580215, z: 1.584795}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 3.58333
-      group: light_swing
+    - seconds: 3.5679169
+      group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 3.71333
+    - seconds: 3.697917
       group: heavy_hit
       finalLanding: 0
       hasContactPoint: 1
-      contactBone: 14
-      contactOffset: {x: -0.21356216, y: 0.33972356, z: 0.5568611}
+      contactBone: 41
+      contactOffset: {x: -0.0566333, y: -0.1196532, z: -0.0218662}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 4.595
+    - seconds: 4.587083
       group: thrust_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 4.7
+    - seconds: 4.692083
       group: stab_hit
       finalLanding: 0
       hasContactPoint: 1
-      contactBone: 0
-      contactOffset: {x: -0.31543067, y: 0.31989178, z: 1.4844899}
+      contactBone: 10
+      contactOffset: {x: 1.268156, y: 1.925051, z: -0.1591302}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 5.3533297
-      group: light_swing
+    - seconds: 5.4125
+      group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 5.48333
+    - seconds: 5.5425
       group: heavy_hit
       finalLanding: 0
       hasContactPoint: 1
       contactBone: 0
-      contactOffset: {x: 0.040481307, y: -1.0979923, z: 0.9837036}
+      contactOffset: {x: 0.0168364, y: -1.116803, z: 0.9778501}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
     - seconds: 6.03
       group: body_fall
@@ -811,29 +847,27 @@ MonoBehaviour:
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
+    fighter: 0
   - label: Mankey Heavy_2
     attack: {fileID: 7400000, guid: 0bdec02c684bfaf45a09de44c51a1302, type: 2}
     reaction: {fileID: 7400000, guid: d0ce6f3fc511d507b93b0a229c02337e, type: 2}
     cues:
-    - seconds: 1.28
-      group: heavy_swing
+    - seconds: 1.276667
+      group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 1.47
+    - seconds: 1.466667
       group: heavy_hit
       finalLanding: 0
       hasContactPoint: 1
-      contactBone: 32
-      contactOffset: {x: 0.05543609, y: 0.2789474, z: 0.013713066}
+      contactBone: 29
+      contactOffset: {x: -0.0358497, y: 0.2718888, z: 0.0166771}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
     - seconds: 2.17
       group: light_swing
@@ -860,43 +894,38 @@ MonoBehaviour:
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 3.2883298
-      group: heavy_swing
+    - seconds: 3.282917
+      group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 3.47833
+    - seconds: 3.472917
+      group: heavy_hit
+      finalLanding: 0
+      hasContactPoint: 1
+      contactBone: 29
+      contactOffset: {x: 0.0967952, y: -0.0491455, z: 0.0439526}
+      contactSource: Weapon
+      damageOnLanding: 0
+    - seconds: 4.0412498
+      group: blade_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource: 
+      damageOnLanding: 0
+    - seconds: 4.23125
       group: heavy_hit
       finalLanding: 0
       hasContactPoint: 1
       contactBone: 0
-      contactOffset: {x: 0.3491383, y: -0.843545, z: 0.9894509}
+      contactOffset: {x: 0.0362418, y: -1.304516, z: 0.8043147}
       contactSource: Weapon
-      avatarContacts: []
-      damageOnLanding: 0
-    - seconds: 3.9633298
-      group: heavy_swing
-      finalLanding: 0
-      hasContactPoint: 0
-      contactBone: 8
-      contactOffset: {x: 0, y: 0, z: 0}
-      contactSource: 
-      avatarContacts: []
-      damageOnLanding: 0
-    - seconds: 4.15333
-      group: heavy_hit
-      finalLanding: 0
-      hasContactPoint: 1
-      contactBone: 2
-      contactOffset: {x: 0.36330098, y: 0.04241663, z: 1.0234303}
-      contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
     - seconds: 4.53
       group: body_fall
@@ -905,137 +934,139 @@ MonoBehaviour:
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
+    fighter: 0
   - label: Mankey Heavy_8
     attack: {fileID: 7400000, guid: e762c1dee3c6fd4158d7c574da543530, type: 2}
     reaction: {fileID: 7400000, guid: aa01adb79aec1d8bfa373f7930b47d9f, type: 2}
     cues:
-    - seconds: 0.84833
+    - seconds: 0.97333
       group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 1
+    - seconds: 0.99167
       group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 1.07833
-      group: light_hit
-      finalLanding: 0
-      hasContactPoint: 1
-      contactBone: 18
-      contactOffset: {x: -0.09116965, y: -1.2396326, z: 0.62921727}
-      contactSource: Weapon
-      avatarContacts: []
-      damageOnLanding: 0
-    - seconds: 1.23
+    - seconds: 1.07
       group: light_hit
       finalLanding: 0
       hasContactPoint: 1
       contactBone: 3
-      contactOffset: {x: -0.86287254, y: -0.60323876, z: -1.0568116}
+      contactOffset: {x: -0.2828045, y: -0.9099638, z: -0.2981865}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 1.63667
+    - seconds: 1.355
+      group: light_hit
+      finalLanding: 0
+      hasContactPoint: 1
+      contactBone: 3
+      contactOffset: {x: -0.3023461, y: 0.4877321, z: -0.9974983}
+      contactSource: Weapon
+      damageOnLanding: 0
+    - seconds: 1.6320829
       group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 1.86667
+    - seconds: 1.862083
       group: heavy_hit
       finalLanding: 0
       hasContactPoint: 1
       contactBone: 3
-      contactOffset: {x: -0.6616211, y: -0.7209867, z: -1.1501538}
+      contactOffset: {x: -0.2377556, y: 0.4723811, z: 0.5472986}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 2.54
+    - seconds: 2.217917
+      group: blade_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource:
+      damageOnLanding: 0
+    - seconds: 2.292917
+      group: light_hit
+      finalLanding: 0
+      hasContactPoint: 1
+      contactBone: 54
+      contactOffset: {x: 0.3708411, y: 0.1731583, z: 1.349185}
+      contactSource: Weapon
+      damageOnLanding: 0
+    - seconds: 2.534167
       group: thrust_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 2.645
+    - seconds: 2.639167
       group: stab_hit
       finalLanding: 0
       hasContactPoint: 1
-      contactBone: 2
-      contactOffset: {x: -0.53094923, y: 1.4128367, z: 0.5257062}
+      contactBone: 40
+      contactOffset: {x: -0.1025725, y: 0.0331034, z: -0.0819071}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 2.92333
+    - seconds: 2.919167
       group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 3.15333
+    - seconds: 3.149167
       group: light_hit
       finalLanding: 0
       hasContactPoint: 1
       contactBone: 4
-      contactOffset: {x: -0.7792453, y: -0.15060556, z: -1.5040284}
+      contactOffset: {x: 0.182878, y: -0.934176, z: -1.089479}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 3.43333
+    - seconds: 3.43375
       group: thrust_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 3.53833
+    - seconds: 3.53875
       group: stab_hit
       finalLanding: 0
       hasContactPoint: 1
       contactBone: 1
-      contactOffset: {x: -0.051097393, y: 1.4066606, z: 0.82685864}
+      contactOffset: {x: 0.7022377, y: 1.39498, z: -0.0554557}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 3.725
-      group: light_swing
+    - seconds: 3.719167
+      group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 3.855
+    - seconds: 3.849167
       group: heavy_hit
       finalLanding: 0
       hasContactPoint: 1
-      contactBone: 3
-      contactOffset: {x: -0.40884885, y: -0.41004792, z: -1.4763557}
+      contactBone: 2
+      contactOffset: {x: -0.2901041, y: 1.761286, z: -0.8669109}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
     - seconds: 4.13
       group: body_fall
@@ -1044,7 +1075,22 @@ MonoBehaviour:
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
+      damageOnLanding: 0
+    - seconds: 4.9725003
+      group: blade_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource:
+      damageOnLanding: 0
+    - seconds: 5.0475
+      group: heavy_hit
+      finalLanding: 0
+      hasContactPoint: 1
+      contactBone: 14
+      contactOffset: {x: 0.4761256, y: -0.7518004, z: 0.0581595}
+      contactSource: Weapon
       damageOnLanding: 0
     - seconds: 5.43
       group: body_fall
@@ -1053,101 +1099,123 @@ MonoBehaviour:
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
+    fighter: 0
   - label: Pepe Heavy_5
     attack: {fileID: 7400000, guid: 55df8da958feec5379886b57b8fdaa22, type: 2}
     reaction: {fileID: 7400000, guid: 815993e08bc1e7bc6ad4c04db31399c9, type: 2}
     cues:
-    - seconds: 1.33167
-      group: light_swing
-      finalLanding: 0
-      hasContactPoint: 0
-      contactBone: 8
-      contactOffset: {x: 0, y: 0, z: 0}
-      contactSource: 
-      avatarContacts: []
-      damageOnLanding: 0
-    - seconds: 1.46167
-      group: heavy_hit
-      finalLanding: 0
-      hasContactPoint: 1
-      contactBone: 31
-      contactOffset: {x: 0.05095266, y: 0.0022160567, z: 0.014189712}
-      contactSource: Shield
-      avatarContacts: []
-      damageOnLanding: 0
-    - seconds: 2.02833
+    - seconds: 1.3325
       group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 2.25833
+    - seconds: 1.4625
+      group: heavy_hit
+      finalLanding: 0
+      hasContactPoint: 1
+      contactBone: 30
+      contactOffset: {x: -0.0405102, y: 0.0016397, z: 0.0370008}
+      contactSource: Shield
+      damageOnLanding: 0
+    - seconds: 2.025
+      group: blade_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource: 
+      damageOnLanding: 0
+    - seconds: 2.255
       group: light_hit
       finalLanding: 0
       hasContactPoint: 1
       contactBone: 15
-      contactOffset: {x: 0.14478287, y: 0.1180448, z: 0.052451193}
+      contactOffset: {x: 0.0831953, y: 0.1115632, z: 0.1217554}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 2.8866699
+    - seconds: 2.525833
+      group: blade_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource:
+      damageOnLanding: 0
+    - seconds: 2.600833
+      group: light_hit
+      finalLanding: 0
+      hasContactPoint: 1
+      contactBone: 4
+      contactOffset: {x: -0.228789, y: 0.0375995, z: 0.0198303}
+      contactSource: Weapon
+      damageOnLanding: 0
+    - seconds: 2.8825
       group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 3.11667
+    - seconds: 3.1125
       group: heavy_hit
       finalLanding: 0
       hasContactPoint: 1
-      contactBone: 23
-      contactOffset: {x: -0.031956248, y: 0.03879483, z: 0.14012145}
+      contactBone: 13
+      contactOffset: {x: 0.1404259, y: 0.1439703, z: 0.0519004}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 3.32333
+    - seconds: 3.4225
       group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 3.55333
+    - seconds: 3.6525
       group: light_hit
       finalLanding: 0
       hasContactPoint: 1
       contactBone: 23
-      contactOffset: {x: -0.05877958, y: 0.047635555, z: 0.06239032}
+      contactOffset: {x: -0.0582904, y: 0.0472373, z: 0.0640484}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 3.9783301
+    - seconds: 3.978333
       group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 4.20833
+    - seconds: 4.208333
       group: heavy_hit
       finalLanding: 0
       hasContactPoint: 1
       contactBone: 21
-      contactOffset: {x: 0.058043465, y: 0.12533127, z: -0.18441243}
+      contactOffset: {x: 0.0580281, y: 0.1253153, z: -0.1844012}
       contactSource: Weapon
-      avatarContacts: []
+      damageOnLanding: 0
+    - seconds: 4.64375
+      group: blade_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource:
+      damageOnLanding: 0
+    - seconds: 4.71875
+      group: heavy_hit
+      finalLanding: 0
+      hasContactPoint: 1
+      contactBone: 12
+      contactOffset: {x: -0.0657361, y: 0.1318823, z: -0.1755935}
+      contactSource: Weapon
       damageOnLanding: 0
     - seconds: 4.97
       group: body_fall
@@ -1156,83 +1224,75 @@ MonoBehaviour:
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
+    fighter: 0
   - label: Pepe Heavy_6
     attack: {fileID: 7400000, guid: 32a144720df8bb1cfb3dc58b6eb1b05b, type: 2}
     reaction: {fileID: 7400000, guid: 29d1673c59917bf858ecdeda1c1d3ef3, type: 2}
     cues:
-    - seconds: 1.2466699
-      group: heavy_swing
+    - seconds: 1.244167
+      group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 1.43667
+    - seconds: 1.434167
       group: heavy_hit
       finalLanding: 0
       hasContactPoint: 1
       contactBone: 3
-      contactOffset: {x: -0.032797027, y: 0.048116963, z: -0.046819735}
+      contactOffset: {x: -0.0807209, y: 0.0031921, z: -0.0812284}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 2.0383298
-      group: heavy_swing
+    - seconds: 2.032083
+      group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 2.22833
+    - seconds: 2.222083
       group: heavy_hit
       finalLanding: 0
       hasContactPoint: 1
       contactBone: 22
-      contactOffset: {x: 0.075451605, y: -0.022986082, z: 0.25013274}
+      contactOffset: {x: 0.207288, y: -0.0924011, z: 0.3026939}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 2.6633298
-      group: heavy_swing
+    - seconds: 2.64375
+      group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 2.85333
+    - seconds: 2.83375
       group: heavy_hit
       finalLanding: 0
       hasContactPoint: 1
-      contactBone: 8
-      contactOffset: {x: 0.14613211, y: -0.32809272, z: -0.0017714776}
+      contactBone: 23
+      contactOffset: {x: -0.2334204, y: 0.0901662, z: -0.0715611}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 4.09333
-      group: heavy_swing
+    - seconds: 4.130417
+      group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 4.28333
+    - seconds: 4.320417
       group: heavy_hit
       finalLanding: 0
       hasContactPoint: 1
       contactBone: 7
-      contactOffset: {x: -0.1118516, y: 0.24584933, z: 0.070560776}
+      contactOffset: {x: -0.1119153, y: 0.2447089, z: 0.0738506}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
     - seconds: 5.07
       group: body_fall
@@ -1241,119 +1301,139 @@ MonoBehaviour:
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
+    fighter: 0
   - label: Pepe Heavy_7
     attack: {fileID: 7400000, guid: e3d0e60f2b1771925ac4af64e74863a1, type: 2}
     reaction: {fileID: 7400000, guid: 1a1eacea83607f6a3ae147efbbc23558, type: 2}
     cues:
-    - seconds: 1.09
+    - seconds: 1.07625
       group: thrust_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 1.195
+    - seconds: 1.18125
       group: stab_hit
-      finalLanding: 0
-      hasContactPoint: 1
-      contactBone: 8
-      contactOffset: {x: -0.005514628, y: 0.26374596, z: 0.13432977}
-      contactSource: Weapon
-      avatarContacts: []
-      damageOnLanding: 0
-    - seconds: 2.5083299
-      group: blade_swing
-      finalLanding: 0
-      hasContactPoint: 0
-      contactBone: 8
-      contactOffset: {x: 0, y: 0, z: 0}
-      contactSource: 
-      avatarContacts: []
-      damageOnLanding: 0
-    - seconds: 2.73833
-      group: light_hit
       finalLanding: 0
       hasContactPoint: 1
       contactBone: 1
-      contactOffset: {x: 0.051646154, y: 0.041126534, z: -0.18844566}
+      contactOffset: {x: -0.0726682, y: 0.0727141, z: 0.0333087}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 3.08667
+    - seconds: 2.064583
       group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 3.31667
+    - seconds: 2.139583
       group: light_hit
       finalLanding: 0
       hasContactPoint: 1
-      contactBone: 22
-      contactOffset: {x: 0.065928884, y: -0.096047394, z: 0.18305822}
+      contactBone: 13
+      contactOffset: {x: 0.0756895, y: 0.1948871, z: 0.0230272}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 3.4833298
-      group: light_swing
+    - seconds: 2.338333
+      group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 3.61333
+    - seconds: 2.413333
+      group: light_hit
+      finalLanding: 0
+      hasContactPoint: 1
+      contactBone: 47
+      contactOffset: {x: -0.0749528, y: 0.0025121, z: 0.0230465}
+      contactSource: Weapon
+      damageOnLanding: 0
+    - seconds: 2.50375
+      group: blade_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource: 
+      damageOnLanding: 0
+    - seconds: 2.73375
+      group: light_hit
+      finalLanding: 0
+      hasContactPoint: 1
+      contactBone: 38
+      contactOffset: {x: -0.0148683, y: 0.0074628, z: 0.0119142}
+      contactSource: Weapon
+      damageOnLanding: 0
+    - seconds: 3.079583
+      group: blade_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource: 
+      damageOnLanding: 0
+    - seconds: 3.309583
+      group: light_hit
+      finalLanding: 0
+      hasContactPoint: 1
+      contactBone: 21
+      contactOffset: {x: -0.0276224, y: 0.0189282, z: 0.1759816}
+      contactSource: Weapon
+      damageOnLanding: 0
+    - seconds: 3.5637498
+      group: blade_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource: 
+      damageOnLanding: 0
+    - seconds: 3.69375
       group: heavy_hit
       finalLanding: 0
       hasContactPoint: 1
-      contactBone: 41
-      contactOffset: {x: 0.025571542, y: -0.037709247, z: 0.017610388}
+      contactBone: 16
+      contactOffset: {x: -0.1629014, y: 0.0396633, z: 0.0130401}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 4.545
+    - seconds: 4.564167
       group: thrust_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
-      contactSource: 
-      avatarContacts: []
+      contactSource:
       damageOnLanding: 0
-    - seconds: 4.65
+    - seconds: 4.669167
       group: stab_hit
       finalLanding: 0
       hasContactPoint: 1
-      contactBone: 21
-      contactOffset: {x: 0.24798226, y: -0.047939483, z: 0.39007145}
+      contactBone: 22
+      contactOffset: {x: 0.0748301, y: -0.0200259, z: 0.2502376}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 5.3533297
-      group: light_swing
+    - seconds: 5.4125
+      group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
-      contactSource: 
-      avatarContacts: []
+      contactSource:
       damageOnLanding: 0
-    - seconds: 5.48333
+    - seconds: 5.5425
       group: heavy_hit
       finalLanding: 0
       hasContactPoint: 1
       contactBone: 15
-      contactOffset: {x: 0.0058665355, y: 0.016451506, z: 0.33502007}
+      contactOffset: {x: 0.005358, y: 0.0131986, z: 0.3339835}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
     - seconds: 6.03
       group: body_fall
@@ -1362,47 +1442,43 @@ MonoBehaviour:
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
+    fighter: 0
   - label: Pepe Heavy_2
     attack: {fileID: 7400000, guid: 9c35a5274953fd6efbf06df0defbdf9c, type: 2}
     reaction: {fileID: 7400000, guid: 1ad661b136b91122291ed51469b56be9, type: 2}
     cues:
-    - seconds: 1.28
-      group: heavy_swing
+    - seconds: 1.27875
+      group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 1.47
+    - seconds: 1.46875
       group: heavy_hit
       finalLanding: 0
       hasContactPoint: 1
-      contactBone: 24
-      contactOffset: {x: 0.043793608, y: 0.028536929, z: 0.007913024}
+      contactBone: 30
+      contactOffset: {x: 0.0332403, y: 0.0247946, z: 0.0424573}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 2.1783302
+    - seconds: 2.105417
       group: light_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 2.30833
+    - seconds: 2.235417
       group: heavy_hit
       finalLanding: 0
       hasContactPoint: 1
-      contactBone: 23
-      contactOffset: {x: -0.061649453, y: 0.050620694, z: -0.039475814}
+      contactBone: 22
+      contactOffset: {x: -0.0143867, y: 0.1445672, z: -0.0076376}
       contactSource: RightFoot
-      avatarContacts: []
       damageOnLanding: 0
     - seconds: 2.83
       group: body_fall
@@ -1411,43 +1487,38 @@ MonoBehaviour:
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 3.28
-      group: heavy_swing
+    - seconds: 3.2766669
+      group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 3.47
+    - seconds: 3.466667
       group: heavy_hit
       finalLanding: 0
       hasContactPoint: 1
       contactBone: 21
-      contactOffset: {x: -0.030056836, y: -0.08548157, z: 0.17087056}
+      contactOffset: {x: -0.0011316, y: -0.0840633, z: 0.1686694}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 3.9633298
-      group: heavy_swing
+    - seconds: 4.0412498
+      group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 4.15333
+    - seconds: 4.23125
       group: heavy_hit
       finalLanding: 0
       hasContactPoint: 1
       contactBone: 8
-      contactOffset: {x: 0.0052810055, y: 0.29867643, z: 0.078433886}
+      contactOffset: {x: 0.0092526, y: 0.3010569, z: -0.0809731}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
     - seconds: 4.53
       group: body_fall
@@ -1456,137 +1527,139 @@ MonoBehaviour:
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
+    fighter: 0
   - label: Pepe Heavy_8
     attack: {fileID: 7400000, guid: 1ad3d996a0d19d8e6a467d4df0bbfb72, type: 2}
     reaction: {fileID: 7400000, guid: 07afc81177a579c6c8735a0a421889f5, type: 2}
     cues:
-    - seconds: 0.84000003
+    - seconds: 0.96917
       group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 0.98333
+    - seconds: 0.97916293
       group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 1.07
+    - seconds: 1.065833
       group: light_hit
       finalLanding: 0
       hasContactPoint: 1
-      contactBone: 36
-      contactOffset: {x: -0.030173, y: -0.0013842876, z: -0.040016897}
+      contactBone: 37
+      contactOffset: {x: -0.0156711, y: -0.0238135, z: 0.0158234}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 1.21333
+    - seconds: 1.3425
       group: light_hit
       finalLanding: 0
       hasContactPoint: 1
-      contactBone: 3
-      contactOffset: {x: 0.061553065, y: -0.19896838, z: 0.08944175}
+      contactBone: 53
+      contactOffset: {x: -0.0603197, y: 0.0081696, z: 0.0299336}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 1.63667
+    - seconds: 1.6320829
       group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 1.86667
+    - seconds: 1.862083
       group: heavy_hit
       finalLanding: 0
       hasContactPoint: 1
       contactBone: 3
-      contactOffset: {x: 0.12591378, y: -0.16756165, z: 0.055970237}
+      contactOffset: {x: -0.2277865, y: 0.0338943, z: 0.0037294}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 2.5149999
+    - seconds: 2.203333
+      group: blade_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource:
+      damageOnLanding: 0
+    - seconds: 2.278333
+      group: light_hit
+      finalLanding: 0
+      hasContactPoint: 1
+      contactBone: 7
+      contactOffset: {x: -0.0145196, y: 0.2250945, z: 0.0023147}
+      contactSource: Weapon
+      damageOnLanding: 0
+    - seconds: 2.513333
       group: thrust_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 2.62
+    - seconds: 2.618333
       group: stab_hit
       finalLanding: 0
       hasContactPoint: 1
       contactBone: 22
-      contactOffset: {x: 0.34497687, y: -0.13310346, z: 0.29118288}
+      contactOffset: {x: 0.3302647, y: -0.1366883, z: 0.2851498}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 2.82333
+    - seconds: 2.87125
       group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 3.05333
+    - seconds: 3.10125
       group: light_hit
       finalLanding: 0
       hasContactPoint: 1
-      contactBone: 18
-      contactOffset: {x: -0.04890167, y: 0.038871493, z: 0.0025218686}
+      contactBone: 53
+      contactOffset: {x: -0.0543174, y: 0.0075456, z: 0.0315357}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 3.30833
+    - seconds: 3.423333
       group: thrust_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 3.41333
+    - seconds: 3.528333
       group: stab_hit
       finalLanding: 0
       hasContactPoint: 1
-      contactBone: 37
-      contactOffset: {x: 0.020602537, y: 0.020228487, z: -0.023567935}
+      contactBone: 17
+      contactOffset: {x: -0.0567029, y: 0.0266603, z: -0.088598}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 3.725
-      group: light_swing
+    - seconds: 3.719167
+      group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 3.855
+    - seconds: 3.849167
       group: heavy_hit
       finalLanding: 0
       hasContactPoint: 1
       contactBone: 7
-      contactOffset: {x: -0.1058476, y: -0.31531683, z: 0.2369242}
+      contactOffset: {x: -0.063817, y: -0.3396124, z: 0.1571801}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
     - seconds: 4.13
       group: body_fall
@@ -1595,7 +1668,22 @@ MonoBehaviour:
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
+      damageOnLanding: 0
+    - seconds: 4.9725003
+      group: blade_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource:
+      damageOnLanding: 0
+    - seconds: 5.0475
+      group: heavy_hit
+      finalLanding: 0
+      hasContactPoint: 1
+      contactBone: 1
+      contactOffset: {x: -0.0479763, y: -0.0739377, z: -0.0575732}
+      contactSource: Weapon
       damageOnLanding: 0
     - seconds: 5.43
       group: body_fall
@@ -1604,47 +1692,43 @@ MonoBehaviour:
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
+    fighter: 0
   - label: Heavy_Katana
     attack: {fileID: 7400000, guid: 6b18ba42872719f6c9bc12b0c3f51ade, type: 2}
     reaction: {fileID: 7400000, guid: 19e297da04baab5319e5ceca78ac7a21, type: 2}
     cues:
-    - seconds: 1.22333
+    - seconds: 1.22
       group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 1.45333
+    - seconds: 1.45
       group: heavy_hit
       finalLanding: 0
       hasContactPoint: 1
-      contactBone: 0
-      contactOffset: {x: -0.44931462, y: 0.27313697, z: -1.4431998}
+      contactBone: 17
+      contactOffset: {x: 0.108119, y: -0.7147162, z: -0.1432029}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 2.04833
+    - seconds: 2.027083
       group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 2.27833
+    - seconds: 2.257083
       group: heavy_hit
       finalLanding: 0
       hasContactPoint: 1
-      contactBone: 15
-      contactOffset: {x: -0.3497284, y: -0.104140654, z: 0.10747509}
+      contactBone: 1
+      contactOffset: {x: 0.5140985, y: 0.5875386, z: 1.486486}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
     - seconds: 4.07
       group: body_fall
@@ -1653,47 +1737,139 @@ MonoBehaviour:
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
+    fighter: 0
   - label: Heavy_Assassin
     attack: {fileID: 7400000, guid: 010f31f1d8757e445be14398d53c516f, type: 2}
     reaction: {fileID: 7400000, guid: bc06abf1e92694a14a3ffae80be7bc78, type: 2}
     cues:
-    - seconds: 0.64
+    - seconds: 0.63374996
       group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 0.87
+    - seconds: 0.86375
       group: light_hit
       finalLanding: 0
       hasContactPoint: 1
-      contactBone: 27
-      contactOffset: {x: -0.067730434, y: 0.06306997, z: -0.14365256}
+      contactBone: 26
+      contactOffset: {x: 0.0157541, y: 0.2624545, z: 0.0341741}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 1.10833
+    - seconds: 1.215
+      group: blade_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource:
+      damageOnLanding: 0
+    - seconds: 1.32
+      group: light_hit
+      finalLanding: 0
+      hasContactPoint: 1
+      contactBone: 54
+      contactOffset: {x: -0.2799829, y: 0.3724984, z: 1.28691}
+      contactSource: Weapon
+      damageOnLanding: 0
+    - seconds: 1.63375
+      group: blade_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource:
+      damageOnLanding: 0
+    - seconds: 1.70875
+      group: light_hit
+      finalLanding: 0
+      hasContactPoint: 1
+      contactBone: 3
+      contactOffset: {x: 0.1991559, y: -0.9076579, z: -0.7978079}
+      contactSource: Weapon
+      damageOnLanding: 0
+    - seconds: 1.776667
       group: thrust_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 1.21333
+    - seconds: 1.851667
       group: stab_hit
       finalLanding: 0
       hasContactPoint: 1
-      contactBone: 11
-      contactOffset: {x: 2.0799458, y: -0.44492233, z: -0.7140691}
+      contactBone: 4
+      contactOffset: {x: -0.2911336, y: -0.8800279, z: -0.8586441}
       contactSource: Weapon
-      avatarContacts: []
+      damageOnLanding: 0
+    - seconds: 1.959583
+      group: blade_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource:
+      damageOnLanding: 0
+    - seconds: 2.034583
+      group: light_hit
+      finalLanding: 0
+      hasContactPoint: 1
+      contactBone: 11
+      contactOffset: {x: 1.141091, y: 0.144537, z: -2.524436}
+      contactSource: Weapon
+      damageOnLanding: 0
+    - seconds: 2.307083
+      group: blade_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource:
+      damageOnLanding: 0
+    - seconds: 2.382083
+      group: light_hit
+      finalLanding: 0
+      hasContactPoint: 1
+      contactBone: 4
+      contactOffset: {x: -0.5600362, y: 0.2902118, z: -1.413586}
+      contactSource: Weapon
+      damageOnLanding: 0
+    - seconds: 2.445
+      group: thrust_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource:
+      damageOnLanding: 0
+    - seconds: 2.52
+      group: stab_hit
+      finalLanding: 0
+      hasContactPoint: 1
+      contactBone: 4
+      contactOffset: {x: 0.2099952, y: 0.482422, z: -0.4336041}
+      contactSource: Weapon
+      damageOnLanding: 0
+    - seconds: 2.922917
+      group: blade_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource:
+      damageOnLanding: 0
+    - seconds: 2.997917
+      group: heavy_hit
+      finalLanding: 0
+      hasContactPoint: 1
+      contactBone: 15
+      contactOffset: {x: -0.020862, y: 0.0091331, z: -0.3837257}
+      contactSource: Weapon
       damageOnLanding: 0
     - seconds: 3.33
       group: light_swing
@@ -1702,7 +1878,6 @@ MonoBehaviour:
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
     - seconds: 4.1
       group: body_fall
@@ -1711,47 +1886,43 @@ MonoBehaviour:
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 1
+    fighter: 0
   - label: Heavy_Katana
     attack: {fileID: 7400000, guid: 9361f4e2bb5ead06aa81604f8381a8b9, type: 2}
     reaction: {fileID: 7400000, guid: 6e79c206cc4f1995293b1d3ccf9566a6, type: 2}
     cues:
-    - seconds: 1.22333
+    - seconds: 1.22
       group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 1.45333
+    - seconds: 1.45
       group: heavy_hit
       finalLanding: 0
       hasContactPoint: 1
-      contactBone: 7
-      contactOffset: {x: -0.07874846, y: 0.25955084, z: -0.01858084}
+      contactBone: 8
+      contactOffset: {x: 0.0042614, y: 0.1980226, z: 0.2302694}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 2.02333
+    - seconds: 2.022917
       group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 2.25333
+    - seconds: 2.252917
       group: heavy_hit
       finalLanding: 0
       hasContactPoint: 1
       contactBone: 23
-      contactOffset: {x: -0.05918506, y: 0.047926016, z: -0.06281761}
+      contactOffset: {x: -0.0340734, y: 0.0385598, z: -0.1390381}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
     - seconds: 4.07
       group: body_fall
@@ -1760,47 +1931,139 @@ MonoBehaviour:
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
+    fighter: 0
   - label: Heavy_Assassin
     attack: {fileID: 7400000, guid: db89ee44446186752998141b56ca836a, type: 2}
     reaction: {fileID: 7400000, guid: 18d676c4910c28d3f80d8b405eeedda0, type: 2}
     cues:
-    - seconds: 0.64833
+    - seconds: 0.63374996
       group: blade_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 0.87833
+    - seconds: 0.86375
       group: light_hit
       finalLanding: 0
       hasContactPoint: 1
-      contactBone: 8
-      contactOffset: {x: 0.037612908, y: -0.35361323, z: 0.0019901458}
+      contactBone: 17
+      contactOffset: {x: 0.0886247, y: 0.0503667, z: 0.0338666}
       contactSource: Weapon
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 1.10833
+    - seconds: 1.215
+      group: blade_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource:
+      damageOnLanding: 0
+    - seconds: 1.32
+      group: light_hit
+      finalLanding: 0
+      hasContactPoint: 1
+      contactBone: 11
+      contactOffset: {x: -0.0308162, y: 0.1395604, z: 0.1446443}
+      contactSource: Weapon
+      damageOnLanding: 0
+    - seconds: 1.63375
+      group: blade_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource:
+      damageOnLanding: 0
+    - seconds: 1.70875
+      group: light_hit
+      finalLanding: 0
+      hasContactPoint: 1
+      contactBone: 26
+      contactOffset: {x: -0.0528, y: -0.1478224, z: -0.0111039}
+      contactSource: Weapon
+      damageOnLanding: 0
+    - seconds: 1.774583
       group: thrust_swing
       finalLanding: 0
       hasContactPoint: 0
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
-    - seconds: 1.21333
+    - seconds: 1.849583
       group: stab_hit
       finalLanding: 0
       hasContactPoint: 1
-      contactBone: 23
-      contactOffset: {x: -0.13402471, y: 0.015987044, z: 0.14632}
+      contactBone: 47
+      contactOffset: {x: 0.00755, y: 0.0080667, z: -0.0212842}
       contactSource: Weapon
-      avatarContacts: []
+      damageOnLanding: 0
+    - seconds: 1.9533329
+      group: blade_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource:
+      damageOnLanding: 0
+    - seconds: 2.028333
+      group: light_hit
+      finalLanding: 0
+      hasContactPoint: 1
+      contactBone: 21
+      contactOffset: {x: 0.0118333, y: -0.1465274, z: 0.187177}
+      contactSource: Weapon
+      damageOnLanding: 0
+    - seconds: 2.307083
+      group: blade_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource:
+      damageOnLanding: 0
+    - seconds: 2.382083
+      group: light_hit
+      finalLanding: 0
+      hasContactPoint: 1
+      contactBone: 47
+      contactOffset: {x: -0.0702422, y: -0.013533, z: 0.0015079}
+      contactSource: Weapon
+      damageOnLanding: 0
+    - seconds: 2.4429169
+      group: thrust_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource:
+      damageOnLanding: 0
+    - seconds: 2.517917
+      group: stab_hit
+      finalLanding: 0
+      hasContactPoint: 1
+      contactBone: 4
+      contactOffset: {x: 0.026544, y: 0.0171438, z: 0.0498758}
+      contactSource: Weapon
+      damageOnLanding: 0
+    - seconds: 2.929167
+      group: blade_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource:
+      damageOnLanding: 0
+    - seconds: 3.004167
+      group: heavy_hit
+      finalLanding: 0
+      hasContactPoint: 1
+      contactBone: 15
+      contactOffset: {x: -0.1586181, y: -0.0354036, z: -0.0231431}
+      contactSource: Weapon
       damageOnLanding: 0
     - seconds: 3.33
       group: light_swing
@@ -1809,7 +2072,6 @@ MonoBehaviour:
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 0
     - seconds: 4.1
       group: body_fall
@@ -1818,8 +2080,8 @@ MonoBehaviour:
       contactBone: 8
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource: 
-      avatarContacts: []
       damageOnLanding: 1
+    fighter: 0
   - label: Vol10_CmnAtemi
     attack: {fileID: 7400000, guid: e47354cd8b0fa220b9e0b4c75f9f0fba, type: 2}
     reaction: {fileID: 7400000, guid: 692759a051faaf7e29c071c77fa3a3b0, type: 2}
@@ -2209,4 +2471,242 @@ MonoBehaviour:
       contactOffset: {x: 0, y: 0, z: 0}
       contactSource:
       avatarContacts: []
+      damageOnLanding: 1
+  - label: Mankey Light_JPBOM
+    fighter: 1
+    attack: {fileID: 7400000, guid: 05a7e52a5035427bf8b2153cfebf07cb, type: 2}
+    reaction: {fileID: 7400000, guid: deb24c5181d2dc1f2a2b1518acc1b6b8, type: 2}
+    cues:
+    - seconds: 0.4
+      group: light_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource: RightHand
+      damageOnLanding: 0
+    - seconds: 0.96
+      group: light_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 0
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource: Receiver
+      damageOnLanding: 0
+    - seconds: 1.096667
+      group: body_fall
+      finalLanding: 1
+      hasContactPoint: 1
+      contactBone: 9
+      contactOffset: {x: 0.0188044, y: 0.1343213, z: -0.8631548}
+      contactSource: Ground
+      damageOnLanding: 1
+  - label: Mankey Light_SIHO
+    fighter: 1
+    attack: {fileID: 7400000, guid: cdeb2e864984486d6904ade95e92a2b6, type: 2}
+    reaction: {fileID: 7400000, guid: 2154eb65618e305baa16b2ec9461c6dc, type: 2}
+    cues:
+    - seconds: 0.18
+      group: light_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource: RightHand
+      damageOnLanding: 0
+    - seconds: 0.47
+      group: light_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource: Receiver
+      damageOnLanding: 0
+    - seconds: 0.8825
+      group: body_fall
+      finalLanding: 1
+      hasContactPoint: 1
+      contactBone: 10
+      contactOffset: {x: 0.3356966, y: 1.365359, z: -0.9518664}
+      contactSource: Ground
+      damageOnLanding: 1
+  - label: Mankey Light_GSWING
+    fighter: 1
+    attack: {fileID: 7400000, guid: 901d48ce9e32b3694a6d3672b7fae915, type: 2}
+    reaction: {fileID: 7400000, guid: 68e43d34d73ee9c30a770ab6c4246441, type: 2}
+    cues:
+    - seconds: 0.24
+      group: light_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource: RightHand
+      damageOnLanding: 0
+    - seconds: 0.350833
+      group: body_fall
+      finalLanding: 0
+      hasContactPoint: 1
+      contactBone: 1
+      contactOffset: {x: -0.0177454, y: -1.534222, z: -0.2026377}
+      contactSource: Ground
+      damageOnLanding: 1
+    - seconds: 0.69
+      group: light_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource: Receiver
+      damageOnLanding: 0
+    - seconds: 0.89
+      group: light_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource: Receiver
+      damageOnLanding: 0
+    - seconds: 1.07
+      group: light_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource: Receiver
+      damageOnLanding: 0
+    - seconds: 1.34
+      group: light_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 0
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource: Receiver
+      damageOnLanding: 0
+    - seconds: 1.58
+      group: body_fall
+      finalLanding: 1
+      hasContactPoint: 1
+      contactBone: 1
+      contactOffset: {x: -0.4333916, y: -0.0521053, z: -1.54486}
+      contactSource: Ground
+      damageOnLanding: 1
+  - label: Pepe Light_JPBOM
+    fighter: 2
+    attack: {fileID: 7400000, guid: 05a7e52a5035427bf8b2153cfebf07cb, type: 2}
+    reaction: {fileID: 7400000, guid: deb24c5181d2dc1f2a2b1518acc1b6b8, type: 2}
+    cues:
+    - seconds: 0.4
+      group: light_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource: RightHand
+      damageOnLanding: 0
+    - seconds: 0.96
+      group: light_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 0
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource: Receiver
+      damageOnLanding: 0
+    - seconds: 1.0925
+      group: body_fall
+      finalLanding: 1
+      hasContactPoint: 1
+      contactBone: 10
+      contactOffset: {x: 0.0640171, y: -0.3323437, z: -0.0008611}
+      contactSource: Ground
+      damageOnLanding: 1
+  - label: Pepe Light_SIHO
+    fighter: 2
+    attack: {fileID: 7400000, guid: cdeb2e864984486d6904ade95e92a2b6, type: 2}
+    reaction: {fileID: 7400000, guid: 2154eb65618e305baa16b2ec9461c6dc, type: 2}
+    cues:
+    - seconds: 0.18
+      group: light_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource: RightHand
+      damageOnLanding: 0
+    - seconds: 0.47
+      group: light_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource: Receiver
+      damageOnLanding: 0
+    - seconds: 0.734583
+      group: body_fall
+      finalLanding: 1
+      hasContactPoint: 1
+      contactBone: 21
+      contactOffset: {x: 0.2651137, y: -0.0903288, z: 0.4899225}
+      contactSource: Ground
+      damageOnLanding: 1
+  - label: Pepe Light_GSWING
+    fighter: 2
+    attack: {fileID: 7400000, guid: 901d48ce9e32b3694a6d3672b7fae915, type: 2}
+    reaction: {fileID: 7400000, guid: 68e43d34d73ee9c30a770ab6c4246441, type: 2}
+    cues:
+    - seconds: 0.24
+      group: light_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource: RightHand
+      damageOnLanding: 0
+    - seconds: 0.33625
+      group: body_fall
+      finalLanding: 0
+      hasContactPoint: 1
+      contactBone: 53
+      contactOffset: {x: -0.0955484, y: 0.3673271, z: 0.0010052}
+      contactSource: Ground
+      damageOnLanding: 1
+    - seconds: 0.69
+      group: light_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource: Receiver
+      damageOnLanding: 0
+    - seconds: 0.89
+      group: light_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource: Receiver
+      damageOnLanding: 0
+    - seconds: 1.07
+      group: light_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 8
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource: Receiver
+      damageOnLanding: 0
+    - seconds: 1.34
+      group: light_swing
+      finalLanding: 0
+      hasContactPoint: 0
+      contactBone: 0
+      contactOffset: {x: 0, y: 0, z: 0}
+      contactSource: Receiver
+      damageOnLanding: 0
+    - seconds: 1.575833
+      group: body_fall
+      finalLanding: 1
+      hasContactPoint: 1
+      contactBone: 7
+      contactOffset: {x: 0.2068702, y: -0.3439515, z: 0.0543913}
+      contactSource: Ground
       damageOnLanding: 1

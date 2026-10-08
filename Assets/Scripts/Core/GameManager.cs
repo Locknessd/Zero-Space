@@ -37,6 +37,7 @@ public partial class GameManager : MonoBehaviour
     public int PendingEventCount => _queue.Count;
     public bool IsEventQueueBusy => _running || _queue.Count > 0;
     public string QueueError { get; private set; }
+    public bool IsReadyForBattleEvents { get; private set; }
 
     private sealed class BattleStack
     {
@@ -73,6 +74,7 @@ public partial class GameManager : MonoBehaviour
     private bool _matchEnded;
     private bool _swapSpeechDuringMatch = true;
     private WebSocketManager _socket;
+    private LoaddingManager _loadingScene;
     private Coroutine _runner;
 
     private MemeBattleUI UI => uiManager != null ? uiManager : MemeBattleUI.Instance;
@@ -89,28 +91,33 @@ public partial class GameManager : MonoBehaviour
 
     private void Start()
     {
+        var loading = UnityEngine.Object.FindFirstObjectByType<LoaddingManager>();
+        if (loading != null && loading.IsLoadingBattleScene) _loadingScene = loading;
         if (uiManager == null) uiManager = MemeBattleUI.Instance;
         if (positioningController == null) positioningController = CombatPositioningController.Instance;
-        if (leftCombat != null) leftCombat.Initialize();
-        if (rightCombat != null) rightCombat.Initialize();
+        if (leftCombat == null || rightCombat == null || !leftCombat.Initialize() || !rightCombat.Initialize())
+        {
+            Fault("BattleScene chưa cấu hình đủ hai CharacterCombat hợp lệ; event vẫn được giữ tại WebSocket.");
+            return;
+        }
         if (positioningController != null)
             positioningController.SetFighters(leftCombat != null ? leftCombat.Animator.transform : null,
                 rightCombat != null ? rightCombat.Animator.transform : null);
         _characterMaxHp["bot_a"] = defaultInitialMaxHpAtomic;
         _characterMaxHp["bot_b"] = defaultInitialMaxHpAtomic;
         UI?.ResetForNewMatch();
+        UI?.SetFighterName(MemeBattleUI.Side.Left, DisplayNameForSide(PlayerUI.Side.Left));
+        UI?.SetFighterName(MemeBattleUI.Side.Right, DisplayNameForSide(PlayerUI.Side.Right));
+        IsReadyForBattleEvents = true;
         SubscribeSocket();
     }
 
     private void SubscribeSocket()
     {
-        if (_socket != null || WebSocketManager.Instance == null) return;
-        // Apply the loading scene's snapshot and backlog before receiving live events.
-        var loading = UnityEngine.Object.FindFirstObjectByType<LoaddingManager>();
-        if (loading != null && loading.IsBufferingMessages) return;
+        if (_socket != null || WebSocketManager.Instance == null || !IsReadyForBattleEvents) return;
         _socket = WebSocketManager.Instance;
-        _socket.OnRawMessageReceived += HandleRawMessage;
         if (_socket.IsFrontendControlled || string.IsNullOrEmpty(initialMatchId)) return;
+        if (_socket.CurrentMatchId == initialMatchId) return;
         if (_socket.IsConnected()) _ = _socket.SubscribeToMatch(initialMatchId, 0);
         else _socket.OnConnectionProgress += WaitAndSubscribe;
     }
@@ -190,7 +197,9 @@ public partial class GameManager : MonoBehaviour
 
     private void Update()
     {
+        if (!IsReadyForBattleEvents || (_loadingScene != null && !_loadingScene.IsBattlePresentationReady)) return;
         SubscribeSocket();
+        ReceivePendingBattleMessages();
         // Incoming match events remain queued while the local animation browser owns playback.
         if (IsAnimationTestMode) return;
         if (enableLocalInputTesting &&
@@ -198,13 +207,26 @@ public partial class GameManager : MonoBehaviour
         {
             if (IsKeyDown(KeyCode.Q)) DebugTriggerQ();
             if (IsKeyDown(KeyCode.E)) DebugTriggerE();
-            if (IsKeyDown(KeyCode.R)) EnqueueCombatAction(PlayerUI.Side.Left, "Vol10_HOLD_LALI");
-            if (IsKeyDown(KeyCode.T)) EnqueueCombatAction(PlayerUI.Side.Right, "Vol10_HOLD_LALI");
         }
         if (!_running && QueueError == null && _queue.Count > 0 && _queue.Peek().ready)
         {
             _running = true;
             _runner = StartCoroutine(RunQueue());
+        }
+    }
+
+    private void ReceivePendingBattleMessages()
+    {
+        if (!IsReadyForBattleEvents || (_loadingScene != null && !_loadingScene.IsBattlePresentationReady)) return;
+        // Backlog and live events use the same FIFO. Limit work per frame, never the inbox size.
+        // Unity calls scene Start methods before Update, so UI/fighter startup cannot reset a replay.
+        if (_socket != null && QueueError == null)
+        {
+            try
+            {
+                for (int count = 0; count < 256 && _socket.DispatchNextBattleMessage(HandleRawMessage); count++) { }
+            }
+            catch (Exception exception) { Fault("Không thể nhận battle event: " + exception); }
         }
     }
 
@@ -520,7 +542,6 @@ public partial class GameManager : MonoBehaviour
     {
         if (_socket != null)
         {
-            _socket.OnRawMessageReceived -= HandleRawMessage;
             _socket.OnConnectionProgress -= WaitAndSubscribe;
         }
         if (Instance == this) Instance = null;
@@ -560,7 +581,7 @@ public partial class GameManager : MonoBehaviour
                     _characterMaxHp[id] = initialHp;
                     _characterMaxHp[side == PlayerUI.Side.Left ? "bot_a" : "bot_b"] = initialHp;
                     _characterHp[side] = initialHp;
-                    UI?.SetFighterName(ToUISide(side), id);
+                    UI?.SetFighterName(ToUISide(side), DisplayNameForSide(side));
                     UI?.UpdateHealth(ToUISide(side), initialHp, initialHp);
                 }
                 break;
@@ -737,6 +758,10 @@ public partial class GameManager : MonoBehaviour
         long maxHp = ResolveMaxHpFor(charId, 0, hpAfter);
         uiManager?.UpdateHealth(ToUISide(side), hpAfter, maxHp);
     }
+
+    // Temporary UI names; backend IDs and their side mappings remain separate.
+    private static string DisplayNameForSide(PlayerUI.Side side) =>
+        side == PlayerUI.Side.Left ? "Mankey" : "Meme";
 
     private string CharacterIdForSide(PlayerUI.Side side)
     {
@@ -982,12 +1007,12 @@ public partial class GameManager : MonoBehaviour
                                                 }
                                             }
                                             catch { }
-                                            if (startSnap.characterHpAtomic != null)
+                                            if (j.Value<bool?>("replayEvents") != true && startSnap.characterHpAtomic != null)
                                             {
                                                 UpdatePlayerHpFromSnapshot("bot_a", PlayerUI.Side.Left, startSnap);
                                                 UpdatePlayerHpFromSnapshot("bot_b", PlayerUI.Side.Right, startSnap);
                                             }
-                                            if (startSnap.currentTurn != null)
+                                            if (j.Value<bool?>("replayEvents") != true && startSnap.currentTurn != null)
                                             {
                                                 roundManager?.StartTurnTimer(startSnap.currentTurn.turnNumber, startSnap.currentTurn.opensAt, startSnap.currentTurn.closesAt);
                                             }
@@ -1054,12 +1079,12 @@ public partial class GameManager : MonoBehaviour
                                 }
                                 catch { }
 
-                            if (snap.characterHpAtomic != null)
+                            if (j.Value<bool?>("replayEvents") != true && snap.characterHpAtomic != null)
                             {
                                 UpdatePlayerHpFromSnapshot("bot_a", PlayerUI.Side.Left, snap);
                                 UpdatePlayerHpFromSnapshot("bot_b", PlayerUI.Side.Right, snap);
                             }
-                            if (snap.currentTurn != null)
+                            if (j.Value<bool?>("replayEvents") != true && snap.currentTurn != null)
                             {
                                 roundManager?.StartTurnTimer(snap.currentTurn.turnNumber, snap.currentTurn.opensAt, snap.currentTurn.closesAt);
                             }
