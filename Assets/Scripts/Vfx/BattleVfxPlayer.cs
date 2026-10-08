@@ -385,6 +385,7 @@ public sealed class BattleVfxPlayer : MonoBehaviour
     }
 
     bool IsBlade(Renderer renderer) => renderer && renderer.enabled && renderer.gameObject.activeInHierarchy &&
+        (!weaponTrails || weaponTrails.IsRendererMeshEligible(renderer)) &&
         renderer.name.IndexOf("shield", StringComparison.OrdinalIgnoreCase) < 0 &&
         renderer.name.IndexOf("case", StringComparison.OrdinalIgnoreCase) < 0;
 

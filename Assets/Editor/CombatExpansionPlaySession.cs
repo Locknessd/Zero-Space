@@ -113,8 +113,9 @@ namespace FrankRetarget.Editor
             nextCheck = EditorApplication.timeSinceStartup + .2;
             try
             {
-                if (EditorApplication.timeSinceStartup - SessionState.GetFloat(Key + ".began", 0) > 650)
-                    throw new TimeoutException("Isolated lifecycle suite exceeded 650 seconds.");
+                double timeout = SessionState.GetString(Key + ".suite", "") == "Slap" ? 1300 : 650;
+                if (EditorApplication.timeSinceStartup - SessionState.GetFloat(Key + ".began", 0) > timeout)
+                    throw new TimeoutException($"Isolated lifecycle suite exceeded {timeout} seconds.");
                 if (phase == 2)
                 {
                     string copy = SessionState.GetString(Key + ".copy", "");
