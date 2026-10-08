@@ -48,14 +48,18 @@ namespace FrankRetarget.Editor
                 .Concat(reaction.GetComponentsInChildren<Transform>(true))
                 .Concat(attack.character.GetComponentsInChildren<Transform>(true))
                 .Concat(reaction.character.GetComponentsInChildren<Transform>(true)).Distinct().ToArray();
-            var times = new[] { 0f, .06f, playback.Duration * .25f, playback.Duration * .5f,
+            var times = new[] { 0f, .03f, .06f, .09f, .12f, playback.Duration * .25f, playback.Duration * .5f,
                 playback.Duration * .85f, playback.Duration };
             var snapshots = new TransformSnapshot[times.Length];
             float maximumGripError = 0;
+            float maximumWeaponGripError = 0;
             float settledGripError = 0;
             var gripLimbs = pose.limbs.Where(limb => limb.sourceKnuckle).ToArray();
+            var rightHand = attack.character.GetBoneTransform(HumanBodyBones.RightHand);
+            var rightGrip = gripLimbs.SingleOrDefault(limb => limb.end == rightHand);
             if (injected)
-                Require(gripLimbs.Length > 0, "Injected source has no calibrated grip limbs to validate.");
+                Require(gripLimbs.Length == 2 && rightGrip != null,
+                    "Injected source needs both calibrated grip limbs, including the right hand.");
             void VerifyOwnership()
             {
                 Require(playback.AttackerActor == attack && playback.ReceiverActor == reaction,
@@ -89,10 +93,27 @@ namespace FrankRetarget.Editor
                     }
                 }
                 Require(native.All(r => r && !r.enabled), "Native source weapon renderer remained enabled.");
-                Require(prop && prop.parent == socket && prop.localPosition.sqrMagnitude < 1e-10f &&
-                    Quaternion.Angle(prop.localRotation, Quaternion.identity) < .001f &&
-                    (prop.localScale - Vector3.one).sqrMagnitude < 1e-10f,
-                    "Source prop lost exact socket attachment or local identity.");
+                Require(prop && prop.parent == socket && (prop.localScale - Vector3.one).sqrMagnitude < 1e-10f,
+                    "Source prop lost exact socket parent or unit local scale.");
+                // Identity places the authored grip at SourceGrip. Transform that
+                // same prop-local point through the actual rendered attachment.
+                Vector3 actualGrip = prop.TransformPoint(socket.InverseTransformPoint(rightGrip.SourceGrip));
+                float weaponGripError = Vector3.Distance(actualGrip, rightGrip.TargetGrip);
+                Require(float.IsFinite(weaponGripError) && weaponGripError <= .025f,
+                    "Actual source weapon separates from the right hand: " + weaponGripError);
+                maximumWeaponGripError = Mathf.Max(maximumWeaponGripError, weaponGripError);
+                bool entering = playback.SampleTime < config.entryBlendSeconds;
+                if (!entering)
+                    Require(prop.localPosition.sqrMagnitude < 1e-10f &&
+                        Quaternion.Angle(prop.localRotation, Quaternion.identity) < .001f,
+                        "Settled source prop lost exact socket local identity.");
+                else
+                {
+                    Quaternion authoredHand = rightGrip.sourceEnd.rotation * rightGrip.rotationOffset;
+                    Quaternion actualHand = prop.rotation * Quaternion.Inverse(socket.rotation) * authoredHand;
+                    Require(Quaternion.Angle(actualHand, rightGrip.end.rotation) < .1f,
+                        "Entry source weapon lost its calibrated right-hand orientation.");
+                }
                 Require(!prop.GetComponentsInChildren<Collider>(true).Any(c => c.enabled) &&
                     !prop.GetComponentsInChildren<Collider2D>(true).Any(c => c.enabled),
                     "Injected source prop contains an enabled collider.");
@@ -102,6 +123,11 @@ namespace FrankRetarget.Editor
                 playback.EvaluateAt(times[i]);
                 VerifyOwnership();
                 snapshots[i] = new TransformSnapshot(transforms);
+                playback.EvaluateAt(times[i]);
+                VerifyOwnership();
+                float positionError = 0;
+                float rotationError = 0;
+                snapshots[i].RequireUnchanged(transforms, ref positionError, ref rotationError);
             }
             float maximumPositionError = 0;
             float maximumRotationError = 0;
@@ -121,8 +147,9 @@ namespace FrankRetarget.Editor
             string drift = FormattableString.Invariant(
                 $"maximum repeat/backward drift={maximumPositionError:R}m/{maximumRotationError:R}deg");
             string grip = injected ? FormattableString.Invariant(
-                $"; aligned grip limbs={gripLimbs.Length}; entry-inclusive grip error={maximumGripError:R}m; settled grip error={settledGripError:R}m") : "";
-            return $"16 samples; tracked renderers={renderers.Length}; injected={injected}; " + drift + grip;
+                $"; aligned grip limbs={gripLimbs.Length}; entry-inclusive source/hand gap={maximumGripError:R}m; actual weapon grip error={maximumWeaponGripError:R}m; settled grip error={settledGripError:R}m") : "";
+            return $"{times.Length * 3 + 4} samples; tracked renderers={renderers.Length}; injected={injected}; " +
+                drift + grip;
         }
 
         static bool Visible(Renderer renderer) => renderer && renderer.enabled && renderer.gameObject.activeInHierarchy;

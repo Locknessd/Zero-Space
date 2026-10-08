@@ -47,6 +47,7 @@ namespace FrankRetarget.Editor
             foreach (var snapshot in snapshots)
             {
                 snapshot.skin.BakeMesh(snapshot.mesh, false);
+                snapshot.mesh.RecalculateBounds();
                 // Bake(false) contains the calibrated renderer scale. Reapplying its
                 // transform scale would enlarge Pepe by ten times in this scene.
                 snapshot.renderer.transform.SetPositionAndRotation(

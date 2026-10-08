@@ -33,6 +33,8 @@ namespace FrankRetarget
         public void CollectFramingPoints(List<Vector3> points)
         {
             points.Clear();
+            if (ReferenceEquals(points, framingPoints))
+                framingPointOwners.Clear();
             if (battle)
             {
                 RefreshBattleRenderers();
@@ -53,17 +55,26 @@ namespace FrankRetarget
             {
                 var renderer = entry.renderer;
                 if (!renderer || !renderer.enabled || !renderer.gameObject.activeInHierarchy) continue;
+                int firstPoint = points.Count;
                 if (renderer is SkinnedMeshRenderer skin && skin.sharedMesh)
                 {
                     // The unscaled bake already contains bone scale. Applying the
                     // renderer scale again enlarges Meme tenfold in this rig.
                     skin.BakeMesh(entry.baked, false);
                     if (entry.baked.vertexCount > 0)
+                    {
+                        // BakeMesh updates vertices, but its supplied bounds can remain expanded.
+                        // Fit the current pose rather than a stale or conservative animation envelope.
+                        entry.baked.RecalculateBounds();
                         AppendBounds(points, entry.baked.bounds, skin.transform);
+                    }
                     else
                         AppendBounds(points, renderer.bounds, null);
                 }
                 else AppendBounds(points, renderer.bounds, null);
+                if (ReferenceEquals(points, framingPoints))
+                    for (int i = firstPoint; i < points.Count; i++)
+                        framingPointOwners.Add(renderer);
             }
         }
 
@@ -181,6 +192,7 @@ namespace FrankRetarget
                     else DestroyImmediate(entry.baked);
                 }
             framingRenderers.Clear();
+            framingPointOwners.Clear();
             uniqueRenderers.Clear();
             cacheReady = false;
         }
