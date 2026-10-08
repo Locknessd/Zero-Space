@@ -13,6 +13,8 @@ namespace FrankRetarget
         public AnimationClip getUp;
         public AnimationClip attackerGetUp;
         [Min(0)] public float entryBlendSeconds;
+        [Min(0)] public float recoveryBlendSeconds;
+        public FrankPairGrounding recoveryGrounding;
         public bool constrainDepthAfterSpacing;
         [Min(0)] public float maximumAlignmentError;
         public Vector3 receiverOffset;
