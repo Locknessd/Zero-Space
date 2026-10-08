@@ -1,17 +1,27 @@
 # SlapFace source preparation status
 
-The editor study tools compile, but source preparation is blocked by missing
-native Avatar dependencies. No SlapFace drivers, paired captures, contacts,
-damage profiles, or gameplay registrations have been accepted.
+All four project-owned native imports and eight unarmed fighter drivers have
+been prepared and validated in Unity 6000.5.9f1. Source capture completed for
+all four clips on both Mankey and Pepe: 4232 sampled poses and 56 timestamped
+sheets. See `NativeImports.json`, `Study.json` and `index.html`.
 
-`CombatExpansionSlapStudy.PrepareDrivers()` failed validation of the first
-source rig. The subsequent read-only `DiagnoseSources()` run in Unity 6000.5.9f1
-completed and produced `SourceDiagnostics.json`. All four source FBXs use
-`CopyFromOther` with unresolved Avatar GUID `54d24dcf9716c0c40821dd95a9e62844`.
-Their imported models have no root Animator, no importer source Avatar and no
-Avatar subassets. Exposed source transforms remain available for investigation.
+The original FBXs referenced missing Avatar GUID
+`54d24dcf9716c0c40821dd95a9e62844`. `SourceDiagnostics.json` records that original
+failure. The repair copies each source under
+`Assets/CombatExpansion/SlapStudy/NativeSources`, preserving the original FBX
+bytes and creating a valid Avatar from its complete native human mapping.
+Original source files and import settings remain unchanged. Original GUID and
+clip IDs remain the provenance keys; adapted identities and source hashes are
+recorded explicitly. Reuse validates the prepared copies against that record.
 
-The native FBXs and their import settings are unchanged. A valid native rig
-preparation method must be established before `PrepareDrivers()` and
-`CaptureSources()` can produce usable evidence. The diagnostic report records
-source identities, importer state and hierarchy details for that follow-up.
+Reproduction order: `CombatExpansionSlapStudy.PrepareNativeImports()`,
+`PrepareDrivers()`, then `CaptureSources()` in Edit Mode.
+
+The captures are independent source performances, not approved paired actions.
+Giver/receiver roles, hand-to-face contact, relative setup, recovery, damage,
+presentation and gameplay registration still require paired validation.
+
+`CombatExpansionSlapStudy.CapturePairCandidates()` provides an unregistered
+24-case runtime pair study across both giver avatars, two receiver headings
+and three spacings. It compiles, but has not been run or visually accepted in
+this checkpoint. Its hand/head measurements use joint pivots, not skin contact.
