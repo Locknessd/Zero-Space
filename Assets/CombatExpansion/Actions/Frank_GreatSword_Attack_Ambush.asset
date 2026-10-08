@@ -25,15 +25,21 @@ MonoBehaviour:
   recovery: The native authored receiver track continues through knockdown. A surviving
     victim uses the grounded existing getup recovery and its automatic recovery sound;
     an accepted lethal victim holds the authored final pose. Attacker completes its
-    source clip.
+    source clip. The authored attacker variant preserves the original Ambush then
+    appends native backward-step start and stop motion before the surviving victim
+    gets up.
   presentation: Exact source-second shared sound and VFX cues with measured per-victim-avatar
     Weapon anchors; established GreatSword weapon variant and trail routing, routed
     audio, hitstop, impact light, flash, cinematic camera impulse and final landing
     accent. Existing cancellation and recovery clean up transient feedback. Landing
     is non-damaging; only accepted server damage is distributed over weapon contacts.
+  authoredAttackSources:
+  - {fileID: 7400000, guid: 610fba6d346a64f4583237c3ef4f7e46, type: 3}
+  - {fileID: 7400000, guid: 12987da400bbe864aae42fdf303bc647, type: 3}
+  - {fileID: 7400000, guid: ed2751f54f474b74397a144408a8fe03, type: 3}
   contacts:
   - strikeId: Frank_GreatSword_Attack_Ambush/01
-    attack: {fileID: 7400000, guid: 610fba6d346a64f4583237c3ef4f7e46, type: 3}
+    attack: {fileID: 7400000, guid: 1dee9f0e83e9ee882a1baafad6a4b0a0, type: 2}
     reaction: {fileID: 7400000, guid: 59a3af1cef1d25a4aa16dd3a87e12f17, type: 3}
     seconds: 0.575
     activeWindowSeconds: {x: 0.55833334, y: 0.59166664}
@@ -51,7 +57,7 @@ MonoBehaviour:
       takedown and landing. No independent reaction, extra armor, or unconditional
       kill is introduced.
   - strikeId: Frank_GreatSword_Attack_Ambush/02-landing
-    attack: {fileID: 7400000, guid: 610fba6d346a64f4583237c3ef4f7e46, type: 3}
+    attack: {fileID: 7400000, guid: 1dee9f0e83e9ee882a1baafad6a4b0a0, type: 2}
     reaction: {fileID: 7400000, guid: 59a3af1cef1d25a4aa16dd3a87e12f17, type: 3}
     seconds: 0.6166667
     activeWindowSeconds: {x: 0.6, y: 0.6333333}
