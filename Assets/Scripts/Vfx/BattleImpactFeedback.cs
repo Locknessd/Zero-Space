@@ -125,9 +125,9 @@ public sealed partial class BattleImpactFeedback : MonoBehaviour
         {
             slowAge += delta;
             flashAge += delta;
+            AdvanceSurfaceHighlight(delta);
         }
         if (flash) flash.Progress = Mathf.Clamp01(flashAge / FlashDuration);
-        AdvanceSurfaceHighlight(delta);
     }
 
     public void ResetFeedback()

@@ -18,10 +18,22 @@ namespace FrankRetarget.Editor
             readonly List<RegionSkin> targetSkins = new List<RegionSkin>();
             bool disposed;
 
+            public enum Selection
+            {
+                BoneAndDescendants,
+                TorsoWithoutHeadNeckOrArms
+            }
+
             public string SelectionSummary { get; }
 
             public SkinRegionProbe(CharacterCombat source, HumanBodyBones sourceRoot,
                 CharacterCombat target, HumanBodyBones targetRoot)
+                : this(source, sourceRoot, target, targetRoot, Selection.BoneAndDescendants)
+            {
+            }
+
+            public SkinRegionProbe(CharacterCombat source, HumanBodyBones sourceRoot,
+                CharacterCombat target, HumanBodyBones targetRoot, Selection targetSelection)
             {
                 this.source = source;
                 this.target = target;
@@ -29,15 +41,15 @@ namespace FrankRetarget.Editor
                 this.targetRoot = targetRoot;
                 var summary = new List<string>
                 {
-                    "Region selection: actual Animator root bone and descendants; every triangle vertex " +
+                    "Region selection: explicit per-side bone policy below; every triangle vertex " +
                     "must have >=0.5 summed influence across all native skin weights on region bones; " +
                     "visible BodySkins only. Geometry: explicit current bone * bindpose world skinning; " +
                     "exact triangle distance; unsigned zero may mean touch or penetration."
                 };
                 try
                 {
-                    SelectRegion(source, sourceRoot, sourceSkins, summary);
-                    SelectRegion(target, targetRoot, targetSkins, summary);
+                    SelectRegion(source, sourceRoot, Selection.BoneAndDescendants, sourceSkins, summary);
+                    SelectRegion(target, targetRoot, targetSelection, targetSkins, summary);
                     SelectionSummary = string.Join("\n", summary);
                 }
                 catch

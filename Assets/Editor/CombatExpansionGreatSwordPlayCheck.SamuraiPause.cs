@@ -19,6 +19,8 @@ namespace FrankRetarget.Editor
         static float[] samuraiPausedAnimators;
         static AudioSource[] samuraiPausedVoices;
         static int[] samuraiPausedAudioSamples;
+        static ParticleSystem[] samuraiPausedParticles;
+        static float[] samuraiPausedParticleTimes;
         static readonly List<PausedClock> samuraiPausedClocks = new List<PausedClock>();
 
         sealed class PausedClock
@@ -27,6 +29,7 @@ namespace FrankRetarget.Editor
             public FieldInfo field;
             public float value;
             public string label;
+            public GameObject root;
         }
 
         static FieldInfo ObservationField(object owner, string name)
@@ -58,7 +61,10 @@ namespace FrankRetarget.Editor
                     continue;
                 var root = ObservationField(item, rootField).GetValue(item) as GameObject;
                 if (root && root.activeInHierarchy)
+                {
                     RememberClock(item, clock, collection + "/" + root.name);
+                    samuraiPausedClocks[samuraiPausedClocks.Count - 1].root = root;
+                }
             }
         }
 
@@ -67,6 +73,8 @@ namespace FrankRetarget.Editor
             pauseActive = pauseResumed = samuraiPresentationResumed = false;
             pausedSamuraiFrames = 0;
             samuraiPausedClocks.Clear();
+            samuraiPausedParticles = Array.Empty<ParticleSystem>();
+            samuraiPausedParticleTimes = Array.Empty<float>();
         }
 
         static void ApplySamuraiPause()
@@ -75,6 +83,9 @@ namespace FrankRetarget.Editor
             {
                 var flashClock = samuraiPausedClocks.First(clock => clock.label == "flash");
                 samuraiPresentationResumed |= (float)flashClock.field.GetValue(flashClock.owner) > flashClock.value;
+                foreach (var particles in samuraiPausedParticles)
+                    if (particles && particles.gameObject.activeInHierarchy)
+                        Require(!particles.isPaused, "Menu-paused particles did not resume.");
                 return;
             }
             if (!pauseActive)
@@ -98,19 +109,31 @@ namespace FrankRetarget.Editor
                 RememberClock(feedback, "flashAge", "flash");
                 RememberClock(feedback, "slowAge", "slow motion");
                 RememberClock(feedback, "remaining", "hit stop");
+                RememberClock(feedback, "surfaceAge", "surface highlight");
                 if (shake.IsShaking)
                     RememberClock(shake, "age", "active camera shake");
                 RememberActiveClocks(game.battleVfx, "instances", "root", "age");
                 RememberActiveClocks(lighting, "pulses", "effect", "elapsed");
+                samuraiPausedParticles = samuraiPausedClocks
+                    .Where(clock => clock.label.StartsWith("instances/") && clock.root)
+                    .SelectMany(clock => clock.root.GetComponentsInChildren<ParticleSystem>())
+                    .Where(particles => particles.isPlaying).Distinct().ToArray();
+                Require(samuraiPausedParticles.Length > 0,
+                    "Prone pause must cover live particle simulation, not only presentation counters.");
+                samuraiPausedParticleTimes = samuraiPausedParticles.Select(particles => particles.time).ToArray();
                 samuraiPausedAt = Now;
                 pauseActive = true;
+                // Tick is appended after PostLateUpdate: this is the completed-frame
+                // baseline. The next Update must pause native particles before simulation.
                 Time.timeScale = 0;
                 report.AppendLine($"PAUSE source={pausedSourceSample:F6} recovery={pausedRecoveryProgress:F6} " +
-                    $"presentationClocks={samuraiPausedClocks.Count} liveVoices={samuraiPausedVoices.Length}");
+                    $"presentationClocks={samuraiPausedClocks.Count} liveVoices={samuraiPausedVoices.Length} " +
+                    $"liveParticles={samuraiPausedParticles.Length} frame={Time.frameCount}");
                 return;
             }
             Require(Time.timeScale == 0 && pair.IsRecovering &&
-                Mathf.Abs(pair.SampleTime - pausedSourceSample) < .00001f,
+                Mathf.Abs(pair.SampleTime - pausedSourceSample) < .00001f &&
+                Mathf.Abs(targetRecoveryProgress - pausedRecoveryProgress) < .00001f,
                 "Pause released source ownership or advanced its clock.");
             for (int i = 0; i < fighters.Length; i++)
                 Require(Mathf.Abs(fighters[i].Animator.GetCurrentAnimatorStateInfo(0).normalizedTime -
@@ -121,10 +144,18 @@ namespace FrankRetarget.Editor
                     "Paused bone changed: " + samuraiPausedBones[i].name);
             foreach (var clock in samuraiPausedClocks)
             {
+                if (clock.label.StartsWith("instances/") || clock.label.StartsWith("pulses/"))
+                    Require(clock.root && clock.root.activeInHierarchy,
+                        "Paused effect was cleared or released: " + clock.label);
                 float current = (float)clock.field.GetValue(clock.owner);
                 Require(current.Equals(clock.value) || Mathf.Abs(current - clock.value) < .00001f,
-                    $"Paused presentation clock advanced: {clock.label} before={clock.value:F6} now={current:F6}");
+                    $"Paused presentation clock advanced: {clock.label} before={clock.value:F6} now={current:F6} " +
+                    $"frame={Time.frameCount} delta={Time.deltaTime:F6} unscaled={Time.unscaledDeltaTime:F6}");
             }
+            for (int i = 0; i < samuraiPausedParticles.Length; i++)
+                Require(samuraiPausedParticles[i] && samuraiPausedParticles[i].isPaused &&
+                    Mathf.Abs(samuraiPausedParticles[i].time - samuraiPausedParticleTimes[i]) < .00001f,
+                    "Menu-paused particle simulation advanced or resumed early.");
             for (int i = 0; i < samuraiPausedVoices.Length; i++)
                 Require(samuraiPausedVoices[i] && !samuraiPausedVoices[i].isPlaying &&
                     samuraiPausedVoices[i].timeSamples == samuraiPausedAudioSamples[i],

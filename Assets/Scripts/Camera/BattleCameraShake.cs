@@ -99,6 +99,8 @@ public sealed class BattleCameraShake : MonoBehaviour
 
     public void AdvanceShake(float unscaledDelta)
     {
+        if (Application.isPlaying && Time.timeScale <= 0)
+            return;
         if (float.IsFinite(unscaledDelta)) age += Mathf.Max(0, unscaledDelta);
     }
 

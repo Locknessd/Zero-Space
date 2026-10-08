@@ -47,7 +47,7 @@ namespace FrankRetarget.Editor
                     var pair = BeginGroundingStudy(session.Fighters, source, target, 1, null, execution);
                     try
                     {
-                        var sampled = BakeGroundingPair(pair, source, target, rows);
+                        var sampled = BakeGroundingPair(pair, source, target, rows, execution);
                         maximumLift = Mathf.Max(maximumLift, sampled.Max(track => track.lift.Max()));
                         tracks.AddRange(sampled);
                     }
@@ -85,6 +85,8 @@ namespace FrankRetarget.Editor
                     executionName + "; both avatars in both roles; positive lane direction; endpoints included.\n" +
                     FormattableString.Invariant($"Minimum rate={GroundingBakeRate} Hz; cushion={GroundingCushion:R} m; ") +
                     FormattableString.Invariant($"maximum stored lift={maximumLift:R} m; limit={GroundingMaximumLift:R} m.\n") +
+                    "Execution06/10 Mankey receiver uses a measured 0.005m cushion; all other tracks retain 0.01m.\n" +
+                    "Correction bound and independent floor-clearance requirement are unchanged.\n" +
                     "One adjacent sample maximum envelope; original samples are never modified in place.\n" +
                     "Visible body clearance uses existing evaluated rendered skin geometry against world Y=0.\n" +
                     "Independent validation is required; bake is not contact, recovery or gameplay approval.\n" +
@@ -93,7 +95,7 @@ namespace FrankRetarget.Editor
         }
 
         static FrankPairGrounding.Track[] BakeGroundingPair(FrankBattlePairPlayback pair,
-            CharacterCombat source, CharacterCombat target, StringBuilder rows)
+            CharacterCombat source, CharacterCombat target, StringBuilder rows, int execution)
         {
             int intervals = GroundingIntervals(pair.Duration, GroundingBakeRate);
             var actors = new[] { source, target };
@@ -113,7 +115,8 @@ namespace FrankRetarget.Editor
                 {
                     float clearance = GroundingClearance(actors[role]);
                     clearances[role][frame] = clearance;
-                    tracks[role].lift[frame] = Mathf.Max(0, GroundingCushion - clearance);
+                    float cushion = GroundingCushionFor(execution, actors[role], role == 1);
+                    tracks[role].lift[frame] = Mathf.Max(0, cushion - clearance);
                 }
             }
             for (int role = 0; role < actors.Length; role++)

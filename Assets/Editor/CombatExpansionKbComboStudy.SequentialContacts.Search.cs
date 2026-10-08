@@ -74,7 +74,10 @@ namespace FrankRetarget.Editor
         {
             var probe = new CombatExpansionAxeDenseStudy.SkinRegionProbe(player.Source,
                 index == 0 ? HumanBodyBones.LeftHand : HumanBodyBones.RightHand,
-                player.Target, SequentialTargetBone(player, index));
+                player.Target, SequentialTargetBone(player, index),
+                bodyJabVariants && record.assignment == 1 && index < 2
+                    ? CombatExpansionAxeDenseStudy.SkinRegionProbe.Selection.TorsoWithoutHeadNeckOrArms
+                    : CombatExpansionAxeDenseStudy.SkinRegionProbe.Selection.BoneAndDescendants);
             if (!record.geometry.Contains(probe.SelectionSummary))
                 record.geometry.Add(probe.SelectionSummary);
             return probe;
@@ -93,15 +96,18 @@ namespace FrankRetarget.Editor
                 index == 0 ? HumanBodyBones.LeftHand : HumanBodyBones.RightHand);
             var targetBone = SequentialTargetBone(player, index);
             var head = player.Target.Animator.GetBoneTransform(targetBone);
+            string region = targetBone == HumanBodyBones.Chest
+                ? "TorsoWithoutHeadNeckOrArms" : targetBone.ToString();
             return new SequentialSample
             {
                 floor = floor,
-                contact = ContactRow(seconds, player.Pair.SampleTime, index + 1, targetBone.ToString(), contact,
+                contact = ContactRow(seconds, player.Pair.SampleTime, index + 1, region, contact,
                     hand, head, floor.attackerAfter, floor.receiverAfter, null)
             };
         }
 
-        static void ClassifySequential(SequentialSample sample, SequentialSample previous, int index, int lane)
+        static void ClassifySequential(SequentialSample sample, SequentialSample previous, int index, int lane,
+            float? blendEndOverride = null, float? windowStartOverride = null)
         {
             var row = sample.contact;
             var before = previous.contact;
@@ -117,9 +123,10 @@ namespace FrankRetarget.Editor
             row.closingSpeed = Vector3.Dot(row.relativeVelocity, (row.targetPivot - row.handPivot).normalized);
             sample.forwardSpeed = Vector3.Dot(row.handVelocity, Vector3.right * lane);
             sample.gapClosingSpeed = (before.gap - row.gap) / interval;
-            float blendEnd = index == 0 ? SequentialEntryBlend : index * .4f + SequentialLinkBlend;
+            float blendEnd = blendEndOverride ??
+                (index == 0 ? SequentialEntryBlend : index * .4f + SequentialLinkBlend);
             sample.inBlend = before.seconds < blendEnd - .000001f;
-            sample.windowEntry = row.seconds <= SequentialStarts[index] + .000001f;
+            sample.windowEntry = row.seconds <= (windowStartOverride ?? SequentialStarts[index]) + .000001f;
             sample.nearSurface = row.gap <= .001f;
             sample.advancing = sample.forwardSpeed > .001f && row.closingSpeed > .001f &&
                 sample.gapClosingSpeed > .001f;

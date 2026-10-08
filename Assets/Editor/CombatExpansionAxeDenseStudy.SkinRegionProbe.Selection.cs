@@ -21,8 +21,13 @@ namespace FrankRetarget.Editor
             static void SelectRegion(CharacterCombat fighter, HumanBodyBones root,
                 List<RegionSkin> selected, List<string> summary)
             {
-                Transform anchor = MappedBone(fighter, root);
-                var region = new HashSet<Transform>(anchor.GetComponentsInChildren<Transform>(true));
+                SelectRegion(fighter, root, Selection.BoneAndDescendants, selected, summary);
+            }
+
+            static void SelectRegion(CharacterCombat fighter, HumanBodyBones root, Selection policy,
+                List<RegionSkin> selected, List<string> summary)
+            {
+                var region = RegionBones(fighter, root, policy, summary);
                 foreach (var skin in BodySkins(fighter))
                 {
                     Mesh mesh = skin.sharedMesh;
@@ -53,7 +58,7 @@ namespace FrankRetarget.Editor
                             for (int corner = 0; corner < 3; corner++)
                                 indices.Add(triangles[face + corner]);
                         }
-                        summary.Add(fighter.name + "/" + root + ": renderer=" + skin.name +
+                        summary.Add(fighter.name + "/" + root + "/" + policy + ": renderer=" + skin.name +
                             "; mesh=" + CombatExpansionInventory.Identity(mesh) +
                             "; selected/total triangles=" + indices.Count / 3 + "/" + triangles.Length / 3);
                         if (indices.Count == 0)

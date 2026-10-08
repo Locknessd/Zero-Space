@@ -1,0 +1,16 @@
+execution,status,asset,report,error
+Execution02,BAKED,"Assets/CombatExpansion/SamuraiStudy/Grounding/Samurai_Execution02_Grounding.asset","Execution02GroundingBake.txt",""
+Execution03,BAKED,"Assets/CombatExpansion/SamuraiStudy/Grounding/Samurai_Execution03_Grounding.asset","Execution03GroundingBake.txt",""
+Execution04,BAKED,"Assets/CombatExpansion/SamuraiStudy/Grounding/Samurai_Execution04_Grounding.asset","Execution04GroundingBake.txt",""
+Execution05,BAKED,"Assets/CombatExpansion/SamuraiStudy/Grounding/Samurai_Execution05_Grounding.asset","Execution05GroundingBake.txt",""
+Execution06,FAIL,"Assets/CombatExpansion/SamuraiStudy/Grounding/Samurai_Execution06_Grounding.asset","Execution06GroundingBake.txt","System.InvalidOperationException: Invalid grounding lift: fighter=Mankey; receiver=True; seconds=1.94166672; measured stored lift=0.302636057; limit=0.3 m. Manual adaptation required; see bake CSV for raw clearance and base lift.
+  at FrankRetarget.Editor.CombatExpansionSamuraiStudy.CheckGroundingTracks (FrankRetarget.FrankPairGrounding+Track[] tracks, CharacterCombat[] fighters) [0x00141] in /home/eragon/Project/unity/Zero-Space/Assets/Editor/CombatExpansionSamuraiStudy.Grounding.Sampling.cs:92 
+  at FrankRetarget.Editor.CombatExpansionSamuraiStudy.BakeExecutionGrounding (System.Int32 execution) [0x001d5] in /home/eragon/Project/unity/Zero-Space/Assets/Editor/CombatExpansionSamuraiStudy.Grounding.cs:78 
+  at FrankRetarget.Editor.CombatExpansionSamuraiStudy.RunRemainingGroundingCollection (System.String operation, System.String success, System.Action`1[T] run) [0x00033] in /home/eragon/Project/unity/Zero-Space/Assets/Editor/CombatExpansionSamuraiStudy.Grounding.Collection.cs:47 "
+Execution07,BAKED,"Assets/CombatExpansion/SamuraiStudy/Grounding/Samurai_Execution07_Grounding.asset","Execution07GroundingBake.txt",""
+Execution08,BAKED,"Assets/CombatExpansion/SamuraiStudy/Grounding/Samurai_Execution08_Grounding.asset","Execution08GroundingBake.txt",""
+Execution09,BAKED,"Assets/CombatExpansion/SamuraiStudy/Grounding/Samurai_Execution09_Grounding.asset","Execution09GroundingBake.txt",""
+Execution10,FAIL,"Assets/CombatExpansion/SamuraiStudy/Grounding/Samurai_Execution10_Grounding.asset","Execution10GroundingBake.txt","System.InvalidOperationException: Invalid grounding lift: fighter=Mankey; receiver=True; seconds=1.53333342; measured stored lift=0.303268373; limit=0.3 m. Manual adaptation required; see bake CSV for raw clearance and base lift.
+  at FrankRetarget.Editor.CombatExpansionSamuraiStudy.CheckGroundingTracks (FrankRetarget.FrankPairGrounding+Track[] tracks, CharacterCombat[] fighters) [0x00141] in /home/eragon/Project/unity/Zero-Space/Assets/Editor/CombatExpansionSamuraiStudy.Grounding.Sampling.cs:92 
+  at FrankRetarget.Editor.CombatExpansionSamuraiStudy.BakeExecutionGrounding (System.Int32 execution) [0x001d5] in /home/eragon/Project/unity/Zero-Space/Assets/Editor/CombatExpansionSamuraiStudy.Grounding.cs:78 
+  at FrankRetarget.Editor.CombatExpansionSamuraiStudy.RunRemainingGroundingCollection (System.String operation, System.String success, System.Action`1[T] run) [0x00033] in /home/eragon/Project/unity/Zero-Space/Assets/Editor/CombatExpansionSamuraiStudy.Grounding.Collection.cs:47 "

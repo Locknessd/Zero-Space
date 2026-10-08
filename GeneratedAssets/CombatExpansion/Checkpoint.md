@@ -44,7 +44,16 @@ It does not complete the combat expansion.
   presentation without changing primary damage identities or times. No gameplay
   asset assigns it yet. Its in-memory contract fixture passed in Unity.
 - Execution02 through Execution10 contact-capture tooling is installed and compiled;
-  its grounding bake and actual collection capture have not yet been run.
+  all nine grounding assets now pass independent floor-clearance validation.
+  Collection contact capture is in progress and excluded from this checkpoint.
+- Global pause freezes pooled particles, effect ages, camera shake and surface
+  highlights. Local contact holds retain the existing unscaled presentation clock.
+- Punch diagnostics now offer a bounded torso probe that excludes head, neck and
+  arm geometry. Earlier broad chest-probe measurements are historical candidate
+  evidence; the corrected four-case jab diagnostic still needs to run in Unity.
+- Slap lethal grounding bake, independent validation and grounded capture tools
+  are installed and compiled. Their Unity runs and gameplay assignment remain
+  pending; the two required authored receiver time maps are included.
 
 ## Validation recorded at this checkpoint
 
@@ -77,15 +86,21 @@ It does not complete the combat expansion.
   and support anchors were remeasured during installation. Execution01's basic
   24-case Play Mode suite passed. The extended suite now passes the recovery
   boundary across both avatars/directions (0.000000 m at report precision),
-  resolving the earlier 0.005514 m snap against a 0.002 m limit. The latest run
-  passed cases 1–32, including lethal, reset and receiver-disable checks. Cleanup
-  now observes actual effect/voice expiry and disarms after the clean assertion.
-  Case 33 failed: a StrongSpreadingSmoke particle clock advanced during the prone
-  pause check. Cases 34–40 did not run; extended lifecycle acceptance remains open.
+  resolving the earlier 0.005514 m snap against a 0.002 m limit. Cleanup observes
+  actual effect/voice expiry and disarms after the clean assertion. After the
+  global-pause repair, the complete rerun passed all 40 cases / 44 activations,
+  including lethal, reset, receiver-disable, native particle and audio freeze/
+  resume checks. Visual/audio choreography acceptance remains separate.
 - `SlapStudy/LethalAuthoring/BakeProvenance.txt` records the selected native-stream
   Root/Motion encoding and successful candidate validation. Maximum bone error
   is below 0.000490 m against the unchanged 0.002 m limit. The final source guard
   reports unchanged sources; this is export fidelity, not gameplay acceptance.
+- Execution02 through Execution10 grounding passed independent 361 Hz checks
+  on both avatar assignments and directions. Execution06 and Execution10 use
+  a 0.005 m cushion only for the Mankey receiver; the 0.3 m correction cap and
+  clearance threshold are unchanged. Original aggregate failure reports remain
+  as history; all nine individual validation reports now pass. This establishes
+  sampled floor clearance, not blade contact or gameplay acceptance.
 - Samurai blade configuration validation passed in Unity after correcting the
   fixture to use persistent mesh references and Unity null equality. Identity,
   calibration, idempotence, conflict rejection and trail/VFX predicates passed;
@@ -103,10 +118,11 @@ It does not complete the combat expansion.
 ## Remaining work
 
 Slap lethal treatment, final gameplay camera review and dedicated audio tuning
-remain unfinished. Samurai Execution01 has basic gameplay validation; extended
-lifecycle (including the recorded particle pause assertion failure), complete
-visual/audio acceptance and the remaining nine registrations
-are still required. Grounding tooling for executions 2 through 10 has compiled
-but has not been run. No new punch-combo study is registered as a qualifying gameplay
-combo; the required combo collection, axe combinations and remaining action
+remain unfinished. Samurai Execution01 has passed its complete extended lifecycle suite;
+visual/audio choreography acceptance and the remaining nine registrations
+are still required. All nine remaining executions have independently validated
+grounding, as described in SamuraiStudy/BladeContacts/RemainingGroundingReview.md.
+Their contacts, support and recovery still need review. Slap lethal grounding
+and the corrected jab diagnostic remain unrun. No new punch-combo study is
+registered as a qualifying gameplay combo; the required combo collection, axe combinations and remaining action
 coverage still need implementation and gameplay validation.
