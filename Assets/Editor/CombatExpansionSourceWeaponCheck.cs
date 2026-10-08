@@ -122,6 +122,7 @@ namespace FrankRetarget.Editor
                     receiverOffset = entry.receiverOffset,
                     receiverRotation = entry.receiverRotation,
                     entryBlendSeconds = .12f,
+                    constrainDepthAfterSpacing = true,
                     maximumAlignmentError = .15f,
                     showWeapon = true,
                     attackerWeaponPrefab = prefab,

@@ -1,0 +1,101 @@
+RUNNING: 48 GreatSword real-frame recovery lifecycle cases.
+Four moves x two attacker avatars x two directions x natural/cancel = 32.
+Ambush x both avatars/directions x pause/reset/disable/lethal = 16.
+Live presentation remains enabled. Full contact/presentation profiles are absent; gameplay registration, contact quality, floor clearance and presentation acceptance remain unverified.
+START case=1 scenario=Natural move=Frank_GreatSword_Attack_Ambush source=Mankey direction=1
+PASS case=1/48 scenario=Natural move=Frank_GreatSword_Attack_Ambush source=Mankey direction=1 callbacks=1/1 getUpFrames=205 progress=0.998 seconds=4.117
+START case=2 scenario=Natural move=Frank_GreatSword_Attack_Ambush source=Pepe direction=1
+PASS case=2/48 scenario=Natural move=Frank_GreatSword_Attack_Ambush source=Pepe direction=1 callbacks=1/1 getUpFrames=218 progress=1.000 seconds=4.135
+START case=3 scenario=Natural move=Frank_GreatSword_Attack_Ambush source=Mankey direction=-1
+PASS case=3/48 scenario=Natural move=Frank_GreatSword_Attack_Ambush source=Mankey direction=-1 callbacks=1/1 getUpFrames=205 progress=0.998 seconds=4.136
+START case=4 scenario=Natural move=Frank_GreatSword_Attack_Ambush source=Pepe direction=-1
+PASS case=4/48 scenario=Natural move=Frank_GreatSword_Attack_Ambush source=Pepe direction=-1 callbacks=1/1 getUpFrames=220 progress=0.996 seconds=4.134
+START case=5 scenario=Natural move=Frank_GreatSword_Attack_Execution1 source=Mankey direction=1
+PASS case=5/48 scenario=Natural move=Frank_GreatSword_Attack_Execution1 source=Mankey direction=1 callbacks=1/1 getUpFrames=298 progress=0.999 seconds=5.433
+START case=6 scenario=Natural move=Frank_GreatSword_Attack_Execution1 source=Pepe direction=1
+PASS case=6/48 scenario=Natural move=Frank_GreatSword_Attack_Execution1 source=Pepe direction=1 callbacks=1/1 getUpFrames=258 progress=0.999 seconds=5.433
+START case=7 scenario=Natural move=Frank_GreatSword_Attack_Execution1 source=Mankey direction=-1
+PASS case=7/48 scenario=Natural move=Frank_GreatSword_Attack_Execution1 source=Mankey direction=-1 callbacks=1/1 getUpFrames=256 progress=1.000 seconds=5.437
+START case=8 scenario=Natural move=Frank_GreatSword_Attack_Execution1 source=Pepe direction=-1
+PASS case=8/48 scenario=Natural move=Frank_GreatSword_Attack_Execution1 source=Pepe direction=-1 callbacks=1/1 getUpFrames=301 progress=0.999 seconds=5.439
+START case=9 scenario=Natural move=Frank_GreatSword_Attack_Execution2 source=Mankey direction=1
+PASS case=9/48 scenario=Natural move=Frank_GreatSword_Attack_Execution2 source=Mankey direction=1 callbacks=1/1 getUpFrames=264 progress=0.998 seconds=5.478
+START case=10 scenario=Natural move=Frank_GreatSword_Attack_Execution2 source=Pepe direction=1
+PASS case=10/48 scenario=Natural move=Frank_GreatSword_Attack_Execution2 source=Pepe direction=1 callbacks=1/1 getUpFrames=152 progress=0.999 seconds=5.487
+START case=11 scenario=Natural move=Frank_GreatSword_Attack_Execution2 source=Mankey direction=-1
+PASS case=11/48 scenario=Natural move=Frank_GreatSword_Attack_Execution2 source=Mankey direction=-1 callbacks=1/1 getUpFrames=255 progress=0.999 seconds=5.480
+START case=12 scenario=Natural move=Frank_GreatSword_Attack_Execution2 source=Pepe direction=-1
+PASS case=12/48 scenario=Natural move=Frank_GreatSword_Attack_Execution2 source=Pepe direction=-1 callbacks=1/1 getUpFrames=280 progress=0.997 seconds=5.479
+START case=13 scenario=Natural move=Frank_GreatSword_Attack_Execution3 source=Mankey direction=1
+PASS case=13/48 scenario=Natural move=Frank_GreatSword_Attack_Execution3 source=Mankey direction=1 callbacks=1/1 getUpFrames=293 progress=1.000 seconds=4.977
+START case=14 scenario=Natural move=Frank_GreatSword_Attack_Execution3 source=Pepe direction=1
+PASS case=14/48 scenario=Natural move=Frank_GreatSword_Attack_Execution3 source=Pepe direction=1 callbacks=1/1 getUpFrames=284 progress=0.998 seconds=4.981
+START case=15 scenario=Natural move=Frank_GreatSword_Attack_Execution3 source=Mankey direction=-1
+PASS case=15/48 scenario=Natural move=Frank_GreatSword_Attack_Execution3 source=Mankey direction=-1 callbacks=1/1 getUpFrames=247 progress=1.000 seconds=4.987
+START case=16 scenario=Natural move=Frank_GreatSword_Attack_Execution3 source=Pepe direction=-1
+PASS case=16/48 scenario=Natural move=Frank_GreatSword_Attack_Execution3 source=Pepe direction=-1 callbacks=1/1 getUpFrames=255 progress=0.998 seconds=4.982
+START case=17 scenario=Cancel move=Frank_GreatSword_Attack_Ambush source=Mankey direction=1
+PASS case=17/48 scenario=Cancel move=Frank_GreatSword_Attack_Ambush source=Mankey direction=1 callbacks=1/1 getUpFrames=26 progress=0.102 seconds=2.856
+START case=18 scenario=Cancel move=Frank_GreatSword_Attack_Ambush source=Pepe direction=1
+PASS case=18/48 scenario=Cancel move=Frank_GreatSword_Attack_Ambush source=Pepe direction=1 callbacks=1/1 getUpFrames=31 progress=0.101 seconds=2.855
+START case=19 scenario=Cancel move=Frank_GreatSword_Attack_Ambush source=Mankey direction=-1
+PASS case=19/48 scenario=Cancel move=Frank_GreatSword_Attack_Ambush source=Mankey direction=-1 callbacks=1/1 getUpFrames=28 progress=0.102 seconds=2.857
+START case=20 scenario=Cancel move=Frank_GreatSword_Attack_Ambush source=Pepe direction=-1
+PASS case=20/48 scenario=Cancel move=Frank_GreatSword_Attack_Ambush source=Pepe direction=-1 callbacks=1/1 getUpFrames=29 progress=0.103 seconds=2.858
+START case=21 scenario=Cancel move=Frank_GreatSword_Attack_Execution1 source=Mankey direction=1
+PASS case=21/48 scenario=Cancel move=Frank_GreatSword_Attack_Execution1 source=Mankey direction=1 callbacks=1/1 getUpFrames=23 progress=0.100 seconds=4.154
+START case=22 scenario=Cancel move=Frank_GreatSword_Attack_Execution1 source=Pepe direction=1
+PASS case=22/48 scenario=Cancel move=Frank_GreatSword_Attack_Execution1 source=Pepe direction=1 callbacks=1/1 getUpFrames=22 progress=0.103 seconds=4.157
+START case=23 scenario=Cancel move=Frank_GreatSword_Attack_Execution1 source=Mankey direction=-1
+PASS case=23/48 scenario=Cancel move=Frank_GreatSword_Attack_Execution1 source=Mankey direction=-1 callbacks=1/1 getUpFrames=24 progress=0.102 seconds=4.169
+START case=24 scenario=Cancel move=Frank_GreatSword_Attack_Execution1 source=Pepe direction=-1
+PASS case=24/48 scenario=Cancel move=Frank_GreatSword_Attack_Execution1 source=Pepe direction=-1 callbacks=1/1 getUpFrames=22 progress=0.101 seconds=4.155
+START case=25 scenario=Cancel move=Frank_GreatSword_Attack_Execution2 source=Mankey direction=1
+PASS case=25/48 scenario=Cancel move=Frank_GreatSword_Attack_Execution2 source=Mankey direction=1 callbacks=1/1 getUpFrames=24 progress=0.101 seconds=4.284
+START case=26 scenario=Cancel move=Frank_GreatSword_Attack_Execution2 source=Pepe direction=1
+PASS case=26/48 scenario=Cancel move=Frank_GreatSword_Attack_Execution2 source=Pepe direction=1 callbacks=1/1 getUpFrames=19 progress=0.100 seconds=4.274
+START case=27 scenario=Cancel move=Frank_GreatSword_Attack_Execution2 source=Mankey direction=-1
+PASS case=27/48 scenario=Cancel move=Frank_GreatSword_Attack_Execution2 source=Mankey direction=-1 callbacks=1/1 getUpFrames=19 progress=0.100 seconds=4.281
+START case=28 scenario=Cancel move=Frank_GreatSword_Attack_Execution2 source=Pepe direction=-1
+PASS case=28/48 scenario=Cancel move=Frank_GreatSword_Attack_Execution2 source=Pepe direction=-1 callbacks=1/1 getUpFrames=23 progress=0.101 seconds=4.285
+START case=29 scenario=Cancel move=Frank_GreatSword_Attack_Execution3 source=Mankey direction=1
+PASS case=29/48 scenario=Cancel move=Frank_GreatSword_Attack_Execution3 source=Mankey direction=1 callbacks=1/1 getUpFrames=21 progress=0.104 seconds=3.788
+START case=30 scenario=Cancel move=Frank_GreatSword_Attack_Execution3 source=Pepe direction=1
+PASS case=30/48 scenario=Cancel move=Frank_GreatSword_Attack_Execution3 source=Pepe direction=1 callbacks=1/1 getUpFrames=24 progress=0.103 seconds=3.778
+START case=31 scenario=Cancel move=Frank_GreatSword_Attack_Execution3 source=Mankey direction=-1
+PASS case=31/48 scenario=Cancel move=Frank_GreatSword_Attack_Execution3 source=Mankey direction=-1 callbacks=1/1 getUpFrames=24 progress=0.102 seconds=3.779
+START case=32 scenario=Cancel move=Frank_GreatSword_Attack_Execution3 source=Pepe direction=-1
+PASS case=32/48 scenario=Cancel move=Frank_GreatSword_Attack_Execution3 source=Pepe direction=-1 callbacks=1/1 getUpFrames=22 progress=0.100 seconds=3.783
+START case=33 scenario=Pause move=Frank_GreatSword_Attack_Ambush source=Mankey direction=1
+PASS case=33/48 scenario=Pause move=Frank_GreatSword_Attack_Ambush source=Mankey direction=1 callbacks=1/1 getUpFrames=258 progress=0.997 seconds=4.342
+START case=34 scenario=Pause move=Frank_GreatSword_Attack_Ambush source=Pepe direction=1
+PASS case=34/48 scenario=Pause move=Frank_GreatSword_Attack_Ambush source=Pepe direction=1 callbacks=1/1 getUpFrames=253 progress=1.000 seconds=4.338
+START case=35 scenario=Pause move=Frank_GreatSword_Attack_Ambush source=Mankey direction=-1
+PASS case=35/48 scenario=Pause move=Frank_GreatSword_Attack_Ambush source=Mankey direction=-1 callbacks=1/1 getUpFrames=261 progress=0.999 seconds=4.343
+START case=36 scenario=Pause move=Frank_GreatSword_Attack_Ambush source=Pepe direction=-1
+PASS case=36/48 scenario=Pause move=Frank_GreatSword_Attack_Ambush source=Pepe direction=-1 callbacks=1/1 getUpFrames=254 progress=0.996 seconds=4.338
+START case=37 scenario=Reset move=Frank_GreatSword_Attack_Ambush source=Mankey direction=1
+PASS case=37/48 scenario=Reset move=Frank_GreatSword_Attack_Ambush source=Mankey direction=1 callbacks=1/1 getUpFrames=25 progress=0.101 seconds=2.857
+START case=38 scenario=Reset move=Frank_GreatSword_Attack_Ambush source=Pepe direction=1
+PASS case=38/48 scenario=Reset move=Frank_GreatSword_Attack_Ambush source=Pepe direction=1 callbacks=1/1 getUpFrames=25 progress=0.105 seconds=2.863
+START case=39 scenario=Reset move=Frank_GreatSword_Attack_Ambush source=Mankey direction=-1
+PASS case=39/48 scenario=Reset move=Frank_GreatSword_Attack_Ambush source=Mankey direction=-1 callbacks=1/1 getUpFrames=24 progress=0.102 seconds=2.862
+START case=40 scenario=Reset move=Frank_GreatSword_Attack_Ambush source=Pepe direction=-1
+PASS case=40/48 scenario=Reset move=Frank_GreatSword_Attack_Ambush source=Pepe direction=-1 callbacks=1/1 getUpFrames=24 progress=0.102 seconds=2.857
+START case=41 scenario=Disable move=Frank_GreatSword_Attack_Ambush source=Mankey direction=1
+PASS case=41/48 scenario=Disable move=Frank_GreatSword_Attack_Ambush source=Mankey direction=1 callbacks=1/1 getUpFrames=26 progress=0.102 seconds=2.860
+START case=42 scenario=Disable move=Frank_GreatSword_Attack_Ambush source=Pepe direction=1
+PASS case=42/48 scenario=Disable move=Frank_GreatSword_Attack_Ambush source=Pepe direction=1 callbacks=1/1 getUpFrames=26 progress=0.103 seconds=2.855
+START case=43 scenario=Disable move=Frank_GreatSword_Attack_Ambush source=Mankey direction=-1
+PASS case=43/48 scenario=Disable move=Frank_GreatSword_Attack_Ambush source=Mankey direction=-1 callbacks=1/1 getUpFrames=25 progress=0.103 seconds=2.853
+START case=44 scenario=Disable move=Frank_GreatSword_Attack_Ambush source=Pepe direction=-1
+PASS case=44/48 scenario=Disable move=Frank_GreatSword_Attack_Ambush source=Pepe direction=-1 callbacks=1/1 getUpFrames=25 progress=0.105 seconds=2.859
+START case=45 scenario=Lethal move=Frank_GreatSword_Attack_Ambush source=Mankey direction=1
+PASS case=45/48 scenario=Lethal move=Frank_GreatSword_Attack_Ambush source=Mankey direction=1 callbacks=1/1 getUpFrames=0 progress=0.000 seconds=2.716
+START case=46 scenario=Lethal move=Frank_GreatSword_Attack_Ambush source=Pepe direction=1
+PASS case=46/48 scenario=Lethal move=Frank_GreatSword_Attack_Ambush source=Pepe direction=1 callbacks=1/1 getUpFrames=0 progress=0.000 seconds=2.713
+START case=47 scenario=Lethal move=Frank_GreatSword_Attack_Ambush source=Mankey direction=-1
+PASS case=47/48 scenario=Lethal move=Frank_GreatSword_Attack_Ambush source=Mankey direction=-1 callbacks=1/1 getUpFrames=0 progress=0.000 seconds=2.712
+START case=48 scenario=Lethal move=Frank_GreatSword_Attack_Ambush source=Pepe direction=-1
+PASS case=48/48 scenario=Lethal move=Frank_GreatSword_Attack_Ambush source=Pepe direction=-1 callbacks=1/1 getUpFrames=0 progress=0.000 seconds=2.721
+PASS all 48 lifecycle cases; acceptance remains unverified.

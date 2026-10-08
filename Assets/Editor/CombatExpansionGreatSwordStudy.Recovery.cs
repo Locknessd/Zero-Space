@@ -72,7 +72,9 @@ namespace FrankRetarget.Editor
                         while (current < seconds - .000001f)
                         {
                             float step = Mathf.Min(1f / 60, seconds - current);
+                            pair.PrepareRecoveryPoseEvaluation();
                             target.Animator.Update(step);
+                            pair.EvaluateRecoveryPose();
                             current += step;
                         }
                         Draw(frame);

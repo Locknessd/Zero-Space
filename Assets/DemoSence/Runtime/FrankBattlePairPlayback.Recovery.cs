@@ -12,6 +12,7 @@ namespace FrankRetarget
 
         void ResetRecovery()
         {
+            ClearRecoveryPoses();
             waitingForGetUp = false;
             attackRecoveryPending = hitRecoveryPending = recoveryFailed = false;
             attackRecoveryStarted = hitRecoveryStarted = false;
@@ -32,6 +33,7 @@ namespace FrankRetarget
         {
             // Unity evaluates both controllers using the existing presentation clock.
             if (!IsRecovering) return;
+            PrepareRecoveryPoseEvaluation();
             float rate = Application.isPlaying && Time.timeScale <= 0 ? 0 : PresentationRate;
             if (attackRecoveryStarted && attacker && attacker.Animator) attacker.Animator.speed = rate;
             if (hitRecoveryStarted && receiver && receiver.Animator) receiver.Animator.speed = rate;
@@ -54,6 +56,7 @@ namespace FrankRetarget
 
         void CompleteSourceMotion()
         {
+            CaptureRecoveryPoses();
             bool hasAttackX = TryGetHipsX(attackActor, out float attackX);
             bool hasHitX = TryGetHipsX(hitActor, out float hitX);
             ClearActor(ref attackActor);
@@ -75,11 +78,15 @@ namespace FrankRetarget
             if (attackRecoveryPending)
             {
                 attackRecoveryStarted = attacker && attacker.BeginSourceGetUp(pair.attackerGetUp);
+                if (attackRecoveryPose != null && hasAttackX)
+                    PreserveRootX(attacker ? attacker.Animator : null, attackX);
                 if (!attackRecoveryStarted) recoveryFailed = true;
             }
             if (hitRecoveryPending)
             {
                 hitRecoveryStarted = receiver && receiver.BeginSourceGetUp(RecoveryClip);
+                if (hitRecoveryPose != null && hasHitX)
+                    PreserveRootX(receiver ? receiver.Animator : null, hitX);
                 if (!hitRecoveryStarted) recoveryFailed = true;
             }
             if (recoveryFailed)
@@ -92,7 +99,9 @@ namespace FrankRetarget
                 if (battleSfx) battleSfx.BeginRecovery(this, attackRecoveryStarted);
                 CombatPositioningController.Instance?.ConstrainDepthNow();
                 ConstrainLightHipsDepth();
+                RebaseRecoveryPoses();
                 Update();
+                EvaluateRecoveryPose();
                 return;
             }
             CompleteNow();
@@ -100,6 +109,7 @@ namespace FrankRetarget
 
         void CompleteNow()
         {
+            ClearRecoveryPoses();
             Playing = false;
             waitingForGetUp = false;
             if (battleSfx) battleSfx.EndSequence(this);
@@ -138,6 +148,7 @@ namespace FrankRetarget
 
         public void Cancel()
         {
+            ClearRecoveryPoses();
             if (battleSfx) battleSfx.EndSequence(this, true);
             if (battleVfx) battleVfx.EndSequence(this, true);
             bool interrupted = Playing;

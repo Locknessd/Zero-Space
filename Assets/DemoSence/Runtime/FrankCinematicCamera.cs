@@ -38,8 +38,10 @@ namespace FrankRetarget
         public FrankCameraLibrary.Shot ActiveShot { get; private set; }
         public float SafetyDolly { get; private set; }
         public IReadOnlyList<Vector3> LastFramingPoints => framingPoints;
+        public IReadOnlyList<Renderer> LastFramingPointOwners => framingPointOwners;
 
         readonly List<Vector3> framingPoints = new List<Vector3>(128);
+        readonly List<Renderer> framingPointOwners = new List<Renderer>(128);
         readonly List<FramingRenderer> framingRenderers = new List<FramingRenderer>();
         readonly HashSet<Renderer> uniqueRenderers = new HashSet<Renderer>();
         FrankTestDriver cachedMankeyDriver, cachedPepeDriver;

@@ -29,10 +29,14 @@ namespace FrankRetarget
 
         public void ApplySourceWeaponGrounding(float lift)
         {
+            ApplySourceWeaponDisplacement(Vector3.up * lift);
+        }
+
+        public void ApplySourceWeaponDisplacement(Vector3 displacement)
+        {
             if (!sourceWeapon || !activeDriver) return;
-            var next = Vector3.up * lift;
-            activeDriver.transform.position += next - sourceWeaponLift;
-            sourceWeaponLift = next;
+            activeDriver.transform.position += displacement - sourceWeaponLift;
+            sourceWeaponLift = displacement;
         }
 
         void ResetSourceWeaponGrounding()

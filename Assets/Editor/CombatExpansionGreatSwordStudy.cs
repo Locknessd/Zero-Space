@@ -41,10 +41,15 @@ namespace FrankRetarget.Editor
                     attack = original.attacker,
                     reaction = original.receiver,
                     getUp = getUp,
+                    recoveryBlendSeconds = .12f,
+                    recoveryGrounding = AssetDatabase.LoadAssetAtPath<FrankPairGrounding>(
+                        "Assets/CombatExpansion/Actions/Frank_GreatSword_" +
+                        (index < 2 ? "Prone" : "Supine") + "Recovery_Grounding.asset"),
                     receiverOffset = original.receiverOffset,
                     receiverRotation = original.receiverRotation,
                     entryBlendSeconds = .12f,
                     maximumAlignmentError = .15f,
+                    constrainDepthAfterSpacing = true,
                     pepeAttacks = source.name == "Pepe",
                     cameraKey = "execution/" + index,
                     showWeapon = true,

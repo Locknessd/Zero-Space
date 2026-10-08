@@ -18,6 +18,10 @@ namespace FrankRetarget.Editor
                 .Where(r => r.enabled && r.gameObject.activeInHierarchy && r.sharedMesh && r.bones.Length > 0)
                 .Select(r => new BodyGeometry(r));
             var bodies = sourceBodies.Concat(targetBodies).Concat(weaponSkins).ToArray();
+            var staticMeshes = StaticMeshes(source.Animator.gameObject, target.Animator.gameObject,
+                pair.AttackerActor.gameObject, pair.ReceiverActor.gameObject);
+            report.AppendLine($"GEOMETRY {label}: skinned={bodies.Length}; static={staticMeshes.Length}; " +
+                string.Join(", ", staticMeshes.Select(mesh => mesh.Name)));
             foreach (var renderer in pair.AttackerActor.Pose.weaponRenderers)
             {
                 string binding = renderer is SkinnedMeshRenderer skin ? $"bones={skin.bones.Length}" : "static mesh";
@@ -53,6 +57,7 @@ namespace FrankRetarget.Editor
                     Vector3 high = Vector3.one * float.NegativeInfinity;
                     float bakeError = 0;
                     float boundsMiss = 0;
+                    float recalculatedError = 0;
                     var points = new List<Vector3>();
                     var tightPoints = new List<Vector3>();
                     foreach (var body in bodies)
@@ -60,6 +65,7 @@ namespace FrankRetarget.Editor
                         body.Sample();
                         bakeError = Mathf.Max(bakeError, body.BakeError);
                         boundsMiss = Mathf.Max(boundsMiss, body.BoundsMiss);
+                        recalculatedError = Mathf.Max(recalculatedError, body.RecalculatedBoundsError);
                         foreach (var vertex in body.world)
                         {
                             var viewport = camera.WorldToViewportPoint(vertex);
@@ -72,15 +78,27 @@ namespace FrankRetarget.Editor
                         points.AddRange(body.framingEnvelope);
                         AppendCorners(tightPoints, body.WorldBounds);
                     }
-                    AppendStaticWeaponBounds(points, pair.AttackerActor.Pose.weaponRenderers);
-                    AppendStaticWeaponBounds(tightPoints, pair.AttackerActor.Pose.weaponRenderers);
+                    foreach (var mesh in staticMeshes)
+                    {
+                        mesh.Sample();
+                        foreach (var vertex in mesh.world)
+                        {
+                            Vector3 viewport = camera.WorldToViewportPoint(vertex);
+                            if (!Finite(viewport))
+                                throw new InvalidOperationException("Nonfinite static projection: " + mesh.Name);
+                            low = Vector3.Min(low, viewport);
+                            high = Vector3.Max(high, viewport);
+                        }
+                        points.AddRange(mesh.framingEnvelope);
+                        tightPoints.AddRange(mesh.framingEnvelope);
+                    }
                     float actualDepth;
                     float permittedDepth = PermittedDepth(camera, framing, points, out actualDepth);
                     float tightDepth;
                     float tightPermitted = PermittedDepth(camera, framing, tightPoints, out tightDepth);
                     bool contained = low.x >= Margin && low.y >= Margin && high.x <= 1 - Margin &&
                         high.y <= 1 - Margin && low.z >= camera.nearClipPlane;
-                    bool scaleCorrect = bakeError <= .005f;
+                    bool scaleCorrect = bakeError <= .005f && recalculatedError <= .0001f;
                     bool reasonableDistance = actualDepth <= permittedDepth;
                     minimum = Vector3.Min(minimum, low);
                     maximum = Vector3.Max(maximum, high);
@@ -98,6 +116,7 @@ namespace FrankRetarget.Editor
                         report.AppendLine(FormattableString.Invariant(
                             $"FAIL {label} t={seconds:R}: viewport={low:R}..{high:R}; ") +
                             FormattableString.Invariant($"contained={contained}; bakeError={bakeError:R}m; ") +
+                            FormattableString.Invariant($"recalculatedBoundsError={recalculatedError:R}m; ") +
                             FormattableString.Invariant($"depth={actualDepth:R}m; allowed={permittedDepth:R}m"));
                     }
                     if (critical || !contained || !scaleCorrect || !reasonableDistance)
@@ -111,11 +130,23 @@ namespace FrankRetarget.Editor
                             FormattableString.Invariant($"allowed={tightPermitted:R}m; ") +
                             FormattableString.Invariant($"safetyDolly={framing.SafetyDolly:R}m"));
                         foreach (var body in bodies)
+                        {
                             report.AppendLine(FormattableString.Invariant(
                                 $"  {body.Name}: currentBoneBounds={body.WorldBounds}; ") +
                                 FormattableString.Invariant($"rawBakeBounds={body.RawBakeBounds}; ") +
                                 FormattableString.Invariant($"bakeError={body.BakeError:R}m; ") +
                                 FormattableString.Invariant($"rawBoundsMiss={body.BoundsMiss:R}m"));
+                            report.AppendLine(FormattableString.Invariant(
+                                $"    bakedVerticesBounds={body.VertexBakeBounds}; ") +
+                                FormattableString.Invariant($"recalculatedBounds={body.RecalculatedBakeBounds}; ") +
+                                FormattableString.Invariant($"rawBoundsDifference={body.RawBoundsDifference:R}m; ") +
+                                FormattableString.Invariant($"recalculatedError={body.RecalculatedBoundsError:R}m"));
+                        }
+                        foreach (var mesh in staticMeshes)
+                            report.AppendLine(FormattableString.Invariant(
+                                $"  static {mesh.Name}: worldBounds={mesh.WorldBounds}; ") +
+                                FormattableString.Invariant($"runtimeBoundsError={mesh.RuntimeBoundsError:R}m"));
+                        AppendDistanceDrivers(report, camera, framing, bodies, staticMeshes);
                         AppendBoneExtrema(report, source, camera);
                         AppendBoneExtrema(report, target, camera);
                     }
@@ -131,23 +162,6 @@ namespace FrankRetarget.Editor
             {
                 foreach (var body in bodies)
                     body.Dispose();
-            }
-        }
-
-        static void AppendStaticWeaponBounds(List<Vector3> points, Renderer[] renderers)
-        {
-            foreach (var renderer in renderers)
-            {
-                if (!renderer || !renderer.enabled || !renderer.gameObject.activeInHierarchy ||
-                    !(renderer is MeshRenderer))
-                    continue;
-                var filter = renderer.GetComponent<MeshFilter>();
-                if (!filter || !filter.sharedMesh)
-                    continue;
-                var local = new List<Vector3>();
-                AppendCorners(local, filter.sharedMesh.bounds);
-                foreach (var point in local)
-                    points.Add(renderer.localToWorldMatrix.MultiplyPoint3x4(point));
             }
         }
 
@@ -183,6 +197,57 @@ namespace FrankRetarget.Editor
             float authored = framing.battleMaximumAuthoredDistance * framing.battleDistanceScale *
                 Mathf.Clamp(framing.Zoom, .65f, 3f) * Mathf.Max(1, 1.3f / camera.aspect);
             return Mathf.Max(authored, requiredDepth) * 1.25f;
+        }
+
+        static void AppendDistanceDrivers(StringBuilder report, Camera camera, FrankCinematicCamera framing,
+            BodyGeometry[] bodies, StaticGeometry[] staticMeshes)
+        {
+            var drivers = new List<KeyValuePair<string, float>>();
+            foreach (var body in bodies)
+            {
+                drivers.Add(new KeyValuePair<string, float>("skin " + body.Name,
+                    RequiredRetreat(camera, framing, body.framingEnvelope)));
+                report.AppendLine(FormattableString.Invariant($"  rawBakeDriver={body.Name}; ") +
+                    FormattableString.Invariant(
+                        $"requiredRetreat={RequiredRetreat(camera, framing, body.rawFramingEnvelope):R}m"));
+            }
+            foreach (var mesh in staticMeshes)
+                drivers.Add(new KeyValuePair<string, float>("static " + mesh.Name,
+                    RequiredRetreat(camera, framing, mesh.framingEnvelope)));
+            if (framing.LastFramingPointOwners.Count != framing.LastFramingPoints.Count)
+                throw new InvalidOperationException("Missing runtime framing point attribution.");
+            int limiting = -1;
+            float worst = float.NegativeInfinity;
+            for (int i = 0; i < framing.LastFramingPoints.Count; i++)
+            {
+                float retreat = RequiredRetreat(camera, framing, new[] { framing.LastFramingPoints[i] });
+                if (retreat <= worst)
+                    continue;
+                worst = retreat;
+                limiting = i;
+            }
+            if (limiting >= 0)
+                report.AppendLine(FormattableString.Invariant($"  runtimeEnvelopeRetreat={worst:R}m; ") +
+                    $"owner={framing.LastFramingPointOwners[limiting].name}; " +
+                    FormattableString.Invariant($"worldPoint={framing.LastFramingPoints[limiting]:R}"));
+            foreach (var driver in drivers.OrderByDescending(entry => entry.Value).Take(4))
+                report.AppendLine(FormattableString.Invariant(
+                    $"  distanceDriver={driver.Key}; requiredRetreatFromCurrentView={driver.Value:R}m"));
+        }
+
+        static float RequiredRetreat(Camera camera, FrankCinematicCamera framing, IEnumerable<Vector3> points)
+        {
+            float vertical = Mathf.Tan(camera.fieldOfView * Mathf.Deg2Rad * .5f) *
+                (1 - Mathf.Clamp(framing.viewportMargin, .05f, .15f) * 2);
+            float horizontal = vertical * camera.aspect;
+            float retreat = float.NegativeInfinity;
+            foreach (var point in points)
+            {
+                Vector3 local = camera.transform.InverseTransformPoint(point);
+                retreat = Mathf.Max(retreat, Mathf.Abs(local.x) / horizontal - local.z,
+                    Mathf.Abs(local.y) / vertical - local.z, .08f - local.z);
+            }
+            return retreat;
         }
 
         static void AppendBoneExtrema(StringBuilder report, CharacterCombat actor, Camera camera)

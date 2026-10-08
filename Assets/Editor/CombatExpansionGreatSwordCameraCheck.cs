@@ -20,8 +20,11 @@ namespace FrankRetarget.Editor
             report.AppendLine("Grounded GreatSword camera; four pairs, both attacking avatars, both directions.");
             report.AppendLine("480x320 aspect 1.5; immediate BattleScene camera, .12 s onward at 60 Hz.");
             report.AppendLine("Includes every study-sheet time and endpoint; current bone/bindpose body vertices.");
+            report.AppendLine("Includes static body/face meshes and injected sword using current transform vertices.");
             report.AppendLine("Body viewport margin >= .049; near plane; no oversized framing approval.");
             report.AppendLine("Bake(false)+TR checked independently against bone weights; raw bake bounds audited.");
+            report.AppendLine("Raw versus baked-vertex versus recalculated bounds; " +
+                "runtime limiting renderer attributed.");
             report.AppendLine("Distance oracle: renderer-local AABBs reconstructed from current bone vertices,");
             report.AppendLine("then rotated to world, matching the runtime envelope; 25 percent allowance unchanged.");
             report.AppendLine("Tight world AABBs are diagnostic only: they omit rotation-induced envelope corners.");
