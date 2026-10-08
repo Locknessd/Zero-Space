@@ -31,6 +31,14 @@ Pepe-to-Mankey setup already reaches both candidate contacts at 1.70 m.
 No Samurai actions are registered by these tools, and damage, presentation,
 recovery and final contact timings remain unaccepted.
 
+Blade presentation configuration now passes isolated Unity validation, including
+persistent mesh serialization and 10,000 warmed predicate passes with zero
+allocated bytes. The native blade calibration and both sheath exclusions are
+saved into BattleScene. Selective-save validation confirms that unrelated saved
+fields are preserved. See `Presentation/Report.txt`, `SelectiveSaveValidation.txt`
+and `Installation.txt`. Actual gameplay trail appearance and effect directions
+still require validation.
+
 Reproduce in Edit Mode using these `CombatExpansionSamuraiStudy` methods:
 
 1. `InspectBladeMesh()`

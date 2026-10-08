@@ -1,0 +1,6 @@
+PASS exact outside-field preservation with unrelated component and object edits
+PASS adjacent excludedMeshes insertion and idempotence
+PASS LF/CRLF and UTF8 BOM/no-BOM byte preservation
+PASS missing component/field, duplicate fields, malformed and unsupported YAML rejection
+PASS prefab, stripped and wrong component rejection
+PASS actual saved BattleScene pure merge, insertion/idempotence and encoding round trip
