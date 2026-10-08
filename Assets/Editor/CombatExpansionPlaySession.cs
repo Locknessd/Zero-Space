@@ -27,6 +27,7 @@ namespace FrankRetarget.Editor
         public static void BeginThrows() => Begin("Throws", "ThrowPlayMode.txt");
         public static void BeginGreatSwordRecovery() => Begin("GreatSwordRecovery", "GreatSwordRecoveryPlayMode.txt");
         public static void BeginGreatSword() => Begin("GreatSword", "GreatSwordPlayMode.txt");
+        public static void BeginSlap() => Begin("Slap", "SlapStudy/PlayMode/Status.txt");
 
         static void Begin(string suite, string report)
         {
@@ -132,6 +133,8 @@ namespace FrankRetarget.Editor
                         CombatExpansionGreatSwordRecoveryPlayCheck.Begin();
                     else if (suite == "GreatSword")
                         CombatExpansionGreatSwordPlayCheck.Begin();
+                    else if (suite == "Slap")
+                        CombatExpansionSlapPlayCheck.Begin();
                     else
                         throw new InvalidOperationException("Unknown lifecycle suite: " + suite);
                     SessionState.SetInt(Key + ".phase", 3);
@@ -139,8 +142,11 @@ namespace FrankRetarget.Editor
                 else if (phase == 3)
                 {
                     string report = File.ReadAllText(SessionState.GetString(Key + ".report", ""));
-                    if (report.Contains("\nPASS all ") || report.Contains("\nFAIL"))
-                        Finish(report.Contains("\nFAIL") ? "FAIL suite; inspect its report."
+                    bool failed = report.StartsWith("FAIL", StringComparison.Ordinal) || report.Contains("\nFAIL");
+                    bool passed = report.StartsWith("PASS_NONLETHAL", StringComparison.Ordinal) ||
+                        report.Contains("\nPASS all ");
+                    if (passed || failed)
+                        Finish(failed ? "FAIL suite; inspect its report."
                             : "PASS suite; inspect its report for case scope.");
                 }
             }

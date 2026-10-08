@@ -152,7 +152,11 @@ namespace FrankRetarget
             // hold the last pose when paused at the end so the camera can settle.
             double t=Mathf.Clamp(time,0,Mathf.Max(0,clip.length-.00001f));
             Vector3 reactionOffset = Vector3.zero;
-            if (reactionSegments != null)
+            if (attackSteps != null)
+            {
+                EvaluateAttacks(time);
+            }
+            else if (reactionSegments != null)
             {
                 reactionOffset = SampleReactions(time, reactionSegments.Length);
                 EvaluateReactionGraph();
@@ -172,6 +176,7 @@ namespace FrankRetarget
         public void Clear()
         {
             ResetSourceWeaponGrounding();
+            ClearAttackTrack();
             ClearReactionTrack();
             if(graph.IsValid())graph.Destroy();
             graph = default;

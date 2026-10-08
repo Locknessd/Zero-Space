@@ -1,0 +1,10 @@
+48 main cases: two actions x two attacker avatars x two directions x six scenarios.
+Repeated cases execute twice: 56 accepted plays plus 8 direct range rejections.
+Normal/repeat/reset/pause use EnqueueCombatAction; interrupt/disable use direct registered move for targeted injection.
+EXCLUDED: lethal visual treatment remains unfinished (native receiver ends upright).
+Blocks are unsupported; range rejection is tested without fabricated block reactions.
+START case=1 scenario=Normal action=SlapFace_Sequence1 avatar=MankeyAvatar direction=1 play=1
+1,Normal,SlapFace_Sequence1,MankeyAvatar,1,1,FAIL,1,0,0.000000,1.754
+Feedback cue=1.400000s audio=True vfx=True lightHold=False light=False shake=False flash=False surface=False callbacks=0/0 pausedFrames=0
+FAIL case=1 scenario=Normal action=SlapFace_Sequence1: System.InvalidOperationException: Impact missed its accepted receiver anchor.
+  at FrankRetarget.Editor.CombatExpansionSlapPlayCheck.Tick () [0x00025] in /home/eragon/Project/unity/Zero-Space/Assets/Editor/CombatExpansionSlapPlayCheck.cs:145 

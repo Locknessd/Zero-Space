@@ -76,10 +76,10 @@ namespace FrankRetarget.Editor
         }
 
         static void CaptureBladePair(CharacterCombat[] fighters, CharacterCombat source, int direction,
-            string output, List<string> scope, FrankPairGrounding grounding)
+            string output, List<string> scope, FrankPairGrounding grounding, float spacing = 1.7f)
         {
             var target = fighters.Single(fighter => fighter != source);
-            var pair = BeginBladeStudy(fighters, source, target, 1, direction, grounding);
+            var pair = BeginBladeStudy(fighters, source, target, 1, direction, grounding, spacing);
             try
             {
                 pair.EvaluateAt(0);
@@ -91,6 +91,7 @@ namespace FrankRetarget.Editor
                 var nodes = PairNodes(pair, source, target);
                 var bounds = new Bounds(source.Animator.GetBoneTransform(HumanBodyBones.Hips).position, Vector3.zero);
                 string stem = source.name + "_" + target.name + "_" + (direction > 0 ? "Positive" : "Negative");
+                scope.Add(FormattableString.Invariant($"{stem} constant entry spacing={spacing:R}m"));
                 var rows = new StringBuilder(BladeHeader);
                 foreach (float seconds in BladeTimes(pair.Duration, grounding))
                 {

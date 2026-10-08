@@ -20,16 +20,23 @@ namespace FrankRetarget.Editor
 
         public static void BakeExecution01Grounding()
         {
+            BakeExecutionGrounding(1);
+        }
+
+        static void BakeExecutionGrounding(int execution)
+        {
             CombatExpansionHumanoidStudy.RequireEditor();
+            string executionName = GroundingExecutionName(execution);
+            string assetPath = GroundingAssetPath(execution);
             var rows = new StringBuilder("fighter,avatar,direction,role,seconds,clearance,baseLift,storedLift\n");
             string failure = null;
             float maximumLift = 0;
             try
             {
-                var existing = AssetDatabase.LoadMainAssetAtPath(Execution01GroundingPath);
+                var existing = AssetDatabase.LoadMainAssetAtPath(assetPath);
                 if ((existing && !(existing is FrankPairGrounding)) ||
-                    (!existing && File.Exists(Execution01GroundingPath)))
-                    throw new InvalidOperationException("Unexpected asset type at " + Execution01GroundingPath);
+                    (!existing && File.Exists(assetPath)))
+                    throw new InvalidOperationException("Unexpected asset type at " + assetPath);
                 using var session = new SourceSession();
                 InitializePairStudy(session.Fighters);
                 CheckGroundingFighters(session.Fighters);
@@ -37,7 +44,7 @@ namespace FrankRetarget.Editor
                 foreach (var source in session.Fighters)
                 {
                     var target = session.Fighters.Single(fighter => fighter != source);
-                    var pair = BeginGroundingStudy(session.Fighters, source, target, 1, null);
+                    var pair = BeginGroundingStudy(session.Fighters, source, target, 1, null, execution);
                     try
                     {
                         var sampled = BakeGroundingPair(pair, source, target, rows);
@@ -50,13 +57,13 @@ namespace FrankRetarget.Editor
                     }
                 }
                 CheckGroundingTracks(tracks.ToArray(), session.Fighters);
-                EnsureGroundingFolder(Path.GetDirectoryName(Execution01GroundingPath).Replace('\\', '/'));
+                EnsureGroundingFolder(Path.GetDirectoryName(assetPath).Replace('\\', '/'));
                 var asset = existing as FrankPairGrounding;
                 if (!asset)
                 {
                     asset = ScriptableObject.CreateInstance<FrankPairGrounding>();
                     asset.tracks = tracks.ToArray();
-                    AssetDatabase.CreateAsset(asset, Execution01GroundingPath);
+                    AssetDatabase.CreateAsset(asset, assetPath);
                 }
                 else
                 {
@@ -72,16 +79,16 @@ namespace FrankRetarget.Editor
             }
             finally
             {
-                WriteGroundingReport("Execution01Grounding.csv", rows.ToString());
-                WriteGroundingReport("Execution01GroundingBake.txt",
+                WriteGroundingReport(executionName + "Grounding.csv", rows.ToString());
+                WriteGroundingReport(executionName + "GroundingBake.txt",
                     (failure == null ? "BAKED\n" : "FAIL\n") +
-                    "Execution01; both avatars in both roles; positive lane direction; endpoints included.\n" +
+                    executionName + "; both avatars in both roles; positive lane direction; endpoints included.\n" +
                     FormattableString.Invariant($"Minimum rate={GroundingBakeRate} Hz; cushion={GroundingCushion:R} m; ") +
                     FormattableString.Invariant($"maximum stored lift={maximumLift:R} m; limit={GroundingMaximumLift:R} m.\n") +
                     "One adjacent sample maximum envelope; original samples are never modified in place.\n" +
                     "Visible body clearance uses existing evaluated rendered skin geometry against world Y=0.\n" +
                     "Independent validation is required; bake is not contact, recovery or gameplay approval.\n" +
-                    (failure ?? "Asset=" + Execution01GroundingPath));
+                    (failure ?? "Asset=" + assetPath));
             }
         }
 
