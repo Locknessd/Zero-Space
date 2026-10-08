@@ -9,13 +9,6 @@ namespace FrankRetarget.Editor
 {
     public static partial class CombatExpansionGreatSwordSetup
     {
-        sealed class ContactSample
-        {
-            public Vector3 world;
-            public readonly Dictionary<HumanBodyBones, Matrix4x4> bones =
-                new Dictionary<HumanBodyBones, Matrix4x4>();
-        }
-
         static BattleSfxBank.Move[] MeasureProfiles(StringBuilder report)
         {
             var profiles = new BattleSfxBank.Move[Specs.Length];
@@ -43,7 +36,7 @@ namespace FrankRetarget.Editor
                 foreach (var spec in Specs)
                 {
                     var target = fighters.Single(f => f != source);
-                    var samples = new ContactSample[spec.contacts.Length];
+                    var forwardContacts = new ForwardContact[spec.contacts.Length];
                     foreach (int direction in new[] { 1, -1 })
                     {
                         foreach (var fighter in fighters)
@@ -71,26 +64,24 @@ namespace FrankRetarget.Editor
                             for (int i = 0; i < spec.contacts.Length; i++)
                             {
                                 pair.EvaluateAt(spec.contacts[i]);
-                                if (!BattlePresentationContactSetup.TryMeasureContact(pair, source, target, "Weapon",
-                                    out var bone, out var offset, out float gap, out var world) ||
-                                    !float.IsFinite(gap) || gap < 0 || gap > .12f || !Finite(offset) || !Finite(world))
+                                var probe = new BattlePresentationContactSetup.BladeContactProbe(pair, source, target);
+                                float gap = probe.Measure(out var world, out var bone, out var offset);
+                                float bodyGap = probe.BodyDistance(world);
+                                if (!ContactDistanceWithin(gap, .12f) || !ContactDistanceWithin(bodyGap, .12f) ||
+                                    !Finite(offset) || !Finite(world))
                                     throw new InvalidOperationException(move.moveName + " invalid contact " + i +
-                                        " on " + target.name + "; gap=" + gap);
+                                        " on " + target.name + "; bladeGap=" + gap + "; bodyGap=" + bodyGap);
                                 var transform = target.Animator.GetBoneTransform(bone);
                                 if (!transform)
                                     throw new InvalidOperationException("Measured victim bone is missing.");
                                 var cue = contacts[i];
-                                float crossGap = 0;
                                 if (direction == 1)
                                 {
-                                    var sample = new ContactSample { world = world };
-                                    for (int b = 0; b < (int)HumanBodyBones.LastBone; b++)
+                                    forwardContacts[i] = new ForwardContact
                                     {
-                                        var anchor = target.Animator.GetBoneTransform((HumanBodyBones)b);
-                                        if (anchor)
-                                            sample.bones.Add((HumanBodyBones)b, anchor.localToWorldMatrix);
-                                    }
-                                    samples[i] = sample;
+                                        probe = probe,
+                                        boneFrame = transform.localToWorldMatrix
+                                    };
                                     if (cue.avatarContacts.Any(a => a.avatar == target.Animator.avatar))
                                         throw new InvalidOperationException("Repeated victim avatar anchor.");
                                     cue.avatarContacts = cue.avatarContacts.Append(new BattleSfxBank.ContactAnchor
@@ -105,26 +96,30 @@ namespace FrankRetarget.Editor
                                         cue.contactOffset = offset;
                                     }
                                 }
-                                else
-                                {
-                                    var anchor = cue.avatarContacts.Single(a => a.avatar == target.Animator.avatar);
-                                    var savedBone = target.Animator.GetBoneTransform(anchor.bone);
-                                    var sample = samples[i];
-                                    if (!savedBone || !sample.bones.TryGetValue(bone, out var forwardMatrix))
-                                        throw new InvalidOperationException("Cannot cross-project victim anchors.");
-                                    crossGap = Mathf.Max(
-                                        Vector3.Distance(savedBone.TransformPoint(anchor.offset), world),
-                                        Vector3.Distance(forwardMatrix.MultiplyPoint3x4(offset), sample.world));
-                                    if (!float.IsFinite(crossGap) || crossGap > .025f)
-                                        throw new InvalidOperationException(move.moveName +
-                                            " facing anchor mismatch: " + crossGap + "m on " + target.name +
-                                            " contact " + i);
-                                }
+                                var anchor = cue.avatarContacts.Single(a => a.avatar == target.Animator.avatar);
+                                var savedBone = target.Animator.GetBoneTransform(anchor.bone);
+                                if (!savedBone || !Finite(anchor.offset))
+                                    throw new InvalidOperationException("Stored victim anchor is invalid.");
+                                if (direction == -1)
+                                    SelectCommonAnchor(cue, anchor, forwardContacts[i], probe, savedBone, world,
+                                        move.moveName + "/" + (i + 1) + " victim=" + target.name, report);
+                                var storedWorld = savedBone.TransformPoint(anchor.offset);
+                                float storedBladeGap = probe.BladeDistance(storedWorld);
+                                float storedBodyGap = probe.BodyDistance(storedWorld);
+                                if (!Finite(storedWorld) || !ContactDistanceWithin(storedBladeGap, .12f) ||
+                                    !ContactDistanceWithin(storedBodyGap, .025f))
+                                    throw new InvalidOperationException(move.moveName +
+                                        " stored anchor misses geometry on " + target.name + " contact " + i +
+                                        "; direction=" + direction + "; bladeGap=" + storedBladeGap +
+                                        "; bodyGap=" + storedBodyGap);
                                 report.AppendLine(FormattableString.Invariant(
                                     $"{move.moveName}/{i + 1} attacker={source.name} victim={target.name} ") +
                                     FormattableString.Invariant(
                                         $"direction={direction} seconds={spec.contacts[i]:R} bone={bone} ") +
-                                    FormattableString.Invariant($"gap={gap:R}m crossProjection={crossGap:R}m ") +
+                                    FormattableString.Invariant(
+                                        $"measuredBladeGap={gap:R}m measuredBodyGap={bodyGap:R}m ") +
+                                    FormattableString.Invariant(
+                                        $"storedBladeGap={storedBladeGap:R}m storedBodyGap={storedBodyGap:R}m ") +
                                     FormattableString.Invariant($"offset=({offset.x:R},{offset.y:R},{offset.z:R})"));
                             }
                         }
@@ -151,6 +146,11 @@ namespace FrankRetarget.Editor
                     property.SetValue(null, positioning);
                 }
             }
+        }
+
+        static bool ContactDistanceWithin(float distance, float maximum)
+        {
+            return float.IsFinite(distance) && distance >= 0 && distance <= maximum;
         }
 
         static BattleSfxBank.Move MakeProfile(CombatTripletData move, Spec spec)

@@ -45317,6 +45317,174 @@ MonoBehaviour:
     grapple: {fileID: 0}
     grappleOutcome: 0
     requiresExplicitSelection: 0
+  - moveName: Frank_GreatSword_Attack_Ambush
+    actionDefinition: {fileID: 11400000, guid: b0270c5f7a56dbda4b62a3e6533a41a4, type: 2}
+    attackAnim: {fileID: 7400000, guid: 610fba6d346a64f4583237c3ef4f7e46, type: 3}
+    hitAnim: {fileID: 7400000, guid: 59a3af1cef1d25a4aa16dd3a87e12f17, type: 3}
+    getUpAnim: {fileID: 1827226128182048838, guid: 157da7dff6b3b3148a29246060747ce5,
+      type: 3}
+    attackRange: 2
+    weapon: 2
+    skill: 0
+    sourcePair:
+      attackerDriver: {fileID: 4717922242589655297, guid: 961df0e45e3d62f0cb55f1e0938e509b,
+        type: 3}
+      receiverDriver: {fileID: 7087485378780173824, guid: 5130e847f3a6a0dc88bddaccddac5962,
+        type: 3}
+      attack: {fileID: 7400000, guid: 610fba6d346a64f4583237c3ef4f7e46, type: 3}
+      reaction: {fileID: 7400000, guid: 59a3af1cef1d25a4aa16dd3a87e12f17, type: 3}
+      reactions: {fileID: 0}
+      getUp: {fileID: 1827226128182048838, guid: 157da7dff6b3b3148a29246060747ce5,
+        type: 3}
+      attackerGetUp: {fileID: 0}
+      recoveryGrounding: {fileID: 11400000, guid: 0d0aabc89bdf54140b86a011839e0d23,
+        type: 2}
+      recoveryBlendSeconds: 0.12
+      entryBlendSeconds: 0.12
+      constrainDepthAfterSpacing: 1
+      maximumAlignmentError: 0.15
+      receiverOffset: {x: 0, y: 0, z: 2}
+      receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+      spacing: {fileID: 0}
+      bodySpacing: 0
+      unarmedIndex: -1
+      pepeAttacks: 1
+      cameraKey: execution/0
+      showWeapon: 1
+      attackerWeaponPrefab: {fileID: 100000, guid: c42679b5f5373904cab203907d233f45,
+        type: 3}
+      attackerWeaponSocket: root/ik_hand_root/ik_hand_gun/ik_hand_r
+      reactionDelay: 0
+    grounding: {fileID: 11400000, guid: fef268d12ea0dad86ae1f6cbedfee525, type: 2}
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
+  - moveName: Frank_GreatSword_Attack_Execution1
+    actionDefinition: {fileID: 11400000, guid: 0b294293e53a3840bbf85344651687e3, type: 2}
+    attackAnim: {fileID: 7400000, guid: 139b0ae28ee0b4f4daa324a3b26584c3, type: 3}
+    hitAnim: {fileID: 7400000, guid: 8a8cfa30410d4de4eaeee65cbe422897, type: 3}
+    getUpAnim: {fileID: 1827226128182048838, guid: 157da7dff6b3b3148a29246060747ce5,
+      type: 3}
+    attackRange: 4
+    weapon: 2
+    skill: 0
+    sourcePair:
+      attackerDriver: {fileID: 4717922242589655297, guid: 961df0e45e3d62f0cb55f1e0938e509b,
+        type: 3}
+      receiverDriver: {fileID: 7087485378780173824, guid: 5130e847f3a6a0dc88bddaccddac5962,
+        type: 3}
+      attack: {fileID: 7400000, guid: 139b0ae28ee0b4f4daa324a3b26584c3, type: 3}
+      reaction: {fileID: 7400000, guid: 8a8cfa30410d4de4eaeee65cbe422897, type: 3}
+      reactions: {fileID: 0}
+      getUp: {fileID: 1827226128182048838, guid: 157da7dff6b3b3148a29246060747ce5,
+        type: 3}
+      attackerGetUp: {fileID: 0}
+      recoveryGrounding: {fileID: 11400000, guid: 0d0aabc89bdf54140b86a011839e0d23,
+        type: 2}
+      recoveryBlendSeconds: 0.12
+      entryBlendSeconds: 0.12
+      constrainDepthAfterSpacing: 1
+      maximumAlignmentError: 0.15
+      receiverOffset: {x: 0, y: 0, z: 4}
+      receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+      spacing: {fileID: 0}
+      bodySpacing: 0
+      unarmedIndex: -1
+      pepeAttacks: 1
+      cameraKey: execution/1
+      showWeapon: 1
+      attackerWeaponPrefab: {fileID: 100000, guid: c42679b5f5373904cab203907d233f45,
+        type: 3}
+      attackerWeaponSocket: root/ik_hand_root/ik_hand_gun/ik_hand_r
+      reactionDelay: 0
+    grounding: {fileID: 11400000, guid: 6fcb043d896e4e4f4b56d7b733085564, type: 2}
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
+  - moveName: Frank_GreatSword_Attack_Execution2
+    actionDefinition: {fileID: 11400000, guid: eee002ad6b9d0c8d9abc7ca118eeefa7, type: 2}
+    attackAnim: {fileID: 7400000, guid: a56c5ae66a018d145b445cbf48c599cd, type: 3}
+    hitAnim: {fileID: 7400000, guid: ace62d913ecb84646a9d95d649c77378, type: 3}
+    getUpAnim: {fileID: 1827226128182048838, guid: f83ba830485ff2b46ba1d67ec650f1e0,
+      type: 3}
+    attackRange: 3.5
+    weapon: 2
+    skill: 0
+    sourcePair:
+      attackerDriver: {fileID: 4717922242589655297, guid: 961df0e45e3d62f0cb55f1e0938e509b,
+        type: 3}
+      receiverDriver: {fileID: 7087485378780173824, guid: 5130e847f3a6a0dc88bddaccddac5962,
+        type: 3}
+      attack: {fileID: 7400000, guid: a56c5ae66a018d145b445cbf48c599cd, type: 3}
+      reaction: {fileID: 7400000, guid: ace62d913ecb84646a9d95d649c77378, type: 3}
+      reactions: {fileID: 0}
+      getUp: {fileID: 1827226128182048838, guid: f83ba830485ff2b46ba1d67ec650f1e0,
+        type: 3}
+      attackerGetUp: {fileID: 0}
+      recoveryGrounding: {fileID: 11400000, guid: 0e3315c06eebc2f62b838fffb249aca3,
+        type: 2}
+      recoveryBlendSeconds: 0.12
+      entryBlendSeconds: 0.12
+      constrainDepthAfterSpacing: 1
+      maximumAlignmentError: 0.15
+      receiverOffset: {x: 0, y: 0, z: 3.5}
+      receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+      spacing: {fileID: 0}
+      bodySpacing: 0
+      unarmedIndex: -1
+      pepeAttacks: 1
+      cameraKey: execution/2
+      showWeapon: 1
+      attackerWeaponPrefab: {fileID: 100000, guid: c42679b5f5373904cab203907d233f45,
+        type: 3}
+      attackerWeaponSocket: root/ik_hand_root/ik_hand_gun/ik_hand_r
+      reactionDelay: 0
+    grounding: {fileID: 11400000, guid: 0d41f65247565d20abe5bfa353311876, type: 2}
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
+  - moveName: Frank_GreatSword_Attack_Execution3
+    actionDefinition: {fileID: 11400000, guid: 030a243d218d01c5a8c0588e15695bf2, type: 2}
+    attackAnim: {fileID: 7400000, guid: 9e99703246e7cbc4197d85121ad0d07c, type: 3}
+    hitAnim: {fileID: 7400000, guid: 6c5dd4f4f7bf14d4ba40eadba2ef8cc1, type: 3}
+    getUpAnim: {fileID: 1827226128182048838, guid: f83ba830485ff2b46ba1d67ec650f1e0,
+      type: 3}
+    attackRange: 2.8
+    weapon: 2
+    skill: 0
+    sourcePair:
+      attackerDriver: {fileID: 4717922242589655297, guid: 961df0e45e3d62f0cb55f1e0938e509b,
+        type: 3}
+      receiverDriver: {fileID: 7087485378780173824, guid: 5130e847f3a6a0dc88bddaccddac5962,
+        type: 3}
+      attack: {fileID: 7400000, guid: 9e99703246e7cbc4197d85121ad0d07c, type: 3}
+      reaction: {fileID: 7400000, guid: 6c5dd4f4f7bf14d4ba40eadba2ef8cc1, type: 3}
+      reactions: {fileID: 0}
+      getUp: {fileID: 1827226128182048838, guid: f83ba830485ff2b46ba1d67ec650f1e0,
+        type: 3}
+      attackerGetUp: {fileID: 0}
+      recoveryGrounding: {fileID: 11400000, guid: 0e3315c06eebc2f62b838fffb249aca3,
+        type: 2}
+      recoveryBlendSeconds: 0.12
+      entryBlendSeconds: 0.12
+      constrainDepthAfterSpacing: 1
+      maximumAlignmentError: 0.15
+      receiverOffset: {x: 0, y: 0, z: 2.8}
+      receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+      spacing: {fileID: 0}
+      bodySpacing: 0
+      unarmedIndex: -1
+      pepeAttacks: 1
+      cameraKey: execution/3
+      showWeapon: 1
+      attackerWeaponPrefab: {fileID: 100000, guid: c42679b5f5373904cab203907d233f45,
+        type: 3}
+      attackerWeaponSocket: root/ik_hand_root/ik_hand_gun/ik_hand_r
+      reactionDelay: 0
+    grounding: {fileID: 11400000, guid: 5a1865786440346f4a37f398729966c2, type: 2}
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
   targetAttackClip: {fileID: 7400002, guid: fa94eee224779fd478087a0594d47928, type: 2}
   targetHitClip: {fileID: 7400003, guid: fa94eee224779fd478087a0594d47928, type: 2}
   targetGetUpClip: {fileID: 7400004, guid: fa94eee224779fd478087a0594d47928, type: 2}
@@ -65340,6 +65508,174 @@ MonoBehaviour:
       reactionDelay: 0
       receiverFloorLift: []
     grounding: {fileID: 0}
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
+  - moveName: Frank_GreatSword_Attack_Ambush
+    actionDefinition: {fileID: 11400000, guid: b0270c5f7a56dbda4b62a3e6533a41a4, type: 2}
+    attackAnim: {fileID: 7400000, guid: 610fba6d346a64f4583237c3ef4f7e46, type: 3}
+    hitAnim: {fileID: 7400000, guid: 59a3af1cef1d25a4aa16dd3a87e12f17, type: 3}
+    getUpAnim: {fileID: 1827226128182048838, guid: 157da7dff6b3b3148a29246060747ce5,
+      type: 3}
+    attackRange: 2
+    weapon: 2
+    skill: 0
+    sourcePair:
+      attackerDriver: {fileID: 4530680800506404388, guid: e104e0bb7fea7914cb9d6796f382eeb9,
+        type: 3}
+      receiverDriver: {fileID: 4173631401516890433, guid: bdc8a4cc17880f18a8da1ecfe26836af,
+        type: 3}
+      attack: {fileID: 7400000, guid: 610fba6d346a64f4583237c3ef4f7e46, type: 3}
+      reaction: {fileID: 7400000, guid: 59a3af1cef1d25a4aa16dd3a87e12f17, type: 3}
+      reactions: {fileID: 0}
+      getUp: {fileID: 1827226128182048838, guid: 157da7dff6b3b3148a29246060747ce5,
+        type: 3}
+      attackerGetUp: {fileID: 0}
+      recoveryGrounding: {fileID: 11400000, guid: 0d0aabc89bdf54140b86a011839e0d23,
+        type: 2}
+      recoveryBlendSeconds: 0.12
+      entryBlendSeconds: 0.12
+      constrainDepthAfterSpacing: 1
+      maximumAlignmentError: 0.15
+      receiverOffset: {x: 0, y: 0, z: 2}
+      receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+      spacing: {fileID: 0}
+      bodySpacing: 0
+      unarmedIndex: -1
+      pepeAttacks: 0
+      cameraKey: execution/0
+      showWeapon: 1
+      attackerWeaponPrefab: {fileID: 100000, guid: c42679b5f5373904cab203907d233f45,
+        type: 3}
+      attackerWeaponSocket: root/ik_hand_root/ik_hand_gun/ik_hand_r
+      reactionDelay: 0
+    grounding: {fileID: 11400000, guid: fef268d12ea0dad86ae1f6cbedfee525, type: 2}
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
+  - moveName: Frank_GreatSword_Attack_Execution1
+    actionDefinition: {fileID: 11400000, guid: 0b294293e53a3840bbf85344651687e3, type: 2}
+    attackAnim: {fileID: 7400000, guid: 139b0ae28ee0b4f4daa324a3b26584c3, type: 3}
+    hitAnim: {fileID: 7400000, guid: 8a8cfa30410d4de4eaeee65cbe422897, type: 3}
+    getUpAnim: {fileID: 1827226128182048838, guid: 157da7dff6b3b3148a29246060747ce5,
+      type: 3}
+    attackRange: 4
+    weapon: 2
+    skill: 0
+    sourcePair:
+      attackerDriver: {fileID: 4530680800506404388, guid: e104e0bb7fea7914cb9d6796f382eeb9,
+        type: 3}
+      receiverDriver: {fileID: 4173631401516890433, guid: bdc8a4cc17880f18a8da1ecfe26836af,
+        type: 3}
+      attack: {fileID: 7400000, guid: 139b0ae28ee0b4f4daa324a3b26584c3, type: 3}
+      reaction: {fileID: 7400000, guid: 8a8cfa30410d4de4eaeee65cbe422897, type: 3}
+      reactions: {fileID: 0}
+      getUp: {fileID: 1827226128182048838, guid: 157da7dff6b3b3148a29246060747ce5,
+        type: 3}
+      attackerGetUp: {fileID: 0}
+      recoveryGrounding: {fileID: 11400000, guid: 0d0aabc89bdf54140b86a011839e0d23,
+        type: 2}
+      recoveryBlendSeconds: 0.12
+      entryBlendSeconds: 0.12
+      constrainDepthAfterSpacing: 1
+      maximumAlignmentError: 0.15
+      receiverOffset: {x: 0, y: 0, z: 4}
+      receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+      spacing: {fileID: 0}
+      bodySpacing: 0
+      unarmedIndex: -1
+      pepeAttacks: 0
+      cameraKey: execution/1
+      showWeapon: 1
+      attackerWeaponPrefab: {fileID: 100000, guid: c42679b5f5373904cab203907d233f45,
+        type: 3}
+      attackerWeaponSocket: root/ik_hand_root/ik_hand_gun/ik_hand_r
+      reactionDelay: 0
+    grounding: {fileID: 11400000, guid: 6fcb043d896e4e4f4b56d7b733085564, type: 2}
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
+  - moveName: Frank_GreatSword_Attack_Execution2
+    actionDefinition: {fileID: 11400000, guid: eee002ad6b9d0c8d9abc7ca118eeefa7, type: 2}
+    attackAnim: {fileID: 7400000, guid: a56c5ae66a018d145b445cbf48c599cd, type: 3}
+    hitAnim: {fileID: 7400000, guid: ace62d913ecb84646a9d95d649c77378, type: 3}
+    getUpAnim: {fileID: 1827226128182048838, guid: f83ba830485ff2b46ba1d67ec650f1e0,
+      type: 3}
+    attackRange: 3.5
+    weapon: 2
+    skill: 0
+    sourcePair:
+      attackerDriver: {fileID: 4530680800506404388, guid: e104e0bb7fea7914cb9d6796f382eeb9,
+        type: 3}
+      receiverDriver: {fileID: 4173631401516890433, guid: bdc8a4cc17880f18a8da1ecfe26836af,
+        type: 3}
+      attack: {fileID: 7400000, guid: a56c5ae66a018d145b445cbf48c599cd, type: 3}
+      reaction: {fileID: 7400000, guid: ace62d913ecb84646a9d95d649c77378, type: 3}
+      reactions: {fileID: 0}
+      getUp: {fileID: 1827226128182048838, guid: f83ba830485ff2b46ba1d67ec650f1e0,
+        type: 3}
+      attackerGetUp: {fileID: 0}
+      recoveryGrounding: {fileID: 11400000, guid: 0e3315c06eebc2f62b838fffb249aca3,
+        type: 2}
+      recoveryBlendSeconds: 0.12
+      entryBlendSeconds: 0.12
+      constrainDepthAfterSpacing: 1
+      maximumAlignmentError: 0.15
+      receiverOffset: {x: 0, y: 0, z: 3.5}
+      receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+      spacing: {fileID: 0}
+      bodySpacing: 0
+      unarmedIndex: -1
+      pepeAttacks: 0
+      cameraKey: execution/2
+      showWeapon: 1
+      attackerWeaponPrefab: {fileID: 100000, guid: c42679b5f5373904cab203907d233f45,
+        type: 3}
+      attackerWeaponSocket: root/ik_hand_root/ik_hand_gun/ik_hand_r
+      reactionDelay: 0
+    grounding: {fileID: 11400000, guid: 0d41f65247565d20abe5bfa353311876, type: 2}
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
+  - moveName: Frank_GreatSword_Attack_Execution3
+    actionDefinition: {fileID: 11400000, guid: 030a243d218d01c5a8c0588e15695bf2, type: 2}
+    attackAnim: {fileID: 7400000, guid: 9e99703246e7cbc4197d85121ad0d07c, type: 3}
+    hitAnim: {fileID: 7400000, guid: 6c5dd4f4f7bf14d4ba40eadba2ef8cc1, type: 3}
+    getUpAnim: {fileID: 1827226128182048838, guid: f83ba830485ff2b46ba1d67ec650f1e0,
+      type: 3}
+    attackRange: 2.8
+    weapon: 2
+    skill: 0
+    sourcePair:
+      attackerDriver: {fileID: 4530680800506404388, guid: e104e0bb7fea7914cb9d6796f382eeb9,
+        type: 3}
+      receiverDriver: {fileID: 4173631401516890433, guid: bdc8a4cc17880f18a8da1ecfe26836af,
+        type: 3}
+      attack: {fileID: 7400000, guid: 9e99703246e7cbc4197d85121ad0d07c, type: 3}
+      reaction: {fileID: 7400000, guid: 6c5dd4f4f7bf14d4ba40eadba2ef8cc1, type: 3}
+      reactions: {fileID: 0}
+      getUp: {fileID: 1827226128182048838, guid: f83ba830485ff2b46ba1d67ec650f1e0,
+        type: 3}
+      attackerGetUp: {fileID: 0}
+      recoveryGrounding: {fileID: 11400000, guid: 0e3315c06eebc2f62b838fffb249aca3,
+        type: 2}
+      recoveryBlendSeconds: 0.12
+      entryBlendSeconds: 0.12
+      constrainDepthAfterSpacing: 1
+      maximumAlignmentError: 0.15
+      receiverOffset: {x: 0, y: 0, z: 2.8}
+      receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+      spacing: {fileID: 0}
+      bodySpacing: 0
+      unarmedIndex: -1
+      pepeAttacks: 0
+      cameraKey: execution/3
+      showWeapon: 1
+      attackerWeaponPrefab: {fileID: 100000, guid: c42679b5f5373904cab203907d233f45,
+        type: 3}
+      attackerWeaponSocket: root/ik_hand_root/ik_hand_gun/ik_hand_r
+      reactionDelay: 0
+    grounding: {fileID: 11400000, guid: 5a1865786440346f4a37f398729966c2, type: 2}
     grapple: {fileID: 0}
     grappleOutcome: 0
     requiresExplicitSelection: 0

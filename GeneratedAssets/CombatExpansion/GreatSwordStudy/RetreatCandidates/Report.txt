@@ -1,0 +1,35 @@
+Native GreatSword retreat candidate study on actual BattleScene avatars.
+Each sheet: grounded Ambush terminal reference, candidate beginning, middle, last native sample.
+Candidate seconds advance at native speed; trajectories sample at 60 Hz plus exact middle/end.
+Candidates retain the original Ambush actor origin and rotation, not terminal hips alignment.
+No candidate offsets, entry blend, grounding correction, depth lock, or gameplay motion added.
+Entry jumps therefore include authored origin differences; these are not proposed transitions.
+Receiver stays frozen in grounded Ambush terminal pose. Camera reframes each image.
+Last sample is length minus 0.00001 seconds, matching native driver endpoint clamp.
+SOURCE path=Assets/GreatSword_Animset/Animation/Root/Movement/GreatSword_Strafe_Walk_B_Start.FBX; clip=Take 001; guid=12987da400bbe864aae42fdf303bc647; fileID=7400000; length=0.266666681s; frameRate=30; looping=False; rig=Generic; motionNode=
+SOURCE path=Assets/GreatSword_Animset/Animation/Root/Movement/GreatSword_Strafe_Walk_B.FBX; clip=Take 001; guid=d8eef487502ecf845ba50b31ca1b2aa6; fileID=7400000; length=1.13333356s; frameRate=30; looping=False; rig=Generic; motionNode=
+SOURCE path=Assets/GreatSword_Animset/Animation/Root/Movement/GreatSword_Strafe_Walk_B_End.FBX; clip=Take 001; guid=ed2751f54f474b74397a144408a8fe03; fileID=7400000; length=0.833333254s; frameRate=30; looping=False; rig=Generic; motionNode=
+REFERENCE fighter=Mankey; direction=1; grounding=Assets/CombatExpansion/Actions/Frank_GreatSword_Attack_Ambush_Grounding.asset
+SOURCE path=Assets/GreatSword_Animset/Animation/Execution_Sample/GreatSword_Attack_Ambush.FBX; clip=GreatSword_Attack_Ambush; guid=610fba6d346a64f4583237c3ef4f7e46; fileID=7400000; length=2.50000024s; frameRate=120; looping=True; rig=Generic; motionNode=
+SOURCE path=Assets/GreatSword_Animset/Animation/Execution_Sample/GreatSword_Attack_Ambushed.FBX; clip=GreatSword_Attack_Ambushed; guid=59a3af1cef1d25a4aa16dd3a87e12f17; fileID=7400000; length=2.50000024s; frameRate=120; looping=True; rig=Generic; motionNode=
+Mankey_1_GreatSword_Strafe_Walk_B_Start: Ambush=2.50000024s; candidate=0,0.133328333,0.266656667s; hipsBackward=0.4200758m; rootBackward=0.420076162m; driver=Assets/DemoSence/GreatSwordExecution/Drivers/Mankey_GreatSword_Attack.prefab
+Mankey_1_GreatSword_Strafe_Walk_B: Ambush=2.50000024s; candidate=0,0.5666618,1.13332355s; hipsBackward=1.7307874m; rootBackward=1.7307868m; driver=Assets/DemoSence/GreatSwordExecution/Drivers/Mankey_GreatSword_Attack.prefab
+Mankey_1_GreatSword_Strafe_Walk_B_End: Ambush=2.50000024s; candidate=0,0.41666162,0.83332324s; hipsBackward=0.5237264m; rootBackward=0.523726642m; driver=Assets/DemoSence/GreatSwordExecution/Drivers/Mankey_GreatSword_Attack.prefab
+REFERENCE fighter=Mankey; direction=-1; grounding=Assets/CombatExpansion/Actions/Frank_GreatSword_Attack_Ambush_Grounding.asset
+SOURCE path=Assets/GreatSword_Animset/Animation/Execution_Sample/GreatSword_Attack_Ambush.FBX; clip=GreatSword_Attack_Ambush; guid=610fba6d346a64f4583237c3ef4f7e46; fileID=7400000; length=2.50000024s; frameRate=120; looping=True; rig=Generic; motionNode=
+SOURCE path=Assets/GreatSword_Animset/Animation/Execution_Sample/GreatSword_Attack_Ambushed.FBX; clip=GreatSword_Attack_Ambushed; guid=59a3af1cef1d25a4aa16dd3a87e12f17; fileID=7400000; length=2.50000024s; frameRate=120; looping=True; rig=Generic; motionNode=
+Mankey_-1_GreatSword_Strafe_Walk_B_Start: Ambush=2.50000024s; candidate=0,0.133328333,0.266656667s; hipsBackward=0.420075834m; rootBackward=0.4200762m; driver=Assets/DemoSence/GreatSwordExecution/Drivers/Mankey_GreatSword_Attack.prefab
+Mankey_-1_GreatSword_Strafe_Walk_B: Ambush=2.50000024s; candidate=0,0.5666618,1.13332355s; hipsBackward=1.7307874m; rootBackward=1.7307868m; driver=Assets/DemoSence/GreatSwordExecution/Drivers/Mankey_GreatSword_Attack.prefab
+Mankey_-1_GreatSword_Strafe_Walk_B_End: Ambush=2.50000024s; candidate=0,0.41666162,0.83332324s; hipsBackward=0.5237264m; rootBackward=0.523726642m; driver=Assets/DemoSence/GreatSwordExecution/Drivers/Mankey_GreatSword_Attack.prefab
+REFERENCE fighter=Pepe; direction=1; grounding=Assets/CombatExpansion/Actions/Frank_GreatSword_Attack_Ambush_Grounding.asset
+SOURCE path=Assets/GreatSword_Animset/Animation/Execution_Sample/GreatSword_Attack_Ambush.FBX; clip=GreatSword_Attack_Ambush; guid=610fba6d346a64f4583237c3ef4f7e46; fileID=7400000; length=2.50000024s; frameRate=120; looping=True; rig=Generic; motionNode=
+SOURCE path=Assets/GreatSword_Animset/Animation/Execution_Sample/GreatSword_Attack_Ambushed.FBX; clip=GreatSword_Attack_Ambushed; guid=59a3af1cef1d25a4aa16dd3a87e12f17; fileID=7400000; length=2.50000024s; frameRate=120; looping=True; rig=Generic; motionNode=
+Pepe_1_GreatSword_Strafe_Walk_B_Start: Ambush=2.50000024s; candidate=0,0.133328333,0.266656667s; hipsBackward=0.453001767m; rootBackward=0.453002244m; driver=Assets/DemoSence/GreatSwordExecution/Drivers/Pepe_GreatSword_Attack.prefab
+Pepe_1_GreatSword_Strafe_Walk_B: Ambush=2.50000024s; candidate=0,0.5666618,1.13332355s; hipsBackward=1.86644852m; rootBackward=1.86644769m; driver=Assets/DemoSence/GreatSwordExecution/Drivers/Pepe_GreatSword_Attack.prefab
+Pepe_1_GreatSword_Strafe_Walk_B_End: Ambush=2.50000024s; candidate=0,0.41666162,0.83332324s; hipsBackward=0.564776838m; rootBackward=0.564776838m; driver=Assets/DemoSence/GreatSwordExecution/Drivers/Pepe_GreatSword_Attack.prefab
+REFERENCE fighter=Pepe; direction=-1; grounding=Assets/CombatExpansion/Actions/Frank_GreatSword_Attack_Ambush_Grounding.asset
+SOURCE path=Assets/GreatSword_Animset/Animation/Execution_Sample/GreatSword_Attack_Ambush.FBX; clip=GreatSword_Attack_Ambush; guid=610fba6d346a64f4583237c3ef4f7e46; fileID=7400000; length=2.50000024s; frameRate=120; looping=True; rig=Generic; motionNode=
+SOURCE path=Assets/GreatSword_Animset/Animation/Execution_Sample/GreatSword_Attack_Ambushed.FBX; clip=GreatSword_Attack_Ambushed; guid=59a3af1cef1d25a4aa16dd3a87e12f17; fileID=7400000; length=2.50000024s; frameRate=120; looping=True; rig=Generic; motionNode=
+Pepe_-1_GreatSword_Strafe_Walk_B_Start: Ambush=2.50000024s; candidate=0,0.133328333,0.266656667s; hipsBackward=0.4530018m; rootBackward=0.453002274m; driver=Assets/DemoSence/GreatSwordExecution/Drivers/Pepe_GreatSword_Attack.prefab
+Pepe_-1_GreatSword_Strafe_Walk_B: Ambush=2.50000024s; candidate=0,0.5666618,1.13332355s; hipsBackward=1.86644852m; rootBackward=1.86644769m; driver=Assets/DemoSence/GreatSwordExecution/Drivers/Pepe_GreatSword_Attack.prefab
+Pepe_-1_GreatSword_Strafe_Walk_B_End: Ambush=2.50000024s; candidate=0,0.41666162,0.83332324s; hipsBackward=0.564776838m; rootBackward=0.564776838m; driver=Assets/DemoSence/GreatSwordExecution/Drivers/Pepe_GreatSword_Attack.prefab
