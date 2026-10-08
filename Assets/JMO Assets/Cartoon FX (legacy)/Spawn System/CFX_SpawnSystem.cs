@@ -1,6 +1,11 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+#if UNITY_6000_5_OR_NEWER
+using PoolObjectId = UnityEngine.EntityId;
+#else
+using PoolObjectId = System.Int32;
+#endif
 
 // Cartoon FX  - (c) 2012-2016 Jean Moreno
 
@@ -24,7 +29,7 @@ public class CFX_SpawnSystem : MonoBehaviour
 	/// </param>
 	static public GameObject GetNextObject(GameObject sourceObj, bool activateObject = true)
 	{
-		int uniqueId = sourceObj.GetInstanceID();
+		PoolObjectId uniqueId = GetPoolObjectId(sourceObj);
 		
 		if(!instance.poolCursors.ContainsKey(uniqueId))
 		{
@@ -128,12 +133,22 @@ public class CFX_SpawnSystem : MonoBehaviour
 	public bool instantiateIfNeeded = false;
 	
 	private bool allObjectsLoaded;
-	private Dictionary<int,List<GameObject>> instantiatedObjects = new Dictionary<int, List<GameObject>>();
-	private Dictionary<int,int> poolCursors = new Dictionary<int, int>();
+	private Dictionary<PoolObjectId, List<GameObject>> instantiatedObjects =
+		new Dictionary<PoolObjectId, List<GameObject>>();
+	private Dictionary<PoolObjectId, int> poolCursors = new Dictionary<PoolObjectId, int>();
+
+	private static PoolObjectId GetPoolObjectId(GameObject sourceObject)
+	{
+#if UNITY_6000_5_OR_NEWER
+		return sourceObject.GetEntityId();
+#else
+		return sourceObject.GetInstanceID();
+#endif
+	}
 	
 	private void addObjectToPool(GameObject sourceObject, int number)
 	{
-		int uniqueId = sourceObject.GetInstanceID();
+		PoolObjectId uniqueId = GetPoolObjectId(sourceObject);
 
 		//Add new entry if it doesn't exist
 		if(!instantiatedObjects.ContainsKey(uniqueId))
@@ -174,7 +189,7 @@ public class CFX_SpawnSystem : MonoBehaviour
 	
 	private void removeObjectsFromPool(GameObject sourceObject)
 	{
-		int uniqueId = sourceObject.GetInstanceID();
+		PoolObjectId uniqueId = GetPoolObjectId(sourceObject);
 		
 		if(!instantiatedObjects.ContainsKey(uniqueId))
 		{
@@ -195,7 +210,7 @@ public class CFX_SpawnSystem : MonoBehaviour
 		poolCursors.Remove(uniqueId);
 	}
 
-	private void increasePoolCursor(int uniqueId)
+	private void increasePoolCursor(PoolObjectId uniqueId)
 	{
 		instance.poolCursors[uniqueId]++;
 		if(instance.poolCursors[uniqueId] >= instance.instantiatedObjects[uniqueId].Count)
