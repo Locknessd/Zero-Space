@@ -28,7 +28,7 @@ namespace FrankRetarget.Editor
             foreach (var cue in profile.cues)
             {
                 Require(cue != null && float.IsFinite(cue.seconds) && cue.seconds >= previous &&
-                    cue.seconds >= 0 && cue.seconds <= move.sourcePair.attack.length,
+                    cue.seconds >= 0 && cue.seconds <= Mathf.Max(move.sourcePair.attack.length, move.sourcePair.reaction.length),
                     "Presentation cue schedule is invalid or unsorted.");
                 previous = cue.seconds;
             }
@@ -66,6 +66,8 @@ namespace FrankRetarget.Editor
                     }
                 }
             }
+            if (Samurai)
+                ValidateSamuraiProfile(profile);
             expectSurface = target.GetComponentsInChildren<Renderer>(true).Any(renderer =>
                 renderer.sharedMaterials.Any(material => material && material.HasProperty(HitFlashId))) &&
                 feedback.surfaceFlashStrength > 0 && feedback.flashScale > 0;
@@ -81,7 +83,8 @@ namespace FrankRetarget.Editor
                 return;
             try
             {
-                Require(activeCase && !Guard && !Interrupt, "Rejected or interrupted action emitted a late contact.");
+                Require(activeCase && !Guard && !Interrupt && !LifecycleCancelled,
+                    "Rejected or interrupted action emitted a late contact.");
                 contacts++;
                 Require(impact.playback == pair && impact.move == move &&
                     impact.attacker == source && impact.receiver == target, "Wrong contact actor ownership.");
@@ -100,11 +103,13 @@ namespace FrankRetarget.Editor
                 }
                 else if (impact.kind == BattleVfxPlayer.ContactKind.Ground)
                 {
-                    var hips = target.Animator.GetBoneTransform(HumanBodyBones.Hips).position;
-                    hips.y = game.battleVfx.groundHeight + .035f;
-                    Require(Vector3.Distance(impact.position, hips) < .001f, "Landing is detached from receiver hips.");
+                    Vector3 landing = impact.cue.TryContactPosition(target.Animator, out var anchor)
+                        ? anchor : target.Animator.GetBoneTransform(HumanBodyBones.Hips).position;
+                    landing.y = game.battleVfx.groundHeight + .035f;
+                    Require(Vector3.Distance(impact.position, landing) < .001f,
+                        "Landing is detached from its authored receiver anchor or hips fallback.");
                 }
-                if (GreatSword)
+                if (NativeSword)
                 {
                     Require(Primary(impact.cue) ? impact.kind != BattleVfxPlayer.ContactKind.Ground :
                         impact.kind == BattleVfxPlayer.ContactKind.Ground && !impact.cue.damageOnLanding,
@@ -112,6 +117,7 @@ namespace FrankRetarget.Editor
                     bool finalStrike = impact.cue == expectedCues.Where(Primary).Last();
                     Require(impact.finishing == (Lethal && finalStrike), "Incorrect accepted-lethal finishing contact.");
                 }
+                CaptureSamuraiContact();
                 ObservePresentation();
             }
             catch (Exception error)

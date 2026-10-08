@@ -13,15 +13,21 @@ namespace FrankRetarget.Editor
 {
     public static partial class CombatExpansionGreatSwordPlayCheck
     {
-        static readonly string[] Actions =
+        static readonly string[] GreatSwordActions =
         {
             "Light_1", "Frank_GreatSword_Attack_Ambush", "Frank_GreatSword_Attack_Execution1",
             "Frank_GreatSword_Attack_Execution2", "Frank_GreatSword_Attack_Execution3", "Heavy_6"
         };
-        const string ReportPath = "GeneratedAssets/CombatExpansion/GreatSwordPlayMode.txt";
-        const int GuardCases = 16;
-        const int QueueCases = 24;
-        const int TotalCases = 48;
+        static readonly string[] SamuraiActions = { "Light_1", "Samurai_Execution01", "Heavy_6" };
+        static bool samuraiSuite;
+        static string[] Actions => samuraiSuite ? SamuraiActions : GreatSwordActions;
+        static string ReportPath => samuraiSuite
+            ? "GeneratedAssets/CombatExpansion/SamuraiStudy/PlayMode/Report.txt"
+            : "GeneratedAssets/CombatExpansion/GreatSwordPlayMode.txt";
+        static int GuardCases => samuraiSuite ? 4 : 16;
+        static int QueueCases => Actions.Length * 4;
+        static int BasicCases => GuardCases + QueueCases + 8;
+        static int TotalCases => BasicCases + (samuraiSuite ? 16 : 0);
         static readonly StringBuilder report = new StringBuilder();
         static readonly HashSet<ulong> contactIds = new HashSet<ulong>();
         static GameManager game;
@@ -42,20 +48,31 @@ namespace FrankRetarget.Editor
         static string failure, action;
         static bool Guard => step < GuardCases;
         static bool Queued => step >= GuardCases && step < GuardCases + QueueCases;
-        static bool Lethal => step >= 40 && step < 44;
-        static bool Interrupt => step >= 44;
+        static bool Lethal => step >= GuardCases + QueueCases && step < GuardCases + QueueCases + 4;
+        static bool Interrupt => step >= GuardCases + QueueCases + 4 && step < BasicCases;
         static bool GreatSword => action != null && action.StartsWith("Frank_GreatSword_", StringComparison.Ordinal);
-        static int Orientation => Guard ? step / 4 : Queued ? (step - GuardCases) / Actions.Length : step % 4;
-        static string Scenario => Guard ? "range guard" : Queued ? "queued" : Lethal ? "lethal" : "source interrupt";
+        static int Orientation => Guard ? step / (samuraiSuite ? 1 : 4) :
+            Queued ? (step - GuardCases) / Actions.Length : step % 4;
+        static string Scenario => Lifecycle ? LifecycleScenario : Guard ? "range guard" :
+            Queued ? "queued" : Lethal ? "lethal" : "source interrupt";
         static double Now => EditorApplication.timeSinceStartup;
 
-        public static void Begin()
+        public static void Begin() => Begin(false);
+        public static void BeginSamurai() => Begin(true);
+
+        static void Begin(bool samurai)
         {
             if (!EditorApplication.isPlaying || running)
                 throw new InvalidOperationException("Begin once in isolated BattleScene Play Mode.");
+            samuraiSuite = samurai;
             report.Clear();
-            report.AppendLine("RUNNING: 16 range guards; 24 queued old-new-old; 4 accepted lethal; 4 source interrupts.");
-            report.AppendLine("Each queue orientation runs Light_1, all four registered GreatSword actions, Heavy_6.");
+            ResetSamuraiSuite();
+            report.AppendLine($"RUNNING: {GuardCases} range guards; {QueueCases} queued old-new-old; " +
+                "4 accepted lethal; 4 source interrupts.");
+            if (samuraiSuite)
+                report.AppendLine("Extension: 4 reset after contact; 4 receiver disable after contact; " +
+                    "4 prone pause/resume; 4 repeated pairs of queued Samurai activations (44 plays total).");
+            report.AppendLine("Each queue orientation runs " + string.Join(", ", Actions) + ".");
             report.AppendLine("Visual contact choreography and subjective quality require separate visual review.");
             saved = false;
             step = 0;
@@ -159,6 +176,7 @@ namespace FrankRetarget.Editor
                         StartCase();
                     return;
                 }
+                MeasureSamuraiFrame();
                 if (!Guard)
                 {
                     ObservePresentation();
@@ -166,6 +184,8 @@ namespace FrankRetarget.Editor
                         return;
                     CheckOwnership();
                     ObserveRecovery();
+                    ObserveSamuraiEvidence();
+                    ApplySamuraiLifecycle();
                     if (Interrupt && pair.Playing && !interrupted)
                     {
                         Require(!pair.IsRecovering && contacts == 0 && pair.SampleTime < expectedCues[0].seconds,
@@ -184,10 +204,12 @@ namespace FrankRetarget.Editor
                 }
                 if (settledAt == 0)
                     settledAt = Now;
-                double quietSeconds = Interrupt ? Math.Max(.65, move.sourcePair.attack.length + .25) : .65;
+                double quietSeconds = Interrupt || LifecycleCancelled
+                    ? Math.Max(.65, move.sourcePair.attack.length + .25) : .65;
                 if (Now - settledAt < quietSeconds)
                     return;
                 CheckCompletion();
+                CheckSamuraiCompletion();
                 report.AppendLine($"PASS case={step + 1}/{TotalCases} scenario={Scenario} action={action} " +
                     $"source={source.name} avatar={source.Animator.avatar.name} direction={Direction} " +
                     $"contacts={contacts} starts={starts} callbacks={sourceEnded}/{targetEnded} " +
@@ -200,7 +222,8 @@ namespace FrankRetarget.Editor
                 activeCase = false;
                 if (Lethal)
                     ResetLethalCase();
-                step++;
+                if (CompleteSamuraiPlay())
+                    step++;
                 Write();
             }
             catch (Exception error)
@@ -236,6 +259,7 @@ namespace FrankRetarget.Editor
             {
                 try
                 {
+                        RestoreSamuraiLifecycle();
                     RestoreState();
                 }
                 catch (Exception cleanup)

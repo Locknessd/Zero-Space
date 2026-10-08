@@ -9,7 +9,9 @@ namespace FrankRetarget.Editor
     {
         static void CheckOwnership()
         {
-            Require(pair && pair.Move == move && source.PlaybackId == sourceId && target.PlaybackId == targetId,
+            bool reset = LifecycleReset && LifecycleCancelled;
+            Require(pair && pair.Move == move && (reset ||
+                source.PlaybackId == sourceId && target.PlaybackId == targetId),
                 "Move or participant identity changed within source playback.");
             Require(pair.SampleTime + .00001f >= previousSample, "Source clock moved backwards.");
             previousSample = pair.SampleTime;
@@ -28,7 +30,7 @@ namespace FrankRetarget.Editor
             Require(source.SourcePlayback == pair && target.SourcePlayback == pair && source.IsBusy && target.IsBusy,
                 "Shared ownership released a participant early.");
             Require(sourceEnded == 0 && targetEnded == 0, "Participant completed before shared pair release.");
-            if (Queued)
+            if (QueuePlayback)
                 Require(game.IsEventQueueBusy, "Ordinary queue completed while source pair remained active.");
             foreach (var manager in equipment)
             {
@@ -51,7 +53,7 @@ namespace FrankRetarget.Editor
                         "trails=" + string.Join(",", root.GetComponentsInChildren<TrailRenderer>(false).Select(t =>
                             t.name + ":emitting=" + t.emitting + ":active=" + t.gameObject.activeInHierarchy)) + ".");
             }
-            if (!GreatSword || pair.IsRecovering)
+            if (!NativeSword || pair.IsRecovering)
                 return;
             Require(pair.AttackerActor && pair.ReceiverActor && pair.AttackerActor.Pose != null &&
                 pair.ReceiverActor.Pose != null, "GreatSword source actor ownership is incomplete.");
@@ -73,7 +75,7 @@ namespace FrankRetarget.Editor
             if (!pair || !pair.IsRecovering)
                 return;
             ObserveGetUp();
-            if (GreatSword)
+            if (NativeSword)
                 Require(!source.Animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.GetUp"),
                     "GreatSword attacker incorrectly entered receiver-only GetUp.");
             if (Lethal)
@@ -109,9 +111,10 @@ namespace FrankRetarget.Editor
             Require(!camera || !camera.IsFocusingAttack, "Gameplay camera retained attack focus.");
             Require(!source.IsBusy && !target.IsBusy && source.Animator.enabled &&
                 (Lethal || target.Animator.enabled), "Participant busy or animator ownership failed cleanup.");
-            Require(source.PlaybackId == sourceId && target.PlaybackId == targetId,
+            Require(LifecycleReset && LifecycleCancelled ||
+                source.PlaybackId == sourceId && target.PlaybackId == targetId,
                 "Completion changed participant identities.");
-            CheckEquipmentRestored(Lethal);
+            CheckEquipmentRestored(Lethal || LifecycleDisable);
             if (Guard)
             {
                 Require(starts == 0 && contacts == 0 && sourceEnded == 0 && targetEnded == 0 &&
@@ -129,8 +132,13 @@ namespace FrankRetarget.Editor
                 nativeBefore + (Lethal ? 1 : 0), "Unexpected source actor leak.");
             if (!Lethal)
                 Require(ownedObjects.All(item => !item), "Source actor, driver, prop or trail survived completion.");
-            if (GreatSword)
+            if (NativeSword)
                 Require(sawSourceSword, "No real frame displayed the owned attacker source sword.");
+            if (LifecycleCancelled)
+            {
+                CheckSamuraiCancellation();
+                return;
+            }
             if (Interrupt)
             {
                 Require(interrupted && contacts == 0 && observedCues.Count == 0 && !targetRecovered &&
@@ -149,7 +157,7 @@ namespace FrankRetarget.Editor
             if (Lethal)
                 Require(target.IsDead && !targetRecovered && target.SourcePlayback == pair,
                     "Accepted lethal victim lost owned terminal hold or recovered.");
-            else if (GreatSword)
+            else if (NativeSword)
                 Require(targetRecovered && recoveryFrames > 1 && targetRecoveryProgress >= .9f && target.IsIdleAndSettled,
                     "Survivor GetUp did not visibly progress to completion and return to idle.");
             else

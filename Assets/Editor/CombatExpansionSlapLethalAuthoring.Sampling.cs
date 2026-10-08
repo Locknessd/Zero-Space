@@ -17,7 +17,10 @@ namespace FrankRetarget.Editor
             public float time, scale;
             public Vector3 body, root;
             public Quaternion bodyRotation, rootRotation;
-            public float[] muscles;
+            public float[] muscles, streamMuscles;
+            public string[] boneNames;
+            public Vector3[] localBones;
+            public Quaternion[] localRotations;
             public Vector3[] bones;
             public Quaternion[] rotations;
         }
@@ -29,13 +32,15 @@ namespace FrankRetarget.Editor
             readonly AnimationClip clip;
             readonly HumanPoseHandler handler;
             readonly Transform[] transforms, bones;
+            readonly string[] boneNames;
+            readonly MuscleStreamCapture streamCapture;
             readonly Vector3[] positions, scales;
             readonly Quaternion[] rotations;
             PlayableGraph graph;
             HumanPose pose;
             float clock;
 
-            public PoseSampler(Scene scene, string rigPath, AnimationClip source)
+            public PoseSampler(Scene scene, string rigPath, AnimationClip source, bool captureMuscles = false)
             {
                 try
                 {
@@ -61,8 +66,13 @@ namespace FrankRetarget.Editor
                     positions = transforms.Select(t => t.localPosition).ToArray();
                     rotations = transforms.Select(t => t.localRotation).ToArray();
                     scales = transforms.Select(t => t.localScale).ToArray();
-                    bones = Enumerable.Range(0, (int)HumanBodyBones.LastBone)
-                        .Select(i => animator.GetBoneTransform((HumanBodyBones)i)).Where(t => t).ToArray();
+                    var mapped = Enumerable.Range(0, (int)HumanBodyBones.LastBone)
+                        .Where(i => animator.GetBoneTransform((HumanBodyBones)i)).ToArray();
+                    bones = mapped.Select(i => animator.GetBoneTransform((HumanBodyBones)i)).ToArray();
+                    boneNames = mapped.Select((id, i) => ((HumanBodyBones)id) + ":" +
+                        AnimationUtility.CalculateTransformPath(bones[i], animator.transform)).ToArray();
+                    if (captureMuscles)
+                        streamCapture = new MuscleStreamCapture();
                     clip = Object.Instantiate(source);
                     clip.hideFlags = HideFlags.HideAndDontSave;
                     var settings = AnimationUtility.GetAnimationClipSettings(clip);
@@ -97,7 +107,10 @@ namespace FrankRetarget.Editor
                 playable.SetApplyFootIK(false);
                 playable.SetApplyPlayableIK(false);
                 var output = AnimationPlayableOutput.Create(graph, "Humanoid source", animator);
-                output.SetSourcePlayable(playable);
+                if (streamCapture == null)
+                    output.SetSourcePlayable(playable);
+                else
+                    output.SetSourcePlayable(streamCapture.Connect(graph, playable));
                 graph.Play();
                 graph.Evaluate(0);
                 clock = 0;
@@ -114,6 +127,20 @@ namespace FrankRetarget.Editor
                     graph.Evaluate(next - clock);
                     clock = next;
                 }
+                return ReadPose(seconds);
+            }
+
+            public MeasuredPose InverseRoundtrip(float seconds)
+            {
+                At(seconds);
+                handler.SetHumanPose(ref pose);
+                var result = ReadPose(seconds);
+                Reset();
+                return result;
+            }
+
+            MeasuredPose ReadPose(float seconds)
+            {
                 handler.GetHumanPose(ref pose);
                 var result = new MeasuredPose
                 {
@@ -126,6 +153,10 @@ namespace FrankRetarget.Editor
                     root = animator.transform.position,
                     rootRotation = animator.transform.rotation,
                     muscles = (float[])pose.muscles.Clone(),
+                    streamMuscles = streamCapture?.Read(),
+                    boneNames = boneNames,
+                    localBones = bones.Select(b => b.localPosition).ToArray(),
+                    localRotations = bones.Select(b => b.localRotation).ToArray(),
                     bones = bones.Select(b => b.position).ToArray(),
                     rotations = bones.Select(b => b.rotation).ToArray()
                 };
@@ -137,6 +168,7 @@ namespace FrankRetarget.Editor
             {
                 if (graph.IsValid())
                     graph.Destroy();
+                streamCapture?.Dispose();
                 handler?.Dispose();
                 if (clip)
                     Object.DestroyImmediate(clip);
@@ -149,6 +181,7 @@ namespace FrankRetarget.Editor
         {
             if (!float.IsFinite(pose.scale) || pose.scale <= 0 || !Finite(pose.body) || !Finite(pose.root) ||
                 !Finite(pose.bodyRotation) || !Finite(pose.rootRotation) ||
+                (pose.streamMuscles != null && pose.streamMuscles.Any(v => !float.IsFinite(v))) ||
                 pose.muscles.Any(v => !float.IsFinite(v)) || pose.bones.Any(v => !Finite(v)) ||
                 pose.rotations.Any(v => !Finite(v)))
                 throw new InvalidOperationException("Nonfinite empirically sampled Humanoid pose at " + pose.time);

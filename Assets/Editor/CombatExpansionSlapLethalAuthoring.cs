@@ -50,6 +50,7 @@ namespace FrankRetarget.Editor
             var report = new StringBuilder();
             var candidates = new List<AnimationClip>();
             Directory.CreateDirectory(Output);
+            ArchivePreviousProvenance();
             Exception failure = null;
             try
             {

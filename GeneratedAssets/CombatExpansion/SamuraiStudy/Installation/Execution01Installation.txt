@@ -1,0 +1,28 @@
+Samurai Execution01 installation; Play Mode acceptance pending.
+Evidence=GeneratedAssets/CombatExpansion/SamuraiStudy/BladeContacts/ContactAuthoring/Report.json; utc=2026-10-08T18:09:44.8552570Z
+Source=Mankey; target=Pepe; attack=3e685dd57e9c78b49b20bef3e8358ae3:7400002; reaction=b01b411d366a5a344bddf3428a7bc8f7:7400002; attackerAvatar=59dc3f26824c72872aa4cf6baeec671e:9000000; victimAvatar=757d9d3f1766533aa895e81a07aa5197:9000000
+Drivers=224e94b27f72de65aa8403d8a294fde0:2627981156790044268; 22b682ea72ad141548c935b490a1b6ba:5840121589346898076
+Grounding=Assets/CombatExpansion/SamuraiStudy/Grounding/Samurai_Execution01_Grounding.asset; 3e9468be3cf45ed178f6ffec095afaa3:11400000
+Recovery=157da7dff6b3b3148a29246060747ce5:1827226128182048838; grounding=Assets/CombatExpansion/Actions/Frank_GreatSword_ProneRecovery_Grounding.asset; blend=0.12s; native duration=3.1666667s.
+Contact victim=Pepe direction=1 time=0.395833343 bone=UpperChest source=Weapon; corrected relative velocity and stored selected-bone anchor validated.
+Contact victim=Pepe direction=1 time=2.0333333 bone=LeftShoulder source=Weapon; corrected relative velocity and stored selected-bone anchor validated.
+Landing victim=Pepe direction=1 time=2.66666675 supportY=0.0104815485 bone=LeftUpperArm local=(-0.104713544,3.15090871,-0.300734878) mesh=757d9d3f1766533aa895e81a07aa5197:-462981019419857548 renderer=Plane triangle=10813 vertex=6153; non-damaging, finalLanding.
+Contact victim=Pepe direction=-1 time=0.395833343 bone=UpperChest source=Weapon; corrected relative velocity and stored selected-bone anchor validated.
+Contact victim=Pepe direction=-1 time=2.0333333 bone=LeftShoulder source=Weapon; corrected relative velocity and stored selected-bone anchor validated.
+Landing victim=Pepe direction=-1 time=2.66666675 supportY=0.0104815485 bone=LeftUpperArm local=(-0.104713067,3.15090847,-0.300736159) mesh=757d9d3f1766533aa895e81a07aa5197:-462981019419857548 renderer=Plane triangle=10813 vertex=6153; non-damaging, finalLanding.
+Source=Pepe; target=Mankey; attack=3e685dd57e9c78b49b20bef3e8358ae3:7400002; reaction=b01b411d366a5a344bddf3428a7bc8f7:7400002; attackerAvatar=757d9d3f1766533aa895e81a07aa5197:9000000; victimAvatar=59dc3f26824c72872aa4cf6baeec671e:9000000
+Drivers=e843971f00482b8af9b3e546a40aa446:7468503520573832048; e9bda2f6da685faedac3c08af217f164:4668455661232588296
+Grounding=Assets/CombatExpansion/SamuraiStudy/Grounding/Samurai_Execution01_Grounding.asset; 3e9468be3cf45ed178f6ffec095afaa3:11400000
+Recovery=157da7dff6b3b3148a29246060747ce5:1827226128182048838; grounding=Assets/CombatExpansion/Actions/Frank_GreatSword_ProneRecovery_Grounding.asset; blend=0.12s; native duration=3.1666667s.
+Contact victim=Mankey direction=1 time=0.3875 bone=UpperChest source=Weapon; corrected relative velocity and stored selected-bone anchor validated.
+Contact victim=Mankey direction=1 time=2.0291667 bone=UpperChest source=Weapon; corrected relative velocity and stored selected-bone anchor validated.
+Landing victim=Mankey direction=1 time=2.7125 supportY=0.009999812 bone=Head local=(-0.114054605,-0.069224976,0.417960137) mesh=59dc3f26824c72872aa4cf6baeec671e:4300000 renderer=Mahgnkey triangle=2971 vertex=1905; non-damaging, finalLanding.
+Contact victim=Mankey direction=-1 time=0.3875 bone=UpperChest source=Weapon; corrected relative velocity and stored selected-bone anchor validated.
+Contact victim=Mankey direction=-1 time=2.0291667 bone=UpperChest source=Weapon; corrected relative velocity and stored selected-bone anchor validated.
+Landing victim=Mankey direction=-1 time=2.7125 supportY=0.009999812 bone=Head local=(-0.114054389,-0.069225274,0.41796) mesh=59dc3f26824c72872aa4cf6baeec671e:4300000 renderer=Mahgnkey triangle=2971 vertex=1905; non-damaging, finalLanding.
+Installed Assets/CombatExpansion/Actions/Samurai_Execution01_Mankey.asset
+Installed Assets/CombatExpansion/Actions/Samurai_Execution01_Pepe.asset
+Only matching heavy move IDs persisted; unrelated scene edits remain live.
+Explicit per-attacker profiles; shared bank unchanged; server outcome rules retained.
+PENDING Play Mode: enqueue/browser/exact animationId, both directions and roles, prone getup transition, surviving/lethal outcomes, cancellation, equipment and feedback cleanup.
+Whooshes at 0.27 and 1.9 seconds are provisional; validate sound and VFX in gameplay.

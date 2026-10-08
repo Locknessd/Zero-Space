@@ -99,16 +99,13 @@ namespace FrankRetarget
                 sourceRotations = new Quaternion[bones.Length];
                 rawRotations = new Quaternion[bones.Length];
                 outputRotations = new Quaternion[bones.Length];
-                if (standing)
-                {
-                    sourcePositions = new Vector3[bones.Length];
-                    rawPositions = new Vector3[bones.Length];
-                    outputPositions = new Vector3[bones.Length];
-                }
+                sourcePositions = new Vector3[bones.Length];
+                rawPositions = new Vector3[bones.Length];
+                outputPositions = new Vector3[bones.Length];
                 for (int index = 0; index < bones.Length; index++)
                 {
                     sourceRotations[index] = bones[index].localRotation;
-                    if (standing) sourcePositions[index] = bones[index].localPosition;
+                    sourcePositions[index] = bones[index].localPosition;
                 }
             }
 
@@ -132,7 +129,7 @@ namespace FrankRetarget
                     {
                         if (Quaternion.Angle(bones[index].localRotation, outputRotations[index]) > .001f)
                             return false;
-                        if (standing && (bones[index].localPosition - outputPositions[index]).sqrMagnitude > 1e-12f)
+                        if ((bones[index].localPosition - outputPositions[index]).sqrMagnitude > 1e-12f)
                             return false;
                     }
                 return true;
@@ -151,7 +148,7 @@ namespace FrankRetarget
                         if (bones[index])
                         {
                             bones[index].localRotation = rawRotations[index];
-                            if (standing) bones[index].localPosition = rawPositions[index];
+                            bones[index].localPosition = rawPositions[index];
                         }
                     hips.localPosition = rawHipsLocal;
                 }
@@ -179,7 +176,7 @@ namespace FrankRetarget
                     if (bones[index])
                     {
                         rawRotations[index] = bones[index].localRotation;
-                        if (standing) rawPositions[index] = bones[index].localPosition;
+                        rawPositions[index] = bones[index].localPosition;
                     }
                 float seconds = (standing ? Mathf.Max(0, normalized) : Mathf.Clamp01(normalized)) * clip.length;
                 float lift = standing ? 0 : GroundingLift(owner.pair.recoveryGrounding, receiverRole, seconds);
@@ -197,12 +194,12 @@ namespace FrankRetarget
                                 sourceRotations[index], rawRotations[index], blend);
                             // Native contact IK may have bounded reach compensation. Return
                             // those offsets gradually instead of shrinking limbs at handoff.
-                            if (standing && bones[index] != hips)
+                            if (bones[index] != hips)
                                 bones[index].localPosition = Vector3.Lerp(
                                     sourcePositions[index], rawPositions[index], blend);
                         }
-                    // Translate the pelvis as a unit. Ground get-up retains controller
-                    // bone offsets; standing recovery blends native reach offsets above.
+                    // Translate the pelvis as a unit while both standing and grounded
+                    // recovery release native bone offsets over the same entry blend.
                     hips.position = Vector3.Lerp(animator.transform.TransformPoint(sourceHipsLocal),
                         hips.position, blend);
                     leftArm.Blend(blend);
@@ -217,7 +214,7 @@ namespace FrankRetarget
                     if (bones[index])
                     {
                         outputRotations[index] = bones[index].localRotation;
-                        if (standing) outputPositions[index] = bones[index].localPosition;
+                        outputPositions[index] = bones[index].localPosition;
                     }
                 appliedNormalizedTime = normalized;
                 applied = true;

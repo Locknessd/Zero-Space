@@ -27,6 +27,7 @@ namespace FrankRetarget.Editor
         public static void BeginThrows() => Begin("Throws", "ThrowPlayMode.txt");
         public static void BeginGreatSwordRecovery() => Begin("GreatSwordRecovery", "GreatSwordRecoveryPlayMode.txt");
         public static void BeginGreatSword() => Begin("GreatSword", "GreatSwordPlayMode.txt");
+        public static void BeginSamurai() => Begin("Samurai", "SamuraiStudy/PlayMode/Report.txt");
         public static void BeginSlap() => Begin("Slap", "SlapStudy/PlayMode/Status.txt");
 
         static void Begin(string suite, string report)
@@ -134,6 +135,8 @@ namespace FrankRetarget.Editor
                         CombatExpansionGreatSwordRecoveryPlayCheck.Begin();
                     else if (suite == "GreatSword")
                         CombatExpansionGreatSwordPlayCheck.Begin();
+                    else if (suite == "Samurai")
+                        CombatExpansionGreatSwordPlayCheck.BeginSamurai();
                     else if (suite == "Slap")
                         CombatExpansionSlapPlayCheck.Begin();
                     else
