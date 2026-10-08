@@ -266,6 +266,9 @@ validate playback infrastructure and existing lifecycle behavior; axe actions re
 
 ## Outstanding scope and gates
 
+GreatSword grounding and source-weapon study evidence is recorded in [COMBAT_GREATSWORD.md](COMBAT_GREATSWORD.md).
+The four pairs remain unregistered pending contact authoring, recovery and gameplay validation.
+
 - `COMBAT_FRANK_COVERAGE.md` and `GeneratedAssets/CombatExpansion/FrankCoverage.tsv` account for all
   126 Frank-scoped stable clip identities. Remaining tester-only content includes three full Insane
   combos and their 14 step choices, four GreatSword execution pairs, and two alternate Warrior

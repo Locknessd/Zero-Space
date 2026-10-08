@@ -20,6 +20,7 @@ namespace FrankRetarget
         public float bodySpacing;
         public int unarmedIndex = -1;
         public bool pepeAttacks;
+        public string cameraKey = "";
         public bool showWeapon;
         public GameObject attackerWeaponPrefab;
         public string attackerWeaponSocket = "";
@@ -227,7 +228,7 @@ namespace FrankRetarget
             CombatPositioningController.Instance?.ConstrainDepthNow();
             ConstrainLightHipsDepth();
             if (Move.grounding)
-                Move.grounding.Apply(SampleTime, attacker.Animator, receiver.Animator);
+                Move.grounding.Apply(SampleTime, attacker.Animator, receiver.Animator, attackActor);
         }
 
         void LateUpdate()

@@ -7,6 +7,21 @@ namespace FrankRetarget
     public sealed partial class FrankTestActor
     {
         GameObject sourceWeapon;
+        Vector3 sourceWeaponLift;
+
+        public void ApplySourceWeaponGrounding(float lift)
+        {
+            if (!sourceWeapon || !activeDriver) return;
+            var next = Vector3.up * lift;
+            activeDriver.transform.position += next - sourceWeaponLift;
+            sourceWeaponLift = next;
+        }
+
+        void ResetSourceWeaponGrounding()
+        {
+            if (activeDriver) activeDriver.transform.position -= sourceWeaponLift;
+            sourceWeaponLift = Vector3.zero;
+        }
 
         public void AttachSourceWeapon(GameObject prefab, string socketPath)
         {
@@ -36,6 +51,8 @@ namespace FrankRetarget
             }
             sourceWeapon = weapon;
             pose.weaponRenderers = renderers;
+            foreach (var limb in pose.limbs)
+                if (limb.sourceKnuckle) limb.alignGrip = true;
 
             // Include the newly parented renderers in the existing Animator bindings,
             // then restore the current source sample after Rebind resets the skeleton.

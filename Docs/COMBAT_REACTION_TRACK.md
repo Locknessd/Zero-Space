@@ -9,8 +9,10 @@ This is playback infrastructure; it does not create a separate hit-confirmation 
 Paired playback also accepts an optional attacker weapon prefab and an exact source-driver socket path.
 The prop uses the socket's local origin, rotation and scale, registers renderers with the retarget pose,
 and disables imported colliders. Existing actor ownership removes it on cleanup; the receiver remains
-unarmed. Runtime and Editor compilation passed. Live attachment, animation and cleanup verification
-remain pending, and no new GreatSword action is registered by this infrastructure change.
+unarmed. Runtime and Editor compilation passed. The subsequent 48-case isolated source-weapon check
+passed attachment, sampling and cancellation checks; Play Mode verification remains pending. See
+[the GreatSword study report](COMBAT_GREATSWORD.md) for grounding, grip fixes and evidence limitations.
+No new GreatSword action is registered by this infrastructure change.
 
 `CombatExpansionReactionTrackCheck.Validate` passed eight isolated actual-avatar cases: both fighters,
 both directions, and ordinary/lethal sampling. Forward/backward pose error was zero, pre-contact poses

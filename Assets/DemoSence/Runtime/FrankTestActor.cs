@@ -147,6 +147,7 @@ namespace FrankRetarget
         public void Evaluate(float time)
         {
             if(!activeDriver||!graph.IsValid())return;
+            ResetSourceWeaponGrounding();
             // Imported looping clips wrap at exactly length. The tester owns looping;
             // hold the last pose when paused at the end so the camera can settle.
             double t=Mathf.Clamp(time,0,Mathf.Max(0,clip.length-.00001f));
@@ -170,6 +171,7 @@ namespace FrankRetarget
         }
         public void Clear()
         {
+            ResetSourceWeaponGrounding();
             ClearReactionTrack();
             if(graph.IsValid())graph.Destroy();
             graph = default;

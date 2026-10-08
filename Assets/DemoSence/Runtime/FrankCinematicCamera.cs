@@ -104,6 +104,7 @@ namespace FrankRetarget
         {
             if (move == null || move.sourcePair == null) return null;
             string role = move.sourcePair.pepeAttacks ? "/pepe" : "/mankey";
+            if (!string.IsNullOrEmpty(move.sourcePair.cameraKey)) return move.sourcePair.cameraKey + role;
             if (move.sourcePair.unarmedIndex >= 0) return "vol10/" + move.sourcePair.unarmedIndex + role;
             int index;
             switch (move.weapon)

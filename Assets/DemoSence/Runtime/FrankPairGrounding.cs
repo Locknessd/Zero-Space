@@ -26,25 +26,28 @@ namespace FrankRetarget
 
         public Track[] tracks = Array.Empty<Track>();
 
-        public void Apply(float seconds, Animator attacker, Animator receiver)
+        public void Apply(float seconds, Animator attacker, Animator receiver, FrankTestActor attackerSource = null)
         {
-            ApplyActor(seconds, attacker, false);
+            float attackLift = ApplyActor(seconds, attacker, false);
             ApplyActor(seconds, receiver, true);
+            if (attackerSource) attackerSource.ApplySourceWeaponGrounding(attackLift);
         }
 
-        void ApplyActor(float seconds, Animator actor, bool receiver)
+        float ApplyActor(float seconds, Animator actor, bool receiver)
         {
             if (!actor)
-                return;
+                return 0;
             foreach (var track in tracks)
             {
                 if (track.avatar != actor.avatar || track.receiver != receiver)
                     continue;
                 var hips = actor.GetBoneTransform(HumanBodyBones.Hips);
+                float lift = track.At(seconds);
                 if (hips)
-                    hips.position += Vector3.up * track.At(seconds);
-                return;
+                    hips.position += Vector3.up * lift;
+                return lift;
             }
+            return 0;
         }
     }
 }
