@@ -40,7 +40,8 @@ namespace FrankRetarget
 
         float MotionDuration => IsGrapple && Move.grapple.For(GrappleOutcome) != null
             ? Move.grapple.decisionSeconds + Move.grapple.For(GrappleOutcome).Duration
-            : Mathf.Max(pair.attack.length, pair.reactionDelay + pair.reaction.length);
+            : Mathf.Max(pair.attack.length, pair.reactions ? pair.reactions.Duration
+                : pair.reactionDelay + pair.reaction.length);
 
         AnimationClip RecoveryClip => IsGrapple
             ? Move.grapple.For(GrappleOutcome)?.getUp : pair.getUp;

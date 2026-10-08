@@ -1,0 +1,34 @@
+RUNNING: isolated saved BattleScene; both avatars, HOLD/ESC normal/lethal requests, light normal/lethal regression, Stop and Exit during damage, saved HUD and authoritative HP.
+START case=1/16 action=Vol10_HOLD side=Left lethalRequest=False interrupted=False
+PASS case=1 action=Vol10_HOLD side=Left lethalRequest=False interrupted=False; HP/UI, ownership and restoration.
+START case=2/16 action=Vol10_HOLD side=Left lethalRequest=True interrupted=False
+PASS case=2 action=Vol10_HOLD side=Left lethalRequest=True interrupted=False; HP/UI, ownership and restoration.
+START case=3/16 action=Vol10_NAGE_ESC side=Left lethalRequest=False interrupted=False
+PASS case=3 action=Vol10_NAGE_ESC side=Left lethalRequest=False interrupted=False; HP/UI, ownership and restoration.
+START case=4/16 action=Vol10_NAGE_ESC side=Left lethalRequest=True interrupted=False
+PASS case=4 action=Vol10_NAGE_ESC side=Left lethalRequest=True interrupted=False; HP/UI, ownership and restoration.
+START case=5/16 action=Light_1 side=Left lethalRequest=False interrupted=False
+PASS case=5 action=Light_1 side=Left lethalRequest=False interrupted=False; HP/UI, ownership and restoration.
+START case=6/16 action=Light_1 side=Left lethalRequest=True interrupted=False
+PASS case=6 action=Light_1 side=Left lethalRequest=True interrupted=False; HP/UI, ownership and restoration.
+START case=7/16 action=Vol10_HOLD side=Right lethalRequest=False interrupted=False
+PASS case=7 action=Vol10_HOLD side=Right lethalRequest=False interrupted=False; HP/UI, ownership and restoration.
+START case=8/16 action=Vol10_HOLD side=Right lethalRequest=True interrupted=False
+PASS case=8 action=Vol10_HOLD side=Right lethalRequest=True interrupted=False; HP/UI, ownership and restoration.
+START case=9/16 action=Vol10_NAGE_ESC side=Right lethalRequest=False interrupted=False
+PASS case=9 action=Vol10_NAGE_ESC side=Right lethalRequest=False interrupted=False; HP/UI, ownership and restoration.
+START case=10/16 action=Vol10_NAGE_ESC side=Right lethalRequest=True interrupted=False
+PASS case=10 action=Vol10_NAGE_ESC side=Right lethalRequest=True interrupted=False; HP/UI, ownership and restoration.
+START case=11/16 action=Light_1 side=Right lethalRequest=False interrupted=False
+PASS case=11 action=Light_1 side=Right lethalRequest=False interrupted=False; HP/UI, ownership and restoration.
+START case=12/16 action=Light_1 side=Right lethalRequest=True interrupted=False
+PASS case=12 action=Light_1 side=Right lethalRequest=True interrupted=False; HP/UI, ownership and restoration.
+START case=13/16 action=Light_1 side=Left lethalRequest=False interrupted=True
+PASS case=13 action=Light_1 side=Left lethalRequest=False interrupted=True; HP/UI, ownership and restoration.
+START case=14/16 action=Light_1 side=Left lethalRequest=True interrupted=True
+PASS case=14 action=Light_1 side=Left lethalRequest=True interrupted=True; HP/UI, ownership and restoration.
+START case=15/16 action=Light_1 side=Right lethalRequest=False interrupted=True
+PASS case=15 action=Light_1 side=Right lethalRequest=False interrupted=True; HP/UI, ownership and restoration.
+START case=16/16 action=Light_1 side=Right lethalRequest=True interrupted=True
+PASS case=16 action=Light_1 side=Right lethalRequest=True interrupted=True; HP/UI, ownership and restoration.
+PASS all 16 preview damage cases.

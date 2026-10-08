@@ -150,16 +150,33 @@ namespace FrankRetarget
             // Imported looping clips wrap at exactly length. The tester owns looping;
             // hold the last pose when paused at the end so the camera can settle.
             double t=Mathf.Clamp(time,0,Mathf.Max(0,clip.length-.00001f));
-            playable.SetTime(t);
-            SampleContinuation(time);
-            graph.Evaluate(0);
+            Vector3 reactionOffset = Vector3.zero;
+            if (reactionSegments != null)
+            {
+                reactionOffset = SampleReactions(time, reactionSegments.Length);
+                EvaluateReactionGraph();
+                PrepareReactionTarget();
+            }
+            else
+            {
+                playable.SetTime(t);
+                SampleContinuation(time);
+                graph.Evaluate(0);
+            }
             if(equipped){equipped.ApplyGrasp();equipped.Follow();}
             Pose.ApplyPose();
+            if (reactionSegments != null) ApplyReactionOffset(reactionOffset);
             BlendEntryPose(time);
         }
         public void Clear()
         {
+            ClearReactionTrack();
             if(graph.IsValid())graph.Destroy();
+            graph = default;
+            playable = default;
+            continuationMixer = default;
+            continuationPlayable = default;
+            continuationClip = null;
             if(activeDriver)
             {
                 activeDriver.gameObject.SetActive(false);
@@ -167,6 +184,6 @@ namespace FrankRetarget
             }
             activeDriver=null;equipped=null;
         }
-        void OnDestroy(){if(graph.IsValid())graph.Destroy();}
+        void OnDestroy(){Clear();}
     }
 }

@@ -8,6 +8,7 @@ namespace FrankRetarget
     {
         public FrankTestDriver attackerDriver, receiverDriver;
         public AnimationClip attack, reaction;
+        public FrankReactionTrack reactions;
         public AnimationClip getUp;
         public AnimationClip attackerGetUp;
         [Min(0)] public float entryBlendSeconds;
@@ -20,6 +21,8 @@ namespace FrankRetarget
         public int unarmedIndex = -1;
         public bool pepeAttacks;
         public bool showWeapon;
+        public GameObject attackerWeaponPrefab;
+        public string attackerWeaponSocket = "";
         public float reactionDelay;
         public bool Valid => attackerDriver && receiverDriver && attack && reaction;
     }
@@ -102,6 +105,13 @@ namespace FrankRetarget
         public bool Begin(CharacterCombat source, CharacterCombat target, CombatTripletData move, bool isLethal)
         {
             if (move.sourcePair == null || !move.sourcePair.Valid) return false;
+            if (move.sourcePair.reactions)
+            {
+                if (move.grapple)
+                    throw new ArgumentException("A pair cannot combine a reaction track with a grapple.", nameof(move));
+                if (!move.sourcePair.reactions.TryValidate(out string error))
+                    throw new ArgumentException(error, nameof(move));
+            }
             pair = move.sourcePair;
             Move = move;
             attacker = source;
@@ -134,8 +144,10 @@ namespace FrankRetarget
                 AcquireEquipment(source, target);
                 float entryBlend = IsGrapple ? Move.grapple.entryBlendSeconds : pair.entryBlendSeconds;
                 attackActor = Actor(source, pair.attackerDriver, pair.attack, true,
-                    pair.showWeapon || move.weapon != TrumpWeaponManager.WeaponType.None, pair.unarmedIndex >= 0, entryBlend);
+                    pair.showWeapon || move.weapon != TrumpWeaponManager.WeaponType.None, pair.unarmedIndex >= 0,
+                    entryBlend, pair.attackerWeaponPrefab, pair.attackerWeaponSocket);
                 hitActor = Actor(target, pair.receiverDriver, pair.reaction, false, false, pair.unarmedIndex >= 0, entryBlend);
+                hitActor.SetReactionTrack(pair.reactions, lethal);
                 // Grapples constrain the complete pair after spacing. Applying a
                 // pelvis lock before optional spacing would move the hands twice
                 // when the baked separation passes through zero.
@@ -177,7 +189,8 @@ namespace FrankRetarget
         }
 
         static FrankTestActor Actor(CharacterCombat combat, FrankTestDriver driver, AnimationClip clip,
-            bool attacking, bool weapons, bool unarmed, float entryBlend = 0)
+            bool attacking, bool weapons, bool unarmed, float entryBlend = 0,
+            GameObject weaponPrefab = null, string weaponSocket = "")
         {
             var root = new GameObject(combat.name + (attacking ? " source attack" : " source reaction"));
             UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(root, combat.gameObject.scene);
@@ -186,8 +199,13 @@ namespace FrankRetarget
             actor.characterName = combat.name;
             actor.character = combat.Animator;
             actor.PrepareEntryBlend(entryBlend);
-            try { actor.ConfigureSource(driver, clip, attacking, weapons, unarmed, preserveCharacterScale: true); }
-            catch { actor.Clear(); Destroy(root); throw; }
+            try
+            {
+                actor.ConfigureSource(driver, clip, attacking, weapons && !weaponPrefab, unarmed,
+                    preserveCharacterScale: true);
+                if (weaponPrefab) actor.AttachSourceWeapon(weaponPrefab, weaponSocket);
+            }
+            catch { ClearActor(ref actor); throw; }
             return actor;
         }
 
@@ -196,7 +214,7 @@ namespace FrankRetarget
             if (!Playing || waitingForGetUp) return;
             SampleTime = Mathf.Clamp(seconds, 0, Duration);
             attackActor.Evaluate(SampleTime);
-            hitActor.Evaluate(Mathf.Max(0, SampleTime - pair.reactionDelay));
+            hitActor.Evaluate(pair.reactions ? SampleTime : Mathf.Max(0, SampleTime - pair.reactionDelay));
             if (pair.spacing && pair.unarmedIndex >= 0 && pair.bodySpacing > 0)
             {
                 Vector3 separation = PairSeparation(SampleTime) * pair.bodySpacing;

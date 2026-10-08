@@ -241,15 +241,42 @@ shot keys because the hold outcomes intentionally reuse the same authored camera
 Per-action abnormal-state coverage, normal-speed visual review and the other remaining presentation
 gates are still required.
 
+## Preview damage and axe adaptation checks
+
+The F8 preview now resolves actual damaging contacts before enabling its lethal option. Nondamaging
+release/escape previews keep full preview HP and emit no damage popup. The isolated saved-scene
+`CombatExpansionPreviewDamageCheck` passed all 16 cases across both fighters, covering release/escape
+with ordinary/lethal requests, damaging Light_1 previews, interruption, authoritative state isolation,
+and health snapshot restoration. Evidence: `PreviewDamagePlayMode.txt`.
+
+`CombatExpansionAxeAdaptationCheck.Audit` compared the actual battle actor sampler with the native
+source studies for all 33 axe clip identities on both fighters. All 66 configurations preserved authored
+hip travel within 0.000006 m and repeated terminal sampling produced no additional movement. Measured
+source/target grip-point error stayed below 0.000002 m. These checks rule out missing travel and grip-point
+separation in this sampling path; they do not establish blade clearance, finger appearance or victim
+contact. Evidence: `AxeAdaptation.csv`. Axe actions remain unregistered pending actual contact/reaction
+authoring and full presentation integration.
+
+## Reaction playback and axe contact authoring
+
+See [the reaction track report](COMBAT_REACTION_TRACK.md) for the shared-clock runtime extension,
+eight actual-avatar sampling checks, measured sampling cost, the repeated 16-case preview and
+40-case grapple regressions, and the two rejected/provisional paired axe candidates. These checks
+validate playback infrastructure and existing lifecycle behavior; axe actions remain unregistered.
+
 ## Outstanding scope and gates
 
+- `COMBAT_FRANK_COVERAGE.md` and `GeneratedAssets/CombatExpansion/FrankCoverage.tsv` account for all
+  126 Frank-scoped stable clip identities. Remaining tester-only content includes three full Insane
+  combos and their 14 step choices, four GreatSword execution pairs, and two alternate Warrior
+  reaction clips. Resolve exact full/step canonical relationships and integrate every distinct action
+  and required support role. `COMBAT_FRANK_CANONICAL.md` records the executed curve/content comparisons
+  for seven source-rig links, Warrior takes and Insane full/step clips. Content and representation differences
+  leave pose equivalence unresolved; these links cannot yet be declared canonical gameplay duplicates.
 - Complete source-role/canonical-duplicate coverage, original scene pair/controller traces and all
   required final coverage classifications.
 - Finish verification of the saved Vol10 throws and trace remaining distinct Frank demo content without duplicates.
 - Finish hold/escape visual and abnormal-state validation beyond the saved gameplay lifecycle.
-- Correct the F8 browser's nondamaging release/escape preview: its fallback can still display synthetic
-  HP loss, and the lethal preview toggle needs a damage-contact guard. Authoritative replay is separate
-  and passed with unchanged health for these outcomes.
 - Integrate every applicable double-axe combo, correct dual attachments, inspect every contact, and
   configure explicit reactions and complete feedback. No double-axe combo is yet integrated here.
 - Integrate actual Samurai pairs with owned unarmed-victim equipment state and all required lifecycle

@@ -102,6 +102,7 @@ public partial class GameManager
             !(ContainsTestMove(fighter.lightCombatMoves, move) || ContainsTestMove(fighter.heavyCombatMoves, move))) return false;
         if (!BeginAnimationTestMode()) return false;
         StopAnimationTest();
+        lethal &= AnimationTestHasDamageContacts(move);
         AnimationTestMove = move;
         AnimationTestAttacker = side;
         AnimationTestLethal = lethal;
@@ -112,6 +113,20 @@ public partial class GameManager
 
     static bool ContainsTestMove(CombatTripletData[] moves, CombatTripletData move) =>
         moves != null && Array.Exists(moves, item => ReferenceEquals(item, move));
+
+    bool AnimationTestHasDamageContacts(CombatTripletData move)
+    {
+        var pair = move.sourcePair;
+        if (pair == null || !pair.Valid) return false;
+        var bank = battleSfx ? battleSfx.bank : battleVfx ? battleVfx.timeline : null;
+        var profile = move.grapple ? move.grapple.Presentation(move.grappleOutcome) : bank ? bank.FindMove(move) : null;
+        var continuation = move.grapple ? move.grapple.For(move.grappleOutcome) : null;
+        float duration = continuation != null
+            ? move.grapple.decisionSeconds + continuation.Duration
+            : Mathf.Max(pair.attack.length, pair.reactionDelay + pair.reaction.length);
+        return float.IsFinite(duration) && duration >= 0 &&
+            BattleHitDamageSequence.ContactTimes(profile, duration).Length > 0;
+    }
 
     IEnumerator RunAnimationTest(PlayerUI.Side side, CombatTripletData move, bool lethal)
     {
@@ -144,7 +159,7 @@ public partial class GameManager
             if (portion > 0) UI?.ShowDamage(side, portion, ContainsTestMove(CombatFor(attacker).heavyCombatMoves, move));
         }
         // Preview health is presentation only; authoritative HP and match snapshots stay intact.
-        if (times.Length == 0) { Present(after, damage); return; }
+        if (times.Length == 0) { Present(before, 0); return; }
         _hitDamage = new BattleHitDamageSequence(before, after, damage, times, Present);
         _damagePlayback = playback;
         playback.TimelineAdvanced += AdvanceDamagePresentation;
