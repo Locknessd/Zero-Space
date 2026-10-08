@@ -7,6 +7,36 @@ namespace FrankRetarget.Editor
 {
     public static partial class CombatExpansionGreatSwordStudy
     {
+        public static void ScanFirstLandings()
+        {
+            Directory.CreateDirectory(Output);
+            var csv = new StringBuilder("fighter,move,direction,seconds,clearance,hipsY,headY,leftFootY,rightFootY\n");
+            EachPair((source, target, move, pair, camera, framing, direction) =>
+            {
+                Vector2 window = move.moveName.EndsWith("Ambush", StringComparison.Ordinal) ?
+                    new Vector2(.54f, .76f) : move.moveName.EndsWith("Execution1", StringComparison.Ordinal) ?
+                    new Vector2(1.9f, 2.5f) : move.moveName.EndsWith("Execution2", StringComparison.Ordinal) ?
+                    new Vector2(1.85f, 2.3f) : new Vector2(1.4f, 1.85f);
+                for (int frame = Mathf.RoundToInt(window.x * 240); frame <= window.y * 240; frame++)
+                {
+                    float seconds = frame / 240f;
+                    pair.EvaluateAt(seconds);
+                    float clearance = BattlePresentationContactSetup.MeasureGroundClearance(target);
+                    if (!float.IsFinite(clearance))
+                        throw new InvalidOperationException("No visible receiver surface for " + move.moveName);
+                    var animator = target.Animator;
+                    float hips = animator.GetBoneTransform(HumanBodyBones.Hips).position.y;
+                    float head = animator.GetBoneTransform(HumanBodyBones.Head).position.y;
+                    float left = animator.GetBoneTransform(HumanBodyBones.LeftFoot).position.y;
+                    float right = animator.GetBoneTransform(HumanBodyBones.RightFoot).position.y;
+                    csv.AppendLine(FormattableString.Invariant(
+                        $"{source.name},{move.moveName},{direction},{seconds:R},{clearance:R},") +
+                        FormattableString.Invariant($"{hips:R},{head:R},{left:R},{right:R}"));
+                }
+                File.WriteAllText(Output + "/FirstLandings.csv", csv.ToString());
+            }, new[] { 1, -1 }, true);
+        }
+
         public static void ScanBladeContacts()
         {
             Directory.CreateDirectory(Output);

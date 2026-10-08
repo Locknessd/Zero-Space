@@ -58,6 +58,7 @@ namespace FrankRetarget.Editor
                     }
                     sheet.Apply();
                     File.WriteAllBytes(output + "/" + key + ".png", sheet.EncodeToPNG());
+                    times.Length--;
                     times.AppendLine();
                     camera.targetTexture = null;
                 }, new[] { 1, -1 }, true);
@@ -77,16 +78,16 @@ namespace FrankRetarget.Editor
         static float[] FineTimes(string action)
         {
             if (action.EndsWith("Ambush", StringComparison.Ordinal))
-                return new[] { 29f, 30, 31, 32, 33, 34, 35, 36, 37, 38, 40, 42 }
-                    .Select(frame => frame / 60).ToArray();
+                return new[] { 135f, 136, 137, 138, 139, 140, 141, 142, 144, 147, 150, 156 }
+                    .Select(frame => frame / 240).ToArray();
             if (action.EndsWith("Execution1", StringComparison.Ordinal))
                 return new[] { 48f, 49, 50, 51, 52, 53, 131, 133, 135, 137, 139, 141 }
                     .Select(frame => frame / 60).ToArray();
             if (action.EndsWith("Execution2", StringComparison.Ordinal))
                 return new[] { 46f, 47, 48, 49, 50, 51, 122, 124, 126, 128, 130, 132 }
                     .Select(frame => frame / 60).ToArray();
-            return new[] { 21f, 22, 23, 40, 41, 42, 90, 92, 94, 96, 98, 100 }
-                .Select(frame => frame / 60).ToArray();
+            return new[] { 87f, 88, 89, 163, 164, 165, 364, 365, 366, 367, 370, 374 }
+                .Select(frame => frame / 240).ToArray();
         }
     }
 }

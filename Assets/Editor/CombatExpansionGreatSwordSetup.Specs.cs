@@ -4,7 +4,8 @@ namespace FrankRetarget.Editor
 {
     public static partial class CombatExpansionGreatSwordSetup
     {
-        public const bool ContactsReviewed = false;
+        // Source-pose contact review only; gameplay and recovery acceptance remain separate.
+        public const bool ContactsReviewed = true;
 
         public sealed class Spec
         {
@@ -22,12 +23,12 @@ namespace FrankRetarget.Editor
             {
                 index = 0,
                 displayName = "GreatSword ambush",
-                contacts = new[] { 33f / 60 },
+                contacts = new[] { 138f / 240 },
                 swings = new[] { .35f },
                 groups = new[] { "heavy_hit" },
-                regions = new[] { "Upper torso under the descending blade" },
+                regions = new[] { "Head under the descending blade" },
                 directions = new[] { Vector3.down },
-                landingSeconds = .7f
+                landingSeconds = 148f / 240
             },
             new Spec
             {
@@ -38,7 +39,7 @@ namespace FrankRetarget.Editor
                 groups = new[] { "stab_hit" },
                 regions = new[] { "Upper chest and neck on the forward thrust" },
                 directions = new[] { Vector3.back },
-                landingSeconds = 2.2833333f
+                landingSeconds = 560f / 240
             },
             new Spec
             {
@@ -49,19 +50,19 @@ namespace FrankRetarget.Editor
                 groups = new[] { "stab_hit" },
                 regions = new[] { "Hip and upper leg on the low thrust" },
                 directions = new[] { Vector3.back },
-                landingSeconds = 2.1333333f
+                landingSeconds = 497f / 240
             },
             new Spec
             {
                 index = 3,
                 displayName = "GreatSword three-cut takedown",
-                contacts = new[] { 22f / 60, 41f / 60, 92f / 60 },
+                contacts = new[] { 22f / 60, 41f / 60, 365f / 240 },
                 swings = new[] { .17f, .5f, 1.3f },
                 groups = new[] { "heavy_hit", "heavy_hit", "heavy_hit" },
                 regions = new[] { "Torso and upper arm on the opening cut",
-                    "Hip and upper leg on the rising cut", "Torso on the descending finisher" },
+                    "Hip and upper leg on the rising cut", "Raised upper arm before the descending finisher crosses the torso" },
                 directions = new[] { Vector3.left, Vector3.up, Vector3.down },
-                landingSeconds = 1.7f
+                landingSeconds = 369f / 240
             }
         };
     }
