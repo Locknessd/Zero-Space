@@ -17,9 +17,10 @@ It does not complete the combat expansion.
   a follow-up with high reactions and transient grounding completed 16 cases.
   The sequential contact study evaluated 12 positive-direction candidates, all
   with incomplete contacts; 12 negative-direction cases were skipped because
-  their corresponding positive sequences were incomplete. Shorter entry blends
-  and a chest-target variant are implemented in tooling but have not been run.
-  These candidates still miss required contacts and are not registered moves.
+  their corresponding positive sequences were incomplete. The shorter-entry and
+  chest-target follow-up recorded all 24 cases: four Mankey cases found all three
+  provisional onsets, ten cases missed contacts, and ten reverse-lane cases were
+  skipped after their forward case missed. No candidate is registered gameplay.
 - The combo catalogue proposes 30 sequences covering all 86 usable punch/kick
   clips. These are authoring plans, not accepted or registered gameplay combos.
 - Optional exact-mesh exclusions support Samurai sheath filtering in trails and
@@ -33,10 +34,17 @@ It does not complete the combat expansion.
 - Landing VFX can use an explicitly assigned contact anchor, with the existing
   hip position as fallback. Live Samurai landing-anchor checks passed on both
   avatars and directions.
-- Slap lethal authoring and raw-preview tools are preserved as provisional editor
-  tooling. The empirical encoding diagnosis failed its native-pose tolerance;
-  no lethal receiver candidate was baked or assigned. Adaptive sample refinement
-  is implemented and compiles, but has not yet passed the empirical pose gate.
+- Slap lethal authoring now saves two project-owned provisional receiver clips.
+  Native-stream encoding and adaptive sample refinement passed dense prefix,
+  retimed-fall, held-pose and backward-replay gates. Source assets are unchanged.
+  Eight raw previews cover both sequences, avatar assignments and lane directions.
+  Raw receiver floor penetration reaches 0.150 m on Pepe and 0.236 m on Mankey.
+  Grounding, final visual acceptance and conditional gameplay assignment remain.
+- Optional lethal-pair infrastructure selects a full receiver clip, grounding and
+  presentation without changing primary damage identities or times. No gameplay
+  asset assigns it yet. Its in-memory contract fixture passed in Unity.
+- Execution02 through Execution10 contact-capture tooling is installed and compiled;
+  its grounding bake and actual collection capture have not yet been run.
 
 ## Validation recorded at this checkpoint
 
@@ -69,12 +77,15 @@ It does not complete the combat expansion.
   and support anchors were remeasured during installation. Execution01's basic
   24-case Play Mode suite passed. The extended suite now passes the recovery
   boundary across both avatars/directions (0.000000 m at report precision),
-  resolving the earlier 0.005514 m snap against a 0.002 m limit. Its first 16
-  cases passed, then case 17 failed the lethal effects/audio cleanup assertion.
-  The remaining extended cases and visual/audio acceptance are still open.
-- `SlapStudy/LethalAuthoring/BakeProvenance.txt` records all four Root/Motion
-  encoding trials and the failed pose-preservation gate. The final source guard
-  reported unchanged sources. Raw candidate preview has not run.
+  resolving the earlier 0.005514 m snap against a 0.002 m limit. The latest run
+  passed cases 1–32, including lethal, reset and receiver-disable checks. Cleanup
+  now observes actual effect/voice expiry and disarms after the clean assertion.
+  Case 33 failed: a StrongSpreadingSmoke particle clock advanced during the prone
+  pause check. Cases 34–40 did not run; extended lifecycle acceptance remains open.
+- `SlapStudy/LethalAuthoring/BakeProvenance.txt` records the selected native-stream
+  Root/Motion encoding and successful candidate validation. Maximum bone error
+  is below 0.000490 m against the unchanged 0.002 m limit. The final source guard
+  reports unchanged sources; this is export fidelity, not gameplay acceptance.
 - Samurai blade configuration validation passed in Unity after correcting the
   fixture to use persistent mesh references and Unity null equality. Identity,
   calibration, idempotence, conflict rejection and trail/VFX predicates passed;
@@ -93,7 +104,7 @@ It does not complete the combat expansion.
 
 Slap lethal treatment, final gameplay camera review and dedicated audio tuning
 remain unfinished. Samurai Execution01 has basic gameplay validation; extended
-lifecycle (including the recorded lethal cleanup assertion failure), complete
+lifecycle (including the recorded particle pause assertion failure), complete
 visual/audio acceptance and the remaining nine registrations
 are still required. Grounding tooling for executions 2 through 10 has compiled
 but has not been run. No new punch-combo study is registered as a qualifying gameplay

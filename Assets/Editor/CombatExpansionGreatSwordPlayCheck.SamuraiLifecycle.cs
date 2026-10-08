@@ -52,6 +52,7 @@ namespace FrankRetarget.Editor
             previousSamuraiTarget = target;
             equipmentChanged = staleSourceChecked = staleRecoveryChecked = false;
             latestRequests = null;
+            ResetSamuraiCleanup();
             ResetSamuraiPause();
             ResetSamuraiEvidence();
             BeginSamuraiMeasurements();

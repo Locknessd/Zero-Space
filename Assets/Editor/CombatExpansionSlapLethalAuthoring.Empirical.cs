@@ -40,8 +40,8 @@ namespace FrankRetarget.Editor
                 var poses = times.Select(time => BlendMeasured(original.At(time),
                     incoming.At(MapFallTime(time - preserve, fall.clip.length)),
                     time, preserve, shift)).ToArray();
-                using var nativeOriginal = new PoseSampler(scene, receiver.path, receiver.clip);
-                using var nativeFall = new PoseSampler(scene, receiver.path, fall.clip);
+                using var nativeOriginal = new PoseSampler(scene, receiver.path, receiver.clip, true);
+                using var nativeFall = new PoseSampler(scene, receiver.path, fall.clip, true);
                 var candidate = RefineExport(scene, receiver, poses, encoding,
                     "SlapSequence" + (sequence + 1) + "_LethalReceiver_Provisional", receiver.clip.length,
                     time => BlendMeasured(original.At(time),

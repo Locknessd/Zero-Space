@@ -38,7 +38,8 @@ public sealed class BattleKnockbackFeedback : MonoBehaviour
     {
         if (impact.kind == BattleVfxPlayer.ContactKind.Ground) { ResetRecoil(); return; }
         if (!impact.playback || !impact.receiver || !impact.receiver.Animator || !impact.attacker) return;
-        var profile = vfx.timeline ? vfx.timeline.FindMove(impact.move) : null;
+        var profile = impact.playback.UsesLethalReceiverVariant
+            ? impact.playback.PresentationProfile(vfx.timeline) : vfx.timeline ? vfx.timeline.FindMove(impact.move) : null;
         // Grabs/throws already place both bodies precisely; preserve their authored contact.
         if (profile != null)
             foreach (var cue in profile.cues) if (cue.damageOnLanding) return;

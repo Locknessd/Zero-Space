@@ -13,11 +13,12 @@ namespace FrankRetarget.Editor
         sealed class ExportError
         {
             public PoseMetrics pose;
-            public float muscle;
+            public float muscle, inverseMuscleDiagnostic;
             public float Score => Mathf.Max(pose.Score, muscle / .003f);
             public override string ToString()
             {
-                return pose + "; inverseMuscleError=" + muscle.ToString("R");
+                return pose + "; nativeStreamMuscleError=" + muscle.ToString("R") +
+                    "; inverseMuscleDiagnostic=" + inverseMuscleDiagnostic.ToString("R");
             }
         }
 
@@ -44,8 +45,22 @@ namespace FrankRetarget.Editor
             return new ExportError
             {
                 pose = metrics,
-                muscle = expected.muscles.Select((value, i) => Mathf.Abs(value - actual.muscles[i])).Max()
+                muscle = StreamMuscleError(expected, actual),
+                inverseMuscleDiagnostic = expected.muscles.Select((value, i) =>
+                    Mathf.Abs(value - actual.muscles[i])).Max()
             };
+        }
+
+        static float StreamMuscleError(MeasuredPose expected, MeasuredPose actual)
+        {
+            if (expected.streamMuscles == null || actual.streamMuscles == null ||
+                expected.streamMuscles.Length != HumanTrait.MuscleCount ||
+                actual.streamMuscles.Length != HumanTrait.MuscleCount)
+                throw new InvalidOperationException("Authored blend validation requires native animation streams.");
+            // GetHumanPose reconstructs controls from the solved bones; that nonlinear inverse
+            // does not commute with blending. Compare the authored native control domain instead.
+            return expected.streamMuscles.Select((value, i) =>
+                Mathf.Abs(value - actual.streamMuscles[i])).Max();
         }
 
         // Retain all 120Hz base keys. Add exact native samples only where a linear interval loses accuracy.
@@ -63,7 +78,7 @@ namespace FrankRetarget.Editor
                 bool keep = false;
                 try
                 {
-                    using var actual = new PoseSampler(scene, rig.path, trial);
+                    using var actual = new PoseSampler(scene, rig.path, trial, true);
                     var add = new SortedSet<float>();
                     float keyScore = 0;
                     float interiorScore = 0;

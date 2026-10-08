@@ -27,6 +27,10 @@ public sealed class CombatActionDefinition : ScriptableObject
         [TextArea] public string continuation;
     }
 
+    [SerializeReference]
+    [Tooltip("Optional complete authored lethal receiver outcome. Null preserves the native pair.")]
+    public CombatLethalPairVariant lethalPairVariant;
+
     public string actionId;
     public string displayName;
     [TextArea] public string gameplayTrigger;
@@ -43,6 +47,8 @@ public sealed class CombatActionDefinition : ScriptableObject
 
     public IEnumerable<string> Validate(CombatTripletData move, BattleSfxBank bank)
     {
+        if (lethalPairVariant != null && !lethalPairVariant.TryValidate(move, bank, null, null, out string variantError))
+            yield return "Lethal receiver variant: " + variantError;
         if (move == null || move.moveName != actionId)
             yield return "Move ID does not match its action definition.";
         if (authoredAttackSources != null && Array.Exists(authoredAttackSources, clip => !clip))
