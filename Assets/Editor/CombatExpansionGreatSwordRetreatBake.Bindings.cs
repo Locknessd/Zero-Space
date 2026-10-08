@@ -70,9 +70,10 @@ namespace FrankRetarget.Editor
                 foreach (var pair in missing)
                 {
                     var binding = pair.Value;
-                    bool known = binding.path == Footsteps ||
-                        (binding.path == HandDummy && binding.propertyName.StartsWith("m_LocalRotation.")) ||
-                        (binding.path == WeaponSocket && !binding.propertyName.StartsWith("m_LocalRotation."));
+                    // The importer may omit any constant transform channel on these known paths.
+                    // VerifyDefaults proves each actual value on both drivers before materializing it.
+                    bool known = binding.path == Footsteps || binding.path == HandDummy ||
+                        binding.path == WeaponSocket;
                     if (!known)
                         throw new InvalidOperationException("Unsupported omitted binding: " + pair.Key +
                             " in " + AssetDatabase.GetAssetPath(segment.clip));
@@ -80,15 +81,22 @@ namespace FrankRetarget.Editor
                 if (missing.Length == 0)
                     continue;
                 var values = VerifyDefaults(segment, missing, drivers, bones, report);
+                // Missing channels are exact constants, but native quaternion conversion also uses key spacing.
+                // Match the source knot schedule instead of spanning a whole phase with two synthetic keys.
+                var constantTimes = segment.curves.Values.SelectMany(c => c.keys.Select(k => k.time))
+                    .Where(t => t >= 0 && t <= segment.clip.length).Concat(new[] { 0f, segment.clip.length })
+                    .Distinct().OrderBy(t => t).ToArray();
                 foreach (var pair in missing)
                 {
                     float value = values[pair.Key];
-                    var curve = AnimationCurve.Constant(0, segment.clip.length, value);
+                    var curve = new AnimationCurve(constantTimes.Select(t => new Keyframe(t, value, 0, 0)).ToArray());
                     segment.curves.Add(pair.Key, curve);
                     segment.bindings.Add(pair.Key, pair.Value);
+                    segment.materializedCurves.Add(pair.Key);
                     report.AppendLine(FormattableString.Invariant(
                         $"MATERIALIZED_DEFAULT source={AssetDatabase.GetAssetPath(segment.clip)}; ") +
-                        FormattableString.Invariant($"binding={pair.Key}; constant={value:R}"));
+                        FormattableString.Invariant($"binding={pair.Key}; constant={value:R}; keys={constantTimes.Length}; ") +
+                        "exact constant on native source knot schedule; zero incoming/outgoing derivatives");
                 }
             }
             report.AppendLine("Binding reconciliation is specific to both GreatSword_Attack native drivers.");

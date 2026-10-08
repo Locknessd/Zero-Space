@@ -28,13 +28,14 @@ namespace FrankRetarget.Editor
 
         static void RecordPaths(List<string> rows, CharacterCombat source, CharacterCombat target,
             int direction, float spacing, float seconds, FrankBattlePairPlayback pair,
-            Dictionary<string, Vector3> baseline)
+            Dictionary<string, Vector3> baseline, bool requireHeldVictim = true)
         {
             foreach (var entry in Bones(pair, source, target))
             {
                 var point = entry.transform.position;
                 var delta = point - baseline[entry.name];
-                if (entry.name.StartsWith("Victim/", StringComparison.Ordinal) && delta.sqrMagnitude > 1e-8f)
+                if (requireHeldVictim && entry.name.StartsWith("Victim/", StringComparison.Ordinal) &&
+                    delta.sqrMagnitude > 1e-8f)
                     throw new InvalidOperationException("Held victim moved; cached body geometry would be stale: " +
                         entry.name);
                 var name = entry.name.Split('/');

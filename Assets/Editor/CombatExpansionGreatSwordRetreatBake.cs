@@ -16,6 +16,7 @@ namespace FrankRetarget.Editor
         const string MotionRoot = "root";
         const float TimeTolerance = .000002f;
         const float ValueTolerance = .0001f;
+        const float RotationTolerance = .08f;
 
         sealed class Segment
         {
@@ -26,6 +27,9 @@ namespace FrankRetarget.Editor
             public readonly Dictionary<string, EditorCurveBinding> bindings =
                 new Dictionary<string, EditorCurveBinding>();
             public readonly Dictionary<string, float> quaternionSigns = new Dictionary<string, float>();
+            public readonly Dictionary<string, Vector3> helperOffsets = new Dictionary<string, Vector3>();
+            public readonly Dictionary<string, Quaternion> helperRotations = new Dictionary<string, Quaternion>();
+            public readonly HashSet<string> materializedCurves = new HashSet<string>();
         }
 
         [MenuItem("Tools/Combat Expansion/Bake GreatSword Ambush Retreat")]
@@ -38,15 +42,7 @@ namespace FrankRetarget.Editor
             Directory.CreateDirectory(Path.GetDirectoryName(ReportPath));
             try
             {
-                var segments = new[]
-                {
-                    Load("Assets/GreatSword_Animset/Animation/Execution_Sample/GreatSword_Attack_Ambush.FBX",
-                        "GreatSword_Attack_Ambush", "610fba6d346a64f4583237c3ef4f7e46", report),
-                    Load("Assets/GreatSword_Animset/Animation/Root/Movement/GreatSword_Strafe_Walk_B_Start.FBX",
-                        "Take 001", "12987da400bbe864aae42fdf303bc647", report),
-                    Load("Assets/GreatSword_Animset/Animation/Root/Movement/GreatSword_Strafe_Walk_B_End.FBX",
-                        "Take 001", "ed2751f54f474b74397a144408a8fe03", report)
-                };
+                var segments = LoadSegments(report);
                 Prepare(segments, report);
                 output = Build(segments, report);
                 ValidateNative(segments, output, report);
@@ -85,6 +81,19 @@ namespace FrankRetarget.Editor
                 if (output && !EditorUtility.IsPersistent(output))
                     Object.DestroyImmediate(output);
             }
+        }
+
+        static Segment[] LoadSegments(StringBuilder report)
+        {
+            return new[]
+            {
+                Load("Assets/GreatSword_Animset/Animation/Execution_Sample/GreatSword_Attack_Ambush.FBX",
+                    "GreatSword_Attack_Ambush", "610fba6d346a64f4583237c3ef4f7e46", report),
+                Load("Assets/GreatSword_Animset/Animation/Root/Movement/GreatSword_Strafe_Walk_B_Start.FBX",
+                    "Take 001", "12987da400bbe864aae42fdf303bc647", report),
+                Load("Assets/GreatSword_Animset/Animation/Root/Movement/GreatSword_Strafe_Walk_B_End.FBX",
+                    "Take 001", "ed2751f54f474b74397a144408a8fe03", report)
+            };
         }
 
         static Segment Load(string path, string name, string expectedGuid, StringBuilder report)

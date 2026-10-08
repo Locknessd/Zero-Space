@@ -13,6 +13,7 @@ namespace FrankRetarget.Editor
         static void Prepare(Segment[] segments, StringBuilder report)
         {
             ReconcileBindings(segments, report);
+            PrepareHelperOffsets(segments, report);
             for (int i = 0; i < segments.Length; i++)
             {
                 var segment = segments[i];
@@ -64,6 +65,7 @@ namespace FrankRetarget.Editor
             var output = Object.Instantiate(segments[0].clip);
             try
             {
+                ValidateQuaternionJoins(segments, report);
                 output.name = "GreatSword_Ambush_Retreat";
                 output.hideFlags = HideFlags.None;
                 output.ClearCurves();
@@ -87,7 +89,9 @@ namespace FrankRetarget.Editor
                             var last = keys[keys.Count - 1];
                             var next = addition[0];
                             float residual = Mathf.Abs(last.value - next.value);
-                            if (residual > ValueTolerance || Mathf.Abs(last.time - next.time) > TimeTolerance)
+                            bool rotation = binding.propertyName.StartsWith("m_LocalRotation.");
+                            if ((!rotation && residual > ValueTolerance) ||
+                                Mathf.Abs(last.time - next.time) > TimeTolerance)
                                 throw new InvalidOperationException(FormattableString.Invariant(
                                     $"Discontinuous join at {segment.start:R}s for {key}: residual={residual:R}"));
                             // Preserve the preceding phase exactly; use the next phase's outgoing derivative.
@@ -100,7 +104,7 @@ namespace FrankRetarget.Editor
                         }
                         keys.AddRange(addition);
                     }
-                    var curve = new AnimationCurve(keys.ToArray());
+                    var curve = ExplicitCurve(keys.ToArray());
                     curve.preWrapMode = WrapMode.ClampForever;
                     curve.postWrapMode = WrapMode.ClampForever;
                     AnimationUtility.SetEditorCurve(output, binding, curve);
@@ -115,11 +119,12 @@ namespace FrankRetarget.Editor
                         events.Add(item);
                     }
                 AnimationUtility.SetAnimationEvents(output, events.OrderBy(e => e.time).ToArray());
-                output.EnsureQuaternionContinuity();
+                // Signs were propagated per segment to both values and tangents. Do not regenerate whole-clip slopes.
+                ValidateQuaternionHemispheres(segments[0], output, report);
                 if (Mathf.Abs(output.length - settings.stopTime) > TimeTolerance || output.isLooping)
                     throw new InvalidOperationException("Output duration or nonlooping settings failed verification.");
                 report.AppendLine($"STITCH curves={segments[0].curves.Count}; events={events.Count}; " +
-                    "native keys and weighted tangents retained; joins preserve incoming/outgoing derivatives.");
+                    "explicit broken/free tangents; numeric keys/weights retained; no global quaternion rewrite.");
                 ValidateCurves(segments, output, report);
                 return output;
             }
@@ -139,6 +144,9 @@ namespace FrankRetarget.Editor
             float offset = 0;
             if (binding.path == MotionRoot && binding.propertyName.StartsWith("m_LocalPosition."))
                 offset = segment.offset["xyz".IndexOf(binding.propertyName.Last())];
+            if (binding.propertyName.StartsWith("m_LocalPosition.") &&
+                segment.helperOffsets.TryGetValue(binding.path, out var helperOffset))
+                offset += helperOffset["xyz".IndexOf(binding.propertyName.Last())];
             var result = curve.keys.ToList();
             if (result.Any(k => !float.IsFinite(k.time) || !float.IsFinite(k.value) ||
                 float.IsNaN(k.inTangent) || float.IsNaN(k.outTangent)))
@@ -194,6 +202,8 @@ namespace FrankRetarget.Editor
             float maximum = 0;
             foreach (string name in segments[0].curves.Keys)
             {
+                if (segments[0].bindings[name].propertyName.StartsWith("m_LocalRotation."))
+                    continue;
                 var actual = AnimationUtility.GetEditorCurve(output, segments[0].bindings[name]);
                 foreach (var segment in segments)
                 {
@@ -211,6 +221,7 @@ namespace FrankRetarget.Editor
                 }
             }
             report.AppendLine(FormattableString.Invariant($"CURVE_EQUIVALENCE 240Hz maxScalarError={maximum:R}"));
+            ValidateQuaternionCurves(segments, output, report);
         }
     }
 }
