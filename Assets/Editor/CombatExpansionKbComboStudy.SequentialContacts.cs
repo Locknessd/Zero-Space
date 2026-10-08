@@ -90,8 +90,8 @@ namespace FrankRetarget.Editor
                 entryBlendSeconds = SequentialEntryBlend, linkBlendSeconds = SequentialLinkBlend,
                 targetRegions = new[]
                 {
-                    bodyJabVariants && assignment == 1 ? "Chest" : "Head",
-                    bodyJabVariants && assignment == 1 ? "Chest" : "Head", "Head"
+                    bodyJabVariants && assignment == 1 ? "TorsoWithoutHeadNeckOrArms" : "Head",
+                    bodyJabVariants && assignment == 1 ? "TorsoWithoutHeadNeckOrArms" : "Head", "Head"
                 }
             };
         }

@@ -1,0 +1,19 @@
+FAIL
+Execution02..10; all nine executions attempted sequentially in separate source sessions.
+Succeeded=7/9; failed=2.
+Execution01 assets and reports are excluded from this collection.
+Sampled grounding only; no contact, recovery or gameplay approval.
+execution,status,asset,report,error
+Execution02,PASS,"Assets/CombatExpansion/SamuraiStudy/Grounding/Samurai_Execution02_Grounding.asset","Execution02GroundingValidation.txt",""
+Execution03,PASS,"Assets/CombatExpansion/SamuraiStudy/Grounding/Samurai_Execution03_Grounding.asset","Execution03GroundingValidation.txt",""
+Execution04,PASS,"Assets/CombatExpansion/SamuraiStudy/Grounding/Samurai_Execution04_Grounding.asset","Execution04GroundingValidation.txt",""
+Execution05,PASS,"Assets/CombatExpansion/SamuraiStudy/Grounding/Samurai_Execution05_Grounding.asset","Execution05GroundingValidation.txt",""
+Execution06,FAIL,"Assets/CombatExpansion/SamuraiStudy/Grounding/Samurai_Execution06_Grounding.asset","Execution06GroundingValidation.txt","System.InvalidOperationException: Missing grounding asset: Assets/CombatExpansion/SamuraiStudy/Grounding/Samurai_Execution06_Grounding.asset
+  at FrankRetarget.Editor.CombatExpansionSamuraiStudy.ValidateExecutionGrounding (System.Int32 execution) [0x00567] in /home/eragon/Project/unity/Zero-Space/Assets/Editor/CombatExpansionSamuraiStudy.Grounding.Validation.cs:112 
+  at FrankRetarget.Editor.CombatExpansionSamuraiStudy.RunRemainingGroundingCollection (System.String operation, System.String success, System.Action`1[T] run) [0x00033] in /home/eragon/Project/unity/Zero-Space/Assets/Editor/CombatExpansionSamuraiStudy.Grounding.Collection.cs:47 "
+Execution07,PASS,"Assets/CombatExpansion/SamuraiStudy/Grounding/Samurai_Execution07_Grounding.asset","Execution07GroundingValidation.txt",""
+Execution08,PASS,"Assets/CombatExpansion/SamuraiStudy/Grounding/Samurai_Execution08_Grounding.asset","Execution08GroundingValidation.txt",""
+Execution09,PASS,"Assets/CombatExpansion/SamuraiStudy/Grounding/Samurai_Execution09_Grounding.asset","Execution09GroundingValidation.txt",""
+Execution10,FAIL,"Assets/CombatExpansion/SamuraiStudy/Grounding/Samurai_Execution10_Grounding.asset","Execution10GroundingValidation.txt","System.InvalidOperationException: Missing grounding asset: Assets/CombatExpansion/SamuraiStudy/Grounding/Samurai_Execution10_Grounding.asset
+  at FrankRetarget.Editor.CombatExpansionSamuraiStudy.ValidateExecutionGrounding (System.Int32 execution) [0x00567] in /home/eragon/Project/unity/Zero-Space/Assets/Editor/CombatExpansionSamuraiStudy.Grounding.Validation.cs:112 
+  at FrankRetarget.Editor.CombatExpansionSamuraiStudy.RunRemainingGroundingCollection (System.String operation, System.String success, System.Action`1[T] run) [0x00033] in /home/eragon/Project/unity/Zero-Space/Assets/Editor/CombatExpansionSamuraiStudy.Grounding.Collection.cs:47 "

@@ -1,21 +1,23 @@
 # Samurai Play Mode checkpoint
 
-Basic24/Report.txt preserves the earlier completed 24-case suite.
-RecoveryBoundaryFailure preserves the initial 5.514 mm getup-entry displacement
-against the unchanged 2 mm tolerance. The grounded local-position blend fixes
-that boundary; all four measured boundaries now report 0.000000 m.
+The latest Report.txt passes all 40 extended cases / 44 accepted activations.
+Coverage includes both avatar assignments and directions, range rejection,
+existing/new/existing queue sequences, lethal outcomes/reset, interruptions,
+reset after contact, receiver disable, prone pause/resume and repeated use.
+All measured recovery boundaries report 0.000000 m at report precision.
 
-Report.txt records the latest 40-case extended run. Cases 1–32 passed, including
-range guards, queued old/new/old actions, lethal outcomes and reset, precontact
-interrupts, reset after contact, and receiver disable after contact across both
-avatars and directions. Natural cleanup observes actual effect/voice expiry,
-then disarms its observer before explicit reset between cases.
+The pause repair freezes pooled particle systems, effect ages, active shake and
+surface highlights during global pause while retaining unscaled presentation
+for local contact holds. Each of the four prone-pause cases observed eight
+live particle systems and one active audio voice; clocks and poses froze and
+resumed, and natural cleanup passed. Owned equipment changes and stale callback
+rejection also passed. The launcher restored the previous play scene and removed
+its temporary copy.
 
-Case 33 failed during prone pause/resume: the particle clock for
-StrongSpreadingSmoke advanced from 0.612848 to 0.727778 while the harness expected
-it to remain paused. Cases 34–40 did not run. The launcher restored the previous
-play scene and removed its temporary copy. This failure remains unresolved.
+Basic24 preserves the earlier suite. RecoveryBoundaryFailure and PauseClockFailure
+preserve the previously observed defects; these are historical failures rather
+than the latest result.
 
-The extended suite is not accepted. The terminal FAIL line is authoritative even
-though the report retains its initial RUNNING header. Screenshots are frame
-evidence; normal-speed choreography and dedicated audio review remain pending.
+This is lifecycle/presentation instrumentation evidence. Normal-speed visual
+choreography, directional effect appearance and dedicated audio review remain
+required. Editor frame/heap measurements are not standalone performance approval.

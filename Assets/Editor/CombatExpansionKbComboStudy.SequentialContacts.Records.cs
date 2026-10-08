@@ -10,10 +10,13 @@ namespace FrankRetarget.Editor
         static float SequentialEntryBlend => bodyJabVariants ? .04f : .12f;
         static float SequentialLinkBlend => bodyJabVariants ? .04f : .08f;
         static string SequentialOutput => "GeneratedAssets/CombatExpansion/KbComboStudy/" +
-            (bodyJabVariants ? "BodyJabCandidates" : "SequentialContacts");
+            (bodyJabVariants ? "BoundedTorsoJabCandidates" : "SequentialContacts");
         static string SequentialScope => bodyJabVariants
             ? "PROVISIONAL short blend and anatomical target variants. Entry/link blends 0.04 seconds. " +
-                "Mankey first jabs retain Head/HighFront; Pepe first jabs test Chest/MidFront. " +
+                "Mankey first jabs retain Head/HighFront; Pepe first jabs test bounded Chest torso/MidFront. " +
+                "Torso excludes mapped neck, head, shoulders and all arm/hand branches; all vertices need " +
+                ">=0.5 weight on retained torso bones. This differs from the historical Chest descendants " +
+                "study, which also included head and arms and cannot establish torso contact. " +
                 "Final hook tests Head/HighRight or HighLeft. Explicit source identities and target regions " +
                 "are recorded per case. Exact hand/region triangle gaps, sequential reaction onsets, " +
                 "bounded instantaneous grounding and reverse checks remain required. " +

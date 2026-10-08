@@ -1,0 +1,16 @@
+PASS
+Execution06; both assignments and both lane directions; actual source playback.
+Pair cases=4/4; actor cases=8/8; pair evaluations=3904; clearance measurements=7808; violations=0.
+Independent grid minimum rate=361 Hz; endpoints included; acceptance clearance >= -0.001 m.
+Worst clearance=0.00498487 m; maximum evaluated correction=0.297636062 m.
+Measures visible evaluated body skins against world Y=0 using existing geometry helper.
+Sampled grounding only; no contact, recovery or gameplay approval.
+source,target,direction,fighter,role,minimumClearance,seconds,samples,maximumCorrection,violations
+"Mankey","Pepe",1,"Mankey",attacker,0.009884029,1.13538468,976,0.197919026,0
+"Mankey","Pepe",1,"Pepe",receiver,0.008363333,1.2516923,976,0.217035308,0
+"Mankey","Pepe",-1,"Mankey",attacker,0.009883698,1.13538468,976,0.197919026,0
+"Mankey","Pepe",-1,"Pepe",receiver,0.008363295,1.2516923,976,0.217035308,0
+"Pepe","Mankey",1,"Pepe",attacker,0.009650138,0.318461537,976,0.08781897,0
+"Pepe","Mankey",1,"Mankey",receiver,0.00498488452,2.1433847,976,0.297636062,0
+"Pepe","Mankey",-1,"Pepe",attacker,0.009649784,0.318461537,976,0.08781897,0
+"Pepe","Mankey",-1,"Mankey",receiver,0.00498487,2.1433847,976,0.297636062,0
