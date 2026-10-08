@@ -11,14 +11,23 @@ It does not complete the combat expansion.
   preventing the hand snap observed when those offsets were restored immediately.
 - The Slap lifecycle assertion accounts for the existing camera-facing effect
   offset, and its launcher allows the complete interruption and cleanup suite.
-- New punch-combo tooling measures all three candidate contacts across avatars,
-  lane directions and spacings. Contact capture is still running locally;
-  its partial outputs are excluded from this checkpoint.
+- Punch-combo tooling measures all three candidate contacts across avatars,
+  lane directions and spacings. The first contact capture completed 12 cases;
+  a follow-up with high reactions and transient grounding completed 16 cases.
+  These candidates still miss required contacts and are not registered moves.
 - The combo catalogue proposes 30 sequences covering all 86 usable punch/kick
   clips. These are authoring plans, not accepted or registered gameplay combos.
 - Optional exact-mesh exclusions support Samurai sheath filtering in trails and
   blade effects. Native blade calibration and both sheath exclusions are saved
   into BattleScene using a selective field merge that preserves other changes.
+- Samurai contact authoring records blade/skin intersections, anatomical regions,
+  bone-local anchors, relative velocities and non-leg landing support for both
+  avatars and directions. Gameplay integration remains pending.
+- Landing VFX can use an explicitly assigned contact anchor, with the existing
+  hip position as fallback. This change has compiled but awaits gameplay checks.
+- Slap lethal authoring and raw-preview tools are preserved as provisional editor
+  tooling. The empirical encoding diagnosis failed its native-pose tolerance;
+  no lethal receiver candidate was baked or assigned.
 
 ## Validation recorded at this checkpoint
 
@@ -36,6 +45,18 @@ It does not complete the combat expansion.
 - The first punch-combo candidate capture previously passed 12 sampling cases,
   including native-pose equivalence and backward seeking. `KbComboStudy/FirstCombo/
   MotionReview.md` records visual limitations. Contact timings remain provisional.
+- `KbComboStudy/FirstComboContacts` contains all 12 completed contact cases and
+  a review of reach, reaction timing and raw floor penetration. Forward/backward
+  contact, clearance and pose discrepancies were zero in this capture.
+- `KbComboStudy/HighReactionLinks` contains 16 completed cases. Transient grounding
+  kept sampled body clearance near or above 0.01 m, but the reaction/timing changes
+  did not resolve reach for both avatars. These results do not qualify a combo.
+- `SamuraiStudy/BladeContacts/ContactAuthoring` contains four completed cases with
+  stable backward seeks. Both victims finish prone. Anatomy, support timing,
+  recovery and presentation still require gameplay acceptance.
+- `SlapStudy/LethalAuthoring/BakeProvenance.txt` records all four Root/Motion
+  encoding trials and the failed pose-preservation gate. The final source guard
+  reported unchanged sources. Raw candidate preview has not run.
 - Samurai blade configuration validation passed in Unity after correcting the
   fixture to use persistent mesh references and Unity null equality. Identity,
   calibration, idempotence, conflict rejection and trail/VFX predicates passed;

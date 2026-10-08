@@ -280,8 +280,8 @@ public sealed class BattleVfxPlayer : MonoBehaviour
                     break;
                 case "body_fall":
                 case "knockout_fall":
-                    var floorAnchor = cue.hasContactPoint ? BoneTransform(receiver, cue.contactBone) : null;
-                    Vector3 ground = floorAnchor ? floorAnchor.TransformPoint(cue.contactOffset) : BonePosition(receiver, HumanBodyBones.Hips);
+                    Vector3 ground = cue.TryContactPosition(receiver ? receiver.Animator : null,
+                        out Vector3 landingPoint) ? landingPoint : BonePosition(receiver, HumanBodyBones.Hips);
                     ground.y = groundHeight + .035f;
                     bool knockout = lethal && cue.finalLanding;
                     Spawn(landingDust, ground, Quaternion.identity, knockout ? 1.35f : 1,
