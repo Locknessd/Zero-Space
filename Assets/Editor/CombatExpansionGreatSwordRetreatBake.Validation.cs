@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using UnityEditor;
@@ -14,6 +15,114 @@ namespace FrankRetarget.Editor
 {
     public static partial class CombatExpansionGreatSwordRetreatBake
     {
+        public static void DiagnoseJoins()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode || AnimationMode.InAnimationMode())
+                throw new InvalidOperationException("Join diagnosis requires idle Edit Mode without animation preview.");
+            const string path = "GeneratedAssets/CombatExpansion/GreatSwordStudy/RetreatJoinDiagnostics.txt";
+            var report = new StringBuilder("Native Ambush retreat join diagnostics; no output clip is written.\n");
+            try
+            {
+                var segments = LoadSegments(report);
+                Prepare(segments, report);
+                for (int join = 1; join < segments.Length; join++)
+                {
+                    var previous = segments[join - 1];
+                    var next = segments[join];
+                    report.AppendLine(FormattableString.Invariant($"JOIN index={join}; seconds={next.start:R}"));
+                    foreach (string key in previous.curves.Keys.OrderBy(k => k))
+                    {
+                        var binding = previous.bindings[key];
+                        if (binding.propertyName.StartsWith("m_LocalRotation."))
+                        {
+                            if (binding.propertyName == "m_LocalRotation.w")
+                            {
+                                float angle = QuaternionJoinAngle(previous, next, binding.path);
+                                report.AppendLine(FormattableString.Invariant(
+                                    $"ROTATION_JOIN path={binding.path}; angle={angle:R}; limit={RotationTolerance:R}; ") +
+                                    $"fails={angle > RotationTolerance}");
+                            }
+                            continue;
+                        }
+                        var left = SegmentKeys(previous, key).Last();
+                        var right = SegmentKeys(next, key).First();
+                        float delta = Mathf.Abs(left.value - right.value);
+                        if (delta <= ValueTolerance)
+                            continue;
+                        report.AppendLine(FormattableString.Invariant(
+                            $"CURVE_JOIN_FAIL binding={key}; previous={left.value:R}; next={right.value:R}; ") +
+                            FormattableString.Invariant($"residual={delta:R}; limit={ValueTolerance:R}"));
+                    }
+                    foreach (string fighter in Fighters)
+                        DiagnoseNativeJoin(previous, next, fighter, report);
+                }
+                report.AppendLine("Diagnostics complete. Bound-transform discontinuities remain bake errors.");
+            }
+            catch (Exception exception)
+            {
+                report.AppendLine("FAIL: " + exception);
+                throw;
+            }
+            finally
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(path));
+                File.WriteAllText(path, report.ToString());
+            }
+        }
+
+        static void DiagnoseNativeJoin(Segment previous, Segment next, string fighter, StringBuilder report)
+        {
+            var original = NativeDriver(fighter);
+            var hierarchy = DriverBones(original);
+            foreach (string key in new[] { "Dummy004", "Dummy003", MotionRoot, WeaponSocket })
+            {
+                if (!hierarchy.TryGetValue(key, out var transform))
+                {
+                    report.AppendLine($"DRIVER_PATH fighter={fighter}; path={key}; present=false");
+                    continue;
+                }
+                string children = string.Join(",", transform.GetComponentsInChildren<Transform>(true)
+                    .Select(t => AnimationUtility.CalculateTransformPath(t, original.transform)));
+                report.AppendLine($"DRIVER_PATH fighter={fighter}; path={key}; present=true; descendants={children}");
+            }
+            var scene = EditorSceneManager.NewPreviewScene();
+            try
+            {
+                using var left = new NativeSample(original, previous.clip, scene);
+                using var right = new NativeSample(original, next.clip, scene);
+                foreach (float endpointInset in new[] { 0f, .00001f })
+                {
+                    left.Evaluate(previous.clip.length - endpointInset);
+                    right.Evaluate(0);
+                    left.bones[MotionRoot].localPosition += previous.offset;
+                    right.bones[MotionRoot].localPosition += next.offset;
+                    ApplyHelperOffsets(previous, left.bones);
+                    ApplyHelperOffsets(next, right.bones);
+                    foreach (string key in left.bones.Keys.OrderBy(k => k))
+                    {
+                        var a = left.bones[key];
+                        var b = right.bones[key];
+                        float position = Vector3.Distance(a.position, b.position);
+                        float angle = Quaternion.Angle(a.rotation, b.rotation);
+                        float scale = Vector3.Distance(a.localScale, b.localScale);
+                        bool fails = position > .0005f || angle > .08f || scale > .0002f;
+                        if (!fails && key != "Dummy004" && key != MotionRoot && key != WeaponSocket)
+                            continue;
+                        report.AppendLine(FormattableString.Invariant(
+                            $"NATIVE_JOIN fighter={fighter}; path={key}; inset={endpointInset:R}; fails={fails}; ") +
+                            FormattableString.Invariant(
+                            $"worldPositionResidual={position:R}; angle={angle:R}; scale={scale:R}; ") +
+                            $"previousLocal={a.localPosition.ToString("F9")}; nextLocal={b.localPosition.ToString("F9")}; " +
+                            $"previousWorld={a.position.ToString("F9")}; nextWorld={b.position.ToString("F9")}");
+                    }
+                }
+            }
+            finally
+            {
+                EditorSceneManager.ClosePreviewScene(scene);
+            }
+        }
+
         static void ValidateNative(Segment[] segments, AnimationClip output, StringBuilder report)
         {
             foreach (string fighter in Fighters)
@@ -43,6 +152,7 @@ namespace FrankRetarget.Editor
                         {
                             source.Evaluate(time);
                             source.bones[MotionRoot].localPosition += segment.offset;
+                            ApplyHelperOffsets(segment, source.bones);
                             baked.Evaluate(segment.start + time);
                             foreach (var pair in source.bones)
                             {
@@ -58,10 +168,13 @@ namespace FrankRetarget.Editor
                                 maxAngle = Mathf.Max(maxAngle, angle);
                                 maxScale = Mathf.Max(maxScale, scale);
                                 if (distance > .0005f || angle > .08f || scale > .0002f)
+                                {
+                                    ReportNativeMismatch(segment, output, fighter, pair.Key, time, source, baked, report);
                                     throw new InvalidOperationException(FormattableString.Invariant(
                                         $"Native equivalence failed on {fighter}/{pair.Key}, segment={segment.start:R}, ") +
                                         FormattableString.Invariant(
                                         $"time={time:R}: position={distance:R}m, angle={angle:R}deg, scale={scale:R}"));
+                                }
                             }
                             samples++;
                         }
@@ -79,7 +192,9 @@ namespace FrankRetarget.Editor
             report.AppendLine("Native verification: AnimationClipPlayable on isolated copies of both native drivers;");
             report.AppendLine("240Hz plus every native key, exact endpoints and length-minus-0.00001 samples.");
             report.AppendLine("Sources are private nonlooping clones to inspect terminal keys without source wrap.");
-            report.AppendLine("Expected pose applies only the reported root-local translation offset.");
+            report.AppendLine("Expected pose applies the reported root-local translation offset.");
+            report.AppendLine("Unused export helpers additionally receive their declared constant local position offsets.");
+            report.AppendLine("Proven unused rotation helpers also receive their declared constant quaternion offsets.");
             report.AppendLine("Every driver transform is compared, including the complete weapon IK chain,");
             report.AppendLine("the nested hand Dummy003 and Footsteps; original clips remain comparison references.");
             report.AppendLine("Limits: 0.0005m world position, 0.08deg world rotation, 0.0002 local scale.");

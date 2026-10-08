@@ -12,7 +12,8 @@ namespace FrankRetarget.Editor
     public static partial class FrankRetargetBuilder
     {
         internal static FrankTestDriver BuildHumanoidStudyDriver(Animator character, string fighter,
-            string modelPath, AnimationClip[] clips, string outputPath, bool weapons)
+            string modelPath, AnimationClip[] clips, string outputPath, bool weapons,
+            string[] retainedRendererNames = null)
         {
             var model = AssetDatabase.LoadAssetAtPath<GameObject>(modelPath);
             var avatar = AssetDatabase.LoadAllAssetsAtPath(modelPath).OfType<Avatar>().FirstOrDefault();
@@ -54,8 +55,17 @@ namespace FrankRetarget.Editor
                 foreach (var other in root.GetComponentsInChildren<Animator>(true).Where(a => a != source))
                     Object.DestroyImmediate(other);
                 var meshes = root.GetComponentsInChildren<Renderer>(true);
-                var axes = meshes.Where(r => weapons && IsStudyAxe(r.transform, root.transform)).ToArray();
-                if (weapons && (axes.Length < 2 || !Bones(root.transform).ContainsKey("L_axe_wp") ||
+                var axes = meshes.Where(r => weapons && (retainedRendererNames == null
+                    ? IsStudyAxe(r.transform, root.transform)
+                    : HasStudyRendererAncestor(r.transform, root.transform, retainedRendererNames))).ToArray();
+                if (weapons && retainedRendererNames != null)
+                    foreach (string retainedName in retainedRendererNames)
+                        if (!axes.Any(r => HasStudyRendererAncestor(r.transform, root.transform,
+                            new[] { retainedName })))
+                            throw new InvalidOperationException("Native retained renderer missing: " +
+                                retainedName + " in " + modelPath);
+                if (weapons && retainedRendererNames == null &&
+                    (axes.Length < 2 || !Bones(root.transform).ContainsKey("L_axe_wp") ||
                     !Bones(root.transform).ContainsKey("R_axe_wp")))
                     throw new InvalidOperationException("Native axe meshes or sockets missing: " + modelPath);
                 foreach (var renderer in meshes)
@@ -65,7 +75,8 @@ namespace FrankRetarget.Editor
                         Object.DestroyImmediate(renderer);
                         continue;
                     }
-                    renderer.sharedMaterials = renderer.sharedMaterials.Select(StudyAxeMaterial).ToArray();
+                    if (retainedRendererNames == null)
+                        renderer.sharedMaterials = renderer.sharedMaterials.Select(StudyAxeMaterial).ToArray();
                     renderer.enabled = true;
                 }
                 var pose = root.AddComponent<FrankPoseRetarget>();
@@ -178,6 +189,14 @@ namespace FrankRetarget.Editor
         {
             for (var t = node; t && t != root; t = t.parent)
                 if (t.name.IndexOf("axe", StringComparison.OrdinalIgnoreCase) >= 0)
+                    return true;
+            return false;
+        }
+
+        static bool HasStudyRendererAncestor(Transform node, Transform root, string[] names)
+        {
+            for (var t = node; t && t != root; t = t.parent)
+                if (names.Contains(t.name, StringComparer.Ordinal))
                     return true;
             return false;
         }

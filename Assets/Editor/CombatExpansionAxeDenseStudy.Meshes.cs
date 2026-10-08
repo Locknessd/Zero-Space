@@ -9,15 +9,15 @@ namespace FrankRetarget.Editor
 {
     public static partial class CombatExpansionAxeDenseStudy
     {
-        static Surface Receiver(CharacterCombat fighter, List<string> geometry)
+        static SkinnedMeshRenderer[] BodySkins(CharacterCombat fighter) =>
+            fighter.Animator.GetComponentsInChildren<SkinnedMeshRenderer>()
+                .Where(skin => Visible(skin) && skin.sharedMesh && skin.sharedMesh.vertexCount >= 1000).ToArray();
+
+        static Surface Receiver(CharacterCombat fighter, List<string> geometry, SkinnedMeshRenderer[] skins = null)
         {
             var result = new Surface();
-            foreach (var skin in fighter.Animator.GetComponentsInChildren<SkinnedMeshRenderer>())
-            {
-                if (!Visible(skin) || !skin.sharedMesh || skin.sharedMesh.vertexCount < 1000)
-                    continue;
+            foreach (var skin in skins ?? BodySkins(fighter))
                 AddBodyMesh(result, skin, geometry);
-            }
             result.Build();
             // A baked avatar larger than its skeleton is a space conversion failure, not a contact.
             var bones = Enum.GetValues(typeof(HumanBodyBones)).Cast<HumanBodyBones>()

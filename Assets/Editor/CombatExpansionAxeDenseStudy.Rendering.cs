@@ -12,7 +12,8 @@ namespace FrankRetarget.Editor
     public static partial class CombatExpansionAxeDenseStudy
     {
         static void WriteSheets(Scene scene, CharacterCombat[] fighters, FrankBattlePairPlayback pair,
-            AxeRegion[] axes, CharacterCombat source, int direction, float[] seconds, List<string> scope)
+            AxeRegion[] axes, CharacterCombat source, int direction, float[] seconds, List<string> scope,
+            string output = Output, Action<float> afterEvaluate = null)
         {
             using var view = new CaptureView(scene, fighters, pair, axes);
             using var skin = new CombatExpansionPreviewSkin(fighters.Select(f => f.gameObject).ToArray());
@@ -36,6 +37,7 @@ namespace FrankRetarget.Editor
                     for (int frame = 0; frame < seconds.Length; frame++)
                     {
                         pair.EvaluateAt(seconds[frame]);
+                        afterEvaluate?.Invoke(seconds[frame]);
                         skin.Sample();
                         foreach (var axe in axes)
                             axe.Update();
@@ -56,7 +58,7 @@ namespace FrankRetarget.Editor
                     }
                     sheet.Apply();
                     string file = source.name + "_" + direction + (regions ? "_HeadRegions.png" : "_Plain.png");
-                    File.WriteAllBytes(Output + "/" + file, sheet.EncodeToPNG());
+                    File.WriteAllBytes(output + "/" + file, sheet.EncodeToPNG());
                     scope.Add(file + ": each time has two adjacent opposing oblique views; times=" +
                         string.Join(";", seconds.Select(t => t.ToString("R", CultureInfo.InvariantCulture))));
                 }

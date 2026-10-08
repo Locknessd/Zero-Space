@@ -20,8 +20,14 @@ namespace FrankRetarget.Editor
 
         public static void Capture()
         {
+            CaptureStudy(null);
+        }
+
+        static void CaptureStudy(FrankReactionTrack reactions)
+        {
             CombatExpansionHumanoidStudy.RequireEditor();
-            Directory.CreateDirectory(Output);
+            string output = reactions ? FrontalOutput : Output;
+            Directory.CreateDirectory(output);
             var singletonTypes = new[]
             {
                 typeof(CombatPositioningController), typeof(GameManager), typeof(MemeBattleUI),
@@ -32,7 +38,7 @@ namespace FrankRetarget.Editor
             var values = singletons.Select(p => p.GetValue(null)).ToArray();
             var active = SceneManager.GetActiveScene();
             Scene scene = default;
-            var scope = Scope();
+            var scope = reactions ? FrontalScope() : Scope();
             var contacts = new List<string>
             {
                 "sourceIdentity,fighter,victim,direction,spacingM,window,seconds,hand,region,bladeBodyGapM," +
@@ -65,12 +71,12 @@ namespace FrankRetarget.Editor
                 }
                 foreach (var source in fighters)
                 foreach (int direction in new[] { 1, -1 })
-                    CapturePair(scene, fighters, source, direction, contacts, paths, scope);
-                File.WriteAllLines(Output + "/Contacts.csv", contacts);
-                File.WriteAllLines(Output + "/Displacements.csv", paths);
+                    CapturePair(scene, fighters, source, direction, contacts, paths, scope, reactions, output);
+                File.WriteAllLines(output + "/Contacts.csv", contacts);
+                File.WriteAllLines(output + "/Displacements.csv", paths);
                 scope.Add("Completed contact rows: " + (contacts.Count - 1));
-                File.WriteAllLines(Output + "/Scope.txt", scope);
-                Debug.Log("Dense Combo_01 study complete: " + Output);
+                File.WriteAllLines(output + "/Scope.txt", scope);
+                Debug.Log("Dense Combo_01 study complete: " + output);
             }
             finally
             {
@@ -90,7 +96,7 @@ namespace FrankRetarget.Editor
         }
 
         static void CapturePair(Scene scene, CharacterCombat[] fighters, CharacterCombat source, int direction,
-            List<string> contacts, List<string> paths, List<string> scope)
+            List<string> contacts, List<string> paths, List<string> scope, FrankReactionTrack reactions, string output)
         {
             foreach (var fighter in fighters)
                 fighter.ResetCombat();
@@ -103,6 +109,13 @@ namespace FrankRetarget.Editor
             var move = CombatExpansionAxeContactStudy.MakeMove(source, target, spacing);
             if (CombatExpansionInventory.Identity(move.attackAnim) != Identity)
                 throw new InvalidOperationException("Unexpected Combo_01 identity");
+            if (reactions)
+            {
+                move.sourcePair.reactions = reactions;
+                move.sourcePair.reactionDelay = 0;
+                scope.Add(Csv("Moving pair", source.name, target.name, direction, spacing,
+                    "attack source end", move.attackAnim.length));
+            }
             if (!source.ExecuteAttack(move, target))
                 throw new InvalidOperationException("Dense axe pair could not begin");
             var pair = source.SourcePlayback;
@@ -118,13 +131,18 @@ namespace FrankRetarget.Editor
                     new AxeRegion(pair.AttackerActor, false, scope)
                 };
                 var body = Receiver(target, scope);
+                var movingSkins = reactions ? BodySkins(target) : null;
                 var baseline = Bones(pair, source, target).ToDictionary(p => p.name, p => p.transform.position);
                 RecordPaths(paths, source, target, direction, spacing, 0, pair, baseline);
+                var recorded = new HashSet<float> { 0 };
                 var minimumTimes = new Dictionary<string, (float gap, float seconds)>();
                 foreach (var sample in Times())
                 {
                     pair.EvaluateAt(sample.seconds);
-                    RecordPaths(paths, source, target, direction, spacing, sample.seconds, pair, baseline);
+                    if (reactions)
+                        body = MovingReceiver(target, movingSkins, sample.seconds, scope);
+                    RecordPaths(paths, source, target, direction, spacing, sample.seconds, pair, baseline, !reactions);
+                    recorded.Add(sample.seconds);
                     foreach (var axe in axes)
                     {
                         axe.Update();
@@ -148,7 +166,19 @@ namespace FrankRetarget.Editor
                 }
                 var selected = new[] { .43f, .48f, .52f, .56f, .9f, .96f, 1.02f, 1.07f, 1.12f }
                     .Concat(minimumTimes.Values.Select(v => v.seconds)).Distinct().OrderBy(t => t).ToArray();
-                WriteSheets(scene, fighters, pair, axes, source, direction, selected, scope);
+                Action<float> movingSample = null;
+                if (reactions)
+                {
+                    selected = selected.Concat(new[] { 0, .2f, .4f, FrontalOnset, 1.3f, 1.8f, move.attackAnim.length })
+                        .Distinct().OrderBy(t => t).ToArray();
+                    movingSample = seconds =>
+                    {
+                        MovingReceiver(target, movingSkins, seconds, scope);
+                        if (recorded.Add(seconds))
+                            RecordPaths(paths, source, target, direction, spacing, seconds, pair, baseline, false);
+                    };
+                }
+                WriteSheets(scene, fighters, pair, axes, source, direction, selected, scope, output, movingSample);
             }
             finally
             {
