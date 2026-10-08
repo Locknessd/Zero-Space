@@ -4,7 +4,195 @@ Normal/repeat/reset/pause use EnqueueCombatAction; interrupt/disable use direct 
 EXCLUDED: lethal visual treatment remains unfinished (native receiver ends upright).
 Blocks are unsupported; range rejection is tested without fabricated block reactions.
 START case=1 scenario=Normal action=SlapFace_Sequence1 avatar=MankeyAvatar direction=1 play=1
-1,Normal,SlapFace_Sequence1,MankeyAvatar,1,1,FAIL,1,0,0.000000,1.754
-Feedback cue=1.400000s audio=True vfx=True lightHold=False light=False shake=False flash=False surface=False callbacks=0/0 pausedFrames=0
-FAIL case=1 scenario=Normal action=SlapFace_Sequence1: System.InvalidOperationException: Impact missed its accepted receiver anchor.
-  at FrankRetarget.Editor.CombatExpansionSlapPlayCheck.Tick () [0x00025] in /home/eragon/Project/unity/Zero-Space/Assets/Editor/CombatExpansionSlapPlayCheck.cs:145 
+1,Normal,SlapFace_Sequence1,MankeyAvatar,1,1,PASS,1,66,0.000000,11.550
+Feedback cue=1.400000s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=2 scenario=Normal action=SlapFace_Sequence1 avatar=PepeAvatar direction=1 play=1
+2,Normal,SlapFace_Sequence1,PepeAvatar,1,1,PASS,1,78,0.000000,11.570
+Feedback cue=1.391667s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=3 scenario=Normal action=SlapFace_Sequence1 avatar=MankeyAvatar direction=-1 play=1
+3,Normal,SlapFace_Sequence1,MankeyAvatar,-1,1,PASS,1,79,0.000000,11.562
+Feedback cue=1.400000s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=4 scenario=Normal action=SlapFace_Sequence1 avatar=PepeAvatar direction=-1 play=1
+4,Normal,SlapFace_Sequence1,PepeAvatar,-1,1,PASS,1,79,0.000001,11.562
+Feedback cue=1.391667s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=5 scenario=Normal action=SlapFace_Sequence2 avatar=MankeyAvatar direction=1 play=1
+5,Normal,SlapFace_Sequence2,MankeyAvatar,1,1,PASS,1,75,0.000000,8.733
+Feedback cue=0.933333s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=6 scenario=Normal action=SlapFace_Sequence2 avatar=PepeAvatar direction=1 play=1
+6,Normal,SlapFace_Sequence2,PepeAvatar,1,1,PASS,1,80,0.000000,8.729
+Feedback cue=0.905000s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=7 scenario=Normal action=SlapFace_Sequence2 avatar=MankeyAvatar direction=-1 play=1
+7,Normal,SlapFace_Sequence2,MankeyAvatar,-1,1,PASS,1,73,0.000000,8.730
+Feedback cue=0.933333s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=8 scenario=Normal action=SlapFace_Sequence2 avatar=PepeAvatar direction=-1 play=1
+8,Normal,SlapFace_Sequence2,PepeAvatar,-1,1,PASS,1,78,0.000000,8.733
+Feedback cue=0.905000s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=9 scenario=Interrupt action=SlapFace_Sequence1 avatar=MankeyAvatar direction=1 play=1
+9,Interrupt,SlapFace_Sequence1,MankeyAvatar,1,1,PASS,1,0,0.000000,12.151
+Feedback cue=1.400000s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=10 scenario=Interrupt action=SlapFace_Sequence1 avatar=PepeAvatar direction=1 play=1
+10,Interrupt,SlapFace_Sequence1,PepeAvatar,1,1,PASS,1,0,0.000000,12.143
+Feedback cue=1.391667s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=11 scenario=Interrupt action=SlapFace_Sequence1 avatar=MankeyAvatar direction=-1 play=1
+11,Interrupt,SlapFace_Sequence1,MankeyAvatar,-1,1,PASS,1,0,0.000000,12.154
+Feedback cue=1.400000s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=12 scenario=Interrupt action=SlapFace_Sequence1 avatar=PepeAvatar direction=-1 play=1
+12,Interrupt,SlapFace_Sequence1,PepeAvatar,-1,1,PASS,1,0,0.000000,12.143
+Feedback cue=1.391667s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=13 scenario=Interrupt action=SlapFace_Sequence2 avatar=MankeyAvatar direction=1 play=1
+13,Interrupt,SlapFace_Sequence2,MankeyAvatar,1,1,PASS,1,0,0.000000,8.851
+Feedback cue=0.933333s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=14 scenario=Interrupt action=SlapFace_Sequence2 avatar=PepeAvatar direction=1 play=1
+14,Interrupt,SlapFace_Sequence2,PepeAvatar,1,1,PASS,1,0,0.000000,8.825
+Feedback cue=0.905000s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=15 scenario=Interrupt action=SlapFace_Sequence2 avatar=MankeyAvatar direction=-1 play=1
+15,Interrupt,SlapFace_Sequence2,MankeyAvatar,-1,1,PASS,1,0,0.000000,8.856
+Feedback cue=0.933333s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=16 scenario=Interrupt action=SlapFace_Sequence2 avatar=PepeAvatar direction=-1 play=1
+16,Interrupt,SlapFace_Sequence2,PepeAvatar,-1,1,PASS,1,0,0.000000,8.825
+Feedback cue=0.905000s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=17 scenario=Reset action=SlapFace_Sequence1 avatar=MankeyAvatar direction=1 play=1
+17,Reset,SlapFace_Sequence1,MankeyAvatar,1,1,PASS,1,1,0.000000,21.165
+Feedback cue=1.400000s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=18 scenario=Reset action=SlapFace_Sequence1 avatar=PepeAvatar direction=1 play=1
+18,Reset,SlapFace_Sequence1,PepeAvatar,1,1,PASS,1,1,0.000000,21.162
+Feedback cue=1.391667s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=19 scenario=Reset action=SlapFace_Sequence1 avatar=MankeyAvatar direction=-1 play=1
+19,Reset,SlapFace_Sequence1,MankeyAvatar,-1,1,PASS,1,1,0.000000,21.160
+Feedback cue=1.400000s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=20 scenario=Reset action=SlapFace_Sequence1 avatar=PepeAvatar direction=-1 play=1
+20,Reset,SlapFace_Sequence1,PepeAvatar,-1,1,PASS,1,1,0.000001,21.161
+Feedback cue=1.391667s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=21 scenario=Reset action=SlapFace_Sequence2 avatar=MankeyAvatar direction=1 play=1
+21,Reset,SlapFace_Sequence2,MankeyAvatar,1,1,PASS,1,1,0.000000,15.492
+Feedback cue=0.933333s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=22 scenario=Reset action=SlapFace_Sequence2 avatar=PepeAvatar direction=1 play=1
+22,Reset,SlapFace_Sequence2,PepeAvatar,1,1,PASS,1,1,0.000000,15.494
+Feedback cue=0.905000s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=23 scenario=Reset action=SlapFace_Sequence2 avatar=MankeyAvatar direction=-1 play=1
+23,Reset,SlapFace_Sequence2,MankeyAvatar,-1,1,PASS,1,1,0.000000,15.496
+Feedback cue=0.933333s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=24 scenario=Reset action=SlapFace_Sequence2 avatar=PepeAvatar direction=-1 play=1
+24,Reset,SlapFace_Sequence2,PepeAvatar,-1,1,PASS,1,1,0.000000,15.494
+Feedback cue=0.905000s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=25 scenario=Disable action=SlapFace_Sequence1 avatar=MankeyAvatar direction=1 play=1
+25,Disable,SlapFace_Sequence1,MankeyAvatar,1,1,PASS,1,1,0.000000,20.806
+Feedback cue=1.400000s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=26 scenario=Disable action=SlapFace_Sequence1 avatar=PepeAvatar direction=1 play=1
+26,Disable,SlapFace_Sequence1,PepeAvatar,1,1,PASS,1,1,0.000000,20.806
+Feedback cue=1.391667s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=27 scenario=Disable action=SlapFace_Sequence1 avatar=MankeyAvatar direction=-1 play=1
+27,Disable,SlapFace_Sequence1,MankeyAvatar,-1,1,PASS,1,1,0.000000,20.808
+Feedback cue=1.400000s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=28 scenario=Disable action=SlapFace_Sequence1 avatar=PepeAvatar direction=-1 play=1
+28,Disable,SlapFace_Sequence1,PepeAvatar,-1,1,PASS,1,1,0.000001,20.809
+Feedback cue=1.391667s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=29 scenario=Disable action=SlapFace_Sequence2 avatar=MankeyAvatar direction=1 play=1
+29,Disable,SlapFace_Sequence2,MankeyAvatar,1,1,PASS,1,1,0.000000,15.140
+Feedback cue=0.933333s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=30 scenario=Disable action=SlapFace_Sequence2 avatar=PepeAvatar direction=1 play=1
+30,Disable,SlapFace_Sequence2,PepeAvatar,1,1,PASS,1,1,0.000000,15.142
+Feedback cue=0.905000s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=31 scenario=Disable action=SlapFace_Sequence2 avatar=MankeyAvatar direction=-1 play=1
+31,Disable,SlapFace_Sequence2,MankeyAvatar,-1,1,PASS,1,1,0.000000,15.143
+Feedback cue=0.933333s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=32 scenario=Disable action=SlapFace_Sequence2 avatar=PepeAvatar direction=-1 play=1
+32,Disable,SlapFace_Sequence2,PepeAvatar,-1,1,PASS,1,1,0.000000,15.140
+Feedback cue=0.905000s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=33 scenario=Pause action=SlapFace_Sequence1 avatar=MankeyAvatar direction=1 play=1
+33,Pause,SlapFace_Sequence1,MankeyAvatar,1,1,PASS,1,142,0.000000,11.816
+Feedback cue=1.400000s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=65
+START case=34 scenario=Pause action=SlapFace_Sequence1 avatar=PepeAvatar direction=1 play=1
+34,Pause,SlapFace_Sequence1,PepeAvatar,1,1,PASS,1,144,0.000000,11.814
+Feedback cue=1.391667s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=65
+START case=35 scenario=Pause action=SlapFace_Sequence1 avatar=MankeyAvatar direction=-1 play=1
+35,Pause,SlapFace_Sequence1,MankeyAvatar,-1,1,PASS,1,146,0.000000,11.815
+Feedback cue=1.400000s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=66
+START case=36 scenario=Pause action=SlapFace_Sequence1 avatar=PepeAvatar direction=-1 play=1
+36,Pause,SlapFace_Sequence1,PepeAvatar,-1,1,PASS,1,142,0.000001,11.815
+Feedback cue=1.391667s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=64
+START case=37 scenario=Pause action=SlapFace_Sequence2 avatar=MankeyAvatar direction=1 play=1
+37,Pause,SlapFace_Sequence2,MankeyAvatar,1,1,PASS,1,123,0.000000,8.981
+Feedback cue=0.933333s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=63
+START case=38 scenario=Pause action=SlapFace_Sequence2 avatar=PepeAvatar direction=1 play=1
+38,Pause,SlapFace_Sequence2,PepeAvatar,1,1,PASS,1,142,0.000000,8.984
+Feedback cue=0.905000s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=62
+START case=39 scenario=Pause action=SlapFace_Sequence2 avatar=MankeyAvatar direction=-1 play=1
+39,Pause,SlapFace_Sequence2,MankeyAvatar,-1,1,PASS,1,144,0.000000,8.984
+Feedback cue=0.933333s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=65
+START case=40 scenario=Pause action=SlapFace_Sequence2 avatar=PepeAvatar direction=-1 play=1
+40,Pause,SlapFace_Sequence2,PepeAvatar,-1,1,PASS,1,137,0.000000,8.982
+Feedback cue=0.905000s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=58
+START case=41 scenario=Repeated action=SlapFace_Sequence1 avatar=MankeyAvatar direction=1 play=1
+41,Repeated,SlapFace_Sequence1,MankeyAvatar,1,1,PASS,1,76,0.000000,11.564
+Feedback cue=1.400000s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=41 scenario=Repeated action=SlapFace_Sequence1 avatar=MankeyAvatar direction=1 play=2
+41,Repeated,SlapFace_Sequence1,MankeyAvatar,1,2,PASS,1,71,0.000000,11.569
+Feedback cue=1.400000s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=42 scenario=Repeated action=SlapFace_Sequence1 avatar=PepeAvatar direction=1 play=1
+42,Repeated,SlapFace_Sequence1,PepeAvatar,1,1,PASS,1,78,0.000000,11.562
+Feedback cue=1.391667s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=42 scenario=Repeated action=SlapFace_Sequence1 avatar=PepeAvatar direction=1 play=2
+42,Repeated,SlapFace_Sequence1,PepeAvatar,1,2,PASS,1,78,0.000000,11.561
+Feedback cue=1.391667s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=43 scenario=Repeated action=SlapFace_Sequence1 avatar=MankeyAvatar direction=-1 play=1
+43,Repeated,SlapFace_Sequence1,MankeyAvatar,-1,1,PASS,1,79,0.000000,11.565
+Feedback cue=1.400000s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=43 scenario=Repeated action=SlapFace_Sequence1 avatar=MankeyAvatar direction=-1 play=2
+43,Repeated,SlapFace_Sequence1,MankeyAvatar,-1,2,PASS,1,73,0.000000,11.564
+Feedback cue=1.400000s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=44 scenario=Repeated action=SlapFace_Sequence1 avatar=PepeAvatar direction=-1 play=1
+44,Repeated,SlapFace_Sequence1,PepeAvatar,-1,1,PASS,1,79,0.000001,11.566
+Feedback cue=1.391667s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=44 scenario=Repeated action=SlapFace_Sequence1 avatar=PepeAvatar direction=-1 play=2
+44,Repeated,SlapFace_Sequence1,PepeAvatar,-1,2,PASS,1,71,0.000001,11.561
+Feedback cue=1.391667s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=45 scenario=Repeated action=SlapFace_Sequence2 avatar=MankeyAvatar direction=1 play=1
+45,Repeated,SlapFace_Sequence2,MankeyAvatar,1,1,PASS,1,64,0.000000,8.726
+Feedback cue=0.933333s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=45 scenario=Repeated action=SlapFace_Sequence2 avatar=MankeyAvatar direction=1 play=2
+45,Repeated,SlapFace_Sequence2,MankeyAvatar,1,2,PASS,1,76,0.000000,8.726
+Feedback cue=0.933333s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=46 scenario=Repeated action=SlapFace_Sequence2 avatar=PepeAvatar direction=1 play=1
+46,Repeated,SlapFace_Sequence2,PepeAvatar,1,1,PASS,1,72,0.000000,8.731
+Feedback cue=0.905000s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=46 scenario=Repeated action=SlapFace_Sequence2 avatar=PepeAvatar direction=1 play=2
+46,Repeated,SlapFace_Sequence2,PepeAvatar,1,2,PASS,1,80,0.000000,8.733
+Feedback cue=0.905000s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=47 scenario=Repeated action=SlapFace_Sequence2 avatar=MankeyAvatar direction=-1 play=1
+47,Repeated,SlapFace_Sequence2,MankeyAvatar,-1,1,PASS,1,77,0.000000,8.724
+Feedback cue=0.933333s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=47 scenario=Repeated action=SlapFace_Sequence2 avatar=MankeyAvatar direction=-1 play=2
+47,Repeated,SlapFace_Sequence2,MankeyAvatar,-1,2,PASS,1,76,0.000000,8.732
+Feedback cue=0.933333s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=48 scenario=Repeated action=SlapFace_Sequence2 avatar=PepeAvatar direction=-1 play=1
+48,Repeated,SlapFace_Sequence2,PepeAvatar,-1,1,PASS,1,78,0.000000,8.732
+Feedback cue=0.905000s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=48 scenario=Repeated action=SlapFace_Sequence2 avatar=PepeAvatar direction=-1 play=2
+48,Repeated,SlapFace_Sequence2,PepeAvatar,-1,2,PASS,1,71,0.000000,8.723
+Feedback cue=0.905000s audio=True vfx=True lightHold=True light=True shake=True flash=True surface=True callbacks=1/1 pausedFrames=0
+START case=49 scenario=RangeGuard action=SlapFace_Sequence1 avatar=MankeyAvatar direction=1 play=1
+49,RangeGuard,SlapFace_Sequence1,MankeyAvatar,1,1,PASS,0,0,0.000000,0.656
+Feedback cue=1.400000s audio=False vfx=False lightHold=False light=False shake=False flash=False surface=False callbacks=0/0 pausedFrames=0
+START case=50 scenario=RangeGuard action=SlapFace_Sequence1 avatar=PepeAvatar direction=1 play=1
+50,RangeGuard,SlapFace_Sequence1,PepeAvatar,1,1,PASS,0,0,0.000000,0.663
+Feedback cue=1.391667s audio=False vfx=False lightHold=False light=False shake=False flash=False surface=False callbacks=0/0 pausedFrames=0
+START case=51 scenario=RangeGuard action=SlapFace_Sequence1 avatar=MankeyAvatar direction=-1 play=1
+51,RangeGuard,SlapFace_Sequence1,MankeyAvatar,-1,1,PASS,0,0,0.000000,0.657
+Feedback cue=1.400000s audio=False vfx=False lightHold=False light=False shake=False flash=False surface=False callbacks=0/0 pausedFrames=0
+START case=52 scenario=RangeGuard action=SlapFace_Sequence1 avatar=PepeAvatar direction=-1 play=1
+52,RangeGuard,SlapFace_Sequence1,PepeAvatar,-1,1,PASS,0,0,0.000000,0.656
+Feedback cue=1.391667s audio=False vfx=False lightHold=False light=False shake=False flash=False surface=False callbacks=0/0 pausedFrames=0
+START case=53 scenario=RangeGuard action=SlapFace_Sequence2 avatar=MankeyAvatar direction=1 play=1
+53,RangeGuard,SlapFace_Sequence2,MankeyAvatar,1,1,PASS,0,0,0.000000,0.656
+Feedback cue=0.933333s audio=False vfx=False lightHold=False light=False shake=False flash=False surface=False callbacks=0/0 pausedFrames=0
+START case=54 scenario=RangeGuard action=SlapFace_Sequence2 avatar=PepeAvatar direction=1 play=1
+54,RangeGuard,SlapFace_Sequence2,PepeAvatar,1,1,PASS,0,0,0.000000,0.657
+Feedback cue=0.905000s audio=False vfx=False lightHold=False light=False shake=False flash=False surface=False callbacks=0/0 pausedFrames=0
+START case=55 scenario=RangeGuard action=SlapFace_Sequence2 avatar=MankeyAvatar direction=-1 play=1
+55,RangeGuard,SlapFace_Sequence2,MankeyAvatar,-1,1,PASS,0,0,0.000000,0.656
+Feedback cue=0.933333s audio=False vfx=False lightHold=False light=False shake=False flash=False surface=False callbacks=0/0 pausedFrames=0
+START case=56 scenario=RangeGuard action=SlapFace_Sequence2 avatar=PepeAvatar direction=-1 play=1
+56,RangeGuard,SlapFace_Sequence2,PepeAvatar,-1,1,PASS,0,0,0.000000,0.655
+Feedback cue=0.905000s audio=False vfx=False lightHold=False light=False shake=False flash=False surface=False callbacks=0/0 pausedFrames=0
+PASS 48 main cases / 56 plays and 8 range guards; lethal EXCLUDED.

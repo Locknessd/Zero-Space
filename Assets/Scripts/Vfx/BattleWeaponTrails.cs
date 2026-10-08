@@ -40,6 +40,8 @@ public sealed class BattleWeaponTrails : MonoBehaviour
     }
     [Tooltip("Calibrated blade endpoints use only a few bone transforms, including meshes without Read/Write.")]
     public StaticBlade[] staticBlades = Array.Empty<StaticBlade>();
+    [Tooltip("Exact mesh identities excluded from weapon trails and native blade effect selection.")]
+    public Mesh[] excludedMeshes = Array.Empty<Mesh>();
     [Range(8, 32)] public int maxTrails = 16;
     [Tooltip("Clear cached world ribbons if a fighter root jumps this far in one update, in metres.")]
     [Min(.25f)] public float discontinuityDistance = 2.5f;
@@ -244,8 +246,31 @@ public sealed class BattleWeaponTrails : MonoBehaviour
         if (Mathf.Abs(projected) >= width) return inner;
         return inner + axis * ((projected < 0 ? -width : width) - projected);
     }
-    static bool Usable(Renderer r) => r && r.enabled && r.gameObject.activeInHierarchy &&
-        r.name.IndexOf("case", StringComparison.OrdinalIgnoreCase) < 0;
+    bool Usable(Renderer r) => r && r.enabled && r.gameObject.activeInHierarchy &&
+        IsRendererMeshEligible(r) && r.name.IndexOf("case", StringComparison.OrdinalIgnoreCase) < 0;
+
+    /// <summary>Allocation-free identity filter; a missing mesh or configuration preserves legacy eligibility.</summary>
+    public bool IsMeshEligible(Mesh mesh)
+    {
+        if (!mesh || excludedMeshes == null)
+            return true;
+        for (int index = 0; index < excludedMeshes.Length; index++)
+            if (excludedMeshes[index] && excludedMeshes[index] == mesh)
+                return false;
+        return true;
+    }
+
+    /// <summary>Checks static and skinned shared meshes without reading geometry or allocating names.</summary>
+    public bool IsRendererMeshEligible(Renderer renderer)
+    {
+        if (!renderer)
+            return false;
+        if (excludedMeshes == null || excludedMeshes.Length == 0)
+            return true;
+        if (renderer is SkinnedMeshRenderer skin)
+            return IsMeshEligible(skin.sharedMesh);
+        return !renderer.TryGetComponent<MeshFilter>(out var filter) || IsMeshEligible(filter.sharedMesh);
+    }
 
     bool ReadGeometry(Renderer renderer)
     {

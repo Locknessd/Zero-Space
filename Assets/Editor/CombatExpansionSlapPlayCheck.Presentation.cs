@@ -55,8 +55,16 @@ namespace FrankRetarget.Editor
                     "Actual animation contact clock differs from per-action authored cue.");
                 Require(!impact.finishing && impact.kind == BattleVfxPlayer.ContactKind.Light,
                     "Slap used heavy, ground or finishing feedback.");
-                Require(expectedCue.TryContactPosition(target.Animator, out var anchor) &&
-                    Vector3.Distance(impact.position, anchor) <= .002f, "Impact missed its accepted receiver anchor.");
+                Require(expectedCue.TryContactPosition(target.Animator, out var anchor),
+                    "Impact lost its accepted receiver anchor.");
+                var camera = Camera.main;
+                Require(camera && camera.gameObject.scene == game.gameObject.scene,
+                    "The isolated battle scene lost its gameplay camera.");
+                // Authored contact effects use the existing 15 mm camera-facing depth offset.
+                Vector3 expectedImpact = anchor - camera.transform.forward * .015f;
+                Require(Vector3.Distance(impact.position, expectedImpact) <= .002f,
+                    $"Impact missed its camera-offset receiver anchor: actual={impact.position:F6}, " +
+                    $"expected={expectedImpact:F6}, anchor={anchor:F6}.");
                 var hand = source.Animator.GetBoneTransform(HumanBodyBones.RightHand);
                 var head = target.Animator.GetBoneTransform(HumanBodyBones.Head);
                 Require(hand && head && Vector3.Distance(impact.position, hand.position) <= .35f &&

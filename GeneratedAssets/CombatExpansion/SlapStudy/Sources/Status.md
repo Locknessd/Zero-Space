@@ -41,7 +41,20 @@ contact samples touch the moving face surface on both lane directions; see
 `../FaceContactsGrounded/MotionReview.md` for selected per-avatar times.
 Both actions are now registered for explicit selection in BattleScene, with
 four per-avatar action definitions, authored feedback profiles and optional
-standing recovery. The first actual Play Mode case failed its impact-position
-assertion; see `../PlayMode/Status.txt`. Gameplay validation and standing-recovery
-validation remain incomplete, and lethal visual treatment is not implemented.
-These registrations are a work-in-progress checkpoint, not accepted integration.
+standing recovery. The nonlethal Play Mode suite now passes 48 lifecycle cases
+covering 56 accepted plays and eight range rejections, across both avatars and
+lane directions. It checks contact feedback, recovery, pause, interruption,
+reset, disable, repeated use and cleanup. See `../PlayMode/Report.txt` and
+`../PlayMode/Cases.csv` for the complete scope.
+
+The initial impact-position assertion omitted the existing 15 mm camera-facing
+effect offset; the corrected assertion retains its 2 mm tolerance. Subsequent
+validation exposed a 68 mm recovery hand snap: restoring controller bone lengths
+immediately discarded the native pose's bounded reach offsets. Standing recovery
+now blends those local positions with the pose; the complete suite measured a
+maximum recovery entry displacement of 0.000001 m. Ground get-up behavior retains
+its existing position handling.
+
+Lethal visual treatment remains unimplemented and was excluded from the suite.
+Final gameplay camera review and Slap-specific audio tuning remain pending.
+These registrations remain part of an unfinished combat expansion checkpoint.
