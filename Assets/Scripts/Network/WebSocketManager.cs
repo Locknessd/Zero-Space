@@ -16,11 +16,13 @@ public partial class WebSocketManager : MonoBehaviour
 
     public static WebSocketManager Instance { get; private set; }
 
-    [Header("Startup")]
-    [Tooltip("Client Input uses IDs entered in Unity. Frontend waits for FE. Applies on all platforms.")]
-    [SerializeField] private StartupMode _startupMode = StartupMode.ClientInput;
-
-    public StartupMode ActiveStartupMode => _startupMode;
+    // Editor always uses client input, including when the build target is WebGL.
+    // A WebGL player waits for FE regardless of any previous scene settings.
+#if UNITY_WEBGL && !UNITY_EDITOR
+    public StartupMode ActiveStartupMode => StartupMode.Frontend;
+#else
+    public StartupMode ActiveStartupMode => StartupMode.ClientInput;
+#endif
 
     public bool IsFrontendControlled => ActiveStartupMode == StartupMode.Frontend;
     public bool IsWaitingForFrontend => IsFrontendControlled && !_frontendStartRequested;
@@ -124,7 +126,7 @@ public partial class WebSocketManager : MonoBehaviour
     {
         if (!IsFrontendControlled)
         {
-            EnqueueError("FRONTEND_START_DISABLED", "Select Frontend startup mode before calling the FE API.");
+            EnqueueError("FRONTEND_START_DISABLED", "Frontend startup is available in WebGL builds. Unity Editor uses Client Input automatically.");
             return;
         }
 

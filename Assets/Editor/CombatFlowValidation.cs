@@ -180,17 +180,18 @@ public static class CombatFlowValidation
 
     private static void ValidateLoadingDelivery(CharacterCombat left, CharacterCombat right)
     {
-        foreach (bool frontend in new[] { false, true })
         foreach (bool slowLoad in new[] { false, true })
         {
-            string label = (frontend ? "Frontend" : "Client Input") + (slowLoad ? " slow" : " fast");
+            string label = "Editor Client Input" + (slowLoad ? " slow" : " fast");
             var socketRoot = new GameObject("Loading Inbox " + label);
             var managerRoot = new GameObject("Loading Game " + label);
             SceneManager.MoveGameObjectToScene(socketRoot, _testScene);
             SceneManager.MoveGameObjectToScene(managerRoot, _testScene);
             Created.Add(socketRoot); Created.Add(managerRoot);
             var socket = socketRoot.AddComponent<WebSocketManager>();
-            Set(socket, "_startupMode", frontend ? WebSocketManager.StartupMode.Frontend : WebSocketManager.StartupMode.ClientInput);
+            Require(socket.ActiveStartupMode == WebSocketManager.StartupMode.ClientInput &&
+                !socket.IsFrontendControlled && !socket.IsWaitingForFrontend,
+                label + " platform selects client input even with WebGL build target");
             var manager = managerRoot.AddComponent<GameManager>();
             manager.leftCombat = left; manager.rightCombat = right;
             manager.enableLocalInputTesting = false; manager.choreographAttackPositions = false; manager.debugMode = false;
