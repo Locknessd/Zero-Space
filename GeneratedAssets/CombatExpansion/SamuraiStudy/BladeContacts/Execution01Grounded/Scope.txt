@@ -1,0 +1,46 @@
+Execution01 candidate pair, both actual fighter assignments and lane directions.
+Uses existing ExecuteAttack and FrankBattlePairPlayback; no gameplay registration or damage.
+Attacker PlayerA armed; victim PlayerB has no weapon renderers. Native source offset 1.7m.
+Only native BladeR mesh 3e685dd57e9c78b49b20bef3e8358ae3:4300002 is measured.
+Blade triangles have all three local Z coordinates <= -0.33: 111 of 7046 faces.
+Boundary is based on the exported native mesh projections; guard, grip and sheath are excluded.
+This is blade surface geometry, not a certified sharpened-edge collision model.
+Whole source pair sampled at 30Hz; candidate windows [0.35,1.05] and [1.75,2.35] at 240Hz.
+Windows come from observed source motion; they are not approved contact times or hit counts.
+Current victim skin and triangle BVH are rebuilt after every source-clock evaluation.
+Unsigned gaps are exact triangle surface distance; zero may indicate touch or intersection.
+Distance does not measure penetration depth or prove a valid anatomical strike.
+Nearest bone is a pivot proximity label, not skin-weighted anatomy classification.
+Images show the measured blade in cyan with a tiny display-only normal offset.
+Measured geometry always uses original unoffset vertices. Sheath is never included.
+Preview scenery is hidden and replaced with a neutral floor; scene lighting is retained.
+Backwards-seek contact gaps and blade tips are compared with previously recorded samples.
+Grounding=3e9468be3cf45ed178f6ffec095afaa3:11400000
+Mankey_Pepe_Positive initial geometry diagnostics:
+Plane: explicit bone/bindpose world bounds=Center: (0.73, 0.81, 0.02), Extents: (0.45, 0.80, 0.30); max Bake(false)+TR error=4.989108E-07m; max Bake(false)+TRS error=14.788538m; rootBone=mixamorig:Hips; quality=Auto
+Plane: 20726 faces; scale=(10.00, 10.00, 10.00); space=explicit current bone * bindpose world skinning
+Pepe body=Center: (0.73, 0.81, 0.02), Extents: (0.45, 0.80, 0.30); skeleton=Center: (0.70, 0.67, 0.03), Extents: (0.41, 0.65, 0.25)
+Mankey_Pepe_Positive window=(0.35, 1.05) minimumGap=0m seconds=0.4; nearestPivot=LeftUpperArm
+Mankey_Pepe_Positive window=(1.75, 2.35) minimumGap=0.0506152958m seconds=2.0333333; nearestPivot=LeftUpperArm
+Mankey_Pepe_Positive samples=371; maxReseekGapError=7.593632E-05m; maxReseekTipError=9.667947E-05m
+Mankey_Pepe_Negative initial geometry diagnostics:
+Plane: explicit bone/bindpose world bounds=Center: (-0.73, 0.81, -0.02), Extents: (0.45, 0.80, 0.30); max Bake(false)+TR error=4.7892803E-07m; max Bake(false)+TRS error=14.788538m; rootBone=mixamorig:Hips; quality=Auto
+Plane: 20726 faces; scale=(10.00, 10.00, 10.00); space=explicit current bone * bindpose world skinning
+Pepe body=Center: (-0.73, 0.81, -0.02), Extents: (0.45, 0.80, 0.30); skeleton=Center: (-0.70, 0.67, -0.03), Extents: (0.41, 0.65, 0.25)
+Mankey_Pepe_Negative window=(0.35, 1.05) minimumGap=0m seconds=0.4; nearestPivot=LeftUpperArm
+Mankey_Pepe_Negative window=(1.75, 2.35) minimumGap=0.050614018m seconds=2.0333333; nearestPivot=LeftUpperArm
+Mankey_Pepe_Negative samples=371; maxReseekGapError=7.772446E-05m; maxReseekTipError=9.846918E-05m
+Pepe_Mankey_Positive initial geometry diagnostics:
+Mahgnkey: explicit bone/bindpose world bounds=Center: (0.67, 0.89, 0.07), Extents: (0.47, 0.88, 0.38); max Bake(false)+TR error=1.33446531E-06m; max Bake(false)+TRS error=0.5477444m; rootBone=Base HumanPelvis; quality=Auto
+Mahgnkey: 3462 faces; scale=(0.70, 0.70, 0.70); space=explicit current bone * bindpose world skinning
+Mankey body=Center: (0.67, 0.89, 0.07), Extents: (0.47, 0.88, 0.38); skeleton=Center: (0.66, 0.75, 0.06), Extents: (0.43, 0.66, 0.29)
+Pepe_Mankey_Positive window=(0.35, 1.05) minimumGap=0m seconds=0.3875; nearestPivot=LeftUpperArm
+Pepe_Mankey_Positive window=(1.75, 2.35) minimumGap=0m seconds=2.0291667; nearestPivot=LeftUpperArm
+Pepe_Mankey_Positive samples=371; maxReseekGapError=9.280443E-05m; maxReseekTipError=0.000100273435m
+Pepe_Mankey_Negative initial geometry diagnostics:
+Mahgnkey: explicit bone/bindpose world bounds=Center: (-0.67, 0.89, -0.07), Extents: (0.47, 0.88, 0.38); max Bake(false)+TR error=1.36733888E-06m; max Bake(false)+TRS error=0.5477444m; rootBone=Base HumanPelvis; quality=Auto
+Mahgnkey: 3462 faces; scale=(0.70, 0.70, 0.70); space=explicit current bone * bindpose world skinning
+Mankey body=Center: (-0.67, 0.89, -0.07), Extents: (0.47, 0.88, 0.38); skeleton=Center: (-0.66, 0.75, -0.06), Extents: (0.43, 0.66, 0.29)
+Pepe_Mankey_Negative window=(0.35, 1.05) minimumGap=0m seconds=0.3875; nearestPivot=LeftUpperArm
+Pepe_Mankey_Negative window=(1.75, 2.35) minimumGap=0m seconds=2.0291667; nearestPivot=LeftUpperArm
+Pepe_Mankey_Negative samples=371; maxReseekGapError=9.211898E-05m; maxReseekTipError=9.894744E-05m

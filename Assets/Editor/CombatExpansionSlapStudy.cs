@@ -22,7 +22,8 @@ namespace FrankRetarget.Editor
         sealed class SourceRecord
         {
             public string label, path, guid, clip, avatar, modelIdentity, importerJson, importerMeta;
-            public long localId;
+            public string originalPath, adaptedPath, adaptedGuid, correction, originalFileHash, originalMetaHash;
+            public long localId, adaptedLocalId;
             public float durationSeconds, framesPerSecond;
             public bool importedLoopTime, importedLoopBlend;
             public Vector3 originalModelPosition, originalModelScale;
@@ -43,7 +44,8 @@ namespace FrankRetarget.Editor
         sealed class CaptureRecord
         {
             public string fighter, label, guid, driverPath, sourceAvatar, fighterAvatar, trajectory;
-            public long localId;
+            public string adaptedGuid, adaptedPath;
+            public long localId, adaptedLocalId;
             public float durationSeconds;
             public int trajectorySamples;
             public Vector3 calibratedNativeScale;
@@ -60,7 +62,9 @@ namespace FrankRetarget.Editor
             public string scope = "Eight independent source captures: four SlapFace clips on Mankey and Pepe. " +
                 "Sequence and A/B labels identify sources only; no attacker assignment or verified pair offset exists. " +
                 "No paired choreography, contact timing, reaction timing or registration is approved. " +
-                "Original model transforms, native rig paths, Avatar identities and unchanged imports are recorded. " +
+                "Original stable source identities and project-owned adapted identities are recorded separately. " +
+                "Prepared imports preserve FBX bytes and settings except the missing Avatar dependency correction. " +
+                "Original model transforms, native rig paths and Avatar identities are recorded. " +
                 "Capture roots normalize to origin and identity rotation; native rig is calibrated to each fighter. " +
                 "Initial bones record this calibrated playback pose, not a verified pair offset. " +
                 "A manually evaluated native Humanoid Animator applies root motion once at 60Hz. " +
@@ -77,14 +81,21 @@ namespace FrankRetarget.Editor
             CombatExpansionHumanoidStudy.RequireEditor();
             CombatExpansionHumanoidStudy.EnsureFolder(AssetsRoot + "/Drivers");
             var sources = ResolveSources();
-            using var session = new SourceSession();
-            foreach (var fighter in session.Fighters)
-            foreach (var source in sources)
+            try
             {
-                string path = DriverPath(fighter.name, source);
-                var driver = FrankRetargetBuilder.BuildHumanoidStudyDriver(fighter.Animator, fighter.name,
-                    source.path, new[] { source.asset }, path, false);
-                ValidateDriver(driver, source, path);
+                using var session = new SourceSession();
+                foreach (var fighter in session.Fighters)
+                foreach (var source in sources)
+                {
+                    string path = DriverPath(fighter.name, source);
+                    var driver = FrankRetargetBuilder.BuildHumanoidStudyDriver(fighter.Animator, fighter.name,
+                        source.path, new[] { source.asset }, path, false);
+                    ValidateDriver(driver, source, path);
+                }
+            }
+            finally
+            {
+                RequireSourceFilesUnchanged(sources);
             }
         }
 
@@ -93,26 +104,36 @@ namespace FrankRetarget.Editor
             var records = new List<SourceRecord>();
             for (int index = 0; index < Guids.Length; index++)
             {
-                string path = AssetDatabase.GUIDToAssetPath(Guids[index]);
+                var baseline = SourceBaseline(index);
+                string originalPath = baseline.originalPath;
+                string path = originalPath;
                 var model = AssetDatabase.LoadAssetAtPath<GameObject>(path);
                 var animator = model ? model.GetComponent<Animator>() : null;
                 var importer = AssetImporter.GetAtPath(path) as ModelImporter;
-                string[] failures = RigFailures(path, model, animator, importer);
-                if (failures.Length != 0)
-                    throw new InvalidOperationException("Invalid exposed SlapFace native rig: " + path +
-                        " | " + string.Join("; ", failures) + ". Run CombatExpansionSlapStudy.DiagnoseSources().");
-                var clip = AssetDatabase.LoadAllAssetsAtPath(path).OfType<AnimationClip>().SingleOrDefault(c =>
-                    CombatExpansionInventory.Identity(c) == Guids[index] + ":" + ClipId);
-                float expectedDuration = index < 2 ? 10.2000008f : 7.36666727f;
-                if (!clip || !clip.humanMotion || clip.frameRate <= 0 ||
-                    Mathf.Abs(clip.length - expectedDuration) > .001f)
-                    throw new InvalidOperationException("SlapFace source identity or duration mismatch: " + path);
+                NativeImportRecord prepared = null;
+                if (RigFailures(path, model, animator, importer).Length != 0)
+                {
+                    prepared = RequirePreparedImport(baseline, index);
+                    path = prepared.adaptedPath;
+                    model = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+                    animator = model.GetComponent<Animator>();
+                    importer = (ModelImporter)AssetImporter.GetAtPath(path);
+                }
+                var originalModel = AssetDatabase.LoadAssetAtPath<GameObject>(originalPath);
+                var clip = NativeClip(path, prepared == null ? Guids[index] : prepared.adaptedGuid, index);
                 var settings = AnimationUtility.GetAnimationClipSettings(clip);
                 records.Add(new SourceRecord
                 {
                     label = "Sequence" + (index / 2 + 1) + "_" + (index % 2 == 0 ? "A" : "B"),
                     path = path,
                     guid = Guids[index],
+                    originalPath = originalPath,
+                    adaptedPath = prepared?.adaptedPath,
+                    adaptedGuid = prepared?.adaptedGuid,
+                    adaptedLocalId = prepared == null ? 0 : prepared.adaptedLocalId,
+                    correction = prepared?.correction,
+                    originalFileHash = baseline.originalFileHash,
+                    originalMetaHash = baseline.originalMetaHash,
                     localId = ClipId,
                     clip = clip.name,
                     asset = clip,
@@ -124,9 +145,9 @@ namespace FrankRetarget.Editor
                     importerMeta = File.ReadAllText(path + ".meta"),
                     importedLoopTime = settings.loopTime,
                     importedLoopBlend = settings.loopBlend,
-                    originalModelPosition = model.transform.localPosition,
-                    originalModelRotation = model.transform.localRotation,
-                    originalModelScale = model.transform.localScale,
+                    originalModelPosition = originalModel.transform.localPosition,
+                    originalModelRotation = originalModel.transform.localRotation,
+                    originalModelScale = originalModel.transform.localScale,
                     nativeRig = model.GetComponentsInChildren<Transform>(true).Select(t =>
                         AnimationUtility.CalculateTransformPath(t, model.transform)).ToArray()
                 });

@@ -16,58 +16,68 @@ namespace FrankRetarget.Editor
         {
             CombatExpansionHumanoidStudy.RequireEditor();
             var sources = ResolveSources();
-            using var session = new SourceSession();
-            foreach (var fighter in session.Fighters)
-            foreach (var source in sources)
+            try
             {
-                string path = DriverPath(fighter.name, source);
-                ValidateDriver(AssetDatabase.LoadAssetAtPath<FrankTestDriver>(path), source, path);
-            }
-            Directory.CreateDirectory(Output);
-            File.WriteAllText(Output + "/Scope.txt", new Report().scope);
-            var captures = new List<CaptureRecord>();
-            WriteReport(sources, captures, "Progress.json");
-            foreach (var fighter in session.Fighters)
-            foreach (var source in sources)
-            {
-                var scene = EditorSceneManager.NewPreviewScene();
-                try
+                using var session = new SourceSession();
+                foreach (var fighter in session.Fighters)
+                foreach (var source in sources)
                 {
-                    using var actor = new Actor(scene, fighter, source);
-                    string stem = fighter.name + "_" + source.label + "_" + source.guid;
-                    var record = new CaptureRecord
+                    string path = DriverPath(fighter.name, source);
+                    ValidateDriver(AssetDatabase.LoadAssetAtPath<FrankTestDriver>(path), source, path);
+                }
+                Directory.CreateDirectory(Output);
+                File.WriteAllText(Output + "/Scope.txt", new Report().scope);
+                var captures = new List<CaptureRecord>();
+                WriteReport(sources, captures, "Progress.json");
+                foreach (var fighter in session.Fighters)
+                foreach (var source in sources)
+                {
+                    var scene = EditorSceneManager.NewPreviewScene();
+                    try
                     {
-                        fighter = fighter.name,
-                        label = source.label,
-                        guid = source.guid,
-                        localId = source.localId,
-                        driverPath = DriverPath(fighter.name, source),
-                        sourceAvatar = source.avatar,
-                        fighterAvatar = CombatExpansionInventory.Identity(fighter.Animator.avatar),
-                        calibratedNativeScale = actor.Driver.transform.localScale,
-                        durationSeconds = source.durationSeconds,
-                        trajectory = stem + ".csv"
-                    };
-                    using var rendering = new SourceRendering(scene, actor);
-                    Bounds bounds = WriteMeasurements(actor, record, rendering);
-                    rendering.WriteSheets(stem, actor, record, bounds);
-                    captures.Add(record);
-                    WriteReport(sources, captures, "Progress.json");
+                        using var actor = new Actor(scene, fighter, source);
+                        string stem = fighter.name + "_" + source.label + "_" + source.guid;
+                        var record = new CaptureRecord
+                        {
+                            fighter = fighter.name,
+                            label = source.label,
+                            guid = source.guid,
+                            localId = source.localId,
+                            adaptedGuid = source.adaptedGuid,
+                            adaptedLocalId = source.adaptedLocalId,
+                            adaptedPath = source.adaptedPath,
+                            driverPath = DriverPath(fighter.name, source),
+                            sourceAvatar = source.avatar,
+                            fighterAvatar = CombatExpansionInventory.Identity(fighter.Animator.avatar),
+                            calibratedNativeScale = actor.Driver.transform.localScale,
+                            durationSeconds = source.durationSeconds,
+                            trajectory = stem + ".csv"
+                        };
+                        using var rendering = new SourceRendering(scene, actor);
+                        Bounds bounds = WriteMeasurements(actor, record, rendering);
+                        rendering.WriteSheets(stem, actor, record, bounds);
+                        captures.Add(record);
+                        WriteReport(sources, captures, "Progress.json");
+                    }
+                    catch (Exception error)
+                    {
+                        throw new InvalidOperationException("SlapFace individual capture failed: " +
+                            fighter.name + " / " + source.label, error);
+                    }
+                    finally
+                    {
+                        EditorSceneManager.ClosePreviewScene(scene);
+                    }
                 }
-                catch (Exception error)
-                {
-                    throw new InvalidOperationException("SlapFace individual capture failed: " +
-                        fighter.name + " / " + source.label, error);
-                }
-                finally
-                {
-                    EditorSceneManager.ClosePreviewScene(scene);
-                }
+                if (captures.Count != 8)
+                    throw new InvalidOperationException("Expected exactly eight SlapFace captures");
+                WriteReport(sources, captures, "Study.json");
+                WriteIndex(captures);
             }
-            if (captures.Count != 8)
-                throw new InvalidOperationException("Expected exactly eight SlapFace captures");
-            WriteReport(sources, captures, "Study.json");
-            WriteIndex(captures);
+            finally
+            {
+                RequireSourceFilesUnchanged(sources);
+            }
         }
 
         static Bounds WriteMeasurements(Actor actor, CaptureRecord record, SourceRendering rendering)

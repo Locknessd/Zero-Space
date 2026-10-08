@@ -61,7 +61,11 @@ namespace FrankRetarget.Editor
 
         static RigDiagnostic DiagnoseSource(string guid)
         {
-            string path = AssetDatabase.GUIDToAssetPath(guid);
+            return DiagnoseSource(guid, AssetDatabase.GUIDToAssetPath(guid));
+        }
+
+        static RigDiagnostic DiagnoseSource(string guid, string path)
+        {
             var model = AssetDatabase.LoadAssetAtPath<GameObject>(path);
             var importer = AssetImporter.GetAtPath(path) as ModelImporter;
             var animator = model ? model.GetComponent<Animator>() : null;
@@ -121,8 +125,8 @@ namespace FrankRetarget.Editor
         static string[] RigFailures(string path, GameObject model, Animator animator, ModelImporter importer)
         {
             var errors = new List<string>();
-            if (!path.StartsWith("Assets/Selected/SlapFace/", StringComparison.Ordinal))
-                errors.Add("Source path is outside SlapFace");
+            if (!path.StartsWith("Assets/Selected/SlapFace/", StringComparison.Ordinal) && !DesignatedNativePath(path))
+                errors.Add("Source path is outside designated SlapFace sources");
             if (!model)
                 errors.Add("Imported model is missing");
             if (!animator)
