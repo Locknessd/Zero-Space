@@ -17,8 +17,9 @@ namespace FrankRetarget.Editor
             source = fighters[Orientation % 2];
             target = fighters[1 - Orientation % 2];
             sourceSide = Orientation % 2 == 0 ? PlayerUI.Side.Left : PlayerUI.Side.Right;
-            action = Guard ? Actions[step % 4 + 1] : Queued ? Actions[(step - GuardCases) % Actions.Length] :
-                Lethal ? Actions[2] : Actions[4];
+            action = Guard ? Actions[samuraiSuite ? 1 : step % 4 + 1]
+                : Queued ? Actions[(step - GuardCases) % Actions.Length]
+                : samuraiSuite ? Actions[1] : Lethal ? Actions[2] : Actions[4];
             move = game.FindCombatAction(sourceSide, action);
             Require(move != null && move.IsValid && move.sourcePair != null && move.sourcePair.Valid,
                 "Missing valid registered source-pair action: " + action);
@@ -31,6 +32,7 @@ namespace FrankRetarget.Editor
             source.Animator.transform.SetPositionAndRotation(a, Quaternion.LookRotation(Vector3.right * Direction));
             target.Animator.transform.SetPositionAndRotation(b, Quaternion.LookRotation(Vector3.left * Direction));
             ValidateProfile();
+            BeginSamuraiCase();
             pair = null;
             ownedObjects = null;
             starts = contacts = sourceEnded = targetEnded = recoveryFrames = 0;
@@ -56,7 +58,7 @@ namespace FrankRetarget.Editor
             Write();
             if (Guard)
                 CheckRangeGuard();
-            else if (Queued)
+            else if (QueuePlayback)
                 Require(game.EnqueueCombatAction(sourceSide, action), "Ordinary gameplay queue rejected action.");
             else
             {
@@ -172,7 +174,8 @@ namespace FrankRetarget.Editor
                 Require(sourceEnded <= 1 && targetEnded <= 1, "Duplicate participant completion.");
                 Require(pair && !pair.Playing && !source.IsBusy && !target.IsBusy,
                     "Completion callback preceded shared ownership release.");
-                Require(succeeded == !Interrupt, "Completion callback reported the wrong outcome.");
+                Require(succeeded == (!Interrupt && !LifecycleCancelled),
+                    "Completion callback reported the wrong outcome.");
             }
             catch (Exception error)
             {

@@ -30,8 +30,8 @@ namespace FrankRetarget.Editor
                 report.AppendLine("COMMON RECEIVER RIG=" + receiver.path + "; source=" + receiver.guid);
                 var tracks = new[] { receiver, fall }.Select(s => CaptureTrack(scene, receiver, s)).ToArray();
                 var encoding = CalibrateEncoding(scene, receiver, tracks, report);
-                using var original = new PoseSampler(scene, receiver.path, receiver.clip);
-                using var incoming = new PoseSampler(scene, receiver.path, fall.clip);
+                using var original = new PoseSampler(scene, receiver.path, receiver.clip, true);
+                using var incoming = new PoseSampler(scene, receiver.path, fall.clip, true);
                 var anchor = original.At(preserve);
                 var fallAnchor = incoming.At(FallStart);
                 var shift = anchor.body - fallAnchor.body;
@@ -40,15 +40,22 @@ namespace FrankRetarget.Editor
                 var poses = times.Select(time => BlendMeasured(original.At(time),
                     incoming.At(MapFallTime(time - preserve, fall.clip.length)),
                     time, preserve, shift)).ToArray();
-                var candidate = EncodePoses(receiver, poses, encoding,
-                    "SlapSequence" + (sequence + 1) + "_LethalReceiver_Provisional", receiver.clip.length);
+                using var nativeOriginal = new PoseSampler(scene, receiver.path, receiver.clip);
+                using var nativeFall = new PoseSampler(scene, receiver.path, fall.clip);
+                var candidate = RefineExport(scene, receiver, poses, encoding,
+                    "SlapSequence" + (sequence + 1) + "_LethalReceiver_Provisional", receiver.clip.length,
+                    time => BlendMeasured(original.At(time),
+                        incoming.At(MapFallTime(time - preserve, fall.clip.length)), time, preserve, shift),
+                    observed => CandidateExportError(nativeOriginal, nativeFall, observed,
+                        preserve, shift, fall.clip.length), report, out poses);
+                times = poses.Select(pose => pose.time).ToArray();
                 try
                 {
                     report.AppendLine("CANDIDATE " + candidate.name + "; encoding=" + encoding);
                     report.AppendLine(FormattableString.Invariant(
                         $"Measured horizontal alignment metres=({shift.x:R},0,{shift.z:R}); body and root shifted together."));
                     report.AppendLine("No muscle residual, clamp, yaw offset or added noise. " +
-                        "Every muscle, including all finger aliases, is sampled from native playback.");
+                        "Muscle capture mode=" + encoding.streamMuscles + "; finger bindings mapped by verified names.");
                     WriteTimeMap(sequence, times, preserve, fall.clip.length);
                     WriteMeasuredMap(sequence, poses);
                     VerifyCandidate(scene, receiver, fall, candidate, preserve, shift, times, report);
@@ -76,7 +83,7 @@ namespace FrankRetarget.Editor
                 Contacts[0] + .12f, Contacts[1] + .12f })
                 if (time < source.clip.length)
                     times.Add(time);
-            using var sampler = new PoseSampler(scene, receiver.path, source.clip);
+            using var sampler = new PoseSampler(scene, receiver.path, source.clip, true);
             return new SampledSource { source = source, poses = times.Select(sampler.At).ToArray() };
         }
 
@@ -85,46 +92,58 @@ namespace FrankRetarget.Editor
         {
             PoseEncoding best = null;
             float bestScore = float.PositiveInfinity;
-            foreach (bool relative in new[] { false, true })
-                foreach (bool normalized in new[] { false, true })
-                {
-                    var encoding = new PoseEncoding { bodyRelative = relative, normalizedMotion = normalized };
-                    float score = 0;
-                    foreach (var track in tracks)
+            DiagnoseRoundtrip(scene, receiver, tracks, report);
+            foreach (bool streamMuscles in new[] { false, true })
+                foreach (bool relative in new[] { false, true })
+                    foreach (bool normalized in new[] { false, true })
                     {
-                        var trial = EncodePoses(receiver, track.poses, encoding, "EmpiricalEncodingProbe",
-                            track.source.clip.length);
-                        try
+                        var encoding = new PoseEncoding
                         {
-                            var metrics = ComparePlayback(scene, receiver, track.source.clip, trial,
-                                ProbeTimes(track.source.clip.length));
-                            score = Mathf.Max(score, metrics.Score);
-                            report.AppendLine("ENCODING TRIAL " + encoding + "; source=" + track.source.guid +
-                                "; " + metrics);
+                            bodyRelative = relative,
+                            normalizedMotion = normalized,
+                            streamMuscles = streamMuscles
+                        };
+                        float score = 0;
+                        foreach (var track in tracks)
+                        {
+                            var trial = EncodePoses(receiver, track.poses, encoding, "EmpiricalEncodingProbe",
+                                track.source.clip.length);
+                            try
+                            {
+                                var metrics = ComparePlayback(scene, receiver, track.source.clip, trial,
+                                    ProbeTimes(track.source.clip.length));
+                                score = Mathf.Max(score, metrics.Score);
+                                report.AppendLine("ENCODING TRIAL " + encoding + "; source=" + track.source.guid +
+                                    "; " + metrics);
+                            }
+                            finally
+                            {
+                                Object.DestroyImmediate(trial);
+                            }
                         }
-                        finally
+                        if (score < bestScore)
                         {
-                            Object.DestroyImmediate(trial);
+                            bestScore = score;
+                            best = encoding;
                         }
                     }
-                    if (score < bestScore)
-                    {
-                        bestScore = score;
-                        best = encoding;
-                    }
-                }
             if (best == null || bestScore > 1)
                 throw new InvalidOperationException("No empirical Root/Motion encoding preserved native bones/root. " +
                     "Best normalized error=" + bestScore + ". Trial measurements are in BakeProvenance.txt.");
             report.AppendLine("SELECTED EMPIRICAL ENCODING " + best);
             foreach (var track in tracks)
             {
-                var canonical = EncodePoses(receiver, track.poses, best, "NativeEquivalenceProof", track.source.clip.length);
+                using var author = new PoseSampler(scene, receiver.path, track.source.clip, true);
+                using var native = new PoseSampler(scene, receiver.path, track.source.clip);
+                var canonical = RefineExport(scene, receiver, track.poses, best,
+                    "NativeEquivalenceProof_" + track.source.guid, track.source.clip.length, author.At,
+                    observed => NativeExportError(native.At(observed.time), observed, Vector3.zero),
+                    report, out track.poses);
                 try
                 {
                     var metrics = ComparePlayback(scene, receiver, track.source.clip, canonical,
                         DenseTimes(track.source.clip.length, track.poses.Select(p => p.time)));
-                    report.AppendLine("FULL 240Hz SOURCE EQUIVALENCE " + track.source.guid + ": " + metrics);
+                    report.AppendLine("FULL 240Hz + OFFSET SOURCE EQUIVALENCE " + track.source.guid + ": " + metrics);
                     if (metrics.Score > 1)
                         throw new InvalidOperationException("Native pose/root equivalence failed: " + metrics);
                 }
@@ -152,7 +171,9 @@ namespace FrankRetarget.Editor
                 body = Vector3.Lerp(original.body, incoming.body + shift, weight),
                 rootRotation = Quaternion.Slerp(original.rootRotation, incoming.rootRotation, weight),
                 bodyRotation = Quaternion.Slerp(original.bodyRotation, incoming.bodyRotation, weight),
-                muscles = original.muscles.Select((v, i) => Mathf.LerpUnclamped(v, incoming.muscles[i], weight)).ToArray()
+                muscles = original.muscles.Select((v, i) => Mathf.LerpUnclamped(v, incoming.muscles[i], weight)).ToArray(),
+                streamMuscles = original.streamMuscles == null ? null : original.streamMuscles.Select((v, i) =>
+                    Mathf.LerpUnclamped(v, incoming.streamMuscles[i], weight)).ToArray()
             };
         }
 
@@ -164,8 +185,11 @@ namespace FrankRetarget.Editor
 
         static float[] DenseTimes(float duration, IEnumerable<float> extra)
         {
-            return Enumerable.Range(0, Mathf.CeilToInt(duration * 240) + 1)
-                .Select(i => Mathf.Min(i / 240f, duration)).Concat(extra).Distinct().OrderBy(t => t).ToArray();
+            var ticks = Enumerable.Range(0, Mathf.CeilToInt(duration * 240) + 1);
+            // Keep the original 240Hz gate and audit an independent phase between export/refinement knots.
+            return ticks.Select(i => Mathf.Min(i / 240f, duration))
+                .Concat(ticks.Select(i => Mathf.Min((i + .37f) / 240f, duration)))
+                .Concat(extra).Distinct().OrderBy(t => t).ToArray();
         }
 
         static void WriteMeasuredMap(int sequence, MeasuredPose[] poses)
@@ -184,6 +208,7 @@ namespace FrankRetarget.Editor
             var report = new StringBuilder();
             Exception failure = null;
             Directory.CreateDirectory(Output);
+            ArchivePreviousProvenance();
             try
             {
                 WriteInspection(sources);

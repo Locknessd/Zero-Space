@@ -1,0 +1,56 @@
+RUNNING: 4 range guards; 12 queued old-new-old; 4 accepted lethal; 4 source interrupts.
+Each queue orientation runs Light_1, Samurai_Execution01, Heavy_6.
+Visual contact choreography and subjective quality require separate visual review.
+START case=1 scenario=range guard action=Samurai_Execution01 source=Mankey avatar=MankeyAvatar direction=1
+PASS case=1/24 scenario=range guard action=Samurai_Execution01 source=Mankey avatar=MankeyAvatar direction=1 contacts=0 starts=0 callbacks=0/0 getUpFrames=0 progress=0.000 audio=0 vfx=0 hold=0 light=0 shake=0 trail=False flash=False seconds=0.680
+START case=2 scenario=range guard action=Samurai_Execution01 source=Pepe avatar=PepeAvatar direction=1
+PASS case=2/24 scenario=range guard action=Samurai_Execution01 source=Pepe avatar=PepeAvatar direction=1 contacts=0 starts=0 callbacks=0/0 getUpFrames=0 progress=0.000 audio=0 vfx=0 hold=0 light=0 shake=0 trail=False flash=False seconds=0.658
+START case=3 scenario=range guard action=Samurai_Execution01 source=Mankey avatar=MankeyAvatar direction=-1
+PASS case=3/24 scenario=range guard action=Samurai_Execution01 source=Mankey avatar=MankeyAvatar direction=-1 contacts=0 starts=0 callbacks=0/0 getUpFrames=0 progress=0.000 audio=0 vfx=0 hold=0 light=0 shake=0 trail=False flash=False seconds=0.657
+START case=4 scenario=range guard action=Samurai_Execution01 source=Pepe avatar=PepeAvatar direction=-1
+PASS case=4/24 scenario=range guard action=Samurai_Execution01 source=Pepe avatar=PepeAvatar direction=-1 contacts=0 starts=0 callbacks=0/0 getUpFrames=0 progress=0.000 audio=0 vfx=0 hold=0 light=0 shake=0 trail=False flash=False seconds=0.658
+START case=5 scenario=queued action=Light_1 source=Mankey avatar=MankeyAvatar direction=1
+PASS case=5/24 scenario=queued action=Light_1 source=Mankey avatar=MankeyAvatar direction=1 contacts=1 starts=1 callbacks=1/1 getUpFrames=242 progress=0.999 audio=6 vfx=5 hold=1 light=1 shake=1 trail=False flash=True seconds=3.852
+START case=6 scenario=queued action=Samurai_Execution01 source=Mankey avatar=MankeyAvatar direction=1
+PASS case=6/24 scenario=queued action=Samurai_Execution01 source=Mankey avatar=MankeyAvatar direction=1 contacts=3 starts=1 callbacks=1/1 getUpFrames=348 progress=0.998 audio=7 vfx=7 hold=3 light=3 shake=3 trail=True flash=True seconds=5.601
+START case=7 scenario=queued action=Heavy_6 source=Mankey avatar=MankeyAvatar direction=1
+PASS case=7/24 scenario=queued action=Heavy_6 source=Mankey avatar=MankeyAvatar direction=1 contacts=5 starts=1 callbacks=1/1 getUpFrames=248 progress=0.998 audio=14 vfx=11 hold=5 light=5 shake=5 trail=True flash=True seconds=8.400
+START case=8 scenario=queued action=Light_1 source=Pepe avatar=PepeAvatar direction=1
+PASS case=8/24 scenario=queued action=Light_1 source=Pepe avatar=PepeAvatar direction=1 contacts=1 starts=1 callbacks=1/1 getUpFrames=242 progress=0.997 audio=5 vfx=5 hold=1 light=1 shake=1 trail=False flash=True seconds=3.844
+START case=9 scenario=queued action=Samurai_Execution01 source=Pepe avatar=PepeAvatar direction=1
+PASS case=9/24 scenario=queued action=Samurai_Execution01 source=Pepe avatar=PepeAvatar direction=1 contacts=3 starts=1 callbacks=1/1 getUpFrames=360 progress=1.000 audio=7 vfx=7 hold=3 light=3 shake=3 trail=True flash=True seconds=5.603
+START case=10 scenario=queued action=Heavy_6 source=Pepe avatar=PepeAvatar direction=1
+PASS case=10/24 scenario=queued action=Heavy_6 source=Pepe avatar=PepeAvatar direction=1 contacts=5 starts=1 callbacks=1/1 getUpFrames=244 progress=0.998 audio=14 vfx=11 hold=5 light=5 shake=5 trail=True flash=True seconds=8.401
+START case=11 scenario=queued action=Light_1 source=Mankey avatar=MankeyAvatar direction=-1
+PASS case=11/24 scenario=queued action=Light_1 source=Mankey avatar=MankeyAvatar direction=-1 contacts=1 starts=1 callbacks=1/1 getUpFrames=243 progress=0.998 audio=5 vfx=5 hold=1 light=1 shake=1 trail=False flash=True seconds=3.848
+START case=12 scenario=queued action=Samurai_Execution01 source=Mankey avatar=MankeyAvatar direction=-1
+PASS case=12/24 scenario=queued action=Samurai_Execution01 source=Mankey avatar=MankeyAvatar direction=-1 contacts=3 starts=1 callbacks=1/1 getUpFrames=360 progress=0.998 audio=7 vfx=7 hold=3 light=3 shake=3 trail=True flash=True seconds=5.599
+START case=13 scenario=queued action=Heavy_6 source=Mankey avatar=MankeyAvatar direction=-1
+PASS case=13/24 scenario=queued action=Heavy_6 source=Mankey avatar=MankeyAvatar direction=-1 contacts=5 starts=1 callbacks=1/1 getUpFrames=227 progress=0.997 audio=14 vfx=11 hold=5 light=5 shake=5 trail=True flash=True seconds=8.407
+START case=14 scenario=queued action=Light_1 source=Pepe avatar=PepeAvatar direction=-1
+PASS case=14/24 scenario=queued action=Light_1 source=Pepe avatar=PepeAvatar direction=-1 contacts=1 starts=1 callbacks=1/1 getUpFrames=240 progress=0.997 audio=5 vfx=5 hold=1 light=1 shake=1 trail=False flash=True seconds=3.848
+START case=15 scenario=queued action=Samurai_Execution01 source=Pepe avatar=PepeAvatar direction=-1
+PASS case=15/24 scenario=queued action=Samurai_Execution01 source=Pepe avatar=PepeAvatar direction=-1 contacts=3 starts=1 callbacks=1/1 getUpFrames=359 progress=1.000 audio=7 vfx=7 hold=3 light=3 shake=3 trail=True flash=True seconds=5.600
+START case=16 scenario=queued action=Heavy_6 source=Pepe avatar=PepeAvatar direction=-1
+PASS case=16/24 scenario=queued action=Heavy_6 source=Pepe avatar=PepeAvatar direction=-1 contacts=5 starts=1 callbacks=1/1 getUpFrames=227 progress=1.000 audio=14 vfx=11 hold=5 light=5 shake=5 trail=True flash=True seconds=8.404
+START case=17 scenario=lethal action=Samurai_Execution01 source=Mankey avatar=MankeyAvatar direction=1
+PASS case=17/24 scenario=lethal action=Samurai_Execution01 source=Mankey avatar=MankeyAvatar direction=1 contacts=3 starts=1 callbacks=1/1 getUpFrames=0 progress=0.000 audio=6 vfx=7 hold=3 light=3 shake=3 trail=True flash=True seconds=4.242
+PASS lethal reset: native source actors, death and held equipment released.
+START case=18 scenario=lethal action=Samurai_Execution01 source=Pepe avatar=PepeAvatar direction=1
+PASS case=18/24 scenario=lethal action=Samurai_Execution01 source=Pepe avatar=PepeAvatar direction=1 contacts=3 starts=1 callbacks=1/1 getUpFrames=0 progress=0.000 audio=6 vfx=7 hold=3 light=3 shake=3 trail=True flash=True seconds=4.068
+PASS lethal reset: native source actors, death and held equipment released.
+START case=19 scenario=lethal action=Samurai_Execution01 source=Mankey avatar=MankeyAvatar direction=-1
+PASS case=19/24 scenario=lethal action=Samurai_Execution01 source=Mankey avatar=MankeyAvatar direction=-1 contacts=3 starts=1 callbacks=1/1 getUpFrames=0 progress=0.000 audio=6 vfx=7 hold=3 light=3 shake=3 trail=True flash=True seconds=4.078
+PASS lethal reset: native source actors, death and held equipment released.
+START case=20 scenario=lethal action=Samurai_Execution01 source=Pepe avatar=PepeAvatar direction=-1
+PASS case=20/24 scenario=lethal action=Samurai_Execution01 source=Pepe avatar=PepeAvatar direction=-1 contacts=3 starts=1 callbacks=1/1 getUpFrames=0 progress=0.000 audio=6 vfx=7 hold=3 light=3 shake=3 trail=True flash=True seconds=4.069
+PASS lethal reset: native source actors, death and held equipment released.
+START case=21 scenario=source interrupt action=Samurai_Execution01 source=Mankey avatar=MankeyAvatar direction=1
+PASS case=21/24 scenario=source interrupt action=Samurai_Execution01 source=Mankey avatar=MankeyAvatar direction=1 contacts=0 starts=1 callbacks=1/1 getUpFrames=0 progress=0.000 audio=0 vfx=0 hold=0 light=0 shake=0 trail=False flash=False seconds=3.128
+START case=22 scenario=source interrupt action=Samurai_Execution01 source=Pepe avatar=PepeAvatar direction=1
+PASS case=22/24 scenario=source interrupt action=Samurai_Execution01 source=Pepe avatar=PepeAvatar direction=1 contacts=0 starts=1 callbacks=1/1 getUpFrames=0 progress=0.000 audio=0 vfx=0 hold=0 light=0 shake=0 trail=False flash=False seconds=3.127
+START case=23 scenario=source interrupt action=Samurai_Execution01 source=Mankey avatar=MankeyAvatar direction=-1
+PASS case=23/24 scenario=source interrupt action=Samurai_Execution01 source=Mankey avatar=MankeyAvatar direction=-1 contacts=0 starts=1 callbacks=1/1 getUpFrames=0 progress=0.000 audio=0 vfx=0 hold=0 light=0 shake=0 trail=False flash=False seconds=3.128
+START case=24 scenario=source interrupt action=Samurai_Execution01 source=Pepe avatar=PepeAvatar direction=-1
+PASS case=24/24 scenario=source interrupt action=Samurai_Execution01 source=Pepe avatar=PepeAvatar direction=-1 contacts=0 starts=1 callbacks=1/1 getUpFrames=0 progress=0.000 audio=0 vfx=0 hold=0 light=0 shake=0 trail=False flash=False seconds=3.129
+PASS all 24 cases; visual review remains separate.

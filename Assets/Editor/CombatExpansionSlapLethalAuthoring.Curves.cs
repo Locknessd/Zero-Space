@@ -12,10 +12,10 @@ namespace FrankRetarget.Editor
     {
         sealed class PoseEncoding
         {
-            public bool bodyRelative, normalizedMotion;
+            public bool bodyRelative, normalizedMotion, streamMuscles;
             public override string ToString()
             {
-                return "body=" + (bodyRelative ? "root-relative" : "world") +
+                return "muscles=" + (streamMuscles ? "native-stream" : "inverse-bones") + "; body=" + (bodyRelative ? "root-relative" : "world") +
                     "; MotionT=" + (normalizedMotion ? "metres/humanScale" : "metres");
             }
         }
@@ -48,7 +48,8 @@ namespace FrankRetarget.Editor
                 AddTransform(keys, "Motion", pose.time,
                     pose.root / (encoding.normalizedMotion ? pose.scale : 1), rootRotation);
                 for (int muscle = 0; muscle < muscles.Length; muscle++)
-                    keys[muscles[muscle]].Add(new Keyframe(pose.time, pose.muscles[muscle]));
+                    keys[muscles[muscle]].Add(new Keyframe(pose.time,
+                        (encoding.streamMuscles ? pose.streamMuscles : pose.muscles)[muscle]));
             }
             var output = Object.Instantiate(template.clip);
             try

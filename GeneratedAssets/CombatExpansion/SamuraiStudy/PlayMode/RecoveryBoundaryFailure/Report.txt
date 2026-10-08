@@ -1,0 +1,84 @@
+RUNNING: 4 range guards; 12 queued old-new-old; 4 accepted lethal; 4 source interrupts.
+Extension: 4 reset after contact; 4 receiver disable after contact; 4 prone pause/resume; 4 repeated pairs of queued Samurai activations (44 plays total).
+Each queue orientation runs Light_1, Samurai_Execution01, Heavy_6.
+Visual contact choreography and subjective quality require separate visual review.
+START case=1 scenario=range guard action=Samurai_Execution01 source=Mankey avatar=MankeyAvatar direction=1
+MEASURE case=1 play=1 frames=129 wallFrameMedianMs=3.810 p95Ms=6.235 maxMs=93.403 mainThreadAllocatedBytes=0 managedHeapDeltaBytes=90112 objects=915->915 nativeActors=0/0/0 pooledVoices=13->13 pooledEffects=0->0
+MEASURE scope=Editor main thread including harness, screenshots, logging, queue movement, pause and settle frames; heap delta is not allocation; pooled objects may be retained. Small repeated samples are raw evidence, not a performance target verdict or standalone build benchmark.
+PASS case=1/40 scenario=range guard action=Samurai_Execution01 source=Mankey avatar=MankeyAvatar direction=1 contacts=0 starts=0 callbacks=0/0 getUpFrames=0 progress=0.000 audio=0 vfx=0 hold=0 light=0 shake=0 trail=False flash=False seconds=0.705
+START case=2 scenario=range guard action=Samurai_Execution01 source=Pepe avatar=PepeAvatar direction=1
+MEASURE case=2 play=1 frames=177 wallFrameMedianMs=3.592 p95Ms=4.092 maxMs=5.765 mainThreadAllocatedBytes=0 managedHeapDeltaBytes=77824 objects=915->915 nativeActors=0/0/0 pooledVoices=13->13 pooledEffects=0->0
+MEASURE scope=Editor main thread including harness, screenshots, logging, queue movement, pause and settle frames; heap delta is not allocation; pooled objects may be retained. Small repeated samples are raw evidence, not a performance target verdict or standalone build benchmark.
+PASS case=2/40 scenario=range guard action=Samurai_Execution01 source=Pepe avatar=PepeAvatar direction=1 contacts=0 starts=0 callbacks=0/0 getUpFrames=0 progress=0.000 audio=0 vfx=0 hold=0 light=0 shake=0 trail=False flash=False seconds=0.655
+START case=3 scenario=range guard action=Samurai_Execution01 source=Mankey avatar=MankeyAvatar direction=-1
+MEASURE case=3 play=1 frames=183 wallFrameMedianMs=3.525 p95Ms=3.782 maxMs=5.058 mainThreadAllocatedBytes=0 managedHeapDeltaBytes=151552 objects=915->915 nativeActors=0/0/0 pooledVoices=13->13 pooledEffects=0->0
+MEASURE scope=Editor main thread including harness, screenshots, logging, queue movement, pause and settle frames; heap delta is not allocation; pooled objects may be retained. Small repeated samples are raw evidence, not a performance target verdict or standalone build benchmark.
+PASS case=3/40 scenario=range guard action=Samurai_Execution01 source=Mankey avatar=MankeyAvatar direction=-1 contacts=0 starts=0 callbacks=0/0 getUpFrames=0 progress=0.000 audio=0 vfx=0 hold=0 light=0 shake=0 trail=False flash=False seconds=0.657
+START case=4 scenario=range guard action=Samurai_Execution01 source=Pepe avatar=PepeAvatar direction=-1
+MEASURE case=4 play=1 frames=184 wallFrameMedianMs=3.550 p95Ms=3.698 maxMs=4.587 mainThreadAllocatedBytes=0 managedHeapDeltaBytes=196608 objects=915->915 nativeActors=0/0/0 pooledVoices=13->13 pooledEffects=0->0
+MEASURE scope=Editor main thread including harness, screenshots, logging, queue movement, pause and settle frames; heap delta is not allocation; pooled objects may be retained. Small repeated samples are raw evidence, not a performance target verdict or standalone build benchmark.
+PASS case=4/40 scenario=range guard action=Samurai_Execution01 source=Pepe avatar=PepeAvatar direction=-1 contacts=0 starts=0 callbacks=0/0 getUpFrames=0 progress=0.000 audio=0 vfx=0 hold=0 light=0 shake=0 trail=False flash=False seconds=0.658
+START case=5 scenario=queued action=Light_1 source=Mankey avatar=MankeyAvatar direction=1
+MEASURE case=5 play=1 frames=879 wallFrameMedianMs=4.209 p95Ms=6.413 maxMs=45.945 mainThreadAllocatedBytes=0 managedHeapDeltaBytes=19582976 objects=915->936 nativeActors=0/2/0 pooledVoices=13->13 pooledEffects=0->4
+MEASURE scope=Editor main thread including harness, screenshots, logging, queue movement, pause and settle frames; heap delta is not allocation; pooled objects may be retained. Small repeated samples are raw evidence, not a performance target verdict or standalone build benchmark.
+PASS case=5/40 scenario=queued action=Light_1 source=Mankey avatar=MankeyAvatar direction=1 contacts=1 starts=1 callbacks=1/1 getUpFrames=225 progress=0.999 audio=6 vfx=5 hold=1 light=1 shake=1 trail=False flash=True seconds=3.853
+START case=6 scenario=queued action=Samurai_Execution01 source=Mankey avatar=MankeyAvatar direction=1
+STALE rejected phase=source old=1/1 current=2/2
+EQUIPMENT two requests while suppressed: Katana,Katana
+FRAME phase=NativeEnd file=Mankey_1_Case6_Play1_NativeEnd.png frame=2228 sourceSeconds=3.166667 recoveryNormalized=0.000000
+RECOVERY_BOUNDARY nativeFrame=2228 frame=2229 sourceSeconds=3.166667/3.166667 recoverySeconds=0.000000 blendDuration=0.120000 blendWeight=0.000000 maxLandmarkDeltaMeters=0.005514 toleranceMeters=0.002000
+BOUNDARY_BONE Hips native=(0.992563, 0.245746, 0.014702) recovery=(0.992563, 0.245746, 0.014703) delta=0.000000
+BOUNDARY_BONE Head native=(0.794616, 0.243426, 0.459764) recovery=(0.794747, 0.243492, 0.459827) delta=0.000160
+BOUNDARY_BONE LeftHand native=(1.069994, 0.156835, 0.197727) recovery=(1.069714, 0.157640, 0.192993) delta=0.004810
+BOUNDARY_BONE RightHand native=(1.336985, 0.170416, 0.267853) recovery=(1.334733, 0.171458, 0.265002) delta=0.003779
+BOUNDARY_BONE LeftFoot native=(1.333120, 0.223522, -0.693907) recovery=(1.328377, 0.222102, -0.696335) delta=0.005514
+BOUNDARY_BONE RightFoot native=(1.559128, 0.183782, -0.272712) recovery=(1.560197, 0.186813, -0.269742) delta=0.004376
+BLEND_INTERNAL sourceHipsWorld=(0.99, 0.25, 0.01) rawHipsLocal=(0.00, 1.36, 0.77) outputHipsLocal=(5.15, 2.46, 0.77)
+BLEND_BONE mixamorig:Hips sourceToRawDegrees=59.053370 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftUpLeg sourceToRawDegrees=10.081380 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightUpLeg sourceToRawDegrees=44.047740 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftLeg sourceToRawDegrees=40.953900 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightLeg sourceToRawDegrees=69.896590 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftFoot sourceToRawDegrees=32.903590 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightFoot sourceToRawDegrees=21.565430 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:Spine sourceToRawDegrees=10.553860 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:Spine1 sourceToRawDegrees=10.720100 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:Neck sourceToRawDegrees=61.744590 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:Head sourceToRawDegrees=74.994880 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftShoulder sourceToRawDegrees=12.558640 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightShoulder sourceToRawDegrees=12.558640 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftArm sourceToRawDegrees=84.825730 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightArm sourceToRawDegrees=47.030800 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftForeArm sourceToRawDegrees=70.493520 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightForeArm sourceToRawDegrees=67.064820 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHand sourceToRawDegrees=43.917910 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHand sourceToRawDegrees=62.538390 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftToeBase sourceToRawDegrees=0.000000 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightToeBase sourceToRawDegrees=0.000000 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandThumb1 sourceToRawDegrees=27.946790 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandThumb2 sourceToRawDegrees=2.379851 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandThumb3 sourceToRawDegrees=12.769140 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandIndex1 sourceToRawDegrees=18.953870 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandIndex2 sourceToRawDegrees=0.787329 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandIndex3 sourceToRawDegrees=7.949369 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandMiddle1 sourceToRawDegrees=7.154058 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandMiddle2 sourceToRawDegrees=3.410271 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandMiddle3 sourceToRawDegrees=18.804780 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandRing1 sourceToRawDegrees=3.179586 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandRing2 sourceToRawDegrees=11.260390 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandRing3 sourceToRawDegrees=25.795380 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandThumb1 sourceToRawDegrees=23.215500 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandThumb2 sourceToRawDegrees=24.316010 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandThumb3 sourceToRawDegrees=61.826370 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandIndex1 sourceToRawDegrees=47.096050 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandIndex2 sourceToRawDegrees=42.967720 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandIndex3 sourceToRawDegrees=68.252890 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandMiddle1 sourceToRawDegrees=58.446610 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandMiddle2 sourceToRawDegrees=43.478110 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandMiddle3 sourceToRawDegrees=53.637660 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandRing1 sourceToRawDegrees=57.778830 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandRing2 sourceToRawDegrees=30.932360 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandRing3 sourceToRawDegrees=57.265260 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:Spine2 sourceToRawDegrees=2.499523 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+FRAME phase=RecoveryEarly file=Mankey_1_Case6_Play1_RecoveryEarly.png frame=2229 sourceSeconds=3.166667 recoveryNormalized=0.000000
+FAIL case=6 action=Samurai_Execution01: System.InvalidOperationException: Prone recovery entry exceeded 2 mm continuity tolerance; inspect boundary/blend diagnostics.   at FrankRetarget.Editor.CombatExpansionGreatSwordPlayCheck.ObserveSamuraiEvidence () [0x00315] in /home/eragon/Project/unity/Zero-Space/Assets/Editor/CombatExpansionGreatSwordPlayCheck.SamuraiEvidence.cs:96    at FrankRetarget.Editor.CombatExpansionGreatSwordPlayCheck.Tick () [0x000b4] in /home/eragon/Project/unity/Zero-Space/Assets/Editor/CombatExpansionGreatSwordPlayCheck.cs:187

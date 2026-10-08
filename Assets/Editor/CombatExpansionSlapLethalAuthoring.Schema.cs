@@ -156,7 +156,9 @@ namespace FrankRetarget.Editor
             report.AppendLine("Canonical Root/Motion encoding is selected by independent bone/root playback equivalence. " +
                 "Goal curves are omitted only after their resulting native poses are proven equivalent at 240Hz.");
             report.AppendLine("120Hz samples plus exact contact, blend, mapping boundaries and source endpoints; " +
-                "linear unweighted tangents. Events empty; original duration; nonlooping.");
+                "linear unweighted tangents plus adaptive native samples where measured interpolation error requires them. " +
+                "No timing changes. Events empty; original duration; nonlooping.");
+            report.AppendLine("Retain the full 240Hz validation grid and add a .37-tick offset grid for interpolation audit.");
             report.AppendLine("240Hz native-pose limits: every bone/root position 0.002m; rotation 0.5 degrees.");
             report.AppendLine("Reject rather than hide a resampling discrepancy.");
         }

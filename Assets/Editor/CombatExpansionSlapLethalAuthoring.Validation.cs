@@ -16,13 +16,13 @@ namespace FrankRetarget.Editor
         sealed class PoseMetrics
         {
             public float position, angle, root, body;
-            public string worst = "none";
+            public string worstPosition = "none", worstAngle = "none";
             public int samples;
             public float Score => Mathf.Max(position / PosePositionLimit, angle / PoseAngleLimit);
 
             public void Compare(MeasuredPose expected, MeasuredPose actual, Vector3 shift)
             {
-                if (expected.bones.Length != actual.bones.Length)
+                if (!expected.boneNames.SequenceEqual(actual.boneNames))
                     throw new InvalidOperationException("Empirical rigs have different bone schemas.");
                 samples++;
                 root = Mathf.Max(root, Vector3.Distance(expected.root + shift, actual.root));
@@ -32,17 +32,33 @@ namespace FrankRetarget.Editor
                 Track(expected.body + shift, actual.body, expected.bodyRotation, actual.bodyRotation,
                     "Body", actual.time);
                 for (int i = 0; i < expected.bones.Length; i++)
-                    Track(expected.bones[i] + shift, actual.bones[i], expected.rotations[i], actual.rotations[i],
-                        "mappedBone[" + i + "]", actual.time);
+                    TrackBone(expected, actual, shift, i);
+            }
+
+            void TrackBone(MeasuredPose expected, MeasuredPose actual, Vector3 shift, int i)
+            {
+                string local = "";
+                if (Vector3.Distance(expected.bones[i] + shift, actual.bones[i]) > position ||
+                    Quaternion.Angle(expected.rotations[i], actual.rotations[i]) > angle)
+                    local = " localPositionExpected=" + V(expected.localBones[i]) +
+                        " localPositionActual=" + V(actual.localBones[i]) +
+                        " localRotationExpected=" + Q(expected.localRotations[i]) +
+                        " localRotationActual=" + Q(actual.localRotations[i]);
+                Track(expected.bones[i] + shift, actual.bones[i], expected.rotations[i], actual.rotations[i],
+                    expected.boneNames[i], actual.time, local);
             }
 
             public void Track(Vector3 expected, Vector3 actual, Quaternion expectedRotation,
-                Quaternion actualRotation, string label, float time)
+                Quaternion actualRotation, string label, float time, string local = "")
             {
                 float distance = Vector3.Distance(expected, actual);
                 float degrees = Quaternion.Angle(expectedRotation, actualRotation);
-                if (distance > position || degrees > angle)
-                    worst = label + " at " + time.ToString("R", System.Globalization.CultureInfo.InvariantCulture);
+                if (!Finite(expected) || !Finite(actual) || !Finite(expectedRotation) || !Finite(actualRotation))
+                    throw new InvalidOperationException("Nonfinite comparison for " + label);
+                if (distance > position)
+                    worstPosition = PoseDetail(label, time, expected, actual, expectedRotation, actualRotation, local);
+                if (degrees > angle)
+                    worstAngle = PoseDetail(label, time, expected, actual, expectedRotation, actualRotation, local);
                 position = Mathf.Max(position, distance);
                 angle = Mathf.Max(angle, degrees);
             }
@@ -50,7 +66,7 @@ namespace FrankRetarget.Editor
             public override string ToString()
             {
                 return FormattableString.Invariant(
-                    $"samples={samples}; positionMax={position:R}m; angleMax={angle:R}deg; rootMax={root:R}m; bodyMax={body:R}m; worst={worst}");
+                    $"samples={samples}; positionMax={position:R}m; angleMax={angle:R}deg; rootMax={root:R}m; bodyMax={body:R}m; worstPosition=[{worstPosition}]; worstAngle=[{worstAngle}]");
             }
         }
 
