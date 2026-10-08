@@ -229,6 +229,7 @@ namespace FrankRetarget
             ConstrainLightHipsDepth();
             if (Move.grounding)
                 Move.grounding.Apply(SampleTime, attacker.Animator, receiver.Animator, attackActor);
+            attackActor.ApplySourceWeaponEntryGrip(SampleTime);
         }
 
         void LateUpdate()

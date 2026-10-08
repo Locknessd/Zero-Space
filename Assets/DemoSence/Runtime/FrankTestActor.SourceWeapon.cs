@@ -8,6 +8,24 @@ namespace FrankRetarget
     {
         GameObject sourceWeapon;
         Vector3 sourceWeaponLift;
+        FrankPoseRetarget.Limb sourceWeaponGrip;
+
+        public void ApplySourceWeaponEntryGrip(float seconds)
+        {
+            if (!sourceWeapon || sourceWeaponGrip == null) return;
+            var weapon = sourceWeapon.transform;
+            weapon.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+            if (entryBones == null || seconds >= entrySeconds) return;
+
+            // Entry blends the visible arm after retargeting. Carry the authored
+            // prop with that hand, using the existing palm-frame calibration.
+            // Always start at socket identity so seeking never integrates offsets.
+            var grip = sourceWeaponGrip;
+            Quaternion authoredHand = grip.sourceEnd.rotation * grip.rotationOffset;
+            Quaternion correction = grip.end.rotation * Quaternion.Inverse(authoredHand);
+            Vector3 position = grip.TargetGrip + correction * (weapon.position - grip.SourceGrip);
+            weapon.SetPositionAndRotation(position, correction * weapon.rotation);
+        }
 
         public void ApplySourceWeaponGrounding(float lift)
         {
@@ -19,6 +37,8 @@ namespace FrankRetarget
 
         void ResetSourceWeaponGrounding()
         {
+            if (sourceWeapon)
+                sourceWeapon.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
             if (activeDriver) activeDriver.transform.position -= sourceWeaponLift;
             sourceWeaponLift = Vector3.zero;
         }
@@ -50,9 +70,16 @@ namespace FrankRetarget
                 else DestroyImmediate(sourceWeapon);
             }
             sourceWeapon = weapon;
+            sourceWeaponGrip = null;
             pose.weaponRenderers = renderers;
+            var rightHand = character.GetBoneTransform(HumanBodyBones.RightHand);
             foreach (var limb in pose.limbs)
+            {
                 if (limb.sourceKnuckle) limb.alignGrip = true;
+                if (limb.end == rightHand && limb.sourceKnuckle && limb.sourceFingerJoint &&
+                    limb.targetKnuckle && limb.targetFingerJoint)
+                    sourceWeaponGrip = limb;
+            }
 
             // Include the newly parented renderers in the existing Animator bindings,
             // then restore the current source sample after Rebind resets the skeleton.

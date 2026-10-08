@@ -23,11 +23,13 @@ namespace FrankRetarget.Editor
                 Root + "Drivers/" + target.name + "_GreatSword_Reaction.prefab");
             if (!attackDriver || !reactionDriver)
                 throw new InvalidOperationException("Missing calibrated GreatSword source driver.");
+            var getUp = Recovery(index);
             return new CombatTripletData
             {
                 moveName = "Frank_" + original.sourceName,
                 attackAnim = original.attacker,
                 hitAnim = original.receiver,
+                getUpAnim = getUp,
                 attackRange = Mathf.Abs(original.receiverOffset.z),
                 weapon = TrumpWeaponManager.WeaponType.GreatSword,
                 grounding = AssetDatabase.LoadAssetAtPath<FrankPairGrounding>("Assets/CombatExpansion/Actions/Frank_" +
@@ -38,6 +40,7 @@ namespace FrankRetarget.Editor
                     receiverDriver = reactionDriver,
                     attack = original.attacker,
                     reaction = original.receiver,
+                    getUp = getUp,
                     receiverOffset = original.receiverOffset,
                     receiverRotation = original.receiverRotation,
                     entryBlendSeconds = .12f,
