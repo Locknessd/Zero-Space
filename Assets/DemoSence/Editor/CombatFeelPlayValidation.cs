@@ -19,10 +19,12 @@ namespace FrankRetarget.Editor
         static GameManager game;
         static double queueStarted;
         static int ended;
+        static int throwIndex, throwCompleted;
+        static CombatTripletData[] throwMoves;
         static readonly StringBuilder report = new StringBuilder();
         static WebSocketManager replaySocket;
-        static string ReviewDirectory => SessionState.GetBool(Key + "networkReplay", false)
-            ? "GeneratedAssets/BattleLoadingReview" : FrankRetargetBuilder.FeelReview;
+        static string ReviewDirectory => SessionState.GetBool(Key + "lightThrows", false) ? "GeneratedAssets/LightThrowReview" :
+            SessionState.GetBool(Key + "networkReplay", false) ? "GeneratedAssets/BattleLoadingReview" : FrankRetargetBuilder.FeelReview;
         [Serializable]
         sealed class IsolatedRoots
         {
@@ -71,6 +73,12 @@ namespace FrankRetarget.Editor
             Begin();
         }
 
+        public static void BeginLightThrows()
+        {
+            SessionState.SetBool(Key + "lightThrows", true);
+            Begin();
+        }
+
         public static void CancelPending()
         {
             Finish();
@@ -93,15 +101,34 @@ namespace FrankRetarget.Editor
                     game.ResetCombatQueue(); game.enabled = true; ended = 0;
                     game.leftCombat.SequenceEnded += SequenceEnded;
                     game.rightCombat.SequenceEnded += SequenceEnded;
-                    if (SessionState.GetBool(Key + "networkReplay", false)) QueueNetworkReplay();
-                    else
+                    if (SessionState.GetBool(Key + "lightThrows", false))
                     {
-                        game.EnqueueLocalAttack(PlayerUI.Side.Left, false);
-                        game.EnqueueLocalAttack(PlayerUI.Side.Right, true);
+                        throwMoves = new[] { game.leftCombat, game.rightCombat }.SelectMany(f => f.lightCombatMoves.Where(m =>
+                            m.moveName == "Light_JPBOM" || m.moveName == "Light_SIHO" || m.moveName == "Light_GSWING")).ToArray();
+                        if (throwMoves.Length != 6) throw new Exception("Missing new Light throw in live scene.");
+                        throwIndex = 0; throwCompleted = game.CompletedAnimationTests;
+                        SessionState.SetInt(Key + "phase", 3);
+                        StartNextThrow();
                     }
-                    queueStarted = EditorApplication.timeSinceStartup;
-                    SessionState.SetInt(Key + "phase", 2);
-                    Write("RUNNING real Light + Heavy queue callbacks\n");
+                    else StartRealQueue();
+                }
+                else if (phase == 3)
+                {
+                    if (!string.IsNullOrEmpty(game.QueueError)) throw new Exception("Throw error: " + game.QueueError);
+                    if (!game.IsAnimationTestPlaying)
+                    {
+                        if (game.CompletedAnimationTests != throwCompleted + throwIndex + 1 ||
+                            game.leftCombat.IsBusy || game.rightCombat.IsBusy || Time.timeScale != 1 ||
+                            game.leftCombat.IsDead || game.rightCombat.IsDead)
+                            throw new Exception("Throw failed to complete its real GetUp recovery.");
+                        report.AppendLine("PASS real " + (throwIndex < 3 ? "Mankey/" : "Meme/") + throwMoves[throwIndex].moveName +
+                            ": attack, hit-stop, receiving animation, GetUp and both callbacks completed.");
+                        throwIndex++;
+                        if (throwIndex < throwMoves.Length) StartNextThrow();
+                        else { game.EndAnimationTestMode(); StartRealQueue(); }
+                    }
+                    else if (EditorApplication.timeSinceStartup - queueStarted > 20)
+                        throw new Exception("Real throw did not recover within 20 seconds: " + throwMoves[throwIndex].moveName);
                 }
                 else
                 {
@@ -125,6 +152,28 @@ namespace FrankRetarget.Editor
                 }
             }
             catch (Exception error) { report.AppendLine("FAIL " + error); Finish(); Debug.LogException(error); }
+        }
+
+        static void StartNextThrow()
+        {
+            queueStarted = EditorApplication.timeSinceStartup;
+            if (!game.PlayAnimationTest(throwIndex < 3 ? PlayerUI.Side.Left : PlayerUI.Side.Right, throwMoves[throwIndex]))
+                throw new Exception("Live GameManager rejected " + throwMoves[throwIndex].moveName);
+            Write("RUNNING real new Light throws and GetUp recovery\n");
+        }
+
+        static void StartRealQueue()
+        {
+            ended = 0;
+            if (SessionState.GetBool(Key + "networkReplay", false)) QueueNetworkReplay();
+            else
+            {
+                game.EnqueueLocalAttack(PlayerUI.Side.Left, false);
+                game.EnqueueLocalAttack(PlayerUI.Side.Right, true);
+            }
+            queueStarted = EditorApplication.timeSinceStartup;
+            SessionState.SetInt(Key + "phase", 2);
+            Write("RUNNING real Light + Heavy queue callbacks\n");
         }
 
         static void SequenceEnded(CharacterCombat fighter, int playbackId, bool succeeded)
@@ -182,7 +231,7 @@ namespace FrankRetarget.Editor
             try
             {
                 foreach (var attacker in fighters)
-                foreach (var move in attacker.heavyCombatMoves.Where(m => m.skill == BattleSkill.None))
+                foreach (var move in attacker.lightCombatMoves.Concat(attacker.heavyCombatMoves).Where(m => m.skill == BattleSkill.None))
                 foreach (bool lethal in new[] { false, true })
                 {
                     game.ResetCombatQueue();
@@ -234,7 +283,7 @@ namespace FrankRetarget.Editor
                     }
                     finally { vfx.ContactOccurred -= observe; vfx.EffectPlayed -= observeFlash; }
                 }
-                report.AppendLine("PASS all seven Heavy weapons, both attackers, lethal/nonlethal (28 combos): a frame crossing a whole combo pauses at each exact contact; carried time resumes every hit once; KO slow motion once; cancel restores time.");
+                report.AppendLine("PASS every Light and Heavy move for both attackers, lethal/nonlethal: a frame crossing a whole combo pauses at each exact contact; carried time resumes every hit once; KO slow motion once; cancel restores time.");
                 report.AppendLine("PASS contact core and both shockwave rings already have particles before hit-stop; rings use game time and remain visible on held contact poses.");
                 Time.timeScale = .5f; feedback.ResetFeedback();
                 Time.timeScale = 0; feedback.ResetFeedback();
@@ -256,11 +305,13 @@ namespace FrankRetarget.Editor
         {
             Write(); SessionState.SetInt(Key + "phase", 0);
             SessionState.SetBool(Key + "networkReplay", false);
+            SessionState.SetBool(Key + "lightThrows", false);
             SessionState.SetBool(Key + "cleanup", true);
             if (game)
             {
                 game.leftCombat.SequenceEnded -= SequenceEnded;
                 game.rightCombat.SequenceEnded -= SequenceEnded;
+                game.EndAnimationTestMode();
                 game.ResetCombatQueue();
             }
             if (replaySocket) UnityEngine.Object.Destroy(replaySocket.gameObject);

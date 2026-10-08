@@ -98,6 +98,7 @@ public sealed class BattleVfxPlayer : MonoBehaviour
         public float age;
         public Transform follow;
         public Vector3 followLocalPoint;
+        public float followCameraOffset;
         public Renderer followRenderer;
         public Vector3 followRendererOffset;
         public float followSeconds;
@@ -252,7 +253,8 @@ public sealed class BattleVfxPlayer : MonoBehaviour
                     break;
                 case "body_fall":
                 case "knockout_fall":
-                    Vector3 ground = BonePosition(receiver, HumanBodyBones.Hips);
+                    var floorAnchor = cue.hasContactPoint ? BoneTransform(receiver, cue.contactBone) : null;
+                    Vector3 ground = floorAnchor ? floorAnchor.TransformPoint(cue.contactOffset) : BonePosition(receiver, HumanBodyBones.Hips);
                     ground.y = groundHeight + .035f;
                     bool knockout = lethal && cue.finalLanding;
                     Spawn(landingDust, ground, Quaternion.identity, knockout ? 1.35f : 1,
@@ -390,6 +392,16 @@ public sealed class BattleVfxPlayer : MonoBehaviour
         if (useBlade && renderers != null)
             foreach (var blade in renderers)
                 if (IsBlade(blade)) Consider(blade.transform, BladeCenter(blade), blade);
+        if (!anchor && timing.contactSource == "Receiver")
+        {
+            var body = BoneTransform(receiver, timing.contactBone);
+            if (body) Consider(body, body.TransformPoint(timing.contactOffset));
+        }
+        if (!anchor && Enum.TryParse(timing.contactSource, out HumanBodyBones requestedLimb))
+        {
+            var limb = BoneTransform(attacker, requestedLimb);
+            if (limb) Consider(limb, limb.position);
+        }
         if (!anchor)
             foreach (var bone in Strikers)
             {
@@ -401,8 +413,11 @@ public sealed class BattleVfxPlayer : MonoBehaviour
         // WHOOSH stays readable. Pack slash arcs rotate along the evaluated weapon sweep.
         float angle = cue == "blade_slash" && screenMotion.sqrMagnitude > .00001f
             ? Mathf.Atan2(screenMotion.y, screenMotion.x) * Mathf.Rad2Deg : 0;
-        Spawn(prefab, point + CameraOffset(.09f), cameraRotation * Quaternion.Euler(0, 0, angle),
-            scale, cue, cue == "blade_slash" ? anchor : null, cue == "blade_slash" ? bladeAnchor : null);
+        bool bodyWhoosh = !useBlade && (timing.contactSource == "Receiver" || Enum.TryParse<HumanBodyBones>(timing.contactSource, out _));
+        float screenOffset = bodyWhoosh ? .35f : .09f;
+        Spawn(prefab, point + CameraOffset(screenOffset), cameraRotation * Quaternion.Euler(0, 0, angle),
+            scale, cue, cue == "blade_slash" || bodyWhoosh ? anchor : null, cue == "blade_slash" ? bladeAnchor : null,
+            bodyWhoosh ? screenOffset : 0);
 
         void Consider(Transform candidate, Vector3 current, Renderer blade = null)
         {
@@ -514,7 +529,7 @@ public sealed class BattleVfxPlayer : MonoBehaviour
     Vector3 CameraOffset(float distance) => -(FacingCamera() * Vector3.forward) * distance;
 
     Instance Spawn(GameObject prefab, Vector3 position, Quaternion rotation, float scale, string cue,
-        Transform follow = null, Renderer followRenderer = null)
+        Transform follow = null, Renderer followRenderer = null, float followCameraOffset = 0)
     {
         if (!prefab) return null;
         var instance = instances.Find(i => i.prefab == prefab && i.root && !i.root.activeSelf);
@@ -556,10 +571,11 @@ public sealed class BattleVfxPlayer : MonoBehaviour
         // around the grip. Track their current bounds rather than the grip position.
         instance.followRenderer = followRenderer;
         instance.followRendererOffset = followRenderer ? position - BladeCenter(followRenderer) : Vector3.zero;
-        instance.followLocalPoint = follow ? follow.InverseTransformPoint(position) : Vector3.zero;
+        instance.followCameraOffset = followCameraOffset;
+        instance.followLocalPoint = follow ? follow.InverseTransformPoint(position - CameraOffset(followCameraOffset)) : Vector3.zero;
         instance.followSeconds = .18f;
         instance.root.SetActive(true);
-        bool contact = cue == "light_hit" || cue == "heavy_hit";
+        bool contact = cue == "light_hit" || cue == "heavy_hit" || cue == "ground_impact" || cue == "body_fall" || cue == "knockout_fall";
         foreach (var particles in instance.particles)
         {
             particles.Stop(false, ParticleSystemStopBehavior.StopEmittingAndClear);
@@ -604,7 +620,13 @@ public sealed class BattleVfxPlayer : MonoBehaviour
                     }
                     instance.root.transform.position = point + instance.followRendererOffset;
                 }
-                else instance.root.transform.position = instance.follow.TransformPoint(instance.followLocalPoint);
+                else
+                {
+                    // Body turns must not swing readable throw WHOOSH letters
+                    // behind the character; keep their offset toward the camera.
+                    instance.root.transform.position = instance.follow.TransformPoint(instance.followLocalPoint) + CameraOffset(instance.followCameraOffset);
+                    if (instance.followCameraOffset > 0) instance.root.transform.rotation = FacingCamera() * instance.prefab.transform.localRotation;
+                }
             }
             bool alive = false;
             foreach (var particles in instance.particles)
