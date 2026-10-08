@@ -8,15 +8,16 @@ namespace FrankRetarget.Editor
     public static partial class CombatExpansionSamuraiStudy
     {
         static FrankBattlePairPlayback BeginGroundingStudy(CharacterCombat[] fighters, CharacterCombat source,
-            CharacterCombat target, int direction, FrankPairGrounding grounding)
+            CharacterCombat target, int direction, FrankPairGrounding grounding, int execution = 1)
         {
+            GroundingExecutionName(execution);
             foreach (var fighter in fighters)
                 fighter.ResetCombat();
             source.Animator.transform.SetPositionAndRotation(Vector3.left * direction * .85f,
                 Quaternion.LookRotation(Vector3.right * direction));
             target.Animator.transform.SetPositionAndRotation(Vector3.right * direction * .85f,
                 Quaternion.LookRotation(Vector3.left * direction));
-            var move = MakePairMove(source, target, 1);
+            var move = MakePairMove(source, target, execution);
             move.grounding = grounding;
             try
             {

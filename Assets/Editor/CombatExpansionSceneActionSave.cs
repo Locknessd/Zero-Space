@@ -16,6 +16,16 @@ namespace FrankRetarget.Editor
 
         public static void Save(Scene scene, CharacterCombat[] fighters, string[] actionIds)
         {
+            SaveRegistry(scene, fighters, actionIds, "heavyCombatMoves");
+        }
+
+        public static void SaveLight(Scene scene, CharacterCombat[] fighters, string[] actionIds)
+        {
+            SaveRegistry(scene, fighters, actionIds, "lightCombatMoves");
+        }
+
+        static void SaveRegistry(Scene scene, CharacterCombat[] fighters, string[] actionIds, string registry)
+        {
             if (EditorApplication.isPlayingOrWillChangePlaymode || !scene.IsValid() || !scene.isLoaded ||
                 scene.path != BattlePath)
                 throw new InvalidOperationException("Open BattleScene in Edit Mode before persisting actions.");
@@ -51,7 +61,7 @@ namespace FrankRetarget.Editor
                 bool sourceBom;
                 string source = Decode(File.ReadAllBytes(Path.Combine(folder, "BattleScene.live.unity")),
                     out sourceBom);
-                string merged = Merge(saved, source, componentIds.ToArray(), actionIds);
+                string merged = Merge(saved, source, componentIds.ToArray(), actionIds, registry);
                 byte[] output = Encode(merged, bom);
                 if (!original.SequenceEqual(output))
                     ReplaceAtomically(path, original, output, folder);
@@ -127,16 +137,30 @@ namespace FrankRetarget.Editor
             byte[] bytes = File.ReadAllBytes(BattlePath);
             string saved = Decode(bytes, out bom);
             var documents = Documents(saved);
-            var ids = documents.Where(pair => pair.Value.Text.Contains("  heavyCombatMoves:"))
-                .Select(pair => pair.Key).ToArray();
-            if (ids.Length == 0)
-                throw new InvalidDataException("No inline combat registries found.");
-            foreach (ulong id in ids)
+            foreach (string registry in new[] { "heavyCombatMoves", "lightCombatMoves" })
             {
-                var list = ReadList(documents[id]);
-                var names = list.Entries.Keys.ToArray();
-                if (Merge(saved, saved, new[] { id }, names) != saved)
-                    throw new InvalidDataException("Identical entry replacement changed scene content.");
+                var ids = documents.Where(pair => pair.Value.Text.Contains("  " + registry + ":"))
+                    .Select(pair => pair.Key).ToArray();
+                if (ids.Length == 0)
+                    throw new InvalidDataException("No inline combat registry found: " + registry);
+                foreach (ulong id in ids)
+                {
+                    var list = ReadList(documents[id], registry);
+                    var names = list.Entries.Keys.ToArray();
+                    if (Merge(saved, saved, new[] { id }, names, registry) != saved)
+                        throw new InvalidDataException("Identical entry replacement changed scene content.");
+                    const string probe = "ValidationOwnedEntry";
+                    if (list.Entries.ContainsKey(probe))
+                        throw new InvalidDataException("Reserved preservation probe name already exists.");
+                    var first = list.Entries.First();
+                    string entry = first.Value.Text.Replace("  - moveName: " + first.Key + Newline(saved),
+                        "  - moveName: " + probe + Newline(saved));
+                    string expected = saved.Insert(list.End, entry);
+                    string source = expected.Insert(expected.IndexOf(Newline(saved), StringComparison.Ordinal),
+                        Newline(saved) + "# Unrelated unsaved change must not be persisted.");
+                    if (Merge(saved, source, new[] { id }, new[] { probe }, registry) != expected)
+                        throw new InvalidDataException("Registry addition changed unrelated scene content.");
+                }
             }
             if (!Encode(saved, bom).SequenceEqual(bytes))
                 throw new InvalidDataException("Scene encoding did not round trip byte for byte.");

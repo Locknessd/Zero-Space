@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [DisallowMultipleComponent]
-public class CharacterCombat : MonoBehaviour
+public partial class CharacterCombat : MonoBehaviour
 {
     [SerializeField] private Animator animator;
     public RuntimeAnimatorController combatController;

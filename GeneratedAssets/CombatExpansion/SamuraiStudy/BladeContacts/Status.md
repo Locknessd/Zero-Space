@@ -16,10 +16,20 @@ The mesh exports and projection image document the boundary excluding the
 guard, grip and sheath. Gaps are unsigned triangle surface distances; zero
 does not distinguish touching from intersecting geometry.
 
-The grounded Mankey-to-Pepe second swing still misses by about 0.0506 m at
-the closest sampled point in its candidate window. Contact adaptation remains
-pending. No Samurai actions are registered by these tools, and no damage or
-presentation timings have been accepted.
+At the original 1.70 m spacing, the grounded Mankey-to-Pepe second swing
+misses by about 0.0506 m. The completed eight-case spacing study now measures
+both directions at 1.70, 1.66, 1.64 and 1.62 m. Gaps at the second swing are
+approximately 0.0506, 0.0132, 0 and 0 m respectively. At 1.64 and 1.62 m,
+only the sample at 2.0333333 s touches within 1 mm; this narrow contact needs
+closer timing review before acceptance. The reviewed 1.64 m positive-lane
+sheet keeps the initial thrust, kneeling receiver and later horizontal cut.
+No mid-action translation, source retiming or enlarged hitbox was introduced.
+See `SpacingCandidates` for trajectories and timestamped sheets.
+
+These spacing results cover Mankey attacking Pepe only. The existing grounded
+Pepe-to-Mankey setup already reaches both candidate contacts at 1.70 m.
+No Samurai actions are registered by these tools, and damage, presentation,
+recovery and final contact timings remain unaccepted.
 
 Reproduce in Edit Mode using these `CombatExpansionSamuraiStudy` methods:
 

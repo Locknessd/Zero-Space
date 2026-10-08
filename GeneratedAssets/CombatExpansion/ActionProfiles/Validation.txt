@@ -1,0 +1,8 @@
+PASS legacy lookup identity and optional null-profile serialization.
+PASS shared clips resolve independent explicit timelines by reference; serialization preserved.
+PASS 256 warmed explicit lookups allocate zero managed bytes.
+PASS wrong attack/reaction and absent source pair produce validation errors without fallback.
+PASS null/empty cue arrays and null cue records report errors without exceptions.
+PASS clock/group/contact-anchor checks, landing/interaction exemptions and audio routing retained.
+PASS valid grapple release/throw/escape retain priority and continuation source validation.
+PASS all lookup checks; transient fixtures only, no scene or asset changes.

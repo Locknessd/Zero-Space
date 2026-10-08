@@ -51,8 +51,11 @@ namespace FrankRetarget.Editor
             return documents;
         }
 
-        static Registry ReadList(Span document)
+        static Registry ReadList(Span document, string registry = "heavyCombatMoves")
         {
+            if (registry != "heavyCombatMoves" && registry != "lightCombatMoves")
+                throw new ArgumentException("Unsupported combat registry: " + registry);
+            string boundary = "  " + registry + ":";
             string newline = Newline(document.Text);
             var lines = document.Text.Split(new[] { newline }, StringSplitOptions.None);
             var header = HeaderPattern.Match(lines[0]);
@@ -69,10 +72,10 @@ namespace FrankRetarget.Editor
             var fields = new HashSet<string>(StringComparer.Ordinal);
             foreach (string line in lines)
             {
-                if (line.StartsWith("  heavyCombatMoves:", StringComparison.Ordinal))
+                if (line.StartsWith(boundary, StringComparison.Ordinal))
                 {
-                    if (found || line != "  heavyCombatMoves:")
-                        throw new InvalidDataException("Ambiguous or unsupported heavy combat list boundary.");
+                    if (found || line != boundary)
+                        throw new InvalidDataException("Ambiguous or unsupported combat list boundary.");
                     found = true;
                     inside = true;
                 }
@@ -81,7 +84,7 @@ namespace FrankRetarget.Editor
                     FinishEntry(entry, offset, document, fields);
                     string name = line.Substring("  - moveName: ".Length);
                     if (!NamePattern.IsMatch(name) || result.Entries.ContainsKey(name))
-                        throw new InvalidDataException("Unknown action name encoding or duplicate heavy action: " + name);
+                        throw new InvalidDataException("Unknown action name encoding or duplicate combat action: " + name);
                     entry = new Span { Start = offset };
                     result.Entries.Add(name, entry);
                     fields.Clear();
@@ -96,16 +99,16 @@ namespace FrankRetarget.Editor
                 {
                     if (entry == null || !line.StartsWith("    ", StringComparison.Ordinal) ||
                         string.IsNullOrWhiteSpace(line) || line.Contains("\t"))
-                        throw new InvalidDataException("Malformed heavy action entry or missing array boundary.");
+                        throw new InvalidDataException("Malformed combat action entry or missing array boundary.");
                     var field = Regex.Match(line, @"\A    ([A-Za-z_][A-Za-z0-9_]*):(?: |$)");
                     if (field.Success && (field.Groups[1].Value == "moveName" ||
                         !fields.Add(field.Groups[1].Value)))
-                        throw new InvalidDataException("Duplicate field in heavy action entry.");
+                        throw new InvalidDataException("Duplicate field in combat action entry.");
                 }
                 offset += line.Length + newline.Length;
             }
             if (!found || inside || result.Entries.Count == 0)
-                throw new InvalidDataException("Missing or unterminated inline heavy combat registry.");
+                throw new InvalidDataException("Missing or unterminated inline combat registry.");
             return result;
         }
 
@@ -119,7 +122,8 @@ namespace FrankRetarget.Editor
             entry.Text = document.Text.Substring(entry.Start - document.Start, end - entry.Start);
         }
 
-        static string Merge(string saved, string source, ulong[] componentIds, string[] actionIds)
+        static string Merge(string saved, string source, ulong[] componentIds, string[] actionIds,
+            string registry = "heavyCombatMoves")
         {
             ValidateIds(actionIds);
             if (componentIds.Length == 0 || componentIds.Distinct().Count() != componentIds.Length)
@@ -133,8 +137,8 @@ namespace FrankRetarget.Editor
             {
                 if (!originals.ContainsKey(id) || !snapshots.ContainsKey(id))
                     throw new InvalidDataException("Missing component in saved scene or snapshot: " + id);
-                var target = ReadList(originals[id]);
-                var current = ReadList(snapshots[id]);
+                var target = ReadList(originals[id], registry);
+                var current = ReadList(snapshots[id], registry);
                 var added = new StringBuilder();
                 foreach (string action in actionIds)
                 {
@@ -168,8 +172,8 @@ namespace FrankRetarget.Editor
             var mergedDocuments = Documents(merged);
             foreach (ulong id in componentIds)
             {
-                var target = ReadList(mergedDocuments[id]);
-                var current = ReadList(snapshots[id]);
+                var target = ReadList(mergedDocuments[id], registry);
+                var current = ReadList(snapshots[id], registry);
                 foreach (string action in actionIds)
                     if (!target.Entries.ContainsKey(action) ||
                         target.Entries[action].Text != current.Entries[action].Text.Replace(sourceNewline, newline))

@@ -1,0 +1,87 @@
+Grounded Execution01 constant entry spacing adaptation candidates; Mankey attacks Pepe only.
+Eight cases: spacings 1.70, 1.66, 1.64 and 1.62 metres, each in both lane directions.
+The 1.70m case repeats native entry spacing as the grounded comparison baseline.
+Both assignments were measured separately in ../Execution01Grounded; Pepe-to-Mankey baseline is already measured there and is not repeated in this sweep.
+Motivation: the prior grounded Mankey-to-Pepe second slash missed by about 0.0506m at 1.70m.
+Only initial actor positions, source pair receiver offset and attack range use the candidate spacing.
+No mid-action translation, retiming or source clip modification is applied.
+Existing ExecuteAttack and FrankBattlePairPlayback evaluate the grounded source pair.
+PlayerA attacker retains the native sword; PlayerB victim has no weapon renderers.
+Measured BladeR mesh=3e685dd57e9c78b49b20bef3e8358ae3:4300002; 111 faces with all three local Z coordinates <= -0.33; guard, grip and sheath excluded.
+Whole source pair sampled at 30Hz; grounded candidate windows [0.35,1.05] and [1.75,2.35] sampled at 240Hz.
+Current victim skin and triangle BVH are rebuilt at each source-clock evaluation.
+Unsigned triangle gaps report touch or intersection, not penetration depth or anatomical approval.
+Nearest bone labels describe pivot proximity only.
+Dual-view sheets show a cyan blade overlay; measurements use original unoffset vertices.
+Backwards-seek gaps and blade tips are checked against recorded samples.
+These are unaccepted candidates: no accepted contacts, damage, feedback or runtime registration.
+GroundingAsset=Assets/CombatExpansion/SamuraiStudy/Grounding/Samurai_Execution01_Grounding.asset
+Grounding=3e9468be3cf45ed178f6ffec095afaa3:11400000
+BaselineSource PlayerA=3e685dd57e9c78b49b20bef3e8358ae3:7400002; name=Execution1_PlayerA; path=Assets/Selected/Mugen Tenshin Studio/Samurai Executions/Mesh/PlayerA/PlayerA_Execution_Anims.FBX
+BaselineSource PlayerB=b01b411d366a5a344bddf3428a7bc8f7:7400002; name=Execution1_PlayerB; path=Assets/Selected/Mugen Tenshin Studio/Samurai Executions/Mesh/PlayerB/PlayerB_Execution_Anims.FBX
+AttackerAvatar=59dc3f26824c72872aa4cf6baeec671e:9000000
+ReceiverAvatar=757d9d3f1766533aa895e81a07aa5197:9000000
+Mankey_Pepe_Positive constant entry spacing=1.7m
+Mankey_Pepe_Positive initial geometry diagnostics:
+Plane: explicit bone/bindpose world bounds=Center: (0.73, 0.81, 0.02), Extents: (0.45, 0.80, 0.30); max Bake(false)+TR error=4.989108E-07m; max Bake(false)+TRS error=14.788538m; rootBone=mixamorig:Hips; quality=Auto
+Plane: 20726 faces; scale=(10.00, 10.00, 10.00); space=explicit current bone * bindpose world skinning
+Pepe body=Center: (0.73, 0.81, 0.02), Extents: (0.45, 0.80, 0.30); skeleton=Center: (0.70, 0.67, 0.03), Extents: (0.41, 0.65, 0.25)
+Mankey_Pepe_Positive window=(0.35, 1.05) minimumGap=0m seconds=0.4; nearestPivot=LeftUpperArm
+Mankey_Pepe_Positive window=(1.75, 2.35) minimumGap=0.0506152958m seconds=2.0333333; nearestPivot=LeftUpperArm
+Mankey_Pepe_Positive samples=371; maxReseekGapError=7.593632E-05m; maxReseekTipError=9.667947E-05m
+Mankey_Pepe_Negative constant entry spacing=1.7m
+Mankey_Pepe_Negative initial geometry diagnostics:
+Plane: explicit bone/bindpose world bounds=Center: (-0.73, 0.81, -0.02), Extents: (0.45, 0.80, 0.30); max Bake(false)+TR error=4.7892803E-07m; max Bake(false)+TRS error=14.788538m; rootBone=mixamorig:Hips; quality=Auto
+Plane: 20726 faces; scale=(10.00, 10.00, 10.00); space=explicit current bone * bindpose world skinning
+Pepe body=Center: (-0.73, 0.81, -0.02), Extents: (0.45, 0.80, 0.30); skeleton=Center: (-0.70, 0.67, -0.03), Extents: (0.41, 0.65, 0.25)
+Mankey_Pepe_Negative window=(0.35, 1.05) minimumGap=0m seconds=0.4; nearestPivot=LeftUpperArm
+Mankey_Pepe_Negative window=(1.75, 2.35) minimumGap=0.050614018m seconds=2.0333333; nearestPivot=LeftUpperArm
+Mankey_Pepe_Negative samples=371; maxReseekGapError=7.772446E-05m; maxReseekTipError=9.846918E-05m
+Mankey_Pepe_Positive constant entry spacing=1.66m
+Mankey_Pepe_Positive initial geometry diagnostics:
+Plane: explicit bone/bindpose world bounds=Center: (0.71, 0.81, 0.02), Extents: (0.45, 0.80, 0.30); max Bake(false)+TR error=5.02458647E-07m; max Bake(false)+TRS error=14.788538m; rootBone=mixamorig:Hips; quality=Auto
+Plane: 20726 faces; scale=(10.00, 10.00, 10.00); space=explicit current bone * bindpose world skinning
+Pepe body=Center: (0.71, 0.81, 0.02), Extents: (0.45, 0.80, 0.30); skeleton=Center: (0.68, 0.67, 0.03), Extents: (0.41, 0.65, 0.25)
+Mankey_Pepe_Positive window=(0.35, 1.05) minimumGap=0m seconds=0.395833343; nearestPivot=LeftUpperArm
+Mankey_Pepe_Positive window=(1.75, 2.35) minimumGap=0.01322655m seconds=2.0333333; nearestPivot=LeftUpperArm
+Mankey_Pepe_Positive samples=371; maxReseekGapError=7.277727E-05m; maxReseekTipError=9.656026E-05m
+Mankey_Pepe_Negative constant entry spacing=1.66m
+Mankey_Pepe_Negative initial geometry diagnostics:
+Plane: explicit bone/bindpose world bounds=Center: (-0.71, 0.81, -0.02), Extents: (0.45, 0.80, 0.30); max Bake(false)+TR error=4.84230441E-07m; max Bake(false)+TRS error=14.788538m; rootBone=mixamorig:Hips; quality=Auto
+Plane: 20726 faces; scale=(10.00, 10.00, 10.00); space=explicit current bone * bindpose world skinning
+Pepe body=Center: (-0.71, 0.81, -0.02), Extents: (0.45, 0.80, 0.30); skeleton=Center: (-0.68, 0.67, -0.03), Extents: (0.41, 0.65, 0.25)
+Mankey_Pepe_Negative window=(0.35, 1.05) minimumGap=0m seconds=0.395833343; nearestPivot=LeftUpperArm
+Mankey_Pepe_Negative window=(1.75, 2.35) minimumGap=0.0132254781m seconds=2.0333333; nearestPivot=LeftUpperArm
+Mankey_Pepe_Negative samples=371; maxReseekGapError=7.44462E-05m; maxReseekTipError=9.846868E-05m
+Mankey_Pepe_Positive constant entry spacing=1.64m
+Mankey_Pepe_Positive initial geometry diagnostics:
+Plane: explicit bone/bindpose world bounds=Center: (0.70, 0.81, 0.02), Extents: (0.45, 0.80, 0.30); max Bake(false)+TR error=5.198349E-07m; max Bake(false)+TRS error=14.788538m; rootBone=mixamorig:Hips; quality=Auto
+Plane: 20726 faces; scale=(10.00, 10.00, 10.00); space=explicit current bone * bindpose world skinning
+Pepe body=Center: (0.70, 0.81, 0.02), Extents: (0.45, 0.80, 0.30); skeleton=Center: (0.67, 0.67, 0.03), Extents: (0.41, 0.65, 0.25)
+Mankey_Pepe_Positive window=(0.35, 1.05) minimumGap=0m seconds=0.395833343; nearestPivot=LeftUpperArm
+Mankey_Pepe_Positive window=(1.75, 2.35) minimumGap=0m seconds=2.0333333; nearestPivot=LeftUpperArm
+Mankey_Pepe_Positive samples=371; maxReseekGapError=7.12871552E-05m; maxReseekTipError=9.691789E-05m
+Mankey_Pepe_Negative constant entry spacing=1.64m
+Mankey_Pepe_Negative initial geometry diagnostics:
+Plane: explicit bone/bindpose world bounds=Center: (-0.70, 0.81, -0.02), Extents: (0.45, 0.80, 0.30); max Bake(false)+TR error=4.819898E-07m; max Bake(false)+TRS error=14.788538m; rootBone=mixamorig:Hips; quality=Auto
+Plane: 20726 faces; scale=(10.00, 10.00, 10.00); space=explicit current bone * bindpose world skinning
+Pepe body=Center: (-0.70, 0.81, -0.02), Extents: (0.45, 0.80, 0.30); skeleton=Center: (-0.67, 0.67, -0.03), Extents: (0.41, 0.65, 0.25)
+Mankey_Pepe_Negative window=(0.35, 1.05) minimumGap=0m seconds=0.395833343; nearestPivot=LeftUpperArm
+Mankey_Pepe_Negative window=(1.75, 2.35) minimumGap=0m seconds=2.0333333; nearestPivot=LeftUpperArm
+Mankey_Pepe_Negative samples=371; maxReseekGapError=7.253885E-05m; maxReseekTipError=9.858752E-05m
+Mankey_Pepe_Positive constant entry spacing=1.62m
+Mankey_Pepe_Positive initial geometry diagnostics:
+Plane: explicit bone/bindpose world bounds=Center: (0.69, 0.81, 0.02), Extents: (0.45, 0.80, 0.30); max Bake(false)+TR error=4.86289537E-07m; max Bake(false)+TRS error=14.788538m; rootBone=mixamorig:Hips; quality=Auto
+Plane: 20726 faces; scale=(10.00, 10.00, 10.00); space=explicit current bone * bindpose world skinning
+Pepe body=Center: (0.69, 0.81, 0.02), Extents: (0.45, 0.80, 0.30); skeleton=Center: (0.66, 0.67, 0.03), Extents: (0.41, 0.65, 0.25)
+Mankey_Pepe_Positive window=(0.35, 1.05) minimumGap=0m seconds=0.391666681; nearestPivot=LeftUpperArm
+Mankey_Pepe_Positive window=(1.75, 2.35) minimumGap=0m seconds=2.0333333; nearestPivot=LeftUpperArm
+Mankey_Pepe_Positive samples=371; maxReseekGapError=6.940961E-05m; maxReseekTipError=9.70371E-05m
+Mankey_Pepe_Negative constant entry spacing=1.62m
+Mankey_Pepe_Negative initial geometry diagnostics:
+Plane: explicit bone/bindpose world bounds=Center: (-0.69, 0.81, -0.02), Extents: (0.45, 0.80, 0.30); max Bake(false)+TR error=4.833699E-07m; max Bake(false)+TRS error=14.788538m; rootBone=mixamorig:Hips; quality=Auto
+Plane: 20726 faces; scale=(10.00, 10.00, 10.00); space=explicit current bone * bindpose world skinning
+Pepe body=Center: (-0.69, 0.81, -0.02), Extents: (0.45, 0.80, 0.30); skeleton=Center: (-0.66, 0.67, -0.03), Extents: (0.41, 0.65, 0.25)
+Mankey_Pepe_Negative window=(0.35, 1.05) minimumGap=0m seconds=0.391666681; nearestPivot=LeftUpperArm
+Mankey_Pepe_Negative window=(1.75, 2.35) minimumGap=0m seconds=2.0333333; nearestPivot=LeftUpperArm
+Mankey_Pepe_Negative samples=371; maxReseekGapError=7.06017E-05m; maxReseekTipError=9.858752E-05m

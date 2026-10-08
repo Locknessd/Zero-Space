@@ -8,12 +8,15 @@ namespace FrankRetarget
     {
         public FrankTestDriver attackerDriver, receiverDriver;
         public AnimationClip attack, reaction;
+        public FrankAttackTrack attacks;
         public FrankReactionTrack reactions;
         public AnimationClip getUp;
         public AnimationClip attackerGetUp;
         public FrankPairGrounding recoveryGrounding;
         [Min(0)] public float recoveryBlendSeconds;
+        [Range(0, 1)] public float standingRecoverySeconds;
         [Min(0)] public float entryBlendSeconds;
+        public bool transferReceiverFingers;
         public bool constrainDepthAfterSpacing;
         [Min(0)] public float maximumAlignmentError;
         public Vector3 receiverOffset;
@@ -108,6 +111,16 @@ namespace FrankRetarget
         public bool Begin(CharacterCombat source, CharacterCombat target, CombatTripletData move, bool isLethal)
         {
             if (move.sourcePair == null || !move.sourcePair.Valid) return false;
+            if (!float.IsFinite(move.sourcePair.standingRecoverySeconds) ||
+                move.sourcePair.standingRecoverySeconds < 0 || move.sourcePair.standingRecoverySeconds > 1)
+                throw new ArgumentException("Standing recovery must be between zero and one second.", nameof(move));
+            if (move.sourcePair.attacks)
+            {
+                if (move.grapple)
+                    throw new ArgumentException("A pair cannot combine an attack track with a grapple.", nameof(move));
+                if (!move.sourcePair.attacks.TryValidate(out string error))
+                    throw new ArgumentException(error, nameof(move));
+            }
             if (move.sourcePair.reactions)
             {
                 if (move.grapple)
@@ -149,8 +162,10 @@ namespace FrankRetarget
                 attackActor = Actor(source, pair.attackerDriver, pair.attack, true,
                     pair.showWeapon || move.weapon != TrumpWeaponManager.WeaponType.None, pair.unarmedIndex >= 0,
                     entryBlend, pair.attackerWeaponPrefab, pair.attackerWeaponSocket);
+                attackActor.SetAttackTrack(pair.attacks);
                 hitActor = Actor(target, pair.receiverDriver, pair.reaction, false, false, pair.unarmedIndex >= 0, entryBlend);
                 hitActor.SetReactionTrack(pair.reactions, lethal);
+                if (pair.transferReceiverFingers) hitActor.Pose.transferFingers = true;
                 // Grapples constrain the complete pair after spacing. Applying a
                 // pelvis lock before optional spacing would move the hands twice
                 // when the baked separation passes through zero.
@@ -260,6 +275,7 @@ namespace FrankRetarget
             {
                 EvaluateRecoveryPose();
                 ConstrainLightHipsDepth();
+                ObserveStandingRecovery();
                 if (!attackRecoveryPending && !hitRecoveryPending) CompleteNow();
                 return;
             }

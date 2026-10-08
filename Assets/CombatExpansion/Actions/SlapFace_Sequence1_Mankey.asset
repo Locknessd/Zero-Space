@@ -1,0 +1,91 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dcfa8577ab5249259fa110adbb5792e, type: 3}
+  m_Name: SlapFace_Sequence1_Mankey
+  m_EditorClassIdentifier: Assembly-CSharp::CombatActionDefinition
+  actionId: SlapFace_Sequence1
+  displayName: "Slap Face \u2014 Sequence 1"
+  gameplayTrigger: Explicit light action via EnqueueCombatAction(side, actionId),
+    exact server animationId and existing animation browser. requiresExplicitSelection
+    keeps it out of random pools. The server accepted exchange remains authority
+    for damage.
+  entryAndInterruption: Living available fighters approach 0.8m spacing; native receiver
+    yaw 180; maximum alignment error 0.15m and entry blend 0.12s. Both roles transfer
+    fingers and are unarmed. Existing pair cancellation owns both roles, cue cleanup
+    and equipment restoration. No invented stun, damage, armor or independent receiver
+    flinch restart.
+  recovery: 'Complete authored source duration: attacker 10.2000008s, receiver 10.2000008s;
+    paired receiver continuation gives StandingRecoil. Standing recovery is configured
+    for 0.3s after source completion. Runtime standing recovery Play Mode validation
+    is pending. Lethal visual treatment and KO validation remain pending; this is
+    not a complete lethal adaptation.'
+  presentation: Per-attacker explicit timeline shared by sound and VFX; light_swing
+    at measured contact minus 0.10s and light_hit at measured right-palm/head skin
+    contact. Per-victim Head-local anchor, existing routed light_hit/body layers,
+    hit-stop, flash, impact light and camera feedback; no weapon trails. Established
+    light-body presentation is interim; slap-specific audio tuning and live gameplay
+    feedback verification remain pending.
+  presentationProfile:
+    rid: 3912399012286431616
+  authoredAttackSources: []
+  contacts:
+  - strikeId: SlapFace_Sequence1/01
+    attack: {fileID: 8993902097722301239, guid: 527e6e5d54a7afac7c1780b695f6034d,
+      type: 3}
+    reaction: {fileID: 8993902097722301239, guid: ab20a2bd36bd2b59358ce4e03e934069,
+      type: 3}
+    seconds: 1.4
+    activeWindowSeconds: {x: 1.3958333, y: 1.4041667}
+    strikingLimb: 18
+    targetRegion: Head; measured facial skin contact on victim avatar PepeAvatar
+    directionInVictimSpace: {x: 0.8596232, y: 0.44942105, z: 0.24304059}
+    reactionPolicy: 0
+    result: 0
+    presentationGroup: light_hit
+    nonDamagingInteraction: 0
+    continuation: Native paired receiver continues on accepted exchange clock without
+      restart. Direction is the measured right-palm source sweep in victim space.
+      Server accepted damage remains authoritative; no extra stun or damage. Surviving
+      standing recovery and lethal visual treatment require separate Play Mode validation.
+  references:
+    version: 2
+    RefIds:
+    - rid: 3912399012286431616
+      type: {class: BattleSfxBank/Move, ns: , asm: Assembly-CSharp}
+      data:
+        label: SlapFace_Sequence1
+        attack: {fileID: 8993902097722301239, guid: 527e6e5d54a7afac7c1780b695f6034d,
+          type: 3}
+        reaction: {fileID: 8993902097722301239, guid: ab20a2bd36bd2b59358ce4e03e934069,
+          type: 3}
+        cues:
+        - seconds: 1.3
+          group: light_swing
+          finalLanding: 0
+          hasContactPoint: 0
+          contactBone: 8
+          contactOffset: {x: 0, y: 0, z: 0}
+          contactSource: 
+          avatarContacts: []
+          damageOnLanding: 0
+        - seconds: 1.4
+          group: light_hit
+          finalLanding: 0
+          hasContactPoint: 1
+          contactBone: 10
+          contactOffset: {x: -0.5829315, y: 0.03508334, z: 0.68289363}
+          contactSource: RightHand
+          avatarContacts:
+          - avatar: {fileID: 9000000, guid: 757d9d3f1766533aa895e81a07aa5197, type: 3}
+            bone: 10
+            offset: {x: -0.5829315, y: 0.03508334, z: 0.68289363}
+          damageOnLanding: 0

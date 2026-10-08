@@ -1,0 +1,48 @@
+SlapFace installation authoring report; gameplay acceptance pending.
+Two explicit actions, each with per-attacker presentation assets; random pool disabled.
+Source seconds; measured skin surfaces; no bone edits or enlarged hitboxes.
+SlapFace_Sequence1_Mankey attack=527e6e5d54a7afac7c1780b695f6034d:8993902097722301239; reaction=ab20a2bd36bd2b59358ce4e03e934069:8993902097722301239
+  attackDuration=10.2000008s reactionDuration=10.2000008s pairDuration=10.2000008s entry=0.12s recovery=0.3s
+Region selection: actual Animator root bone and descendants; every triangle vertex must have >=0.5 summed influence across all native skin weights on region bones; visible BodySkins only. Geometry: explicit current bone * bindpose world skinning; exact triangle distance; unsigned zero may mean touch or penetration.
+Mankey/RightHand: renderer=Mahgnkey; mesh=59dc3f26824c72872aa4cf6baeec671e:4300000; selected/total triangles=319/3462
+Pepe/Head: renderer=Plane; mesh=757d9d3f1766533aa895e81a07aa5197:-462981019419857548; selected/total triangles=4026/20726
+SlapFace_Sequence1_Mankey victim=Pepe lane=1 contact=1.4s gap=0m anchorPointDifference=3.071953E-08m bodyClearanceAttacker=0.0109761981m victim=0.0100524928m
+  Head local anchor=(-0.5829315,0.03508334,0.682893634); palm sweep victim space=(0.8596232,0.449421048,0.243040591)
+  Zero-gap contact tie: stored positive anchor differs from selected reverse surface point; geometry gap alone validates this reverse sample.
+SlapFace_Sequence1_Mankey victim=Pepe lane=-1 contact=1.4s gap=0m anchorPointDifference=0.00435199169m bodyClearanceAttacker=0.0109760882m victim=0.0100525161m
+  Head local anchor=(-0.5829315,0.03508334,0.682893634); palm sweep victim space=(0.8596232,0.449421048,0.243040591)
+SlapFace_Sequence1_Pepe attack=527e6e5d54a7afac7c1780b695f6034d:8993902097722301239; reaction=ab20a2bd36bd2b59358ce4e03e934069:8993902097722301239
+  attackDuration=10.2000008s reactionDuration=10.2000008s pairDuration=10.2000008s entry=0.12s recovery=0.3s
+Region selection: actual Animator root bone and descendants; every triangle vertex must have >=0.5 summed influence across all native skin weights on region bones; visible BodySkins only. Geometry: explicit current bone * bindpose world skinning; exact triangle distance; unsigned zero may mean touch or penetration.
+Pepe/RightHand: renderer=Plane; mesh=757d9d3f1766533aa895e81a07aa5197:-462981019419857548; selected/total triangles=1491/20726
+Mankey/Head: renderer=Mahgnkey; mesh=59dc3f26824c72872aa4cf6baeec671e:4300000; selected/total triangles=769/3462
+SlapFace_Sequence1_Pepe victim=Mankey lane=1 contact=1.39166665s gap=0m anchorPointDifference=2.048571E-07m bodyClearanceAttacker=0.0102681732m victim=0.0102946414m
+  Head local anchor=(0.178666562,-0.027547285,0.348071039); palm sweep victim space=(0.9082543,0.395215124,-0.137401134)
+SlapFace_Sequence1_Pepe victim=Mankey lane=-1 contact=1.39166665s gap=0m anchorPointDifference=1.57706108E-06m bodyClearanceAttacker=0.0102682533m victim=0.01029482m
+  Head local anchor=(0.178666562,-0.027547285,0.348071039); palm sweep victim space=(0.9082543,0.395215124,-0.137401134)
+SlapFace_Sequence2_Mankey attack=fbcb6d41ffb38285a0b7ad4cbd25d06e:8993902097722301239; reaction=8ae91d8a5acd3a1f64feaad62ff62a6d:8993902097722301239
+  attackDuration=7.36666727s reactionDuration=7.36666727s pairDuration=7.36666727s entry=0.12s recovery=0.3s
+Region selection: actual Animator root bone and descendants; every triangle vertex must have >=0.5 summed influence across all native skin weights on region bones; visible BodySkins only. Geometry: explicit current bone * bindpose world skinning; exact triangle distance; unsigned zero may mean touch or penetration.
+Mankey/RightHand: renderer=Mahgnkey; mesh=59dc3f26824c72872aa4cf6baeec671e:4300000; selected/total triangles=319/3462
+Pepe/Head: renderer=Plane; mesh=757d9d3f1766533aa895e81a07aa5197:-462981019419857548; selected/total triangles=4026/20726
+SlapFace_Sequence2_Mankey victim=Pepe lane=1 contact=0.933333337s gap=0m anchorPointDifference=2.23517418E-08m bodyClearanceAttacker=0.0111875m victim=0.0100382166m
+  Head local anchor=(0.105317317,-0.0285516419,0.926991045); palm sweep victim space=(0.9311114,0.0197464563,0.364200115)
+SlapFace_Sequence2_Mankey victim=Pepe lane=-1 contact=0.933333337s gap=0m anchorPointDifference=0.00198923424m bodyClearanceAttacker=0.0111874305m victim=0.010038022m
+  Head local anchor=(0.105317317,-0.0285516419,0.926991045); palm sweep victim space=(0.9311114,0.0197464563,0.364200115)
+SlapFace_Sequence2_Pepe attack=fbcb6d41ffb38285a0b7ad4cbd25d06e:8993902097722301239; reaction=8ae91d8a5acd3a1f64feaad62ff62a6d:8993902097722301239
+  attackDuration=7.36666727s reactionDuration=7.36666727s pairDuration=7.36666727s entry=0.12s recovery=0.3s
+Region selection: actual Animator root bone and descendants; every triangle vertex must have >=0.5 summed influence across all native skin weights on region bones; visible BodySkins only. Geometry: explicit current bone * bindpose world skinning; exact triangle distance; unsigned zero may mean touch or penetration.
+Pepe/RightHand: renderer=Plane; mesh=757d9d3f1766533aa895e81a07aa5197:-462981019419857548; selected/total triangles=1491/20726
+Mankey/Head: renderer=Mahgnkey; mesh=59dc3f26824c72872aa4cf6baeec671e:4300000; selected/total triangles=769/3462
+SlapFace_Sequence2_Pepe victim=Mankey lane=1 contact=0.905s gap=0m anchorPointDifference=1.37381917E-07m bodyClearanceAttacker=0.0110458843m victim=0.0104647689m
+  Head local anchor=(0.1233029,0.0192192569,0.351745963); palm sweep victim space=(0.9336037,0.000881933258,-0.358306259)
+SlapFace_Sequence2_Pepe victim=Mankey lane=-1 contact=0.905s gap=0m anchorPointDifference=1.93141119E-07m bodyClearanceAttacker=0.01104612m victim=0.0104650417m
+  Head local anchor=(0.1233029,0.0192192569,0.351745963); palm sweep victim space=(0.9336037,0.000881933258,-0.358306259)
+Installed Assets/CombatExpansion/Actions/SlapFace_Sequence1_Mankey.asset; actionId=SlapFace_Sequence1
+Installed Assets/CombatExpansion/Actions/SlapFace_Sequence1_Pepe.asset; actionId=SlapFace_Sequence1
+Installed Assets/CombatExpansion/Actions/SlapFace_Sequence2_Mankey.asset; actionId=SlapFace_Sequence2
+Installed Assets/CombatExpansion/Actions/SlapFace_Sequence2_Pepe.asset; actionId=SlapFace_Sequence2
+Server accepted exchange owns damage; no invented stun or damage.
+Existing light_hit and routed body layers are interim light-body presentation; slap-specific audio tuning remains pending.
+PENDING: live gameplay, queue/browser/exact animationId, cancellation, both roles and directions, surviving standing recovery and lethal visual treatment/KO validation.
+Full source duration is preserved; no shortened native continuation. Standing recovery is configured at 0.3s after source completion, not gameplay-verified here.

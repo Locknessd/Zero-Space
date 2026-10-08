@@ -71,15 +71,20 @@ namespace FrankRetarget.Editor
         }
 
         static FrankBattlePairPlayback BeginBladeStudy(CharacterCombat[] fighters, CharacterCombat source,
-            CharacterCombat target, int execution, int direction, FrankPairGrounding grounding = null)
+            CharacterCombat target, int execution, int direction, FrankPairGrounding grounding = null,
+            float spacing = 1.7f)
         {
+            if (!float.IsFinite(spacing) || spacing < 1.58f || spacing > 1.7f)
+                throw new ArgumentOutOfRangeException(nameof(spacing));
             foreach (var fighter in fighters)
                 fighter.ResetCombat();
-            source.Animator.transform.SetPositionAndRotation(Vector3.left * direction * .85f,
+            source.Animator.transform.SetPositionAndRotation(Vector3.left * direction * spacing * .5f,
                 Quaternion.LookRotation(Vector3.right * direction));
-            target.Animator.transform.SetPositionAndRotation(Vector3.right * direction * .85f,
+            target.Animator.transform.SetPositionAndRotation(Vector3.right * direction * spacing * .5f,
                 Quaternion.LookRotation(Vector3.left * direction));
             var move = MakePairMove(source, target, execution);
+            move.attackRange = spacing;
+            move.sourcePair.receiverOffset = Vector3.forward * spacing;
             move.grounding = grounding;
             if (!source.ExecuteAttack(move, target) || source.SourcePlayback == null)
                 throw new InvalidOperationException("Samurai blade study pair was rejected.");

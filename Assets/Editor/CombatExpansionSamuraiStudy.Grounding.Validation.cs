@@ -10,7 +10,14 @@ namespace FrankRetarget.Editor
     {
         public static void ValidateExecution01Grounding()
         {
+            ValidateExecutionGrounding(1);
+        }
+
+        static void ValidateExecutionGrounding(int execution)
+        {
             CombatExpansionHumanoidStudy.RequireEditor();
+            string executionName = GroundingExecutionName(execution);
+            string assetPath = GroundingAssetPath(execution);
             var rows = new StringBuilder("source,target,direction,fighter,role,minimumClearance,seconds," +
                 "samples,maximumCorrection,violations\n");
             var failures = new StringBuilder();
@@ -24,9 +31,9 @@ namespace FrankRetarget.Editor
             string failure = null;
             try
             {
-                var asset = AssetDatabase.LoadAssetAtPath<FrankPairGrounding>(Execution01GroundingPath);
+                var asset = AssetDatabase.LoadAssetAtPath<FrankPairGrounding>(assetPath);
                 if (!asset)
-                    throw new InvalidOperationException("Missing grounding asset: " + Execution01GroundingPath);
+                    throw new InvalidOperationException("Missing grounding asset: " + assetPath);
                 using var session = new SourceSession();
                 InitializePairStudy(session.Fighters);
                 CheckGroundingFighters(session.Fighters);
@@ -35,7 +42,7 @@ namespace FrankRetarget.Editor
                 foreach (int direction in new[] { 1, -1 })
                 {
                     var target = session.Fighters.Single(fighter => fighter != source);
-                    var pair = BeginGroundingStudy(session.Fighters, source, target, direction, asset);
+                    var pair = BeginGroundingStudy(session.Fighters, source, target, direction, asset, execution);
                     try
                     {
                         foreach (var track in asset.tracks)
@@ -107,7 +114,7 @@ namespace FrankRetarget.Editor
             finally
             {
                 var summary = new StringBuilder(failure == null ? "PASS\n" : "FAIL\n");
-                summary.AppendLine("Execution01; both assignments and both lane directions; actual source playback.");
+                summary.AppendLine(executionName + "; both assignments and both lane directions; actual source playback.");
                 summary.AppendLine(FormattableString.Invariant(
                     $"Pair cases={pairCases}/4; actor cases={actorCases}/8; pair evaluations={evaluations}; ") +
                     FormattableString.Invariant($"clearance measurements={measurements}; violations={violations}."));
@@ -121,7 +128,7 @@ namespace FrankRetarget.Editor
                 if (failure != null)
                     summary.AppendLine(failure);
                 summary.Append(rows);
-                WriteGroundingReport("Execution01GroundingValidation.txt", summary.ToString());
+                WriteGroundingReport(executionName + "GroundingValidation.txt", summary.ToString());
             }
         }
     }

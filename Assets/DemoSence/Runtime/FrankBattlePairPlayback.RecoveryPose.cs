@@ -10,10 +10,16 @@ namespace FrankRetarget
 
         void CaptureRecoveryPoses()
         {
-            if (pair.recoveryBlendSeconds <= 0 && !pair.recoveryGrounding) return;
-            if (pair.attackerGetUp)
+            attackStandingRecovery = pair.standingRecoverySeconds > 0 && !pair.attackerGetUp;
+            hitStandingRecovery = pair.standingRecoverySeconds > 0 && !lethal && !RecoveryClip;
+            bool getUpPose = pair.recoveryBlendSeconds > 0 || pair.recoveryGrounding;
+            if (attackStandingRecovery && attacker.idleAnim)
+                attackRecoveryPose = new RecoveryPose(attacker, attacker.idleAnim, attackPlaybackId, true);
+            else if (getUpPose && pair.attackerGetUp)
                 attackRecoveryPose = new RecoveryPose(attacker, pair.attackerGetUp, attackPlaybackId);
-            if (!lethal && RecoveryClip)
+            if (hitStandingRecovery && receiver.idleAnim)
+                hitRecoveryPose = new RecoveryPose(receiver, receiver.idleAnim, hitPlaybackId, true);
+            else if (getUpPose && !lethal && RecoveryClip)
                 hitRecoveryPose = new RecoveryPose(receiver, RecoveryClip, hitPlaybackId);
         }
 
@@ -52,6 +58,8 @@ namespace FrankRetarget
             readonly Animator animator;
             readonly AnimationClip clip;
             readonly int playbackId;
+            readonly bool standing;
+            readonly string stateName;
             readonly Transform hips;
             readonly Transform[] bones;
             readonly Quaternion[] sourceRotations;
@@ -66,11 +74,13 @@ namespace FrankRetarget
             float appliedNormalizedTime;
             bool applied;
 
-            public RecoveryPose(CharacterCombat fighter, AnimationClip clip, int playbackId)
+            public RecoveryPose(CharacterCombat fighter, AnimationClip clip, int playbackId, bool standing = false)
             {
                 this.fighter = fighter;
                 this.clip = clip;
                 this.playbackId = playbackId;
+                this.standing = standing;
+                stateName = standing ? "Base Layer.Idle" : "Base Layer.GetUp";
                 animator = fighter.Animator;
                 hips = animator.GetBoneTransform(HumanBodyBones.Hips);
                 sourceHipsWorld = hips.position;
@@ -116,7 +126,7 @@ namespace FrankRetarget
                 if (!applied) return;
                 // A fresh Animator sample or a new owner must never be rolled back.
                 if (Owns(owner) &&
-                    animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.GetUp") &&
+                    animator.GetCurrentAnimatorStateInfo(0).IsName(stateName) &&
                     animator.GetCurrentAnimatorStateInfo(0).normalizedTime == appliedNormalizedTime &&
                     OutputStillPresent())
                 {
@@ -131,7 +141,7 @@ namespace FrankRetarget
             {
                 if (!Owns(owner)) return;
                 var state = animator.GetCurrentAnimatorStateInfo(0);
-                if (!state.IsName("Base Layer.GetUp"))
+                if (!state.IsName(stateName))
                 {
                     Restore(owner);
                     return;
@@ -146,10 +156,10 @@ namespace FrankRetarget
                 rawHipsLocal = hips.localPosition;
                 for (int index = 0; index < bones.Length; index++)
                     if (bones[index]) rawRotations[index] = bones[index].localRotation;
-                float seconds = Mathf.Clamp01(normalized) * clip.length;
-                float lift = GroundingLift(owner.pair.recoveryGrounding, receiverRole, seconds);
+                float seconds = (standing ? Mathf.Max(0, normalized) : Mathf.Clamp01(normalized)) * clip.length;
+                float lift = standing ? 0 : GroundingLift(owner.pair.recoveryGrounding, receiverRole, seconds);
                 hips.position += Vector3.up * lift;
-                float duration = owner.pair.recoveryBlendSeconds;
+                float duration = standing ? owner.pair.standingRecoverySeconds : owner.pair.recoveryBlendSeconds;
                 float blend = duration > 0 ? Mathf.SmoothStep(0, 1, seconds / duration) : 1;
                 if (blend < 1)
                 {
