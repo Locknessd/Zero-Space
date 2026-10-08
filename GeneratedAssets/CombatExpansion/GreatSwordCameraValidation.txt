@@ -12,82 +12,82 @@ Tight world AABBs are diagnostic only: they omit rotation-induced envelope corne
 Isolated editor sampling only; live transitions and rendered pixels are not certified.
 GEOMETRY Mankey/Frank_GreatSword_Attack_Ambush/1: skinned=2; static=3; Monkey_eyes, Object001, GreatSword_01(Clone)
 WEAPON Mankey/Frank_GreatSword_Attack_Ambush/1: GreatSword_01(Clone); MeshRenderer; static mesh
-DIAGNOSTIC Mankey/Frank_GreatSword_Attack_Ambush/1 t=1.13636374: camera=(-0.3305143, 1.67669249, 5.31875467); viewport=(0.140937656, 0.2806371, 4.667677)..(0.910456836, 0.675544441, 6.10610676); rawBoundsMiss=0m
-  rendererLocalEnvelope: depth=5.56853437m; allowed=6.97000027m; tightWorldEnvelope: depth=5.568534m; allowed=6.97000027m; safetyDolly=0m
-  Mahgnkey: currentBoneBounds=Center: (0.44, 0.56, -0.04), Extents: (0.72, 0.52, 0.45); rawBakeBounds=Center: (-0.05, -1.47, 0.58), Extents: (0.55, 0.80, 0.59); bakeError=1.83546081E-06m; rawBoundsMiss=0m
-    bakedVerticesBounds=Center: (0.04, -1.44, 0.56), Extents: (0.45, 0.72, 0.52); recalculatedBounds=Center: (0.04, -1.44, 0.56), Extents: (0.45, 0.72, 0.52); rawBoundsDifference=0.214077547m; recalculatedError=0m
-  Plane: currentBoneBounds=Center: (-0.01, 0.24, 0.00), Extents: (1.01, 0.23, 0.64); rawBakeBounds=Center: (0.04, -0.98, 0.18), Extents: (0.74, 1.05, 0.35); bakeError=5.232409E-07m; rawBoundsMiss=0m
-    bakedVerticesBounds=Center: (0.00, -1.01, 0.24), Extents: (0.64, 1.01, 0.23); recalculatedBounds=Center: (0.00, -1.01, 0.24), Extents: (0.64, 1.01, 0.23); rawBoundsDifference=0.183224857m; recalculatedError=5.96046448E-08m
-  static Monkey_eyes: worldBounds=Center: (0.84, 0.68, -0.10), Extents: (0.06, 0.08, 0.08); runtimeBoundsError=0m
-  static Object001: worldBounds=Center: (0.79, 0.64, 0.15), Extents: (0.07, 0.07, 0.07); runtimeBoundsError=1.20137E-07m
-  static GreatSword_01(Clone): worldBounds=Center: (1.35, 0.17, 0.09), Extents: (1.24, 0.28, 0.16); runtimeBoundsError=2.98023224E-08m
-  rawBakeDriver=Mahgnkey; requiredRetreat=-1.97522926m
-  rawBakeDriver=Plane; requiredRetreat=-0.0413941368m
-  runtimeEnvelopeRetreat=-0.118507043m; owner=Plane; worldPoint=(-1.016762, 0.4736412, 0.6370691)
-  distanceDriver=skin Plane; requiredRetreatFromCurrentView=-0.118507043m
-  distanceDriver=static GreatSword_01(Clone); requiredRetreatFromCurrentView=-0.798951149m
-  distanceDriver=skin Mahgnkey; requiredRetreatFromCurrentView=-2.18108058m
-  distanceDriver=static Monkey_eyes; requiredRetreatFromCurrentView=-4.588638m
-  Mankey currentBonesViewport=(0.4951474, 0.335118353, 5.22475433)..(0.7142328, 0.5986236, 5.96320343)
-  Pepe currentBonesViewport=(0.456545532, 0.2894473, 4.681072)..(0.903320849, 0.43737632, 5.91959238)
-DIAGNOSTIC Mankey/Frank_GreatSword_Attack_Ambush/1 t=1.7273: camera=(-1.25493562, 2.331113, 5.580718); viewport=(0.2753398, 0.111334063, 5.242334)..(0.6838598, 0.7062538, 8.135834); rawBoundsMiss=0m
-  rendererLocalEnvelope: depth=6.57115m; allowed=8.213939m; tightWorldEnvelope: depth=6.57115m; allowed=8.21394m; safetyDolly=0.928618848m
-  Mahgnkey: currentBoneBounds=Center: (0.22, 0.91, -0.07), Extents: (0.47, 0.89, 0.50); rawBakeBounds=Center: (-0.04, -1.19, 0.94), Extents: (0.63, 0.53, 0.96); bakeError=1.77242407E-06m; rawBoundsMiss=0m
-    bakedVerticesBounds=Center: (0.07, -1.22, 0.91), Extents: (0.50, 0.47, 0.89); recalculatedBounds=Center: (0.07, -1.22, 0.91), Extents: (0.50, 0.47, 0.89); rawBoundsDifference=0.240810946m; recalculatedError=1.68587391E-07m
+DIAGNOSTIC Mankey/Frank_GreatSword_Attack_Ambush/1 t=1.63636374: camera=(-0.8417648, 2.14652944, 5.27137375); viewport=(0.318333566, 0.114915013, 4.82395935)..(0.7831366, 0.70711416, 7.500257); rawBoundsMiss=0m
+  rendererLocalEnvelope: depth=6.058775m; allowed=7.57346725m; tightWorldEnvelope: depth=6.058775m; allowed=7.573469m; safetyDolly=0.440041542m
+  Mahgnkey: currentBoneBounds=Center: (0.34, 0.84, -0.05), Extents: (0.49, 0.81, 0.51); rawBakeBounds=Center: (-0.06, -1.31, 0.89), Extents: (0.63, 0.53, 0.90); bakeError=1.82476867E-06m; rawBoundsMiss=0m
+    bakedVerticesBounds=Center: (0.05, -1.34, 0.84), Extents: (0.51, 0.49, 0.81); recalculatedBounds=Center: (0.05, -1.34, 0.84), Extents: (0.51, 0.49, 0.81); rawBoundsDifference=0.242229149m; recalculatedError=2.4755667E-07m
   Plane: currentBoneBounds=Center: (-0.01, 0.24, 0.00), Extents: (1.01, 0.23, 0.64); rawBakeBounds=Center: (0.04, -0.98, 0.18), Extents: (0.74, 1.05, 0.35); bakeError=5.364418E-07m; rawBoundsMiss=0m
     bakedVerticesBounds=Center: (0.00, -1.01, 0.24), Extents: (0.64, 1.01, 0.23); recalculatedBounds=Center: (0.00, -1.01, 0.24), Extents: (0.64, 1.01, 0.23); rawBoundsDifference=0.182871267m; recalculatedError=2.38418579E-07m
-  static Monkey_eyes: worldBounds=Center: (0.34, 1.44, 0.05), Extents: (0.07, 0.07, 0.07); runtimeBoundsError=3.071953E-08m
-  static Object001: worldBounds=Center: (0.30, 1.42, 0.31), Extents: (0.08, 0.07, 0.07); runtimeBoundsError=1.2287812E-07m
-  static GreatSword_01(Clone): worldBounds=Center: (0.60, 0.46, -0.82), Extents: (0.53, 0.62, 1.18); runtimeBoundsError=5.96046448E-08m
-  rawBakeDriver=Mahgnkey; requiredRetreat=-0.07643629m
-  rawBakeDriver=Plane; requiredRetreat=0.946376741m
-  runtimeEnvelopeRetreat=9.279898E-07m; owner=Plane; worldPoint=(-1.01671, 0.0100003313, 0.637133539)
-  distanceDriver=skin Plane; requiredRetreatFromCurrentView=9.279898E-07m
-  distanceDriver=static GreatSword_01(Clone); requiredRetreatFromCurrentView=-0.252288461m
-  distanceDriver=skin Mahgnkey; requiredRetreatFromCurrentView=-0.7163657m
-  distanceDriver=static Object001; requiredRetreatFromCurrentView=-4.029087m
-  Mankey currentBonesViewport=(0.398723722, 0.186946809, 5.525894)..(0.484545767, 0.598844469, 6.586268)
-  Pepe currentBonesViewport=(0.289466023, 0.119585276, 5.2557373)..(0.677525163, 0.279764354, 6.49431133)
-CASE Mankey/Frank_GreatSword_Attack_Ambush/1: samples=156; viewport=(0.119079918, 0.09294933, 4.512964)..(0.9120346, 0.88969624, 8.580118); maxBakeError=1.96384644E-06m; rawBoundsMiss=0m; maxDolly=1.9486928m; maxDepth=7.49394m; failures=0
+  static Monkey_eyes: worldBounds=Center: (0.57, 1.28, 0.07), Extents: (0.08, 0.08, 0.07); runtimeBoundsError=6.143906E-08m
+  static Object001: worldBounds=Center: (0.53, 1.27, 0.32), Extents: (0.09, 0.08, 0.08); runtimeBoundsError=1.33280039E-07m
+  static GreatSword_01(Clone): worldBounds=Center: (1.00, 0.38, -0.62), Extents: (0.86, 0.57, 0.99); runtimeBoundsError=1.33280039E-07m
+  rawBakeDriver=Mahgnkey; requiredRetreat=-0.151940227m
+  rawBakeDriver=Plane; requiredRetreat=0.9463726m
+  runtimeEnvelopeRetreat=-9.647781E-07m; owner=Plane; worldPoint=(-1.01671, 0.0100003313, 0.637133539)
+  distanceDriver=skin Plane; requiredRetreatFromCurrentView=-9.647781E-07m
+  distanceDriver=static GreatSword_01(Clone); requiredRetreatFromCurrentView=-0.161949083m
+  distanceDriver=skin Mahgnkey; requiredRetreatFromCurrentView=-0.7687481m
+  distanceDriver=static Monkey_eyes; requiredRetreatFromCurrentView=-3.95753074m
+  Mankey currentBonesViewport=(0.4276347, 0.191374719, 5.144392)..(0.5440248, 0.589458942, 6.18264)
+  Pepe currentBonesViewport=(0.346826136, 0.123873733, 4.837363)..(0.7761653, 0.295238167, 6.075937)
+DIAGNOSTIC Mankey/Frank_GreatSword_Attack_Ambush/1 t=1.7273: camera=(-1.25493574, 2.331114, 5.58072); viewport=(0.27534, 0.111334108, 5.24233627)..(0.6838598, 0.706253648, 8.135837); rawBoundsMiss=0m
+  rendererLocalEnvelope: depth=6.57115173m; allowed=8.213939m; tightWorldEnvelope: depth=6.57115173m; allowed=8.213942m; safetyDolly=0.9286209m
+  Mahgnkey: currentBoneBounds=Center: (0.22, 0.91, -0.07), Extents: (0.47, 0.89, 0.50); rawBakeBounds=Center: (-0.04, -1.19, 0.94), Extents: (0.63, 0.53, 0.96); bakeError=1.78832943E-06m; rawBoundsMiss=0m
+    bakedVerticesBounds=Center: (0.07, -1.22, 0.91), Extents: (0.50, 0.47, 0.89); recalculatedBounds=Center: (0.07, -1.22, 0.91), Extents: (0.50, 0.47, 0.89); rawBoundsDifference=0.24081102m; recalculatedError=5.96046448E-08m
+  Plane: currentBoneBounds=Center: (-0.01, 0.24, 0.00), Extents: (1.01, 0.23, 0.64); rawBakeBounds=Center: (0.04, -0.98, 0.18), Extents: (0.74, 1.05, 0.35); bakeError=5.364418E-07m; rawBoundsMiss=0m
+    bakedVerticesBounds=Center: (0.00, -1.01, 0.24), Extents: (0.64, 1.01, 0.23); recalculatedBounds=Center: (0.00, -1.01, 0.24), Extents: (0.64, 1.01, 0.23); rawBoundsDifference=0.182871267m; recalculatedError=2.38418579E-07m
+  static Monkey_eyes: worldBounds=Center: (0.34, 1.44, 0.05), Extents: (0.07, 0.07, 0.07); runtimeBoundsError=3.7252903E-09m
+  static Object001: worldBounds=Center: (0.30, 1.42, 0.31), Extents: (0.08, 0.07, 0.07); runtimeBoundsError=1.1920929E-07m
+  static GreatSword_01(Clone): worldBounds=Center: (0.60, 0.46, -0.82), Extents: (0.53, 0.62, 1.18); runtimeBoundsError=2.149076E-07m
+  rawBakeDriver=Mahgnkey; requiredRetreat=-0.07643812m
+  rawBakeDriver=Plane; requiredRetreat=0.94637686m
+  runtimeEnvelopeRetreat=-4.335395E-07m; owner=Plane; worldPoint=(-1.01671, 0.0100003313, 0.637133539)
+  distanceDriver=skin Plane; requiredRetreatFromCurrentView=-4.335395E-07m
+  distanceDriver=static GreatSword_01(Clone); requiredRetreatFromCurrentView=-0.252287865m
+  distanceDriver=skin Mahgnkey; requiredRetreatFromCurrentView=-0.716364563m
+  distanceDriver=static Object001; requiredRetreatFromCurrentView=-4.02909136m
+  Mankey currentBonesViewport=(0.398723871, 0.18694675, 5.5258975)..(0.4845458, 0.598844349, 6.586271)
+  Pepe currentBonesViewport=(0.289466172, 0.119585335, 5.25574)..(0.677525163, 0.279764354, 6.49431372)
+CASE Mankey/Frank_GreatSword_Attack_Ambush/1: samples=222; viewport=(0.111276694, 0.09294933, 4.53867769)..(0.9120346, 0.8896965, 8.580119); maxBakeError=1.96384644E-06m; rawBoundsMiss=0m; maxDolly=1.94869077m; maxDepth=7.493938m; failures=0
 GEOMETRY Mankey/Frank_GreatSword_Attack_Ambush/-1: skinned=2; static=3; Monkey_eyes, Object001, GreatSword_01(Clone)
 WEAPON Mankey/Frank_GreatSword_Attack_Ambush/-1: GreatSword_01(Clone); MeshRenderer; static mesh
-DIAGNOSTIC Mankey/Frank_GreatSword_Attack_Ambush/-1 t=1.13636374: camera=(0.3305143, 1.67669249, 5.351176); viewport=(0.118889719, 0.2989698, 4.731682)..(0.8247737, 0.678258061, 6.178659); rawBoundsMiss=0m
-  rendererLocalEnvelope: depth=5.59093475m; allowed=6.97000027m; tightWorldEnvelope: depth=5.59093475m; allowed=6.97000027m; safetyDolly=0m
-  Mahgnkey: currentBoneBounds=Center: (-0.44, 0.56, 0.04), Extents: (0.72, 0.52, 0.45); rawBakeBounds=Center: (-0.05, -1.47, 0.58), Extents: (0.55, 0.80, 0.59); bakeError=1.837199E-06m; rawBoundsMiss=0m
-    bakedVerticesBounds=Center: (0.04, -1.44, 0.56), Extents: (0.45, 0.72, 0.52); recalculatedBounds=Center: (0.04, -1.44, 0.56), Extents: (0.45, 0.72, 0.52); rawBoundsDifference=0.214077428m; recalculatedError=0m
-  Plane: currentBoneBounds=Center: (0.01, 0.24, 0.00), Extents: (1.01, 0.23, 0.64); rawBakeBounds=Center: (0.04, -0.98, 0.18), Extents: (0.74, 1.05, 0.35); bakeError=5.7557844E-07m; rawBoundsMiss=0m
-    bakedVerticesBounds=Center: (0.00, -1.01, 0.24), Extents: (0.64, 1.01, 0.23); recalculatedBounds=Center: (0.00, -1.01, 0.24), Extents: (0.64, 1.01, 0.23); rawBoundsDifference=0.183224708m; recalculatedError=2.38418579E-07m
-  static Monkey_eyes: worldBounds=Center: (-0.84, 0.68, 0.10), Extents: (0.06, 0.08, 0.08); runtimeBoundsError=7.450581E-09m
-  static Object001: worldBounds=Center: (-0.79, 0.64, -0.15), Extents: (0.07, 0.07, 0.07); runtimeBoundsError=1.35141292E-07m
-  static GreatSword_01(Clone): worldBounds=Center: (-1.35, 0.17, -0.09), Extents: (1.24, 0.28, 0.16); runtimeBoundsError=1.49011612E-08m
-  rawBakeDriver=Mahgnkey; requiredRetreat=-2.024641m
-  rawBakeDriver=Plane; requiredRetreat=-0.08740986m
-  runtimeEnvelopeRetreat=-0.127672836m; owner=Plane; worldPoint=(1.01676226, 0.4736411, 0.646077454)
-  distanceDriver=skin Plane; requiredRetreatFromCurrentView=-0.127673313m
-  distanceDriver=static GreatSword_01(Clone); requiredRetreatFromCurrentView=-1.116121m
-  distanceDriver=skin Mahgnkey; requiredRetreatFromCurrentView=-2.16550612m
-  distanceDriver=static Monkey_eyes; requiredRetreatFromCurrentView=-4.567358m
-  Mankey currentBonesViewport=(0.282668173, 0.34112826, 5.29309654)..(0.511364639, 0.603409648, 5.7894187)
-  Pepe currentBonesViewport=(0.124649048, 0.306671351, 4.751028)..(0.518670261, 0.438082546, 5.922404)
-DIAGNOSTIC Mankey/Frank_GreatSword_Attack_Ambush/-1 t=1.7273: camera=(1.33515072, 2.41312051, 7.2435503); viewport=(0.303039134, 0.184651911, 5.95021057)..(0.729259133, 0.733091, 8.191472); rawBoundsMiss=0m
-  rendererLocalEnvelope: depth=6.89445257m; allowed=8.618066m; tightWorldEnvelope: depth=6.894453m; allowed=8.618067m; safetyDolly=1.32305253m
-  Mahgnkey: currentBoneBounds=Center: (-0.22, 0.91, 0.07), Extents: (0.47, 0.89, 0.50); rawBakeBounds=Center: (-0.04, -1.19, 0.94), Extents: (0.63, 0.53, 0.96); bakeError=1.79037318E-06m; rawBoundsMiss=0m
-    bakedVerticesBounds=Center: (0.07, -1.22, 0.91), Extents: (0.50, 0.47, 0.89); recalculatedBounds=Center: (0.07, -1.22, 0.91), Extents: (0.50, 0.47, 0.89); rawBoundsDifference=0.240810946m; recalculatedError=1.46000971E-07m
+DIAGNOSTIC Mankey/Frank_GreatSword_Attack_Ambush/-1 t=1.63636374: camera=(0.907413363, 2.213645, 6.54945); viewport=(0.2356177, 0.2057559, 5.71020365)..(0.8313261, 0.731867, 7.39891434); rawBoundsMiss=0m
+  rendererLocalEnvelope: depth=6.379787m; allowed=7.97473431m; tightWorldEnvelope: depth=6.379787m; allowed=7.97473431m; safetyDolly=0.7628493m
+  Mahgnkey: currentBoneBounds=Center: (-0.34, 0.84, 0.05), Extents: (0.49, 0.81, 0.51); rawBakeBounds=Center: (-0.06, -1.31, 0.89), Extents: (0.63, 0.53, 0.90); bakeError=1.73265653E-06m; rawBoundsMiss=0m
+    bakedVerticesBounds=Center: (0.05, -1.34, 0.84), Extents: (0.51, 0.49, 0.81); recalculatedBounds=Center: (0.05, -1.34, 0.84), Extents: (0.51, 0.49, 0.81); rawBoundsDifference=0.2422291m; recalculatedError=1.68587391E-07m
   Plane: currentBoneBounds=Center: (0.01, 0.24, 0.00), Extents: (1.01, 0.23, 0.64); rawBakeBounds=Center: (0.04, -0.98, 0.18), Extents: (0.74, 1.05, 0.35); bakeError=5.26624831E-07m; rawBoundsMiss=0m
     bakedVerticesBounds=Center: (0.00, -1.01, 0.24), Extents: (0.64, 1.01, 0.23); recalculatedBounds=Center: (0.00, -1.01, 0.24), Extents: (0.64, 1.01, 0.23); rawBoundsDifference=0.182871372m; recalculatedError=2.98023224E-07m
-  static Monkey_eyes: worldBounds=Center: (-0.34, 1.44, -0.05), Extents: (0.07, 0.07, 0.07); runtimeBoundsError=6.143906E-08m
-  static Object001: worldBounds=Center: (-0.30, 1.42, -0.31), Extents: (0.08, 0.07, 0.07); runtimeBoundsError=1.1920929E-07m
-  static GreatSword_01(Clone): worldBounds=Center: (-0.60, 0.46, 0.82), Extents: (0.53, 0.62, 1.18); runtimeBoundsError=1.1920929E-07m
-  rawBakeDriver=Mahgnkey; requiredRetreat=-2.93210649m
+  static Monkey_eyes: worldBounds=Center: (-0.57, 1.28, -0.07), Extents: (0.08, 0.08, 0.07); runtimeBoundsError=6.00685E-08m
+  static Object001: worldBounds=Center: (-0.53, 1.27, -0.32), Extents: (0.09, 0.08, 0.08); runtimeBoundsError=6.664002E-08m
+  static GreatSword_01(Clone): worldBounds=Center: (-1.00, 0.38, 0.62), Extents: (0.86, 0.57, 0.99); runtimeBoundsError=0m
+  rawBakeDriver=Mahgnkey; requiredRetreat=-2.4453218m
+  rawBakeDriver=Plane; requiredRetreat=-1.28431678m
+  runtimeEnvelopeRetreat=4.40000122E-07m; owner=GreatSword_01(Clone); worldPoint=(-0.1394496, -0.186254948, 1.60823274)
+  distanceDriver=static GreatSword_01(Clone); requiredRetreatFromCurrentView=4.40000122E-07m
+  distanceDriver=skin Plane; requiredRetreatFromCurrentView=-2.06041217m
+  distanceDriver=skin Mahgnkey; requiredRetreatFromCurrentView=-2.65537m
+  distanceDriver=static Monkey_eyes; requiredRetreatFromCurrentView=-4.39513874m
+  Mankey currentBonesViewport=(0.4254283, 0.295227766, 6.60432863)..(0.5576337, 0.6359199, 7.21040535)
+  Pepe currentBonesViewport=(0.240340024, 0.270331323, 6.12648964)..(0.5674932, 0.3842951, 7.297864)
+DIAGNOSTIC Mankey/Frank_GreatSword_Attack_Ambush/-1 t=1.7273: camera=(1.3351506, 2.41312122, 7.24355125); viewport=(0.303039134, 0.184651822, 5.950212)..(0.729259253, 0.7330908, 8.191473); rawBoundsMiss=0m
+  rendererLocalEnvelope: depth=6.894454m; allowed=8.618068m; tightWorldEnvelope: depth=6.894454m; allowed=8.618068m; safetyDolly=1.3230536m
+  Mahgnkey: currentBoneBounds=Center: (-0.22, 0.91, 0.07), Extents: (0.47, 0.89, 0.50); rawBakeBounds=Center: (-0.04, -1.19, 0.94), Extents: (0.63, 0.53, 0.96); bakeError=1.70532053E-06m; rawBoundsMiss=0m
+    bakedVerticesBounds=Center: (0.07, -1.22, 0.91), Extents: (0.50, 0.47, 0.89); recalculatedBounds=Center: (0.07, -1.22, 0.91), Extents: (0.50, 0.47, 0.89); rawBoundsDifference=0.240810961m; recalculatedError=8.42936956E-08m
+  Plane: currentBoneBounds=Center: (0.01, 0.24, 0.00), Extents: (1.01, 0.23, 0.64); rawBakeBounds=Center: (0.04, -0.98, 0.18), Extents: (0.74, 1.05, 0.35); bakeError=5.26624831E-07m; rawBoundsMiss=0m
+    bakedVerticesBounds=Center: (0.00, -1.01, 0.24), Extents: (0.64, 1.01, 0.23); recalculatedBounds=Center: (0.00, -1.01, 0.24), Extents: (0.64, 1.01, 0.23); rawBoundsDifference=0.182871372m; recalculatedError=2.98023224E-07m
+  static Monkey_eyes: worldBounds=Center: (-0.34, 1.44, -0.05), Extents: (0.07, 0.07, 0.07); runtimeBoundsError=5.96046448E-08m
+  static Object001: worldBounds=Center: (-0.30, 1.42, -0.31), Extents: (0.08, 0.07, 0.07); runtimeBoundsError=1.2287812E-07m
+  static GreatSword_01(Clone): worldBounds=Center: (-0.60, 0.46, 0.82), Extents: (0.53, 0.62, 1.18); runtimeBoundsError=1.365714E-07m
+  rawBakeDriver=Mahgnkey; requiredRetreat=-2.93210435m
   rawBakeDriver=Plane; requiredRetreat=-1.92814708m
-  runtimeEnvelopeRetreat=1.39289014E-07m; owner=GreatSword_01(Clone); worldPoint=(-0.0694553852, -0.164056718, 1.99692726)
-  distanceDriver=static GreatSword_01(Clone); requiredRetreatFromCurrentView=9.33009048E-08m
-  distanceDriver=skin Plane; requiredRetreatFromCurrentView=-2.70424318m
-  distanceDriver=skin Mahgnkey; requiredRetreatFromCurrentView=-3.19185328m
-  distanceDriver=static Monkey_eyes; requiredRetreatFromCurrentView=-4.69384956m
-  Mankey currentBonesViewport=(0.466624856, 0.3074959, 7.33772)..(0.5745677, 0.6469179, 7.95629263)
-  Pepe currentBonesViewport=(0.307260215, 0.287396431, 6.91904736)..(0.6016003, 0.387764037, 8.090422)
-CASE Mankey/Frank_GreatSword_Attack_Ambush/-1: samples=156; viewport=(0.09477708, 0.100880407, 4.638418)..(0.9152069, 0.8885573, 8.918707); maxBakeError=1.96203655E-06m; rawBoundsMiss=0m; maxDolly=2.02917123m; maxDepth=7.5908103m; failures=0
+  runtimeEnvelopeRetreat=1.85277116E-07m; owner=GreatSword_01(Clone); worldPoint=(-0.0694553256, -0.164056629, 1.996927)
+  distanceDriver=static GreatSword_01(Clone); requiredRetreatFromCurrentView=6.851083E-07m
+  distanceDriver=skin Plane; requiredRetreatFromCurrentView=-2.70424151m
+  distanceDriver=skin Mahgnkey; requiredRetreatFromCurrentView=-3.19184971m
+  distanceDriver=static Monkey_eyes; requiredRetreatFromCurrentView=-4.69385242m
+  Mankey currentBonesViewport=(0.466624856, 0.307495743, 7.33772039)..(0.5745676, 0.6469177, 7.956294)
+  Pepe currentBonesViewport=(0.307260215, 0.287396342, 6.919049)..(0.6016002, 0.387763917, 8.090423)
+CASE Mankey/Frank_GreatSword_Attack_Ambush/-1: samples=222; viewport=(0.09146389, 0.1008836, 4.63840055)..(0.9152068, 0.8885576, 8.91866); maxBakeError=1.8947926E-06m; rawBoundsMiss=0m; maxDolly=2.0291698m; maxDepth=7.590809m; failures=0
 GEOMETRY Mankey/Frank_GreatSword_Attack_Execution1/1: skinned=2; static=3; Monkey_eyes, Object001, GreatSword_01(Clone)
 WEAPON Mankey/Frank_GreatSword_Attack_Execution1/1: GreatSword_01(Clone); MeshRenderer; static mesh
 DIAGNOSTIC Mankey/Frank_GreatSword_Attack_Execution1/1 t=1.727273: camera=(-0.1328318, 2.24071383, 6.24166965); viewport=(0.15577282, 0.2967842, 5.820317)..(0.8259648, 0.678104937, 7.35425138); rawBoundsMiss=0m
@@ -324,82 +324,82 @@ DIAGNOSTIC Mankey/Frank_GreatSword_Attack_Execution3/-1 t=1.7273: camera=(-1.802
 CASE Mankey/Frank_GreatSword_Attack_Execution3/-1: samples=211; viewport=(0.08108315, 0.09489989, 4.400282)..(0.9177005, 0.8942709, 9.841926); maxBakeError=2.57272768E-06m; rawBoundsMiss=0m; maxDolly=2.9651525m; maxDepth=8.612108m; failures=0
 GEOMETRY Pepe/Frank_GreatSword_Attack_Ambush/1: skinned=2; static=3; Monkey_eyes, Object001, GreatSword_01(Clone)
 WEAPON Pepe/Frank_GreatSword_Attack_Ambush/1: GreatSword_01(Clone); MeshRenderer; static mesh
-DIAGNOSTIC Pepe/Frank_GreatSword_Attack_Ambush/1 t=1.13636374: camera=(-0.541863859, 1.5803802, 5.78399944); viewport=(0.08791661, 0.371163458, 5.142488)..(0.8518522, 0.6627224, 6.608926); rawBoundsMiss=0m
-  rendererLocalEnvelope: depth=6.157079m; allowed=7.587511m; tightWorldEnvelope: depth=6.157079m; allowed=7.587511m; safetyDolly=0.5543342m
-  Plane: currentBoneBounds=Center: (0.36, 0.46, 0.06), Extents: (0.60, 0.45, 0.39); rawBakeBounds=Center: (-0.07, -1.31, 0.43), Extents: (0.46, 0.68, 0.54); bakeError=5.20595165E-07m; rawBoundsMiss=0m
-    bakedVerticesBounds=Center: (-0.06, -1.36, 0.46), Extents: (0.39, 0.60, 0.45); recalculatedBounds=Center: (-0.06, -1.36, 0.46), Extents: (0.39, 0.60, 0.45); rawBoundsDifference=0.154926717m; recalculatedError=1.49011612E-07m
-  Mahgnkey: currentBoneBounds=Center: (-0.01, 0.32, -0.09), Extents: (1.07, 0.31, 0.74); rawBakeBounds=Center: (-0.09, -1.04, 0.27), Extents: (0.75, 1.14, 0.53); bakeError=1.6148349E-06m; rawBoundsMiss=0m
-    bakedVerticesBounds=Center: (-0.09, -1.01, 0.32), Extents: (0.74, 1.07, 0.31); recalculatedBounds=Center: (-0.09, -1.01, 0.32), Extents: (0.74, 1.07, 0.31); rawBoundsDifference=0.285893619m; recalculatedError=2.38418579E-07m
-  static Monkey_eyes: worldBounds=Center: (-0.70, 0.06, -0.08), Extents: (0.06, 0.07, 0.07); runtimeBoundsError=6.188917E-08m
-  static Object001: worldBounds=Center: (-0.73, 0.22, -0.28), Extents: (0.07, 0.08, 0.07); runtimeBoundsError=6.82857E-08m
-  static GreatSword_01(Clone): worldBounds=Center: (1.54, 0.19, 0.19), Extents: (1.34, 0.30, 0.17); runtimeBoundsError=2.4575624E-07m
-  rawBakeDriver=Plane; requiredRetreat=-2.6689837m
-  rawBakeDriver=Mahgnkey; requiredRetreat=-0.340034366m
-  runtimeEnvelopeRetreat=1.21396579E-06m; owner=Mahgnkey003; worldPoint=(-1.46037579, 0.3189299, -0.2623058)
-  distanceDriver=static GreatSword_01(Clone); requiredRetreatFromCurrentView=-0.08707064m
-  distanceDriver=skin Mahgnkey; requiredRetreatFromCurrentView=-0.671073258m
-  distanceDriver=static Object001; requiredRetreatFromCurrentView=-1.87449384m
-  distanceDriver=static Monkey_eyes; requiredRetreatFromCurrentView=-1.93226159m
-  Pepe currentBonesViewport=(0.4680019, 0.380736, 5.59429)..(0.659763753, 0.6280097, 6.34448671)
-  Mankey currentBonesViewport=(0.4375883, 0.3777479, 5.18013859)..(0.8268465, 0.5227413, 6.56345272)
-DIAGNOSTIC Pepe/Frank_GreatSword_Attack_Ambush/1 t=1.7273: camera=(-1.198759, 1.74621773, 4.68017435); viewport=(0.190259323, 0.203477412, 4.25443029)..(0.7139273, 0.7861228, 7.22215939); rawBoundsMiss=0m
-  rendererLocalEnvelope: depth=5.64019346m; allowed=6.97000027m; tightWorldEnvelope: depth=5.64019346m; allowed=6.97000027m; safetyDolly=0m
-  Plane: currentBoneBounds=Center: (0.31, 0.76, 0.01), Extents: (0.36, 0.74, 0.45); rawBakeBounds=Center: (-0.06, -1.33, 0.72), Extents: (0.52, 0.47, 0.84); bakeError=5.213277E-07m; rawBoundsMiss=0m
-    bakedVerticesBounds=Center: (-0.01, -1.31, 0.76), Extents: (0.45, 0.36, 0.74); recalculatedBounds=Center: (-0.01, -1.31, 0.76), Extents: (0.45, 0.36, 0.74); rawBoundsDifference=0.224249974m; recalculatedError=2.731428E-07m
+DIAGNOSTIC Pepe/Frank_GreatSword_Attack_Ambush/1 t=1.63636374: camera=(-0.995684743, 1.81541133, 5.451066); viewport=(0.27158004, 0.272616446, 4.96508646)..(0.763557434, 0.7282853, 7.69829941); rawBoundsMiss=0m
+  rendererLocalEnvelope: depth=6.247421m; allowed=7.809273m; tightWorldEnvelope: depth=6.247421m; allowed=7.809273m; safetyDolly=0.629689038m
+  Plane: currentBoneBounds=Center: (0.42, 0.68, 0.02), Extents: (0.41, 0.67, 0.44); rawBakeBounds=Center: (-0.05, -1.44, 0.66), Extents: (0.52, 0.49, 0.78); bakeError=5.69083056E-07m; rawBoundsMiss=0m
+    bakedVerticesBounds=Center: (-0.02, -1.42, 0.68), Extents: (0.44, 0.41, 0.67); recalculatedBounds=Center: (-0.02, -1.42, 0.68), Extents: (0.44, 0.41, 0.67); rawBoundsDifference=0.195803851m; recalculatedError=2.66560079E-07m
   Mahgnkey: currentBoneBounds=Center: (-0.01, 0.32, -0.09), Extents: (1.07, 0.31, 0.74); rawBakeBounds=Center: (-0.09, -1.04, 0.27), Extents: (0.75, 1.14, 0.53); bakeError=1.5335894E-06m; rawBoundsMiss=0m
     bakedVerticesBounds=Center: (-0.09, -1.01, 0.32), Extents: (0.74, 1.07, 0.31); recalculatedBounds=Center: (-0.09, -1.01, 0.32), Extents: (0.74, 1.07, 0.31); rawBoundsDifference=0.285940915m; recalculatedError=5.96046448E-08m
   static Monkey_eyes: worldBounds=Center: (-0.70, 0.06, -0.08), Extents: (0.06, 0.07, 0.07); runtimeBoundsError=6.143906E-08m
   static Object001: worldBounds=Center: (-0.73, 0.22, -0.28), Extents: (0.07, 0.08, 0.07); runtimeBoundsError=1.2287812E-07m
-  static GreatSword_01(Clone): worldBounds=Center: (0.72, 0.50, -0.79), Extents: (0.57, 0.67, 1.27); runtimeBoundsError=2.66560079E-07m
-  rawBakeDriver=Plane; requiredRetreat=-0.561429m
-  rawBakeDriver=Mahgnkey; requiredRetreat=0.5280799m
-  runtimeEnvelopeRetreat=-0.275023639m; owner=GreatSword_01(Clone); worldPoint=(1.29129577, 1.172106, 0.481371045)
-  distanceDriver=static GreatSword_01(Clone); requiredRetreatFromCurrentView=-0.275022835m
-  distanceDriver=skin Mahgnkey; requiredRetreatFromCurrentView=-0.580211341m
-  distanceDriver=skin Plane; requiredRetreatFromCurrentView=-1.32735121m
-  distanceDriver=static Monkey_eyes; requiredRetreatFromCurrentView=-1.81279027m
-  Pepe currentBonesViewport=(0.3364648, 0.232066, 4.53821945)..(0.428374916, 0.6717708, 5.511518)
-  Mankey currentBonesViewport=(0.215012491, 0.211413383, 4.29209042)..(0.664877951, 0.40266028, 5.67543268)
-CASE Pepe/Frank_GreatSword_Attack_Ambush/1: samples=156; viewport=(0.08162158, 0.09245488, 4.23074)..(0.9147001, 0.889045358, 9.134631); maxBakeError=1.76438812E-06m; rawBoundsMiss=0m; maxDolly=2.275014m; maxDepth=7.77680826m; failures=0
+  static GreatSword_01(Clone): worldBounds=Center: (1.15, 0.42, -0.57), Extents: (0.92, 0.61, 1.07); runtimeBoundsError=1.78813934E-07m
+  rawBakeDriver=Plane; requiredRetreat=-1.66597152m
+  rawBakeDriver=Mahgnkey; requiredRetreat=-0.5193378m
+  runtimeEnvelopeRetreat=-1.48906349E-06m; owner=GreatSword_01(Clone); worldPoint=(2.077629, 1.03083885, 0.499747574)
+  distanceDriver=static GreatSword_01(Clone); requiredRetreatFromCurrentView=-2.29912052E-06m
+  distanceDriver=skin Mahgnkey; requiredRetreatFromCurrentView=-1.627627m
+  distanceDriver=skin Plane; requiredRetreatFromCurrentView=-2.39219m
+  distanceDriver=static Monkey_eyes; requiredRetreatFromCurrentView=-2.860205m
+  Pepe currentBonesViewport=(0.3947846, 0.28730306, 5.28689)..(0.496847242, 0.636990547, 6.240041)
+  Mankey currentBonesViewport=(0.3259242, 0.2766819, 5.002746)..(0.726595342, 0.438984573, 6.386089)
+DIAGNOSTIC Pepe/Frank_GreatSword_Attack_Ambush/1 t=1.7273: camera=(-1.1987586, 1.7462182, 4.68017435); viewport=(0.190259427, 0.203477174, 4.254431)..(0.713927448, 0.786123157, 7.22216034); rawBoundsMiss=0m
+  rendererLocalEnvelope: depth=5.64019251m; allowed=6.97000027m; tightWorldEnvelope: depth=5.64019251m; allowed=6.97000027m; safetyDolly=0m
+  Plane: currentBoneBounds=Center: (0.31, 0.76, 0.01), Extents: (0.36, 0.74, 0.45); rawBakeBounds=Center: (-0.06, -1.33, 0.72), Extents: (0.52, 0.47, 0.84); bakeError=5.64722541E-07m; rawBoundsMiss=0m
+    bakedVerticesBounds=Center: (-0.01, -1.31, 0.76), Extents: (0.45, 0.36, 0.74); recalculatedBounds=Center: (-0.01, -1.31, 0.76), Extents: (0.45, 0.36, 0.74); rawBoundsDifference=0.224250153m; recalculatedError=1.1920929E-07m
+  Mahgnkey: currentBoneBounds=Center: (-0.01, 0.32, -0.09), Extents: (1.07, 0.31, 0.74); rawBakeBounds=Center: (-0.09, -1.04, 0.27), Extents: (0.75, 1.14, 0.53); bakeError=1.5335894E-06m; rawBoundsMiss=0m
+    bakedVerticesBounds=Center: (-0.09, -1.01, 0.32), Extents: (0.74, 1.07, 0.31); recalculatedBounds=Center: (-0.09, -1.01, 0.32), Extents: (0.74, 1.07, 0.31); rawBoundsDifference=0.285940915m; recalculatedError=5.96046448E-08m
+  static Monkey_eyes: worldBounds=Center: (-0.70, 0.06, -0.08), Extents: (0.06, 0.07, 0.07); runtimeBoundsError=6.143906E-08m
+  static Object001: worldBounds=Center: (-0.73, 0.22, -0.28), Extents: (0.07, 0.08, 0.07); runtimeBoundsError=1.2287812E-07m
+  static GreatSword_01(Clone): worldBounds=Center: (0.72, 0.50, -0.79), Extents: (0.57, 0.67, 1.27); runtimeBoundsError=2.38418579E-07m
+  rawBakeDriver=Plane; requiredRetreat=-0.561433554m
+  rawBakeDriver=Mahgnkey; requiredRetreat=0.5280819m
+  runtimeEnvelopeRetreat=-0.2750208m; owner=GreatSword_01(Clone); worldPoint=(1.29129672, 1.17210746, 0.481371164)
+  distanceDriver=static GreatSword_01(Clone); requiredRetreatFromCurrentView=-0.2750215m
+  distanceDriver=skin Mahgnkey; requiredRetreatFromCurrentView=-0.5802098m
+  distanceDriver=skin Plane; requiredRetreatFromCurrentView=-1.32735693m
+  distanceDriver=static Monkey_eyes; requiredRetreatFromCurrentView=-1.81278825m
+  Pepe currentBonesViewport=(0.336464822, 0.2320663, 4.53822)..(0.4283749, 0.671771169, 5.511518)
+  Mankey currentBonesViewport=(0.21501258, 0.211413175, 4.292091)..(0.664878, 0.402660072, 5.675433)
+CASE Pepe/Frank_GreatSword_Attack_Ambush/1: samples=222; viewport=(0.08162158, 0.09245476, 4.23073959)..(0.914699852, 0.8890451, 9.134513); maxBakeError=1.7520116E-06m; rawBoundsMiss=0m; maxDolly=2.27501345m; maxDepth=7.77680731m; failures=0
 GEOMETRY Pepe/Frank_GreatSword_Attack_Ambush/-1: skinned=2; static=3; Monkey_eyes, Object001, GreatSword_01(Clone)
 WEAPON Pepe/Frank_GreatSword_Attack_Ambush/-1: GreatSword_01(Clone); MeshRenderer; static mesh
-DIAGNOSTIC Pepe/Frank_GreatSword_Attack_Ambush/-1 t=1.13636374: camera=(0.5684619, 1.60757232, 5.988173); viewport=(0.155871868, 0.389593184, 5.32940054)..(0.853099465, 0.667987764, 6.90700436); rawBoundsMiss=0m
-  rendererLocalEnvelope: depth=6.302218m; allowed=6.97000027m; tightWorldEnvelope: depth=6.302218m; allowed=6.97000027m; safetyDolly=0.685120642m
-  Plane: currentBoneBounds=Center: (-0.36, 0.46, 0.02), Extents: (0.60, 0.45, 0.39); rawBakeBounds=Center: (0.01, -1.31, 0.43), Extents: (0.46, 0.68, 0.54); bakeError=4.382563E-07m; rawBoundsMiss=0m
-    bakedVerticesBounds=Center: (0.02, -1.36, 0.46), Extents: (0.39, 0.60, 0.45); recalculatedBounds=Center: (0.02, -1.36, 0.46), Extents: (0.39, 0.60, 0.45); rawBoundsDifference=0.154926941m; recalculatedError=2.98023224E-08m
-  Mahgnkey: currentBoneBounds=Center: (0.01, 0.32, -0.02), Extents: (1.07, 0.31, 0.74); rawBakeBounds=Center: (0.03, -1.04, 0.27), Extents: (0.75, 1.14, 0.53); bakeError=1.62907247E-06m; rawBoundsMiss=0m
-    bakedVerticesBounds=Center: (0.02, -1.01, 0.32), Extents: (0.74, 1.07, 0.31); recalculatedBounds=Center: (0.02, -1.01, 0.32), Extents: (0.74, 1.07, 0.31); rawBoundsDifference=0.28589353m; recalculatedError=1.1920929E-07m
-  static Monkey_eyes: worldBounds=Center: (0.70, 0.06, -0.03), Extents: (0.06, 0.07, 0.07); runtimeBoundsError=1.1920929E-07m
-  static Object001: worldBounds=Center: (0.73, 0.22, 0.17), Extents: (0.07, 0.08, 0.07); runtimeBoundsError=1.49011612E-08m
-  static GreatSword_01(Clone): worldBounds=Center: (-1.54, 0.19, -0.12), Extents: (1.34, 0.30, 0.17); runtimeBoundsError=2.40735631E-07m
-  rawBakeDriver=Plane; requiredRetreat=-2.854327m
-  rawBakeDriver=Mahgnkey; requiredRetreat=-0.47802496m
-  runtimeEnvelopeRetreat=-8.66881E-07m; owner=Mahgnkey003; worldPoint=(1.46037614, 0.3189296, 0.15079084)
-  distanceDriver=skin Mahgnkey; requiredRetreatFromCurrentView=-0.8077335m
-  distanceDriver=static GreatSword_01(Clone); requiredRetreatFromCurrentView=-0.810009539m
-  distanceDriver=static Object001; requiredRetreatFromCurrentView=-1.85768056m
-  distanceDriver=static Monkey_eyes; requiredRetreatFromCurrentView=-2.074214m
-  Pepe currentBonesViewport=(0.334133983, 0.4011793, 5.959279)..(0.519923031, 0.636798739, 6.42549229)
-  Mankey currentBonesViewport=(0.192235738, 0.4010737, 5.3753)..(0.5297967, 0.51596725, 6.68719)
-DIAGNOSTIC Pepe/Frank_GreatSword_Attack_Ambush/-1 t=1.7273: camera=(1.25356114, 1.80224454, 6.235329); viewport=(0.286493361, 0.246578068, 4.739373)..(0.865643144, 0.7971461, 7.196697); rawBoundsMiss=0m
-  rendererLocalEnvelope: depth=5.822742m; allowed=7.27842855m; tightWorldEnvelope: depth=5.822742m; allowed=7.27842855m; safetyDolly=0.2694732m
-  Plane: currentBoneBounds=Center: (-0.31, 0.76, 0.07), Extents: (0.36, 0.74, 0.45); rawBakeBounds=Center: (0.02, -1.33, 0.72), Extents: (0.52, 0.47, 0.84); bakeError=5.599348E-07m; rawBoundsMiss=0m
-    bakedVerticesBounds=Center: (0.07, -1.31, 0.76), Extents: (0.45, 0.36, 0.74); recalculatedBounds=Center: (0.07, -1.31, 0.76), Extents: (0.45, 0.36, 0.74); rawBoundsDifference=0.224250466m; recalculatedError=1.78813934E-07m
+DIAGNOSTIC Pepe/Frank_GreatSword_Attack_Ambush/-1 t=1.63636374: camera=(1.07492423, 1.89642143, 6.78434467); viewport=(0.2517032, 0.318889648, 5.843478)..(0.895332754, 0.7433011, 7.70523071); rawBoundsMiss=0m
+  rendererLocalEnvelope: depth=6.62889m; allowed=8.286112m; tightWorldEnvelope: depth=6.62889m; allowed=8.286112m; safetyDolly=1.0193249m
+  Plane: currentBoneBounds=Center: (-0.42, 0.68, 0.06), Extents: (0.41, 0.67, 0.44); rawBakeBounds=Center: (0.03, -1.44, 0.66), Extents: (0.52, 0.49, 0.78); bakeError=5.72483941E-07m; rawBoundsMiss=0m
+    bakedVerticesBounds=Center: (0.06, -1.42, 0.68), Extents: (0.44, 0.41, 0.67); recalculatedBounds=Center: (0.06, -1.42, 0.68), Extents: (0.44, 0.41, 0.67); rawBoundsDifference=0.195803881m; recalculatedError=2.66560079E-07m
   Mahgnkey: currentBoneBounds=Center: (0.01, 0.32, -0.02), Extents: (1.07, 0.31, 0.74); rawBakeBounds=Center: (0.03, -1.04, 0.27), Extents: (0.75, 1.14, 0.53); bakeError=1.54742656E-06m; rawBoundsMiss=0m
     bakedVerticesBounds=Center: (0.02, -1.01, 0.32), Extents: (0.74, 1.07, 0.31); recalculatedBounds=Center: (0.02, -1.01, 0.32), Extents: (0.74, 1.07, 0.31); rawBoundsDifference=0.285940975m; recalculatedError=0m
   static Monkey_eyes: worldBounds=Center: (0.70, 0.06, -0.03), Extents: (0.06, 0.07, 0.07); runtimeBoundsError=6.322027E-08m
   static Object001: worldBounds=Center: (0.73, 0.22, 0.17), Extents: (0.07, 0.08, 0.07); runtimeBoundsError=5.96046448E-08m
-  static GreatSword_01(Clone): worldBounds=Center: (-0.72, 0.50, 0.87), Extents: (0.57, 0.67, 1.27); runtimeBoundsError=2.4575624E-07m
-  rawBakeDriver=Plane; requiredRetreat=-1.69712627m
-  rawBakeDriver=Mahgnkey; requiredRetreat=-1.97927177m
-  runtimeEnvelopeRetreat=2.57436454E-07m; owner=GreatSword_01(Clone); worldPoint=(-1.291296, 1.172106, 2.13274312)
-  distanceDriver=static GreatSword_01(Clone); requiredRetreatFromCurrentView=9.238781E-07m
-  distanceDriver=skin Plane; requiredRetreatFromCurrentView=-1.92129493m
+  static GreatSword_01(Clone): worldBounds=Center: (-1.15, 0.42, 0.65), Extents: (0.92, 0.61, 1.07); runtimeBoundsError=1.1920929E-07m
+  rawBakeDriver=Plane; requiredRetreat=-2.63752842m
+  rawBakeDriver=Mahgnkey; requiredRetreat=-2.19554853m
+  runtimeEnvelopeRetreat=-1.33074991E-06m; owner=GreatSword_01(Clone); worldPoint=(-2.07762933, 1.03083885, 1.71358228)
+  distanceDriver=static GreatSword_01(Clone); requiredRetreatFromCurrentView=-8.53912752E-07m
+  distanceDriver=skin Mahgnkey; requiredRetreatFromCurrentView=-2.53273082m
+  distanceDriver=skin Plane; requiredRetreatFromCurrentView=-2.99678063m
+  distanceDriver=static Object001; requiredRetreatFromCurrentView=-3.59600735m
+  Pepe currentBonesViewport=(0.461362422, 0.382941276, 6.74763346)..(0.5784394, 0.6729322, 7.439436)
+  Mankey currentBonesViewport=(0.276127875, 0.384955138, 6.300138)..(0.5813554, 0.4902834, 7.6120224)
+DIAGNOSTIC Pepe/Frank_GreatSword_Attack_Ambush/-1 t=1.7273: camera=(1.253561, 1.80224538, 6.23533058); viewport=(0.286493361, 0.246578455, 4.73937464)..(0.8656432, 0.7971463, 7.19669867); rawBoundsMiss=0m
+  rendererLocalEnvelope: depth=5.82274342m; allowed=7.27842855m; tightWorldEnvelope: depth=5.82274342m; allowed=7.27842855m; safetyDolly=0.2694744m
+  Plane: currentBoneBounds=Center: (-0.31, 0.76, 0.07), Extents: (0.36, 0.74, 0.45); rawBakeBounds=Center: (0.02, -1.33, 0.72), Extents: (0.52, 0.47, 0.84); bakeError=6.971769E-07m; rawBoundsMiss=0m
+    bakedVerticesBounds=Center: (0.07, -1.31, 0.76), Extents: (0.45, 0.36, 0.74); recalculatedBounds=Center: (0.07, -1.31, 0.76), Extents: (0.45, 0.36, 0.74); rawBoundsDifference=0.224250153m; recalculatedError=1.33280039E-07m
+  Mahgnkey: currentBoneBounds=Center: (0.01, 0.32, -0.02), Extents: (1.07, 0.31, 0.74); rawBakeBounds=Center: (0.03, -1.04, 0.27), Extents: (0.75, 1.14, 0.53); bakeError=1.54742656E-06m; rawBoundsMiss=0m
+    bakedVerticesBounds=Center: (0.02, -1.01, 0.32), Extents: (0.74, 1.07, 0.31); recalculatedBounds=Center: (0.02, -1.01, 0.32), Extents: (0.74, 1.07, 0.31); rawBoundsDifference=0.285940975m; recalculatedError=0m
+  static Monkey_eyes: worldBounds=Center: (0.70, 0.06, -0.03), Extents: (0.06, 0.07, 0.07); runtimeBoundsError=6.322027E-08m
+  static Object001: worldBounds=Center: (0.73, 0.22, 0.17), Extents: (0.07, 0.08, 0.07); runtimeBoundsError=5.96046448E-08m
+  static GreatSword_01(Clone): worldBounds=Center: (-0.72, 0.50, 0.87), Extents: (0.57, 0.67, 1.27); runtimeBoundsError=2.98023224E-08m
+  rawBakeDriver=Plane; requiredRetreat=-1.69712412m
+  rawBakeDriver=Mahgnkey; requiredRetreat=-1.97927165m
+  runtimeEnvelopeRetreat=-4.60645253E-07m; owner=GreatSword_01(Clone); worldPoint=(-1.291297, 1.17210746, 2.132743)
+  distanceDriver=static GreatSword_01(Clone); requiredRetreatFromCurrentView=-4.60645253E-07m
+  distanceDriver=skin Plane; requiredRetreatFromCurrentView=-1.92129278m
   distanceDriver=skin Mahgnkey; requiredRetreatFromCurrentView=-2.83168173m
-  distanceDriver=static Object001; requiredRetreatFromCurrentView=-3.8949585m
-  Pepe currentBonesViewport=(0.494480133, 0.3657946, 6.164167)..(0.6102555, 0.709814, 6.889666)
-  Mankey currentBonesViewport=(0.309763223, 0.3711891, 5.791604)..(0.6420694, 0.486474276, 7.103488)
-CASE Pepe/Frank_GreatSword_Attack_Ambush/-1: samples=156; viewport=(0.1017265, 0.110353805, 4.449141)..(0.91843164, 0.889034152, 8.705888); maxBakeError=1.74005754E-06m; rawBoundsMiss=0m; maxDolly=1.92914522m; maxDepth=7.60920954m; failures=0
+  distanceDriver=static Object001; requiredRetreatFromCurrentView=-3.89495873m
+  Pepe currentBonesViewport=(0.4944801, 0.365794837, 6.16416836)..(0.6102555, 0.70981425, 6.889668)
+  Mankey currentBonesViewport=(0.309763223, 0.371188939, 5.791606)..(0.6420694, 0.486474127, 7.10349)
+CASE Pepe/Frank_GreatSword_Attack_Ambush/-1: samples=222; viewport=(0.09190481, 0.110351682, 4.43990564)..(0.9184315, 0.8890339, 8.705887); maxBakeError=1.74005754E-06m; rawBoundsMiss=0m; maxDolly=1.9291234m; maxDepth=7.60920858m; failures=0
 GEOMETRY Pepe/Frank_GreatSword_Attack_Execution1/1: skinned=2; static=3; Monkey_eyes, Object001, GreatSword_01(Clone)
 WEAPON Pepe/Frank_GreatSword_Attack_Execution1/1: GreatSword_01(Clone); MeshRenderer; static mesh
 DIAGNOSTIC Pepe/Frank_GreatSword_Attack_Execution1/1 t=1.727273: camera=(0.3651508, 2.300825, 5.25292253); viewport=(0.168528557, 0.1737825, 5.00373)..(0.8734581, 0.742089033, 6.346012); rawBoundsMiss=0m
