@@ -111,6 +111,7 @@ namespace FrankRetarget.Editor
                 game.battleVfx.SequenceBegan += SequenceBegan;
                 game.battleVfx.ContactOccurred += Contact;
                 game.battleVfx.EffectPlayed += EffectPlayed;
+                game.battleVfx.EffectsCleared += SamuraiCleanupCleared;
                 game.battleSfx.CuePlayed += AudioPlayed;
                 Application.logMessageReceived += UnexpectedLog;
                 foreach (var fighter in fighters)
@@ -177,6 +178,7 @@ namespace FrankRetarget.Editor
                     return;
                 }
                 MeasureSamuraiFrame();
+                ObserveSamuraiCleanup();
                 if (!Guard)
                 {
                     ObservePresentation();
@@ -209,6 +211,8 @@ namespace FrankRetarget.Editor
                 if (Now - settledAt < quietSeconds)
                     return;
                 CheckCompletion();
+                if (!AwaitSamuraiCleanup())
+                    return;
                 CheckSamuraiCompletion();
                 report.AppendLine($"PASS case={step + 1}/{TotalCases} scenario={Scenario} action={action} " +
                     $"source={source.name} avatar={source.Animator.avatar.name} direction={Direction} " +
@@ -248,6 +252,8 @@ namespace FrankRetarget.Editor
         {
             running = false;
             activeCase = false;
+            if (game && game.battleVfx)
+                game.battleVfx.EffectsCleared -= SamuraiCleanupCleared;
             EditorApplication.update -= Watchdog;
             EditorApplication.playModeStateChanged -= PlayModeChanged;
             AssemblyReloadEvents.beforeAssemblyReload -= BeforeReload;

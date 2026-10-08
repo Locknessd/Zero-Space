@@ -85,14 +85,15 @@ namespace FrankRetarget.Editor
             float preserve, Vector3 shift, float[] knots, StringBuilder report)
         {
             ValidateClipStructure(candidate, receiver.clip.length);
-            using var original = new PoseSampler(scene, receiver.path, receiver.clip);
-            using var incoming = new PoseSampler(scene, receiver.path, fall.clip);
-            using var actual = new PoseSampler(scene, receiver.path, candidate);
+            using var original = new PoseSampler(scene, receiver.path, receiver.clip, true);
+            using var incoming = new PoseSampler(scene, receiver.path, fall.clip, true);
+            using var actual = new PoseSampler(scene, receiver.path, candidate, true);
             var prefix = new PoseMetrics();
             var tail = new PoseMetrics();
             var blend = new PoseMetrics();
             var hold = new PoseMetrics();
             float muscleError = 0;
+            float inverseMuscleDiagnostic = 0;
             MeasuredPose held = null;
             var snapshots = new Dictionary<float, MeasuredPose>();
             foreach (float time in DenseTimes(candidate.length, knots))
@@ -112,8 +113,10 @@ namespace FrankRetarget.Editor
                         "blend root", time);
                     blend.Track(expected.body, observed.body, expected.bodyRotation, observed.bodyRotation,
                         "blend body", time);
+                    muscleError = Mathf.Max(muscleError, StreamMuscleError(expected, observed));
                     for (int i = 0; i < expected.muscles.Length; i++)
-                        muscleError = Mathf.Max(muscleError, Mathf.Abs(expected.muscles[i] - observed.muscles[i]));
+                        inverseMuscleDiagnostic = Mathf.Max(inverseMuscleDiagnostic,
+                            Mathf.Abs(expected.muscles[i] - observed.muscles[i]));
                 }
                 if (time >= preserve + FallDuration)
                 {
@@ -124,7 +127,8 @@ namespace FrankRetarget.Editor
             }
             report.AppendLine("240Hz ORIGINAL PREFIX " + prefix);
             report.AppendLine("240Hz AUTHORED FALL VS NATIVE RETIMED SOURCE " + tail);
-            report.AppendLine("240Hz BLEND BODY/ROOT " + blend + "; muscleError=" + muscleError);
+            report.AppendLine("240Hz BLEND BODY/ROOT " + blend + "; nativeStreamMuscleError=" + muscleError +
+                "; inverseMuscleDiagnostic=" + inverseMuscleDiagnostic);
             report.AppendLine("240Hz HELD FINAL POSE " + hold);
             if (prefix.Score > 1 || tail.Score > 1 || blend.Score > 1 || hold.Score > 1 || muscleError > .003f)
                 throw new InvalidOperationException("Candidate failed independent native pose/root preservation. " +

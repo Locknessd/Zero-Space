@@ -130,6 +130,20 @@ namespace FrankRetarget
                 if (!move.sourcePair.reactions.TryValidate(out string error))
                     throw new ArgumentException(error, nameof(move));
             }
+            var selectionBank = source.battleSfx ? source.battleSfx.bank
+                : source.battleVfx ? source.battleVfx.timeline : null;
+            if (!CombatLethalPairVariant.TrySelect(move, isLethal, selectionBank,
+                source.Animator.avatar, target.Animator.avatar, out var selectedVariant, out string variantError))
+            {
+                Debug.LogWarning("Rejected lethal receiver variant: " + variantError, this);
+                return false;
+            }
+            if (selectedVariant != null && !selectedVariant.TryValidateReceiver(target.Animator, out variantError))
+            {
+                Debug.LogWarning("Rejected lethal receiver contacts: " + variantError, this);
+                return false;
+            }
+            lethalVariant = selectedVariant;
             pair = move.sourcePair;
             Move = move;
             attacker = source;
@@ -165,8 +179,8 @@ namespace FrankRetarget
                     pair.showWeapon || move.weapon != TrumpWeaponManager.WeaponType.None, pair.unarmedIndex >= 0,
                     entryBlend, pair.attackerWeaponPrefab, pair.attackerWeaponSocket);
                 attackActor.SetAttackTrack(pair.attacks);
-                hitActor = Actor(target, pair.receiverDriver, pair.reaction, false, false, pair.unarmedIndex >= 0, entryBlend);
-                hitActor.SetReactionTrack(pair.reactions, lethal);
+                hitActor = Actor(target, pair.receiverDriver, ReceiverClip, false, false, pair.unarmedIndex >= 0, entryBlend);
+                hitActor.SetReactionTrack(lethalVariant == null ? pair.reactions : null, lethal);
                 if (pair.transferReceiverFingers) hitActor.Pose.transferFingers = true;
                 // Grapples constrain the complete pair after spacing. Applying a
                 // pelvis lock before optional spacing would move the hands twice
@@ -234,7 +248,8 @@ namespace FrankRetarget
             if (!Playing || waitingForGetUp) return;
             SampleTime = Mathf.Clamp(seconds, 0, Duration);
             attackActor.Evaluate(SampleTime);
-            hitActor.Evaluate(pair.reactions ? SampleTime : Mathf.Max(0, SampleTime - pair.reactionDelay));
+            hitActor.Evaluate(lethalVariant != null || pair.reactions
+                ? SampleTime : Mathf.Max(0, SampleTime - pair.reactionDelay));
             Vector3 originalAttackHips = attackActor.Pose.targetHips.position;
             if (pair.spacing && pair.unarmedIndex >= 0 && pair.bodySpacing > 0)
             {
@@ -247,8 +262,8 @@ namespace FrankRetarget
             }
             CombatPositioningController.Instance?.ConstrainDepthNow();
             ConstrainLightHipsDepth();
-            if (Move.grounding)
-                Move.grounding.Apply(SampleTime, attacker.Animator, receiver.Animator);
+            if (ActiveGrounding)
+                ActiveGrounding.Apply(SampleTime, attacker.Animator, receiver.Animator);
             ApplyReceiverFloorLift();
             attackActor.ApplySourceWeaponDisplacement(attackActor.Pose.targetHips.position - originalAttackHips);
             attackActor.ApplySourceWeaponEntryGrip(SampleTime);
