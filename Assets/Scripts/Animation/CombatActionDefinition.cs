@@ -33,12 +33,16 @@ public sealed class CombatActionDefinition : ScriptableObject
     [TextArea] public string entryAndInterruption;
     [TextArea] public string recovery;
     [TextArea] public string presentation;
+    [Tooltip("Original ordered source clips used to author an adapted attacker animation.")]
+    public AnimationClip[] authoredAttackSources = Array.Empty<AnimationClip>();
     public Contact[] contacts = Array.Empty<Contact>();
 
     public IEnumerable<string> Validate(CombatTripletData move, BattleSfxBank bank)
     {
         if (move == null || move.moveName != actionId)
             yield return "Move ID does not match its action definition.";
+        if (authoredAttackSources != null && Array.Exists(authoredAttackSources, clip => !clip))
+            yield return "An authored attacker source reference is missing.";
         if (contacts == null || contacts.Length == 0)
         {
             yield return "Action has no authored contacts.";

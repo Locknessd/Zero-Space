@@ -1,0 +1,53 @@
+Dense Combo_01 study. No action entries, hit times, reactions or gameplay acceptance are authored.
+Source: 5b18d7ef2de2c7e45acf6b7c15d8a3ce:7400000; actual BattleScene Mankey and Pepe, each as attacker, both lane directions.
+Proposed spacing: Mankey attack 1.0m; Pepe attack 1.35m, from prior frontal candidate, unapproved.
+Victim holds t=0 of prior study Hit:932279eb1c22db24385eb04c03856eb1:7400024 throughout.
+No reaction is advanced; body surface therefore stays static. Pair root policy is current gameplay playback.
+Windows: [0.43,0.56], [0.90,1.12] seconds. Each starts at boundary and steps 1/240s; end is included.
+Last interval of each window can be shorter than 1/240s. Samples are poses, not confirmed strikes.
+World positions and unsigned triangle-surface gaps are metres; zero means surface touch/intersection.
+Gap is minimum over vertex-face, edge-edge and segment-face intersection candidates via triangle BVH.
+A fully enclosed surface can have nonzero surface gap; this is not penetration depth or collision approval.
+FBX inspected offline: both native axes have 210 control points and a long shaft with broad distal wings.
+Head selection uses actual imported mesh: longest bounds axis, wider terminal third identifies head end.
+Shaft center/width measured at 20-50 percent length from butt; exclude 1.35 times shaft half-width.
+Select triangles wholly beyond 55 percent length and outside shaft corridor; preserve original topology.
+HeadWing is a conservative blade-wing proxy, not certified sharpened edge; collar/haft is excluded.
+HaftOrUnclassified is remaining mesh, including ambiguous collar/head transitions; never called blade.
+HandBonePoint is hand pivot proximity only, not hand skin surface distance.
+Victim includes visible skinned meshes with >=1000 vertices; named geometry and counts logged below.
+Body uses explicit current bone/bindpose world skinning, with Bake(false) space diagnostics.
+Nearest bone is Euclidean proximity to major bone pivot, not skin-weight anatomy classification.
+Displacements.csv stores actor, driver, model roots, source hips and actual hips/feet against t=0.
+Images show plain anatomy plus colored head overlays: left cyan, right orange. Two opposing oblique views.
+Images include fixed context poses and each hand/window sampled minimum; image timestamps are stamped.
+Preview-only state; render visibility, material/mesh ownership, RenderTexture and singletons restored.
+Mankey/Left: mesh=L_axe_wp; localBounds=Center: (0.00, -0.08, 0.51), Extents: (0.06, 0.35, 0.78); axis=2; widthAxis=1; headSign=1; boundary=0.588667631; shaftCenter=-0.0004667081; shaftExclusionRadius=0.0449072644; headFaces=125; remainingFaces=275
+Mankey/Right: mesh=R_axe_wp; localBounds=Center: (0.00, -0.08, 0.51), Extents: (0.06, 0.35, 0.78); axis=2; widthAxis=1; headSign=1; boundary=0.588667631; shaftCenter=-0.0004667081; shaftExclusionRadius=0.0449072644; headFaces=125; remainingFaces=275
+Plane: explicit bone/bindpose world bounds=Center: (0.48, 0.81, 0.02), Extents: (0.42, 0.81, 0.29); max Bake(false)+TR error=7.26498456E-07m; max Bake(false)+TRS error=14.65512m; rootBone=mixamorig:Hips; quality=Auto
+Plane: 20726 faces; scale=(10.00, 10.00, 10.00); space=explicit current bone * bindpose world skinning
+Pepe body=Center: (0.48, 0.81, 0.02), Extents: (0.42, 0.81, 0.29); skeleton=Center: (0.45, 0.70, 0.02), Extents: (0.38, 0.69, 0.24)
+Mankey_1_Plain.png: each time has two adjacent opposing oblique views; times=0.43;0.471666664;0.48;0.488333344;0.52;0.56;0.9;0.96;1.02;1.07;1.07083333;1.0916667;1.12
+Mankey_1_HeadRegions.png: each time has two adjacent opposing oblique views; times=0.43;0.471666664;0.48;0.488333344;0.52;0.56;0.9;0.96;1.02;1.07;1.07083333;1.0916667;1.12
+Mankey/Left: mesh=L_axe_wp; localBounds=Center: (0.00, -0.08, 0.51), Extents: (0.06, 0.35, 0.78); axis=2; widthAxis=1; headSign=1; boundary=0.588667631; shaftCenter=-0.0004667081; shaftExclusionRadius=0.0449072644; headFaces=125; remainingFaces=275
+Mankey/Right: mesh=R_axe_wp; localBounds=Center: (0.00, -0.08, 0.51), Extents: (0.06, 0.35, 0.78); axis=2; widthAxis=1; headSign=1; boundary=0.588667631; shaftCenter=-0.0004667081; shaftExclusionRadius=0.0449072644; headFaces=125; remainingFaces=275
+Plane: explicit bone/bindpose world bounds=Center: (-0.48, 0.81, -0.02), Extents: (0.42, 0.81, 0.29); max Bake(false)+TR error=6.378955E-07m; max Bake(false)+TRS error=14.65512m; rootBone=mixamorig:Hips; quality=Auto
+Plane: 20726 faces; scale=(10.00, 10.00, 10.00); space=explicit current bone * bindpose world skinning
+Pepe body=Center: (-0.48, 0.81, -0.02), Extents: (0.42, 0.81, 0.29); skeleton=Center: (-0.45, 0.70, -0.02), Extents: (0.38, 0.69, 0.24)
+Mankey_-1_Plain.png: each time has two adjacent opposing oblique views; times=0.43;0.471666664;0.48;0.488333344;0.52;0.56;0.9;0.96;1.02;1.07;1.07083333;1.0916667;1.12
+Mankey_-1_HeadRegions.png: each time has two adjacent opposing oblique views; times=0.43;0.471666664;0.48;0.488333344;0.52;0.56;0.9;0.96;1.02;1.07;1.07083333;1.0916667;1.12
+Pepe/Left: mesh=L_axe_wp; localBounds=Center: (0.00, -0.08, 0.51), Extents: (0.06, 0.35, 0.78); axis=2; widthAxis=1; headSign=1; boundary=0.588667631; shaftCenter=-0.0004667081; shaftExclusionRadius=0.0449072644; headFaces=125; remainingFaces=275
+Pepe/Right: mesh=R_axe_wp; localBounds=Center: (0.00, -0.08, 0.51), Extents: (0.06, 0.35, 0.78); axis=2; widthAxis=1; headSign=1; boundary=0.588667631; shaftCenter=-0.0004667081; shaftExclusionRadius=0.0449072644; headFaces=125; remainingFaces=275
+Mahgnkey: explicit bone/bindpose world bounds=Center: (0.59, 0.96, 0.03), Extents: (0.45, 0.95, 0.36); max Bake(false)+TR error=1.33481888E-06m; max Bake(false)+TRS error=0.5779393m; rootBone=Base HumanPelvis; quality=Auto
+Mahgnkey: 3462 faces; scale=(0.70, 0.70, 0.70); space=explicit current bone * bindpose world skinning
+Mankey body=Center: (0.59, 0.96, 0.03), Extents: (0.45, 0.95, 0.36); skeleton=Center: (0.60, 0.82, 0.01), Extents: (0.39, 0.73, 0.33)
+Pepe_1_Plain.png: each time has two adjacent opposing oblique views; times=0.43;0.471666664;0.48;0.4925;0.52;0.56;0.9;0.96;1.02;1.05833328;1.07;1.0958333;1.12
+Pepe_1_HeadRegions.png: each time has two adjacent opposing oblique views; times=0.43;0.471666664;0.48;0.4925;0.52;0.56;0.9;0.96;1.02;1.05833328;1.07;1.0958333;1.12
+Pepe/Left: mesh=L_axe_wp; localBounds=Center: (0.00, -0.08, 0.51), Extents: (0.06, 0.35, 0.78); axis=2; widthAxis=1; headSign=1; boundary=0.588667631; shaftCenter=-0.0004667081; shaftExclusionRadius=0.0449072644; headFaces=125; remainingFaces=275
+Pepe/Right: mesh=R_axe_wp; localBounds=Center: (0.00, -0.08, 0.51), Extents: (0.06, 0.35, 0.78); axis=2; widthAxis=1; headSign=1; boundary=0.588667631; shaftCenter=-0.0004667081; shaftExclusionRadius=0.0449072644; headFaces=125; remainingFaces=275
+Mahgnkey: explicit bone/bindpose world bounds=Center: (-0.59, 0.96, -0.03), Extents: (0.45, 0.95, 0.36); max Bake(false)+TR error=1.376806E-06m; max Bake(false)+TRS error=0.5779393m; rootBone=Base HumanPelvis; quality=Auto
+Mahgnkey: 3462 faces; scale=(0.70, 0.70, 0.70); space=explicit current bone * bindpose world skinning
+Mankey body=Center: (-0.59, 0.96, -0.03), Extents: (0.45, 0.95, 0.36); skeleton=Center: (-0.60, 0.82, -0.01), Extents: (0.39, 0.73, 0.33)
+Pepe_-1_Plain.png: each time has two adjacent opposing oblique views; times=0.43;0.471666664;0.48;0.4925;0.52;0.56;0.9;0.96;1.02;1.05833328;1.07;1.0958333;1.12
+Pepe_-1_HeadRegions.png: each time has two adjacent opposing oblique views; times=0.43;0.471666664;0.48;0.4925;0.52;0.56;0.9;0.96;1.02;1.05833328;1.07;1.0958333;1.12
+Completed contact rows: 2088

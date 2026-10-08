@@ -16,14 +16,18 @@ namespace FrankRetarget.Editor
         const float MaximumLift = .75f;
         const string ActionRoot = "Assets/CombatExpansion/Actions/";
 
-        public static void Bake()
+        public static void Bake() => BakeIndices(new[] { 0, 1, 2, 3 });
+
+        public static void BakeAmbush() => BakeIndices(new[] { 0 });
+
+        static void BakeIndices(int[] indices)
         {
             var report = new StringBuilder("fighter,action,role,seconds,clearance,baseLift,storedLift\n");
             try
             {
                 WithFighters(fighters =>
                 {
-                    for (int index = 0; index < 4; index++)
+                    foreach (int index in indices)
                     {
                         var tracks = new List<FrankPairGrounding.Track>();
                         string action = null;
@@ -106,7 +110,8 @@ namespace FrankRetarget.Editor
             }
             finally
             {
-                WriteReport("GreatSwordGrounding.csv", report.ToString());
+                WriteReport(indices.Length == 4 ? "GreatSwordGrounding.csv" : "GreatSwordAmbushGrounding.csv",
+                    report.ToString());
             }
         }
 
