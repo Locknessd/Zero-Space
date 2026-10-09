@@ -1,0 +1,5 @@
+FAILED_PARTIAL
+System.ArgumentException: An item with the same key has already been added. Key: 5.333333
+  at System.Collections.Generic.Dictionary`2[TKey,TValue].TryInsert (TKey key, TValue value, System.Collections.Generic.InsertionBehavior behavior) [0x000dd] in <94b103fb80364239bfc0542bee09d001>:0 
+  at System.Collections.Generic.Dictionary`2[TKey,TValue].Add (TKey key, TValue value) [0x00000] in <94b103fb80364239bfc0542bee09d001>:0 
+  at FrankRetarget.Editor.CombatExpansionSamuraiStudy.CaptureExecution05ReplayStages () [0x002ea] in /home/eragon/Project/unity/Zero-Space/Assets/Editor/CombatExpansionSamuraiStudy.ReplayStages.cs:128 

@@ -25,6 +25,9 @@ namespace FrankRetarget.Editor
                         float.IsFinite(q.z) && float.IsFinite(q.w), "Nonfinite runtime pose: " + bone.name);
                 }
             }
+            if (Samurai10)
+                Require(Mathf.Abs(pair.Duration - 2.666666746f) < .00001f,
+                    "Execution10 must play the full original native duration.");
             if (!pair.Playing)
                 return;
             Require(source.SourcePlayback == pair && target.SourcePlayback == pair && source.IsBusy && target.IsBusy,

@@ -1,0 +1,15 @@
+{
+    "status": "FAILED_PARTIAL",
+    "scope": "Diagnostic of forward versus terminal-then-seek Evaluation05 poses. Original runtime actors, native clips, grounding and 1.7m setup. Both fighter assignments and directions. All mapped human bones and animator roots on source and fighter rigs. World and local positions are compared independently; rotations are reported in degrees. No pose repair, tolerance change, contact acceptance or gameplay registration.",
+    "error": "System.ArgumentException: An item with the same key has already been added. Key: 5.333333\n  at System.Collections.Generic.Dictionary`2[TKey,TValue].TryInsert (TKey key, TValue value, System.Collections.Generic.InsertionBehavior behavior) [0x000dd] in <94b103fb80364239bfc0542bee09d001>:0 \n  at System.Collections.Generic.Dictionary`2[TKey,TValue].Add (TKey key, TValue value) [0x00000] in <94b103fb80364239bfc0542bee09d001>:0 \n  at FrankRetarget.Editor.CombatExpansionSamuraiStudy.CaptureExecution05ReplayStages () [0x002ea] in /home/eragon/Project/unity/Zero-Space/Assets/Editor/CombatExpansionSamuraiStudy.ReplayStages.cs:128 ",
+    "cases": [
+        {
+            "name": "Mankey_Pepe_1",
+            "attack": "3e685dd57e9c78b49b20bef3e8358ae3:7400010",
+            "reaction": "b01b411d366a5a344bddf3428a7bc8f7:7400010",
+            "grounding": "02a49c29cec769e6095f7ebed333d7f4:11400000",
+            "status": "FAILED_PARTIAL",
+            "comparisons": []
+        }
+    ]
+}

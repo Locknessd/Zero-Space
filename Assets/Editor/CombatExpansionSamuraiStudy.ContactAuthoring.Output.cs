@@ -73,7 +73,7 @@ namespace FrankRetarget.Editor
             rows.Append(FormattableString.Invariant($",{point.x:R},{point.y:R},{point.z:R}"));
         }
 
-        static void CAWriteCsv(CACase record, string stem)
+        static void CAWriteCsv(CACase record, string stem, string output = CAOutput)
         {
             var rows = new StringBuilder("attacker,victim,direction,spacingM,sourceSeconds,torsoMinimumWorldY," +
                 "victimMinimumWorldY,attackerMinimumWorldY,hipsWorldX,hipsWorldY,hipsWorldZ," +
@@ -89,7 +89,7 @@ namespace FrankRetarget.Editor
                 CAVector(rows, row.supportWorldPoint);
                 rows.AppendLine(FormattableString.Invariant($",{row.supportBone},{row.torsoFacingUp:R}"));
             }
-            File.WriteAllText(CAOutput + "/" + stem + "_Landing.csv", rows.ToString());
+            File.WriteAllText(output + "/" + stem + "_Landing.csv", rows.ToString());
             rows = new StringBuilder("attacker,victim,direction,spacingM,sourceSeconds,gapM,attackerMinimumY," +
                 "victimMinimumY,chosenBone,targetBoneLocalX,targetBoneLocalY,targetBoneLocalZ," +
                 "bladeLocalX,bladeLocalY,bladeLocalZ,bladeVelocityVictimX,bladeVelocityVictimY," +
@@ -102,7 +102,7 @@ namespace FrankRetarget.Editor
                 CAVector(rows, row.bladeVelocityVictimMps);
                 rows.AppendLine("," + row.tiedTriangles.Count);
             }
-            File.WriteAllText(CAOutput + "/" + stem + "_Contacts.csv", rows.ToString());
+            File.WriteAllText(output + "/" + stem + "_Contacts.csv", rows.ToString());
         }
     }
 }

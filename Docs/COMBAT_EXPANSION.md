@@ -267,11 +267,12 @@ validate playback infrastructure and existing lifecycle behavior; axe actions re
 ## Outstanding scope and gates
 
 GreatSword grounding and source-weapon study evidence is recorded in [COMBAT_GREATSWORD.md](COMBAT_GREATSWORD.md).
-The four pairs remain unregistered pending contact authoring, recovery and gameplay validation.
+The four GreatSword pairs are now saved and passed the 48-case gameplay suite;
+remaining visual and presentation acceptance must still be checked per action.
 
 - `COMBAT_FRANK_COVERAGE.md` and `GeneratedAssets/CombatExpansion/FrankCoverage.tsv` account for all
   126 Frank-scoped stable clip identities. Remaining tester-only content includes three full Insane
-  combos and their 14 step choices, four GreatSword execution pairs, and two alternate Warrior
+  combos and their 14 step choices, and two alternate Warrior
   reaction clips. Resolve exact full/step canonical relationships and integrate every distinct action
   and required support role. `COMBAT_FRANK_CANONICAL.md` records the executed curve/content comparisons
   for seven source-rig links, Warrior takes and Insane full/step clips. Content and representation differences
@@ -282,8 +283,10 @@ The four pairs remain unregistered pending contact authoring, recovery and gamep
 - Finish hold/escape visual and abnormal-state validation beyond the saved gameplay lifecycle.
 - Integrate every applicable double-axe combo, correct dual attachments, inspect every contact, and
   configure explicit reactions and complete feedback. No double-axe combo is yet integrated here.
-- Integrate actual Samurai pairs with owned unarmed-victim equipment state and all required lifecycle
-  cases. No new Samurai execution is yet integrated here.
+- Samurai executions 01 and 10 are saved in both fighters' registries with owned unarmed victims.
+  Execution 01 passed 40 lifecycle cases; Execution 10 gameplay acceptance is pending.
+  See `GeneratedAssets/CombatExpansion/SamuraiStudy/Installation/Execution01Gameplay.md` and
+  `Execution10Gameplay.md`. Integrate 02–09 and finish every execution's audiovisual review.
 - Integrate distinct SlapFace and Rough Pack actions with their required transitions/pairings.
 - Author at least 20 distinct new punch/kick combos with full usable-source coverage. Current qualifying
   new punch/kick combo count: **0**. Atemi and existing combos do not count toward this requirement.

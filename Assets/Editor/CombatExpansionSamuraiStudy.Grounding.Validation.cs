@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.IO;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
@@ -15,9 +16,15 @@ namespace FrankRetarget.Editor
 
         static void ValidateExecutionGrounding(int execution)
         {
+            ValidateExecutionGrounding(execution, null, null, null, null);
+        }
+
+        static void ValidateExecutionGrounding(int execution, string assetPathOverride,
+            string reportOutput, AnimationClip attackOverride, AnimationClip reactionOverride)
+        {
             CombatExpansionHumanoidStudy.RequireEditor();
             string executionName = GroundingExecutionName(execution);
-            string assetPath = GroundingAssetPath(execution);
+            string assetPath = assetPathOverride ?? GroundingAssetPath(execution);
             var rows = new StringBuilder("source,target,direction,fighter,role,minimumClearance,seconds," +
                 "samples,maximumCorrection,violations\n");
             var failures = new StringBuilder();
@@ -42,9 +49,11 @@ namespace FrankRetarget.Editor
                 foreach (int direction in new[] { 1, -1 })
                 {
                     var target = session.Fighters.Single(fighter => fighter != source);
-                    var pair = BeginGroundingStudy(session.Fighters, source, target, direction, asset, execution);
+                    var pair = BeginGroundingStudy(session.Fighters, source, target, direction, asset, execution,
+                        attackOverride, reactionOverride);
                     try
                     {
+                        CCValidatePair(pair, asset, execution, attackOverride, reactionOverride);
                         foreach (var track in asset.tracks)
                             if (Mathf.Abs(track.duration - pair.Duration) > .0001f)
                                 throw new InvalidOperationException("Stale Samurai grounding track duration.");
@@ -128,7 +137,14 @@ namespace FrankRetarget.Editor
                 if (failure != null)
                     summary.AppendLine(failure);
                 summary.Append(rows);
-                WriteGroundingReport(executionName + "GroundingValidation.txt", summary.ToString());
+                if (reportOutput == null)
+                    WriteGroundingReport(executionName + "GroundingValidation.txt", summary.ToString());
+                else
+                {
+                    Directory.CreateDirectory(reportOutput);
+                    File.WriteAllText(Path.Combine(reportOutput, executionName + "GroundingValidation.txt"),
+                        summary.ToString());
+                }
             }
         }
     }

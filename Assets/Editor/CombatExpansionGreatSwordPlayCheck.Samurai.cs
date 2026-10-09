@@ -6,7 +6,7 @@ namespace FrankRetarget.Editor
 {
     public static partial class CombatExpansionGreatSwordPlayCheck
     {
-        static bool Samurai => action == "Samurai_Execution01";
+        static bool Samurai => samuraiSuite && action == samuraiConfiguration.action;
         static bool NativeSword => GreatSword || Samurai;
 
         static void ValidateSamuraiProfile(BattleSfxBank.Move profile)
@@ -26,10 +26,15 @@ namespace FrankRetarget.Editor
                 "Samurai must use its native source blade and a renderer/collider-free receiver driver.");
             Require(data.getUp && !data.attackerGetUp && data.recoveryGrounding && move.grounding &&
                 data.transferReceiverFingers && data.recoveryBlendSeconds > 0,
-                "Samurai receiver grounding, fingers or prone recovery is missing.");
+                $"Samurai receiver grounding, fingers or {SamuraiRecoveryPose} recovery is missing.");
             Require(CombatExpansionInventory.Identity(data.getUp) ==
-                "157da7dff6b3b3148a29246060747ce5:1827226128182048838",
-                "Samurai must recover from its actual prone end pose.");
+                samuraiConfiguration.getUpIdentity,
+                $"Samurai must recover from its actual {SamuraiRecoveryPose} end pose.");
+            if (Samurai10)
+            {
+                ValidateSamurai10Profile(profile);
+                return;
+            }
             var hits = expectedCues.Where(Primary).ToArray();
             var landings = expectedCues.Where(cue => cue.group == "body_fall").ToArray();
             Require(hits.Length == 2 && hits[0].group == "stab_hit" && hits[1].group == "heavy_hit" &&
@@ -54,7 +59,7 @@ namespace FrankRetarget.Editor
         {
             if (!Samurai || !QueuePlayback)
                 return;
-            string directory = "GeneratedAssets/CombatExpansion/SamuraiStudy/PlayMode";
+            string directory = samuraiConfiguration.directory;
             Directory.CreateDirectory(directory);
             ScreenCapture.CaptureScreenshot(directory + "/" + source.name + "_" + Direction +
                 "_Case" + (step + 1) + "_Play" + (samuraiRepeat + 1) + "_Contact" + contacts + ".png");

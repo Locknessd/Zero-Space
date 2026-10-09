@@ -1,0 +1,5 @@
+FAILED anchor replay validation; inspect partial evidence.
+System.InvalidOperationException: Anchor units fixture accepted invalid evidence: overflowed world distance
+  at FrankRetarget.Editor.CombatExpansionSamuraiStudy.CAAnchorReject (System.Action action, System.String label, System.Collections.Generic.List`1[T] results) [0x0001c] in /home/eragon/Project/unity/Zero-Space/Assets/Editor/CombatExpansionSamuraiStudy.ContactAuthoring.AnchorFixtures.cs:38 
+  at FrankRetarget.Editor.CombatExpansionSamuraiStudy.CAValidateAnchorFixtures (System.Collections.Generic.List`1[T] results) [0x00635] in /home/eragon/Project/unity/Zero-Space/Assets/Editor/CombatExpansionSamuraiStudy.ContactAuthoring.AnchorFixtures.cs:125 
+  at FrankRetarget.Editor.CombatExpansionSamuraiStudy.ValidateContactAnchorWorldUnits () [0x0001c] in /home/eragon/Project/unity/Zero-Space/Assets/Editor/CombatExpansionSamuraiStudy.ContactAuthoring.AnchorValidation.cs:87 

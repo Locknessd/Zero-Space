@@ -26,12 +26,13 @@ namespace FrankRetarget.Editor
         }
 
         // Reuses the dense axe study's exact triangle queries for other authored weapons.
-        // Only renderer selection is cached. Update rebuilds the moving victim surface.
-        public sealed class MovingBodyProbe
+        // Current geometry and BVH partitioning are rebuilt on every update; buffers alone are reused.
+        public sealed partial class MovingBodyProbe
         {
             readonly CharacterCombat target;
             readonly SkinnedMeshRenderer[] skins;
             Surface body;
+            Surface spare;
             public float MinimumY => body != null ? body.Bounds.min.y : float.NaN;
 
             public MovingBodyProbe(CharacterCombat target)
@@ -44,7 +45,9 @@ namespace FrankRetarget.Editor
 
             public void Update(List<string> diagnostics)
             {
-                body = Receiver(target, diagnostics, skins);
+                var next = MovingReceiver(target, diagnostics, skins, spare ?? new Surface());
+                spare = body;
+                body = next;
             }
 
             public BodyContact Measure(Renderer renderer, Vector3[] localVertices, int[] triangles)

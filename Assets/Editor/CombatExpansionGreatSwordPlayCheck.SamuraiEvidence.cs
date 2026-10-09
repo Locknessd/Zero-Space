@@ -28,6 +28,7 @@ namespace FrankRetarget.Editor
 
         static void ResetSamuraiEvidence()
         {
+            ResetSamuraiTrajectory();
             samuraiNativeEnd = null;
             samuraiBoundary = capturedNativeEnd = capturedEarly = capturedMid = capturedLate = false;
             samuraiMaxBoundary = 0;
@@ -51,6 +52,7 @@ namespace FrankRetarget.Editor
                 }
                 return;
             }
+            ObserveSamuraiTrajectory();
             if (!targetRecovered)
                 return;
             float seconds = targetRecoveryProgress * move.sourcePair.getUp.length;
@@ -73,7 +75,7 @@ namespace FrankRetarget.Editor
                 capturedEarly = true;
                 samuraiBoundary = true;
                 Require(samuraiMaxBoundary <= .002f,
-                    "Prone recovery entry exceeded 2 mm continuity tolerance; inspect boundary/blend diagnostics.");
+                    $"{SamuraiRecoveryTitle} recovery entry exceeded 2 mm continuity tolerance; inspect boundary/blend diagnostics.");
             }
             if (seconds <= move.sourcePair.recoveryBlendSeconds)
             {
@@ -83,13 +85,13 @@ namespace FrankRetarget.Editor
             }
             if (!capturedMid && targetRecoveryProgress >= .45f)
             {
-                Require(targetRecoveryProgress < .7f, "Missed real-frame mid-prone recovery capture window.");
+                Require(targetRecoveryProgress < .7f, $"Missed real-frame mid-{SamuraiRecoveryPose} recovery capture window.");
                 CaptureSamuraiFrame("RecoveryMid");
                 capturedMid = true;
             }
             if (!capturedLate && targetRecoveryProgress >= .85f)
             {
-                Require(targetRecoveryProgress <= 1.01f, "Missed real-frame late-prone recovery capture window.");
+                Require(targetRecoveryProgress <= 1.01f, $"Missed real-frame late-{SamuraiRecoveryPose} recovery capture window.");
                 CaptureSamuraiFrame("RecoveryLate");
                 capturedLate = true;
             }
@@ -99,7 +101,7 @@ namespace FrankRetarget.Editor
         {
             // Read the actual runtime correction snapshot; never sample or step the Animator here.
             var correction = ObservationField(pair, "hitRecoveryPose").GetValue(pair);
-            Require(correction != null, "Prone recovery has no owned blend correction snapshot.");
+            Require(correction != null, $"{SamuraiRecoveryTitle} recovery has no owned blend correction snapshot.");
             var bones = (Transform[])ObservationField(correction, "bones").GetValue(correction);
             var native = (Quaternion[])ObservationField(correction, "sourceRotations").GetValue(correction);
             var raw = (Quaternion[])ObservationField(correction, "rawRotations").GetValue(correction);
@@ -129,8 +131,9 @@ namespace FrankRetarget.Editor
         {
             if (!Samurai || !QueuePlayback || LifecycleCancelled)
                 return;
+            FlushSamuraiTrajectory();
             Require(capturedNativeEnd && capturedEarly && capturedMid && capturedLate && samuraiBoundary &&
-                samuraiBlendFrames > 0, "Queued Samurai lacks native end or early/mid/late prone recovery evidence.");
+                samuraiBlendFrames > 0, $"Queued Samurai lacks native end or early/mid/late {SamuraiRecoveryPose} recovery evidence.");
             report.AppendLine($"RECOVERY_EVIDENCE maxBoundaryMeters={samuraiMaxBoundary:F6} " +
                 $"blendFrames={samuraiBlendFrames} screenshotsRequested=4; " +
                 "rendered appearance requires visual review.");

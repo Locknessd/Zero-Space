@@ -112,7 +112,9 @@ namespace FrankRetarget.Editor
                 if (NativeSword)
                 {
                     Require(Primary(impact.cue) ? impact.kind != BattleVfxPlayer.ContactKind.Ground :
-                        impact.kind == BattleVfxPlayer.ContactKind.Ground && !impact.cue.damageOnLanding,
+                        impact.kind == BattleVfxPlayer.ContactKind.Ground &&
+                        (Samurai10 ? impact.cue == expectedCues[0] && impact.cue.damageOnLanding
+                            : !impact.cue.damageOnLanding),
                         "GreatSword published an unsupported contact kind.");
                     bool finalStrike = impact.cue == expectedCues.Where(Primary).Last();
                     Require(impact.finishing == (Lethal && finalStrike), "Incorrect accepted-lethal finishing contact.");
@@ -132,6 +134,9 @@ namespace FrankRetarget.Editor
                 return;
             if (!activeCase || Guard || interrupted)
                 failure = "Rejected or interrupted exchange emitted a new effect.";
+            if (Samurai10 && pair && pair.SampleTime < 1.8f &&
+                (cue == "blade_slash" || game.battleVfx.weaponTrails.Owns(effect)))
+                failure = "Execution10 emitted a weapon arc/trail during the body throw before its stab swing.";
             if (effect && effect.activeInHierarchy)
             {
                 sawEffects = true;
