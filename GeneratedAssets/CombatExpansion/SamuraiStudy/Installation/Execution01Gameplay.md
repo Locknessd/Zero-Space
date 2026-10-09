@@ -65,13 +65,15 @@ Its initial run caught a 0.005514 m recovery-entry snap caused by native local
 bone offsets being restored immediately. The shared recovery correction now
 blends those offsets for grounded getup as well as standing recovery.
 
-The rerun passed its first 16 cases, including all four avatar/direction recovery
-boundaries at 0.000000 m (report precision) against the unchanged 0.002 m limit.
-Case 17 then failed the lethal effects/audio cleanup assertion. This is an open
-validation issue; the extended suite has not passed. See `../PlayMode/Report.txt`
-and the earlier failure archive in `../PlayMode/RecoveryBoundaryFailure`.
+The current rerun passed all 40 cases, including all four avatar/direction recovery
+boundaries against the unchanged 0.002 m limit, lethal cleanup, action reset,
+actor disable, global pause during recovery, and repeated queued activation.
+The suite exercised 44 activation attempts. See `../PlayMode/Report.txt`; earlier
+failures remain archived and are superseded by this completed run.
 
 Frame timing, heap changes and object counts are raw Editor observations including
 harness overhead, not a standalone performance verdict. The allocation counter
 failed its capability probe and is reported unavailable. Dedicated listening,
-whoosh timing, full normal-speed visual review and executions 02–10 remain open.
+whoosh timing and full normal-speed visual review remain open. Execution 10 is
+now separately registered, with its gameplay acceptance tracked in
+`Execution10Gameplay.md`; executions 02–09 still require integration.

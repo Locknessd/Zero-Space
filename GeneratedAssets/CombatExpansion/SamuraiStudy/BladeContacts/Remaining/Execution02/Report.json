@@ -1,0 +1,81 @@
+{
+    "scope": "Blade-only candidate evidence; no approved contacts, hit counts or gameplay changes. Execution02..10 use native source pairs, armed PlayerA and unarmed PlayerB, both avatar assignments and lane directions, source offset 1.7m and baked grounding. Times are authoritative source seconds, not normalized time; shorter source clips hold their final pose. World units are metres, Y-up, ground Y=0. Full timeline at 30Hz including endpoints; 240Hz refinement is discovered independently per case around blade approach, near surfaces, local/global minima and non-leg support minima. Coarse discovery may miss subframe events; complete CSV is retained for manual review. Candidate intervals are observed proximity runs or minimum windows, never approved damage events. Unsigned zero distance means touch/intersection, not penetration depth or a damaging strike. Blade surface uses native BladeR 3e685dd57e9c78b49b20bef3e8358ae3:4300002, 111 faces, all local Z<=-0.33. Grip, guard and sheath are excluded. Other visible body contacts require manual review. Dense gap uses MovingBodyProbe BVH rebuilt each frame; nearestBone is only a spatial pivot label. Representative CAMeasureContact anatomy uses normalized native skin weights and barycentric points; triangle ties within 0.00001m and dominant group ties within 0.01 are retained, never resolved as hits. Relative velocity differentiates the fixed blade-local and chosen bone-local anchors at +/-1/240s; endpoints use a clamped one-sided interval with its actual denominator. Victim axes are sampled at t. Support excludes legs: every triangle corner needs >=0.5 HeadNeck/AxialTorso/arm weight. Torso front normal is cross(rightShoulder-leftShoulder, upperChestOrChest-hips); dot with up is +1 face-up, -1 face-down. Near-ground 0.02m is a candidate threshold, not landing approval. Sheets use established fixed side/oblique gameplay study cameras and a display floor at -0.015m. Backward seeks start at clip end and must stay within 0.001m, torso dot within 0.0001, same support bone. No Execution01 timing, spacing adaptation or hit count is reused. Source assets/settings stay unchanged.",
+    "utc": "2026-10-08T19:55:00.2781410Z",
+    "unity": "6000.5.9f1",
+    "execution": 2,
+    "status": "CAPTURED four cases; candidates and recovery remain unapproved.",
+    "error": "",
+    "grounding": "8da1ed35d95bf541bae845e82dfa1837:11400000",
+    "sources": [
+        {
+            "role": "PlayerA",
+            "path": "Assets/Selected/Mugen Tenshin Studio/Samurai Executions/Mesh/PlayerA/PlayerA_Execution_Anims.FBX",
+            "guid": "3e685dd57e9c78b49b20bef3e8358ae3",
+            "clip": "Execution2_PlayerA",
+            "avatar": "3e685dd57e9c78b49b20bef3e8358ae3:9000000",
+            "rootSettings": {
+                "loopTime": false,
+                "loopBlend": false,
+                "loopBlendOrientation": false,
+                "loopBlendPositionY": false,
+                "loopBlendPositionXZ": false,
+                "lockRootRotation": false,
+                "lockRootHeightY": false,
+                "lockRootPositionXZ": false,
+                "keepOriginalOrientation": false,
+                "keepOriginalPositionY": true,
+                "keepOriginalPositionXZ": false,
+                "heightFromFeet": false,
+                "startTime": 0.0,
+                "stopTime": 3.566666841506958,
+                "orientationOffsetY": 0.0,
+                "level": 0.0,
+                "cycleOffset": 0.0
+            },
+            "localId": 7400004,
+            "durationSeconds": 3.566666841506958,
+            "framesPerSecond": 30.0
+        },
+        {
+            "role": "PlayerB",
+            "path": "Assets/Selected/Mugen Tenshin Studio/Samurai Executions/Mesh/PlayerB/PlayerB_Execution_Anims.FBX",
+            "guid": "b01b411d366a5a344bddf3428a7bc8f7",
+            "clip": "Execution2_PlayerB",
+            "avatar": "b01b411d366a5a344bddf3428a7bc8f7:9000000",
+            "rootSettings": {
+                "loopTime": false,
+                "loopBlend": false,
+                "loopBlendOrientation": false,
+                "loopBlendPositionY": false,
+                "loopBlendPositionXZ": false,
+                "lockRootRotation": false,
+                "lockRootHeightY": false,
+                "lockRootPositionXZ": false,
+                "keepOriginalOrientation": false,
+                "keepOriginalPositionY": true,
+                "keepOriginalPositionXZ": false,
+                "heightFromFeet": false,
+                "startTime": 0.0,
+                "stopTime": 3.566666841506958,
+                "orientationOffsetY": 0.0,
+                "level": 0.0,
+                "cycleOffset": 0.0
+            },
+            "localId": 7400004,
+            "durationSeconds": 3.566666841506958,
+            "framesPerSecond": 30.0
+        }
+    ],
+    "caseFiles": [
+        "Mankey_Pepe_Positive.json",
+        "Mankey_Pepe_Negative.json",
+        "Pepe_Mankey_Positive.json",
+        "Pepe_Mankey_Negative.json"
+    ],
+    "caseStatuses": [
+        "CAPTURED",
+        "CAPTURED",
+        "CAPTURED",
+        "CAPTURED"
+    ]
+}

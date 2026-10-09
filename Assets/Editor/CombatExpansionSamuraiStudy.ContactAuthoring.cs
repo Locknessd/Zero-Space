@@ -128,8 +128,7 @@ namespace FrankRetarget.Editor
                     {
                         var repeated = CAMeasureContact(pair, sword, skins, attackerSkins, target, time);
                         seek.contactGapErrorM = Mathf.Abs(original.minimumGapM - repeated.minimumGapM);
-                        seek.contactAnchorErrorM = Vector3.Distance(original.targetHipsLocalPoint,
-                            repeated.targetHipsLocalPoint);
+                        seek.contactAnchorErrorM = CAContactAnchorWorldError(original, repeated);
                     }
                     seek.withinOneMillimeter = Mathf.Max(seek.maxTrajectoryErrorM, seek.torsoMinimumErrorM,
                         seek.fullBodyMinimumErrorM, seek.bladeTipErrorM, seek.contactGapErrorM,

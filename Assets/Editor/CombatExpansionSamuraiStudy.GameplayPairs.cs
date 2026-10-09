@@ -11,7 +11,8 @@ namespace FrankRetarget.Editor
     {
         const string PairOutput = "GeneratedAssets/CombatExpansion/SamuraiStudy/UnarmedPairs";
 
-        public static CombatTripletData MakePairMove(CharacterCombat source, CharacterCombat target, int execution)
+        public static CombatTripletData MakePairMove(CharacterCombat source, CharacterCombat target, int execution,
+            AnimationClip attackOverride = null, AnimationClip reactionOverride = null)
         {
             if (execution < 1 || execution > 10 || !source || !target || source == target)
                 throw new ArgumentException("A Samurai pair needs two fighters and an execution from 1 to 10.");
@@ -19,6 +20,9 @@ namespace FrankRetarget.Editor
             long localId = 7400000 + 2 * execution;
             var attack = clips.Single(c => c.role == Roles[0] && c.localId == localId).asset;
             var reaction = clips.Single(c => c.role == Roles[1] && c.localId == localId).asset;
+            FOValidateOverrides(execution, attackOverride, reactionOverride);
+            attack = attackOverride ? attackOverride : attack;
+            reaction = reactionOverride ? reactionOverride : reaction;
             string attackPath = DriverPath(source.name, 0, true);
             string reactionPath = DriverPath(target.name, 1, false);
             var attackDriver = AssetDatabase.LoadAssetAtPath<FrankTestDriver>(attackPath);

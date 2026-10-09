@@ -95,7 +95,8 @@ namespace FrankRetarget.Editor
         }
 
         static void CCCapturePair(CharacterCombat[] fighters, CharacterCombat source, int direction,
-            int execution, FrankPairGrounding grounding, string output, CCCase record)
+            int execution, FrankPairGrounding grounding, string output, CCCase record,
+            AnimationClip attackOverride = null, AnimationClip reactionOverride = null)
         {
             var target = fighters.Single(f => f != source);
             FrankBattlePairPlayback pair = null;
@@ -103,8 +104,9 @@ namespace FrankRetarget.Editor
             record.file = stem + ".json";
             try
             {
-                pair = BeginBladeStudy(fighters, source, target, execution, direction, grounding, 1.7f);
-                CCValidatePair(pair, grounding, execution);
+                pair = BeginBladeStudy(fighters, source, target, execution, direction, grounding, 1.7f,
+                    attackOverride, reactionOverride);
+                CCValidatePair(pair, grounding, execution, attackOverride, reactionOverride);
                 pair.EvaluateAt(0);
                 CheckPairWeapons(pair, pair.AttackerActor.Pose.weaponRenderers);
                 using var sword = new SwordRegion(pair);
@@ -196,17 +198,25 @@ namespace FrankRetarget.Editor
             }
         }
 
-        static void CCValidatePair(FrankBattlePairPlayback pair, FrankPairGrounding grounding, int execution)
+        static void CCValidatePair(FrankBattlePairPlayback pair, FrankPairGrounding grounding, int execution,
+            AnimationClip attackOverride = null, AnimationClip reactionOverride = null)
         {
+            FOValidateOverrides(execution, attackOverride, reactionOverride);
             var native = pair.Move.sourcePair;
             long id = 7400000 + execution * 2;
-            if (CombatExpansionInventory.Identity(native.attack) != Guids[0] + ":" + id ||
-                CombatExpansionInventory.Identity(native.reaction) != Guids[1] + ":" + id ||
+            string attackIdentity = attackOverride ? CombatExpansionInventory.Identity(attackOverride) :
+                Guids[0] + ":" + id;
+            string reactionIdentity = reactionOverride ? CombatExpansionInventory.Identity(reactionOverride) :
+                Guids[1] + ":" + id;
+            if (CombatExpansionInventory.Identity(native.attack) != attackIdentity ||
+                CombatExpansionInventory.Identity(native.reaction) != reactionIdentity ||
+                !grounding || grounding.tracks == null || grounding.tracks.Length != 4 ||
                 pair.Move.grounding != grounding || !float.IsFinite(pair.Duration) || pair.Duration <= 0 ||
                 Mathf.Abs(pair.Duration - Mathf.Max(native.attack.length, native.reaction.length)) > .0001f)
                 throw new InvalidOperationException("Unexpected source identity, grounding or full duration.");
             foreach (var track in grounding.tracks)
-                if (Mathf.Abs(track.duration - pair.Duration) > .0001f)
+                if (track == null || !float.IsFinite(track.duration) ||
+                    Mathf.Abs(track.duration - pair.Duration) > .0001f)
                     throw new InvalidOperationException("Stale grounding duration.");
         }
     }

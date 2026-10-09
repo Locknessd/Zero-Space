@@ -15,7 +15,7 @@ namespace FrankRetarget.Editor
         static bool LifecycleCancelled => Lifecycle && interrupted;
         static bool QueuePlayback => Queued || LifecycleReset || LifecyclePause || LifecycleRepeat;
         static string LifecycleScenario => LifecycleReset ? "reset after contact" :
-            LifecycleDisable ? "receiver disable after contact" : LifecyclePause ? "prone pause/resume" :
+            LifecycleDisable ? "receiver disable after contact" : LifecyclePause ? SamuraiRecoveryPose + " pause/resume" :
             "repeated queued activation";
         static int samuraiRepeat;
         static bool equipmentChanged, staleSourceChecked, staleRecoveryChecked;
@@ -31,6 +31,10 @@ namespace FrankRetarget.Editor
             stalePair = null;
             combatEnabled = null;
             pauseActive = false;
+            previousSamuraiSource = previousSamuraiTarget = null;
+            staleSource = staleTarget = null;
+            staleSourceId = staleTargetId = 0;
+            pair = null;
         }
 
         static void BeginSamuraiCase()
@@ -141,9 +145,14 @@ namespace FrankRetarget.Editor
                 observedCues.Contains(expectedCues[0]) && !targetRecovered && source.IsIdleAndSettled &&
                 target.IsIdleAndSettled && !source.IsDead && !target.IsDead,
                 "Post-contact interruption must retain exactly its first confirmed contact and never recover.");
-            Require(sawAudio && sawEffects && sawHold && sawLights && sawShake && sawFlash && sawTrail &&
+            // Execution10 opens with a body throw; its first weapon swing is after this cancellation window.
+            bool correctTrailPhase = Samurai10 ? !sawTrail : sawTrail;
+            Require(sawAudio && sawEffects && sawHold && sawLights && sawShake && sawFlash && correctTrailPhase &&
                 (!expectSurface || sawSurface),
-                "First contact did not show all confirmed presentation before interruption.");
+                "First contact presentation before interruption: audio=" + sawAudio + " effects=" + sawEffects +
+                " hold=" + sawHold + " light=" + sawLights + " shake=" + sawShake + " flash=" + sawFlash +
+                " trail=" + sawTrail + " correctTrailPhase=" + correctTrailPhase +
+                " surface=" + sawSurface + " expectSurface=" + expectSurface);
             if (LifecycleReset)
                 Require(source.PlaybackId > sourceId && target.PlaybackId > targetId,
                     "Round reset failed to invalidate both old participant identities.");
@@ -169,7 +178,7 @@ namespace FrankRetarget.Editor
             if (LifecyclePause)
                 Require(pauseResumed && samuraiPresentationResumed && pausedSamuraiFrames >= 2 &&
                     targetRecoveryProgress > pausedRecoveryProgress + .1f,
-                    "Paused prone recovery did not stop across real frames and then resume progression.");
+                    $"Paused {SamuraiRecoveryPose} recovery did not stop across real frames and then resume progression.");
             if (LifecycleRepeat && samuraiRepeat == 1)
                 Require(staleSourceChecked && staleRecoveryChecked,
                     "Repeated activation did not reject stale callbacks in both source and recovery phases.");

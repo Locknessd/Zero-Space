@@ -136,6 +136,7 @@ namespace FrankRetarget
         void StartGraph()
         {
             var pose=activeDriver.pose;
+            CaptureBaseSamplingPose();
             graph=PlayableGraph.Create(characterName+" preview");
             graph.SetTimeUpdateMode(DirectorUpdateMode.Manual);
             playable=AnimationClipPlayable.Create(graph,clip);
@@ -162,6 +163,10 @@ namespace FrankRetarget
                 EvaluateReactionGraph();
                 PrepareReactionTarget();
             }
+            else if (!continuationMixer.IsValid())
+            {
+                EvaluateBaseGraph(t);
+            }
             else
             {
                 playable.SetTime(t);
@@ -178,6 +183,7 @@ namespace FrankRetarget
             ResetSourceWeaponGrounding();
             ClearAttackTrack();
             ClearReactionTrack();
+            ClearBaseSamplingPose();
             if(graph.IsValid())graph.Destroy();
             graph = default;
             playable = default;

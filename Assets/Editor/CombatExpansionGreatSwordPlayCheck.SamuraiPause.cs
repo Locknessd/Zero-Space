@@ -93,7 +93,7 @@ namespace FrankRetarget.Editor
                 if (!pair.IsRecovering || !targetRecovered)
                     return;
                 Require(targetRecoveryProgress * move.sourcePair.getUp.length < move.sourcePair.recoveryBlendSeconds,
-                    "Missed the real-frame prone recovery blend window; pause coverage cannot be claimed.");
+                    $"Missed the real-frame {SamuraiRecoveryPose} recovery blend window; pause coverage cannot be claimed.");
                 samuraiPausedBones = fighters.SelectMany(f =>
                     f.Animator.GetComponentsInChildren<Transform>(true)).ToArray();
                 samuraiPausedPositions = samuraiPausedBones.Select(b => b.position).ToArray();
@@ -119,7 +119,7 @@ namespace FrankRetarget.Editor
                     .SelectMany(clock => clock.root.GetComponentsInChildren<ParticleSystem>())
                     .Where(particles => particles.isPlaying).Distinct().ToArray();
                 Require(samuraiPausedParticles.Length > 0,
-                    "Prone pause must cover live particle simulation, not only presentation counters.");
+                    $"{SamuraiRecoveryTitle} pause must cover live particle simulation, not only presentation counters.");
                 samuraiPausedParticleTimes = samuraiPausedParticles.Select(particles => particles.time).ToArray();
                 samuraiPausedAt = Now;
                 pauseActive = true;

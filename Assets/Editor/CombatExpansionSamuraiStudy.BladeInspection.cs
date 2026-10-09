@@ -72,7 +72,7 @@ namespace FrankRetarget.Editor
 
         static FrankBattlePairPlayback BeginBladeStudy(CharacterCombat[] fighters, CharacterCombat source,
             CharacterCombat target, int execution, int direction, FrankPairGrounding grounding = null,
-            float spacing = 1.7f)
+            float spacing = 1.7f, AnimationClip attackOverride = null, AnimationClip reactionOverride = null)
         {
             if (!float.IsFinite(spacing) || spacing < 1.58f || spacing > 1.7f)
                 throw new ArgumentOutOfRangeException(nameof(spacing));
@@ -82,7 +82,7 @@ namespace FrankRetarget.Editor
                 Quaternion.LookRotation(Vector3.right * direction));
             target.Animator.transform.SetPositionAndRotation(Vector3.right * direction * spacing * .5f,
                 Quaternion.LookRotation(Vector3.left * direction));
-            var move = MakePairMove(source, target, execution);
+            var move = MakePairMove(source, target, execution, attackOverride, reactionOverride);
             move.attackRange = spacing;
             move.sourcePair.receiverOffset = Vector3.forward * spacing;
             move.grounding = grounding;

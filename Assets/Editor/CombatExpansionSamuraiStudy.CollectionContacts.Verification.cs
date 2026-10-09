@@ -40,8 +40,7 @@ namespace FrankRetarget.Editor
                     var anatomy = CCContact(pair, sword, skins, attackerSkins, target, time);
                     seek.contactGapErrorM = Mathf.Max(seek.contactGapErrorM,
                         Mathf.Abs(original.minimumGapM - anatomy.minimumGapM));
-                    seek.contactAnchorErrorM = Vector3.Distance(original.targetHipsLocalPoint,
-                        anatomy.targetHipsLocalPoint);
+                    seek.contactAnchorErrorM = CAContactAnchorWorldError(original, anatomy);
                 }
                 seek.withinOneMillimeter = Mathf.Max(seek.maxTrajectoryErrorM, seek.torsoMinimumErrorM,
                     seek.supportMinimumErrorM, seek.supportPointErrorM, seek.fullBodyMinimumErrorM,

@@ -18,11 +18,11 @@ namespace FrankRetarget.Editor
             "Light_1", "Frank_GreatSword_Attack_Ambush", "Frank_GreatSword_Attack_Execution1",
             "Frank_GreatSword_Attack_Execution2", "Frank_GreatSword_Attack_Execution3", "Heavy_6"
         };
-        static readonly string[] SamuraiActions = { "Light_1", "Samurai_Execution01", "Heavy_6" };
-        static bool samuraiSuite;
-        static string[] Actions => samuraiSuite ? SamuraiActions : GreatSwordActions;
+        static SamuraiConfiguration samuraiConfiguration;
+        static bool samuraiSuite => samuraiConfiguration != null;
+        static string[] Actions => samuraiSuite ? samuraiConfiguration.actions : GreatSwordActions;
         static string ReportPath => samuraiSuite
-            ? "GeneratedAssets/CombatExpansion/SamuraiStudy/PlayMode/Report.txt"
+            ? samuraiConfiguration.directory + "/Report.txt"
             : "GeneratedAssets/CombatExpansion/GreatSwordPlayMode.txt";
         static int GuardCases => samuraiSuite ? 4 : 16;
         static int QueueCases => Actions.Length * 4;
@@ -57,21 +57,23 @@ namespace FrankRetarget.Editor
             Queued ? "queued" : Lethal ? "lethal" : "source interrupt";
         static double Now => EditorApplication.timeSinceStartup;
 
-        public static void Begin() => Begin(false);
-        public static void BeginSamurai() => Begin(true);
+        public static void Begin() => Begin(null);
+        public static void BeginSamurai() => Begin(Samurai01Configuration);
+        public static void BeginSamurai10() => Begin(Samurai10Configuration);
 
-        static void Begin(bool samurai)
+        static void Begin(SamuraiConfiguration configuration)
         {
             if (!EditorApplication.isPlaying || running)
                 throw new InvalidOperationException("Begin once in isolated BattleScene Play Mode.");
-            samuraiSuite = samurai;
+            samuraiConfiguration = configuration;
             report.Clear();
             ResetSamuraiSuite();
             report.AppendLine($"RUNNING: {GuardCases} range guards; {QueueCases} queued old-new-old; " +
                 "4 accepted lethal; 4 source interrupts.");
             if (samuraiSuite)
                 report.AppendLine("Extension: 4 reset after contact; 4 receiver disable after contact; " +
-                    "4 prone pause/resume; 4 repeated pairs of queued Samurai activations (44 plays total).");
+                    $"4 {SamuraiRecoveryPose} pause/resume; " +
+                    "4 repeated pairs of queued Samurai activations (44 plays total).");
             report.AppendLine("Each queue orientation runs " + string.Join(", ", Actions) + ".");
             report.AppendLine("Visual contact choreography and subjective quality require separate visual review.");
             saved = false;
