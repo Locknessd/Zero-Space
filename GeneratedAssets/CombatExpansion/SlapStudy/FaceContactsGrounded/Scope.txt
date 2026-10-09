@@ -1,0 +1,132 @@
+Two native SlapFace pairs; both actual fighter assignments and both lane directions.
+Candidate setup: constant 0.8m spacing, receiver source yaw 180, entry blend 0.12s.
+Sequence1 gives with A and receives with B; Sequence2 gives with B and receives with A.
+Both participants use runtime-owned unarmed equipment; source finger transfer is enabled.
+Exact moving right-hand skin region versus moving head skin region, including descendants.
+Region faces require at least 0.5 relevant bone weight on all three vertices.
+Unsigned triangle distance: zero can mean touching or intersection, not penetration depth.
+Full source duration at 30Hz, candidate contact windows at 240Hz, endpoints included.
+Sequence1 contact window [1.25,1.6]s; Sequence2 [0.78,1.12]s from paired motion review.
+Full visible body minimum Y is measured separately for both participants at every sample.
+Prepared source clips with authored per-avatar grounding correction.
+No accepted damage, gameplay registration or presentation profile is assigned by this capture.
+Sequence1_Mankey_Pepe_Positive attack=527e6e5d54a7afac7c1780b695f6034d:8993902097722301239; reaction=ab20a2bd36bd2b59358ce4e03e934069:8993902097722301239; grounding=1ba8477f214d8974eaddccf53661dc18:11400000
+Region selection: actual Animator root bone and descendants; every triangle vertex must have >=0.5 summed influence across all native skin weights on region bones; visible BodySkins only. Geometry: explicit current bone * bindpose world skinning; exact triangle distance; unsigned zero may mean touch or penetration.
+Mankey/RightHand: renderer=Mahgnkey; mesh=59dc3f26824c72872aa4cf6baeec671e:4300000; selected/total triangles=319/3462
+Pepe/Head: renderer=Plane; mesh=757d9d3f1766533aa895e81a07aa5197:-462981019419857548; selected/total triangles=4026/20726
+Mahgnkey: explicit bone/bindpose world bounds=Center: (-0.22, 0.89, -0.07), Extents: (0.47, 0.88, 0.38); max Bake(false)+TR error=1.43257762E-06m; max Bake(false)+TRS error=0.547804654m; rootBone=Base HumanPelvis; quality=Auto
+Plane: explicit bone/bindpose world bounds=Center: (0.28, 0.81, 0.02), Extents: (0.45, 0.80, 0.30); max Bake(false)+TR error=6.32553849E-07m; max Bake(false)+TRS error=14.7911062m; rootBone=mixamorig:Hips; quality=Auto
+Mahgnkey: explicit bone/bindpose world bounds=Center: (-0.22, 0.89, -0.07), Extents: (0.47, 0.88, 0.38); max Bake(false)+TR error=1.43257762E-06m; max Bake(false)+TRS error=0.547804654m; rootBone=Base HumanPelvis; quality=Auto
+Mahgnkey: 3462 faces; scale=(0.70, 0.70, 0.70); space=explicit current bone * bindpose world skinning
+Mankey body=Center: (-0.22, 0.89, -0.07), Extents: (0.47, 0.88, 0.38); skeleton=Center: (-0.21, 0.75, -0.06), Extents: (0.43, 0.66, 0.29)
+Plane: explicit bone/bindpose world bounds=Center: (0.28, 0.81, 0.02), Extents: (0.45, 0.80, 0.30); max Bake(false)+TR error=6.32553849E-07m; max Bake(false)+TRS error=14.7911062m; rootBone=mixamorig:Hips; quality=Auto
+Plane: 20726 faces; scale=(10.00, 10.00, 10.00); space=explicit current bone * bindpose world skinning
+Pepe body=Center: (0.28, 0.81, 0.02), Extents: (0.45, 0.80, 0.30); skeleton=Center: (0.25, 0.67, 0.03), Extents: (0.41, 0.65, 0.25)
+Sequence1_Mankey_Pepe_Positive samples=383; minimumGap=0m at 1.39583337s; attackerMinimumY=0.009999514m; receiverMinimumY=0.009997249m
+Sequence1_Mankey_Pepe_Positive near-surface samples <=1mm: 8; first=1.39583337s; last=1.425s
+Sequence1_Mankey_Pepe_Positive maxReseekGapOrPivotError=0m; maxReseekRotationError=0deg
+Sequence1_Mankey_Pepe_Negative attack=527e6e5d54a7afac7c1780b695f6034d:8993902097722301239; reaction=ab20a2bd36bd2b59358ce4e03e934069:8993902097722301239; grounding=1ba8477f214d8974eaddccf53661dc18:11400000
+Region selection: actual Animator root bone and descendants; every triangle vertex must have >=0.5 summed influence across all native skin weights on region bones; visible BodySkins only. Geometry: explicit current bone * bindpose world skinning; exact triangle distance; unsigned zero may mean touch or penetration.
+Mankey/RightHand: renderer=Mahgnkey; mesh=59dc3f26824c72872aa4cf6baeec671e:4300000; selected/total triangles=319/3462
+Pepe/Head: renderer=Plane; mesh=757d9d3f1766533aa895e81a07aa5197:-462981019419857548; selected/total triangles=4026/20726
+Mahgnkey: explicit bone/bindpose world bounds=Center: (0.22, 0.89, 0.07), Extents: (0.47, 0.88, 0.38); max Bake(false)+TR error=1.34544371E-06m; max Bake(false)+TRS error=0.547804654m; rootBone=Base HumanPelvis; quality=Auto
+Plane: explicit bone/bindpose world bounds=Center: (-0.28, 0.81, -0.02), Extents: (0.45, 0.80, 0.30); max Bake(false)+TR error=7.521766E-07m; max Bake(false)+TRS error=14.7911062m; rootBone=mixamorig:Hips; quality=Auto
+Mahgnkey: explicit bone/bindpose world bounds=Center: (0.22, 0.89, 0.07), Extents: (0.47, 0.88, 0.38); max Bake(false)+TR error=1.34544371E-06m; max Bake(false)+TRS error=0.547804654m; rootBone=Base HumanPelvis; quality=Auto
+Mahgnkey: 3462 faces; scale=(0.70, 0.70, 0.70); space=explicit current bone * bindpose world skinning
+Mankey body=Center: (0.22, 0.89, 0.07), Extents: (0.47, 0.88, 0.38); skeleton=Center: (0.21, 0.75, 0.06), Extents: (0.43, 0.66, 0.29)
+Plane: explicit bone/bindpose world bounds=Center: (-0.28, 0.81, -0.02), Extents: (0.45, 0.80, 0.30); max Bake(false)+TR error=7.521766E-07m; max Bake(false)+TRS error=14.7911062m; rootBone=mixamorig:Hips; quality=Auto
+Plane: 20726 faces; scale=(10.00, 10.00, 10.00); space=explicit current bone * bindpose world skinning
+Pepe body=Center: (-0.28, 0.81, -0.02), Extents: (0.45, 0.80, 0.30); skeleton=Center: (-0.25, 0.67, -0.03), Extents: (0.41, 0.65, 0.25)
+Sequence1_Mankey_Pepe_Negative samples=383; minimumGap=0m at 1.39583337s; attackerMinimumY=0.009999752m; receiverMinimumY=0.009997368m
+Sequence1_Mankey_Pepe_Negative near-surface samples <=1mm: 8; first=1.39583337s; last=1.425s
+Sequence1_Mankey_Pepe_Negative maxReseekGapOrPivotError=0m; maxReseekRotationError=0deg
+Sequence1_Pepe_Mankey_Positive attack=527e6e5d54a7afac7c1780b695f6034d:8993902097722301239; reaction=ab20a2bd36bd2b59358ce4e03e934069:8993902097722301239; grounding=1ba8477f214d8974eaddccf53661dc18:11400000
+Region selection: actual Animator root bone and descendants; every triangle vertex must have >=0.5 summed influence across all native skin weights on region bones; visible BodySkins only. Geometry: explicit current bone * bindpose world skinning; exact triangle distance; unsigned zero may mean touch or penetration.
+Pepe/RightHand: renderer=Plane; mesh=757d9d3f1766533aa895e81a07aa5197:-462981019419857548; selected/total triangles=1491/20726
+Mankey/Head: renderer=Mahgnkey; mesh=59dc3f26824c72872aa4cf6baeec671e:4300000; selected/total triangles=769/3462
+Plane: explicit bone/bindpose world bounds=Center: (-0.28, 0.81, -0.02), Extents: (0.45, 0.80, 0.30); max Bake(false)+TR error=4.806202E-07m; max Bake(false)+TRS error=14.7909737m; rootBone=mixamorig:Hips; quality=Auto
+Mahgnkey: explicit bone/bindpose world bounds=Center: (0.22, 0.89, 0.07), Extents: (0.47, 0.88, 0.38); max Bake(false)+TR error=1.23823179E-06m; max Bake(false)+TRS error=0.5478071m; rootBone=Base HumanPelvis; quality=Auto
+Plane: explicit bone/bindpose world bounds=Center: (-0.28, 0.81, -0.02), Extents: (0.45, 0.80, 0.30); max Bake(false)+TR error=4.806202E-07m; max Bake(false)+TRS error=14.7909737m; rootBone=mixamorig:Hips; quality=Auto
+Plane: 20726 faces; scale=(10.00, 10.00, 10.00); space=explicit current bone * bindpose world skinning
+Pepe body=Center: (-0.28, 0.81, -0.02), Extents: (0.45, 0.80, 0.30); skeleton=Center: (-0.25, 0.67, -0.03), Extents: (0.41, 0.65, 0.25)
+Mahgnkey: explicit bone/bindpose world bounds=Center: (0.22, 0.89, 0.07), Extents: (0.47, 0.88, 0.38); max Bake(false)+TR error=1.23823179E-06m; max Bake(false)+TRS error=0.5478071m; rootBone=Base HumanPelvis; quality=Auto
+Mahgnkey: 3462 faces; scale=(0.70, 0.70, 0.70); space=explicit current bone * bindpose world skinning
+Mankey body=Center: (0.22, 0.89, 0.07), Extents: (0.47, 0.88, 0.38); skeleton=Center: (0.21, 0.75, 0.06), Extents: (0.43, 0.66, 0.29)
+Sequence1_Pepe_Mankey_Positive samples=383; minimumGap=0m at 1.3875s; attackerMinimumY=0.00999546051m; receiverMinimumY=0.009985685m
+Sequence1_Pepe_Mankey_Positive near-surface samples <=1mm: 5; first=1.3875s; last=1.42916667s
+Sequence1_Pepe_Mankey_Positive maxReseekGapOrPivotError=0m; maxReseekRotationError=0deg
+Sequence1_Pepe_Mankey_Negative attack=527e6e5d54a7afac7c1780b695f6034d:8993902097722301239; reaction=ab20a2bd36bd2b59358ce4e03e934069:8993902097722301239; grounding=1ba8477f214d8974eaddccf53661dc18:11400000
+Region selection: actual Animator root bone and descendants; every triangle vertex must have >=0.5 summed influence across all native skin weights on region bones; visible BodySkins only. Geometry: explicit current bone * bindpose world skinning; exact triangle distance; unsigned zero may mean touch or penetration.
+Pepe/RightHand: renderer=Plane; mesh=757d9d3f1766533aa895e81a07aa5197:-462981019419857548; selected/total triangles=1491/20726
+Mankey/Head: renderer=Mahgnkey; mesh=59dc3f26824c72872aa4cf6baeec671e:4300000; selected/total triangles=769/3462
+Plane: explicit bone/bindpose world bounds=Center: (0.28, 0.81, 0.02), Extents: (0.45, 0.80, 0.30); max Bake(false)+TR error=7.55269866E-07m; max Bake(false)+TRS error=14.7909727m; rootBone=mixamorig:Hips; quality=Auto
+Mahgnkey: explicit bone/bindpose world bounds=Center: (-0.22, 0.89, -0.07), Extents: (0.47, 0.88, 0.38); max Bake(false)+TR error=1.43183149E-06m; max Bake(false)+TRS error=0.547807m; rootBone=Base HumanPelvis; quality=Auto
+Plane: explicit bone/bindpose world bounds=Center: (0.28, 0.81, 0.02), Extents: (0.45, 0.80, 0.30); max Bake(false)+TR error=7.55269866E-07m; max Bake(false)+TRS error=14.7909727m; rootBone=mixamorig:Hips; quality=Auto
+Plane: 20726 faces; scale=(10.00, 10.00, 10.00); space=explicit current bone * bindpose world skinning
+Pepe body=Center: (0.28, 0.81, 0.02), Extents: (0.45, 0.80, 0.30); skeleton=Center: (0.25, 0.67, 0.03), Extents: (0.41, 0.65, 0.25)
+Mahgnkey: explicit bone/bindpose world bounds=Center: (-0.22, 0.89, -0.07), Extents: (0.47, 0.88, 0.38); max Bake(false)+TR error=1.43183149E-06m; max Bake(false)+TRS error=0.547807m; rootBone=Base HumanPelvis; quality=Auto
+Mahgnkey: 3462 faces; scale=(0.70, 0.70, 0.70); space=explicit current bone * bindpose world skinning
+Mankey body=Center: (-0.22, 0.89, -0.07), Extents: (0.47, 0.88, 0.38); skeleton=Center: (-0.21, 0.75, -0.06), Extents: (0.43, 0.66, 0.29)
+Sequence1_Pepe_Mankey_Negative samples=383; minimumGap=0m at 1.3875s; attackerMinimumY=0.00999546051m; receiverMinimumY=0.009985685m
+Sequence1_Pepe_Mankey_Negative near-surface samples <=1mm: 5; first=1.3875s; last=1.42916667s
+Sequence1_Pepe_Mankey_Negative maxReseekGapOrPivotError=0m; maxReseekRotationError=0deg
+Sequence2_Mankey_Pepe_Positive attack=fbcb6d41ffb38285a0b7ad4cbd25d06e:8993902097722301239; reaction=8ae91d8a5acd3a1f64feaad62ff62a6d:8993902097722301239; grounding=34cdf39f3a9aa2b53a2b777c61bae99c:11400000
+Region selection: actual Animator root bone and descendants; every triangle vertex must have >=0.5 summed influence across all native skin weights on region bones; visible BodySkins only. Geometry: explicit current bone * bindpose world skinning; exact triangle distance; unsigned zero may mean touch or penetration.
+Mankey/RightHand: renderer=Mahgnkey; mesh=59dc3f26824c72872aa4cf6baeec671e:4300000; selected/total triangles=319/3462
+Pepe/Head: renderer=Plane; mesh=757d9d3f1766533aa895e81a07aa5197:-462981019419857548; selected/total triangles=4026/20726
+Mahgnkey: explicit bone/bindpose world bounds=Center: (-0.22, 0.89, -0.07), Extents: (0.47, 0.88, 0.38); max Bake(false)+TR error=1.44256546E-06m; max Bake(false)+TRS error=0.547807m; rootBone=Base HumanPelvis; quality=Auto
+Plane: explicit bone/bindpose world bounds=Center: (0.28, 0.81, 0.02), Extents: (0.45, 0.80, 0.30); max Bake(false)+TR error=5.23028632E-07m; max Bake(false)+TRS error=14.79097m; rootBone=mixamorig:Hips; quality=Auto
+Mahgnkey: explicit bone/bindpose world bounds=Center: (-0.22, 0.89, -0.07), Extents: (0.47, 0.88, 0.38); max Bake(false)+TR error=1.44256546E-06m; max Bake(false)+TRS error=0.547807m; rootBone=Base HumanPelvis; quality=Auto
+Mahgnkey: 3462 faces; scale=(0.70, 0.70, 0.70); space=explicit current bone * bindpose world skinning
+Mankey body=Center: (-0.22, 0.89, -0.07), Extents: (0.47, 0.88, 0.38); skeleton=Center: (-0.21, 0.75, -0.06), Extents: (0.43, 0.66, 0.29)
+Plane: explicit bone/bindpose world bounds=Center: (0.28, 0.81, 0.02), Extents: (0.45, 0.80, 0.30); max Bake(false)+TR error=5.23028632E-07m; max Bake(false)+TRS error=14.79097m; rootBone=mixamorig:Hips; quality=Auto
+Plane: 20726 faces; scale=(10.00, 10.00, 10.00); space=explicit current bone * bindpose world skinning
+Pepe body=Center: (0.28, 0.81, 0.02), Extents: (0.45, 0.80, 0.30); skeleton=Center: (0.25, 0.67, 0.03), Extents: (0.41, 0.65, 0.25)
+Sequence2_Mankey_Pepe_Positive samples=323; minimumGap=0m at 0.9166666s; attackerMinimumY=0.009999752m; receiverMinimumY=0.009943306m
+Sequence2_Mankey_Pepe_Positive near-surface samples <=1mm: 11; first=0.9166666s; last=0.946666658s
+Sequence2_Mankey_Pepe_Positive maxReseekGapOrPivotError=3.923649E-06m; maxReseekRotationError=0deg
+Sequence2_Mankey_Pepe_Negative attack=fbcb6d41ffb38285a0b7ad4cbd25d06e:8993902097722301239; reaction=8ae91d8a5acd3a1f64feaad62ff62a6d:8993902097722301239; grounding=34cdf39f3a9aa2b53a2b777c61bae99c:11400000
+Region selection: actual Animator root bone and descendants; every triangle vertex must have >=0.5 summed influence across all native skin weights on region bones; visible BodySkins only. Geometry: explicit current bone * bindpose world skinning; exact triangle distance; unsigned zero may mean touch or penetration.
+Mankey/RightHand: renderer=Mahgnkey; mesh=59dc3f26824c72872aa4cf6baeec671e:4300000; selected/total triangles=319/3462
+Pepe/Head: renderer=Plane; mesh=757d9d3f1766533aa895e81a07aa5197:-462981019419857548; selected/total triangles=4026/20726
+Mahgnkey: explicit bone/bindpose world bounds=Center: (0.22, 0.89, 0.07), Extents: (0.47, 0.88, 0.38); max Bake(false)+TR error=1.3305546E-06m; max Bake(false)+TRS error=0.5478071m; rootBone=Base HumanPelvis; quality=Auto
+Plane: explicit bone/bindpose world bounds=Center: (-0.28, 0.81, -0.02), Extents: (0.45, 0.80, 0.30); max Bake(false)+TR error=5.308245E-07m; max Bake(false)+TRS error=14.79097m; rootBone=mixamorig:Hips; quality=Auto
+Mahgnkey: explicit bone/bindpose world bounds=Center: (0.22, 0.89, 0.07), Extents: (0.47, 0.88, 0.38); max Bake(false)+TR error=1.3305546E-06m; max Bake(false)+TRS error=0.5478071m; rootBone=Base HumanPelvis; quality=Auto
+Mahgnkey: 3462 faces; scale=(0.70, 0.70, 0.70); space=explicit current bone * bindpose world skinning
+Mankey body=Center: (0.22, 0.89, 0.07), Extents: (0.47, 0.88, 0.38); skeleton=Center: (0.21, 0.75, 0.06), Extents: (0.43, 0.66, 0.29)
+Plane: explicit bone/bindpose world bounds=Center: (-0.28, 0.81, -0.02), Extents: (0.45, 0.80, 0.30); max Bake(false)+TR error=5.308245E-07m; max Bake(false)+TRS error=14.79097m; rootBone=mixamorig:Hips; quality=Auto
+Plane: 20726 faces; scale=(10.00, 10.00, 10.00); space=explicit current bone * bindpose world skinning
+Pepe body=Center: (-0.28, 0.81, -0.02), Extents: (0.45, 0.80, 0.30); skeleton=Center: (-0.25, 0.67, -0.03), Extents: (0.41, 0.65, 0.25)
+Sequence2_Mankey_Pepe_Negative samples=323; minimumGap=0m at 0.9166666s; attackerMinimumY=0.00999999m; receiverMinimumY=0.009943187m
+Sequence2_Mankey_Pepe_Negative near-surface samples <=1mm: 11; first=0.9166666s; last=0.946666658s
+Sequence2_Mankey_Pepe_Negative maxReseekGapOrPivotError=4.15322938E-06m; maxReseekRotationError=0deg
+Sequence2_Pepe_Mankey_Positive attack=fbcb6d41ffb38285a0b7ad4cbd25d06e:8993902097722301239; reaction=8ae91d8a5acd3a1f64feaad62ff62a6d:8993902097722301239; grounding=34cdf39f3a9aa2b53a2b777c61bae99c:11400000
+Region selection: actual Animator root bone and descendants; every triangle vertex must have >=0.5 summed influence across all native skin weights on region bones; visible BodySkins only. Geometry: explicit current bone * bindpose world skinning; exact triangle distance; unsigned zero may mean touch or penetration.
+Pepe/RightHand: renderer=Plane; mesh=757d9d3f1766533aa895e81a07aa5197:-462981019419857548; selected/total triangles=1491/20726
+Mankey/Head: renderer=Mahgnkey; mesh=59dc3f26824c72872aa4cf6baeec671e:4300000; selected/total triangles=769/3462
+Plane: explicit bone/bindpose world bounds=Center: (-0.28, 0.81, -0.02), Extents: (0.45, 0.80, 0.30); max Bake(false)+TR error=6.06753645E-07m; max Bake(false)+TRS error=14.7911062m; rootBone=mixamorig:Hips; quality=Auto
+Mahgnkey: explicit bone/bindpose world bounds=Center: (0.22, 0.89, 0.07), Extents: (0.47, 0.88, 0.38); max Bake(false)+TR error=1.38614848E-06m; max Bake(false)+TRS error=0.547804654m; rootBone=Base HumanPelvis; quality=Auto
+Plane: explicit bone/bindpose world bounds=Center: (-0.28, 0.81, -0.02), Extents: (0.45, 0.80, 0.30); max Bake(false)+TR error=6.06753645E-07m; max Bake(false)+TRS error=14.7911062m; rootBone=mixamorig:Hips; quality=Auto
+Plane: 20726 faces; scale=(10.00, 10.00, 10.00); space=explicit current bone * bindpose world skinning
+Pepe body=Center: (-0.28, 0.81, -0.02), Extents: (0.45, 0.80, 0.30); skeleton=Center: (-0.25, 0.67, -0.03), Extents: (0.41, 0.65, 0.25)
+Mahgnkey: explicit bone/bindpose world bounds=Center: (0.22, 0.89, 0.07), Extents: (0.47, 0.88, 0.38); max Bake(false)+TR error=1.38614848E-06m; max Bake(false)+TRS error=0.547804654m; rootBone=Base HumanPelvis; quality=Auto
+Mahgnkey: 3462 faces; scale=(0.70, 0.70, 0.70); space=explicit current bone * bindpose world skinning
+Mankey body=Center: (0.22, 0.89, 0.07), Extents: (0.47, 0.88, 0.38); skeleton=Center: (0.21, 0.75, 0.06), Extents: (0.43, 0.66, 0.29)
+Sequence2_Pepe_Mankey_Positive samples=323; minimumGap=0m at 0.9s; attackerMinimumY=0.009994149m; receiverMinimumY=0.009968996m
+Sequence2_Pepe_Mankey_Positive near-surface samples <=1mm: 8; first=0.9s; last=0.959166646s
+Sequence2_Pepe_Mankey_Positive maxReseekGapOrPivotError=3.90774267E-06m; maxReseekRotationError=0deg
+Sequence2_Pepe_Mankey_Negative attack=fbcb6d41ffb38285a0b7ad4cbd25d06e:8993902097722301239; reaction=8ae91d8a5acd3a1f64feaad62ff62a6d:8993902097722301239; grounding=34cdf39f3a9aa2b53a2b777c61bae99c:11400000
+Region selection: actual Animator root bone and descendants; every triangle vertex must have >=0.5 summed influence across all native skin weights on region bones; visible BodySkins only. Geometry: explicit current bone * bindpose world skinning; exact triangle distance; unsigned zero may mean touch or penetration.
+Pepe/RightHand: renderer=Plane; mesh=757d9d3f1766533aa895e81a07aa5197:-462981019419857548; selected/total triangles=1491/20726
+Mankey/Head: renderer=Mahgnkey; mesh=59dc3f26824c72872aa4cf6baeec671e:4300000; selected/total triangles=769/3462
+Plane: explicit bone/bindpose world bounds=Center: (0.28, 0.81, 0.02), Extents: (0.45, 0.80, 0.30); max Bake(false)+TR error=4.39268433E-07m; max Bake(false)+TRS error=14.7911062m; rootBone=mixamorig:Hips; quality=Auto
+Mahgnkey: explicit bone/bindpose world bounds=Center: (-0.22, 0.89, -0.07), Extents: (0.47, 0.88, 0.38); max Bake(false)+TR error=1.32974731E-06m; max Bake(false)+TRS error=0.547804654m; rootBone=Base HumanPelvis; quality=Auto
+Plane: explicit bone/bindpose world bounds=Center: (0.28, 0.81, 0.02), Extents: (0.45, 0.80, 0.30); max Bake(false)+TR error=4.39268433E-07m; max Bake(false)+TRS error=14.7911062m; rootBone=mixamorig:Hips; quality=Auto
+Plane: 20726 faces; scale=(10.00, 10.00, 10.00); space=explicit current bone * bindpose world skinning
+Pepe body=Center: (0.28, 0.81, 0.02), Extents: (0.45, 0.80, 0.30); skeleton=Center: (0.25, 0.67, 0.03), Extents: (0.41, 0.65, 0.25)
+Mahgnkey: explicit bone/bindpose world bounds=Center: (-0.22, 0.89, -0.07), Extents: (0.47, 0.88, 0.38); max Bake(false)+TR error=1.32974731E-06m; max Bake(false)+TRS error=0.547804654m; rootBone=Base HumanPelvis; quality=Auto
+Mahgnkey: 3462 faces; scale=(0.70, 0.70, 0.70); space=explicit current bone * bindpose world skinning
+Mankey body=Center: (-0.22, 0.89, -0.07), Extents: (0.47, 0.88, 0.38); skeleton=Center: (-0.21, 0.75, -0.06), Extents: (0.43, 0.66, 0.29)
+Sequence2_Pepe_Mankey_Negative samples=323; minimumGap=0m at 0.9s; attackerMinimumY=0.00999403m; receiverMinimumY=0.00996923447m
+Sequence2_Pepe_Mankey_Negative near-surface samples <=1mm: 8; first=0.9s; last=0.959166646s
+Sequence2_Pepe_Mankey_Negative maxReseekGapOrPivotError=3.73381135E-06m; maxReseekRotationError=0deg

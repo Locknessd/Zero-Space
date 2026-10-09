@@ -12,11 +12,17 @@ namespace FrankRetarget.Editor
         const string Root = "Assets/DemoSence/GreatSwordExecution/";
         public const string Socket = "root/ik_hand_root/ik_hand_gun/ik_hand_r";
         public const string Weapon = "Assets/GreatSword_Animset/Model/Weapon/GreatSword_01.FBX";
+        public const string AmbushRetreat = "Assets/CombatExpansion/Animations/GreatSword_Ambush_Retreat.anim";
 
-        public static CombatTripletData MakeMove(CharacterCombat source, CharacterCombat target, int index)
+        public static CombatTripletData MakeMove(CharacterCombat source, CharacterCombat target, int index,
+            bool originalAmbush = false)
         {
             var library = AssetDatabase.LoadAssetAtPath<FrankGreatSwordLibrary>(Root + "GreatSwordExecutionLibrary.asset");
             var original = library.pairs[index];
+            var attack = index == 0 && !originalAmbush
+                ? AssetDatabase.LoadAssetAtPath<AnimationClip>(AmbushRetreat) : original.attacker;
+            if (!attack)
+                throw new InvalidOperationException("Bake the authored Ambush retreat before building its move.");
             var attackDriver = AssetDatabase.LoadAssetAtPath<FrankTestDriver>(
                 Root + "Drivers/" + source.name + "_GreatSword_Attack.prefab");
             var reactionDriver = AssetDatabase.LoadAssetAtPath<FrankTestDriver>(
@@ -27,7 +33,7 @@ namespace FrankRetarget.Editor
             return new CombatTripletData
             {
                 moveName = "Frank_" + original.sourceName,
-                attackAnim = original.attacker,
+                attackAnim = attack,
                 hitAnim = original.receiver,
                 getUpAnim = getUp,
                 attackRange = Mathf.Abs(original.receiverOffset.z),
@@ -38,7 +44,7 @@ namespace FrankRetarget.Editor
                 {
                     attackerDriver = attackDriver,
                     receiverDriver = reactionDriver,
-                    attack = original.attacker,
+                    attack = attack,
                     reaction = original.receiver,
                     getUp = getUp,
                     recoveryBlendSeconds = .12f,

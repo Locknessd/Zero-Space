@@ -92,7 +92,14 @@ public sealed class BattleSfxBank : ScriptableObject
     public Move FindMove(CombatTripletData move)
     {
         if (move != null && move.grapple) return move.grapple.Presentation(move.grappleOutcome);
+        if (move?.actionDefinition && move.actionDefinition.presentationProfile != null)
+            return move.actionDefinition.presentationProfile;
         if (move?.sourcePair == null) return null;
+        return FindLegacyMove(move);
+    }
+
+    Move FindLegacyMove(CombatTripletData move)
+    {
         Fighter fighter = move.sourcePair.pepeAttacks ? Fighter.Pepe : Fighter.Mankey;
         return Array.Find(moves, m => m != null && m.fighter == fighter && MatchesActionName(m, move) &&
             m.attack == move.sourcePair.attack && m.reaction == move.sourcePair.reaction) ??

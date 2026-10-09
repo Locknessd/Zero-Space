@@ -1,0 +1,2441 @@
+{
+    "utc": "2026-10-08T21:07:20.9062480Z",
+    "unity": "6000.5.9f1",
+    "status": "PASS anchor units fixtures and 48 actual rig queries; full capture gates unverified.",
+    "scope": "Execution03 anchor replay units only; no gameplay assignment or acceptance. World error uses stored selected triangle points. Raw hips local distance has no metre units. The unchanged 0.001m anchor gate is checked; full collection gates require a separate recapture.",
+    "grounding": "dce9be185b42c0f7b9d6f65617eb33ad:11400000",
+    "error": "",
+    "fixtures": [
+        "PASS scale=(0.1, 0.1, 0.1) rotation=(0, 0, 0, 1) axis=(1, 0, 0) expectedWorldM=0.0002 actualWorldM=0.000200003386 rawLocalDistance=0.00200003386",
+        "PASS scale=(0.1, 0.1, 0.1) rotation=(0, 0, 0, 1) axis=(1, 0, 0) expectedWorldM=0.002 actualWorldM=0.002000004 rawLocalDistance=0.02000004",
+        "PASS scale=(0.1, 0.1, 0.1) rotation=(0, 0, 0, 1) axis=(0, 1, 0) expectedWorldM=0.0002 actualWorldM=0.000200003386 rawLocalDistance=0.00200003386",
+        "PASS scale=(0.1, 0.1, 0.1) rotation=(0, 0, 0, 1) axis=(0, 1, 0) expectedWorldM=0.002 actualWorldM=0.002000004 rawLocalDistance=0.02000004",
+        "PASS scale=(0.1, 0.1, 0.1) rotation=(0, 0, 0, 1) axis=(0, 0, 1) expectedWorldM=0.0002 actualWorldM=0.000200003386 rawLocalDistance=0.00200003386",
+        "PASS scale=(0.1, 0.1, 0.1) rotation=(0, 0, 0, 1) axis=(0, 0, 1) expectedWorldM=0.002 actualWorldM=0.002000004 rawLocalDistance=0.02000004",
+        "PASS scale=(0.1, 0.1, 0.1) rotation=(0.117271751, 0.6007841, -0.2846288, 0.7377617) axis=(1, 0, 0) expectedWorldM=0.0002 actualWorldM=0.00020000129 rawLocalDistance=0.002000019",
+        "PASS scale=(0.1, 0.1, 0.1) rotation=(0.117271751, 0.6007841, -0.2846288, 0.7377617) axis=(1, 0, 0) expectedWorldM=0.002 actualWorldM=0.001999998 rawLocalDistance=0.01999998",
+        "PASS scale=(0.1, 0.1, 0.1) rotation=(0.117271751, 0.6007841, -0.2846288, 0.7377617) axis=(0, 1, 0) expectedWorldM=0.0002 actualWorldM=0.000200000839 rawLocalDistance=0.002000004",
+        "PASS scale=(0.1, 0.1, 0.1) rotation=(0.117271751, 0.6007841, -0.2846288, 0.7377617) axis=(0, 1, 0) expectedWorldM=0.002 actualWorldM=0.00199999963 rawLocalDistance=0.0199999958",
+        "PASS scale=(0.1, 0.1, 0.1) rotation=(0.117271751, 0.6007841, -0.2846288, 0.7377617) axis=(0, 0, 1) expectedWorldM=0.0002 actualWorldM=0.000200003371 rawLocalDistance=0.00200003386",
+        "PASS scale=(0.1, 0.1, 0.1) rotation=(0.117271751, 0.6007841, -0.2846288, 0.7377617) axis=(0, 0, 1) expectedWorldM=0.002 actualWorldM=0.001999996 rawLocalDistance=0.019999966",
+        "PASS scale=(1, 1, 1) rotation=(0, 0, 0, 1) axis=(1, 0, 0) expectedWorldM=0.0002 actualWorldM=0.000200003386 rawLocalDistance=0.000200003386",
+        "PASS scale=(1, 1, 1) rotation=(0, 0, 0, 1) axis=(1, 0, 0) expectedWorldM=0.002 actualWorldM=0.002000004 rawLocalDistance=0.002000004",
+        "PASS scale=(1, 1, 1) rotation=(0, 0, 0, 1) axis=(0, 1, 0) expectedWorldM=0.0002 actualWorldM=0.000200003386 rawLocalDistance=0.000200003386",
+        "PASS scale=(1, 1, 1) rotation=(0, 0, 0, 1) axis=(0, 1, 0) expectedWorldM=0.002 actualWorldM=0.002000004 rawLocalDistance=0.002000004",
+        "PASS scale=(1, 1, 1) rotation=(0, 0, 0, 1) axis=(0, 0, 1) expectedWorldM=0.0002 actualWorldM=0.000200003386 rawLocalDistance=0.000200003386",
+        "PASS scale=(1, 1, 1) rotation=(0, 0, 0, 1) axis=(0, 0, 1) expectedWorldM=0.002 actualWorldM=0.002000004 rawLocalDistance=0.002000004",
+        "PASS scale=(1, 1, 1) rotation=(0.117271751, 0.6007841, -0.2846288, 0.7377617) axis=(1, 0, 0) expectedWorldM=0.0002 actualWorldM=0.00020000129 rawLocalDistance=0.000200003386",
+        "PASS scale=(1, 1, 1) rotation=(0.117271751, 0.6007841, -0.2846288, 0.7377617) axis=(1, 0, 0) expectedWorldM=0.002 actualWorldM=0.00199999986 rawLocalDistance=0.00199998915",
+        "PASS scale=(1, 1, 1) rotation=(0.117271751, 0.6007841, -0.2846288, 0.7377617) axis=(0, 1, 0) expectedWorldM=0.0002 actualWorldM=0.000200000839 rawLocalDistance=0.000200003386",
+        "PASS scale=(1, 1, 1) rotation=(0.117271751, 0.6007841, -0.2846288, 0.7377617) axis=(0, 1, 0) expectedWorldM=0.002 actualWorldM=0.00200000335 rawLocalDistance=0.002000004",
+        "PASS scale=(1, 1, 1) rotation=(0.117271751, 0.6007841, -0.2846288, 0.7377617) axis=(0, 0, 1) expectedWorldM=0.0002 actualWorldM=0.0001999957 rawLocalDistance=0.000199995935",
+        "PASS scale=(1, 1, 1) rotation=(0.117271751, 0.6007841, -0.2846288, 0.7377617) axis=(0, 0, 1) expectedWorldM=0.002 actualWorldM=0.00200000731 rawLocalDistance=0.002000004",
+        "PASS scale=(10, 10, 10) rotation=(0, 0, 0, 1) axis=(1, 0, 0) expectedWorldM=0.0002 actualWorldM=0.000200033188 rawLocalDistance=1.99973583E-05",
+        "PASS scale=(10, 10, 10) rotation=(0, 0, 0, 1) axis=(1, 0, 0) expectedWorldM=0.002 actualWorldM=0.00199997425 rawLocalDistance=0.000199988484",
+        "PASS scale=(10, 10, 10) rotation=(0, 0, 0, 1) axis=(0, 1, 0) expectedWorldM=0.0002 actualWorldM=0.000199973583 rawLocalDistance=1.99973583E-05",
+        "PASS scale=(10, 10, 10) rotation=(0, 0, 0, 1) axis=(0, 1, 0) expectedWorldM=0.002 actualWorldM=0.00199997425 rawLocalDistance=0.000199995935",
+        "PASS scale=(10, 10, 10) rotation=(0, 0, 0, 1) axis=(0, 0, 1) expectedWorldM=0.0002 actualWorldM=0.000200033188 rawLocalDistance=2.00048089E-05",
+        "PASS scale=(10, 10, 10) rotation=(0, 0, 0, 1) axis=(0, 0, 1) expectedWorldM=0.002 actualWorldM=0.00199997425 rawLocalDistance=0.000199995935",
+        "PASS scale=(10, 10, 10) rotation=(0.117271751, 0.6007841, -0.2846288, 0.7377617) axis=(1, 0, 0) expectedWorldM=0.0002 actualWorldM=0.00020002485 rawLocalDistance=1.99973583E-05",
+        "PASS scale=(10, 10, 10) rotation=(0.117271751, 0.6007841, -0.2846288, 0.7377617) axis=(1, 0, 0) expectedWorldM=0.002 actualWorldM=0.00199999637 rawLocalDistance=0.000199988484",
+        "PASS scale=(10, 10, 10) rotation=(0.117271751, 0.6007841, -0.2846288, 0.7377617) axis=(0, 1, 0) expectedWorldM=0.0002 actualWorldM=0.000200025 rawLocalDistance=1.999736E-05",
+        "PASS scale=(10, 10, 10) rotation=(0.117271751, 0.6007841, -0.2846288, 0.7377617) axis=(0, 1, 0) expectedWorldM=0.002 actualWorldM=0.00199995 rawLocalDistance=0.000199995935",
+        "PASS scale=(10, 10, 10) rotation=(0.117271751, 0.6007841, -0.2846288, 0.7377617) axis=(0, 0, 1) expectedWorldM=0.0002 actualWorldM=0.000200020135 rawLocalDistance=1.99973583E-05",
+        "PASS scale=(10, 10, 10) rotation=(0.117271751, 0.6007841, -0.2846288, 0.7377617) axis=(0, 0, 1) expectedWorldM=0.002 actualWorldM=0.00200000359 rawLocalDistance=0.000199995935",
+        "PASS scale=(0.1, 2, 10) rotation=(0, 0, 0, 1) axis=(1, 0, 0) expectedWorldM=0.0002 actualWorldM=0.000200003386 rawLocalDistance=0.00200003386",
+        "PASS scale=(0.1, 2, 10) rotation=(0, 0, 0, 1) axis=(1, 0, 0) expectedWorldM=0.002 actualWorldM=0.002000004 rawLocalDistance=0.02000004",
+        "PASS scale=(0.1, 2, 10) rotation=(0, 0, 0, 1) axis=(0, 1, 0) expectedWorldM=0.0002 actualWorldM=0.000200003386 rawLocalDistance=0.000100001693",
+        "PASS scale=(0.1, 2, 10) rotation=(0, 0, 0, 1) axis=(0, 1, 0) expectedWorldM=0.002 actualWorldM=0.002000004 rawLocalDistance=0.001000002",
+        "PASS scale=(0.1, 2, 10) rotation=(0, 0, 0, 1) axis=(0, 0, 1) expectedWorldM=0.0002 actualWorldM=0.000200033188 rawLocalDistance=2.00048089E-05",
+        "PASS scale=(0.1, 2, 10) rotation=(0, 0, 0, 1) axis=(0, 0, 1) expectedWorldM=0.002 actualWorldM=0.00199997425 rawLocalDistance=0.000199995935",
+        "PASS scale=(0.1, 2, 10) rotation=(0.117271751, 0.6007841, -0.2846288, 0.7377617) axis=(1, 0, 0) expectedWorldM=0.0002 actualWorldM=0.00020002485 rawLocalDistance=0.00200025737",
+        "PASS scale=(0.1, 2, 10) rotation=(0.117271751, 0.6007841, -0.2846288, 0.7377617) axis=(1, 0, 0) expectedWorldM=0.002 actualWorldM=0.00200000312 rawLocalDistance=0.02000004",
+        "PASS scale=(0.1, 2, 10) rotation=(0.117271751, 0.6007841, -0.2846288, 0.7377617) axis=(0, 1, 0) expectedWorldM=0.0002 actualWorldM=0.000199976683 rawLocalDistance=9.99868644E-05",
+        "PASS scale=(0.1, 2, 10) rotation=(0.117271751, 0.6007841, -0.2846288, 0.7377617) axis=(0, 1, 0) expectedWorldM=0.002 actualWorldM=0.00199999823 rawLocalDistance=0.001000002",
+        "PASS scale=(0.1, 2, 10) rotation=(0.117271751, 0.6007841, -0.2846288, 0.7377617) axis=(0, 0, 1) expectedWorldM=0.0002 actualWorldM=0.000199971269 rawLocalDistance=1.99976312E-05",
+        "PASS scale=(0.1, 2, 10) rotation=(0.117271751, 0.6007841, -0.2846288, 0.7377617) axis=(0, 0, 1) expectedWorldM=0.002 actualWorldM=0.00200005225 rawLocalDistance=0.000200003473",
+        "PASS same world anchor under different rotated nonuniform snapshot transforms",
+        "PASS selected triangle zero remains authoritative",
+        "PASS rejected missing baseline evidence 0",
+        "PASS rejected missing repeated evidence 0",
+        "PASS rejected missing baseline evidence 1",
+        "PASS rejected missing repeated evidence 1",
+        "PASS rejected missing baseline evidence 2",
+        "PASS rejected missing repeated evidence 2",
+        "PASS rejected missing baseline evidence 3",
+        "PASS rejected missing repeated evidence 3",
+        "PASS rejected nonfinite baseline axis 0 value NaN",
+        "PASS rejected nonfinite repeated axis 0 value NaN",
+        "PASS rejected nonfinite baseline axis 1 value NaN",
+        "PASS rejected nonfinite repeated axis 1 value NaN",
+        "PASS rejected nonfinite baseline axis 2 value NaN",
+        "PASS rejected nonfinite repeated axis 2 value NaN",
+        "PASS rejected nonfinite baseline axis 0 value Infinity",
+        "PASS rejected nonfinite repeated axis 0 value Infinity",
+        "PASS rejected nonfinite baseline axis 1 value Infinity",
+        "PASS rejected nonfinite repeated axis 1 value Infinity",
+        "PASS rejected nonfinite baseline axis 2 value Infinity",
+        "PASS rejected nonfinite repeated axis 2 value Infinity",
+        "PASS rejected nonfinite baseline axis 0 value -Infinity",
+        "PASS rejected nonfinite repeated axis 0 value -Infinity",
+        "PASS rejected nonfinite baseline axis 1 value -Infinity",
+        "PASS rejected nonfinite repeated axis 1 value -Infinity",
+        "PASS rejected nonfinite baseline axis 2 value -Infinity",
+        "PASS rejected nonfinite repeated axis 2 value -Infinity",
+        "PASS rejected overflowed world distance"
+    ],
+    "actualRigQueries": [
+        {
+            "attacker": "Mankey",
+            "victim": "Pepe",
+            "laneDirection": 1,
+            "pass": 1,
+            "queryOrder": "forward from clip start",
+            "seconds": 0.4749999940395355,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": 0.926220178604126,
+                "y": 0.8584915995597839,
+                "z": -0.1942840814590454
+            },
+            "repeatedWorldPoint": {
+                "x": 0.9262068867683411,
+                "y": 0.8584878444671631,
+                "z": -0.19427917897701264
+            },
+            "baselineHipsLocalPoint": {
+                "x": -1.875171184539795,
+                "y": 1.0766541957855225,
+                "z": -0.35216641426086428
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -1.8752102851867676,
+                "y": 1.0766465663909913,
+                "z": -0.3520269989967346
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.1000000461935997,
+                "y": 0.10000000894069672,
+                "z": 0.1000000387430191
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.10000002384185791,
+                "y": 0.10000000149011612,
+                "z": 0.10000002384185791
+            },
+            "rawHipsLocalDistance": 0.00014499545795843005,
+            "contactAnchorErrorM": 0.00001465632794861449,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Plane",
+            "repeatedRenderer": "Plane",
+            "baselineTriangle": 9795,
+            "repeatedTriangle": 9795
+        },
+        {
+            "attacker": "Mankey",
+            "victim": "Pepe",
+            "laneDirection": 1,
+            "pass": 1,
+            "queryOrder": "forward from clip start",
+            "seconds": 2.387500047683716,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": 0.641786515712738,
+                "y": 0.7079893350601196,
+                "z": 0.4263669550418854
+            },
+            "repeatedWorldPoint": {
+                "x": 0.6417760848999023,
+                "y": 0.7079933881759644,
+                "z": 0.4263538122177124
+            },
+            "baselineHipsLocalPoint": {
+                "x": -3.517838478088379,
+                "y": 2.629204034805298,
+                "z": 1.917027235031128
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -3.517970323562622,
+                "y": 2.6292459964752199,
+                "z": 1.916902780532837
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.10000002384185791,
+                "y": 0.10000000894069672,
+                "z": 0.10000002384185791
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.10000002384185791,
+                "y": 0.09999999403953552,
+                "z": 0.10000002384185791
+            },
+            "rawHipsLocalDistance": 0.00018609924882184714,
+            "contactAnchorErrorM": 0.000017261616449104622,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Plane",
+            "repeatedRenderer": "Plane",
+            "baselineTriangle": 10937,
+            "repeatedTriangle": 10937
+        },
+        {
+            "attacker": "Mankey",
+            "victim": "Pepe",
+            "laneDirection": 1,
+            "pass": 1,
+            "queryOrder": "backward from clip end",
+            "seconds": 2.387500047683716,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": 0.641786515712738,
+                "y": 0.7079893350601196,
+                "z": 0.4263669550418854
+            },
+            "repeatedWorldPoint": {
+                "x": 0.6417678594589233,
+                "y": 0.707996666431427,
+                "z": 0.4263444244861603
+            },
+            "baselineHipsLocalPoint": {
+                "x": -3.517838478088379,
+                "y": 2.629204034805298,
+                "z": 1.917027235031128
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -3.518073558807373,
+                "y": 2.6292788982391359,
+                "z": 1.9168038368225098
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.10000002384185791,
+                "y": 0.10000000894069672,
+                "z": 0.10000002384185791
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.10000002384185791,
+                "y": 0.10000000894069672,
+                "z": 0.10000002384185791
+            },
+            "rawHipsLocalDistance": 0.0003328276507090777,
+            "contactAnchorErrorM": 0.000030156768843880855,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Plane",
+            "repeatedRenderer": "Plane",
+            "baselineTriangle": 10937,
+            "repeatedTriangle": 10937
+        },
+        {
+            "attacker": "Mankey",
+            "victim": "Pepe",
+            "laneDirection": 1,
+            "pass": 1,
+            "queryOrder": "backward from clip end",
+            "seconds": 0.4749999940395355,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": 0.926220178604126,
+                "y": 0.8584915995597839,
+                "z": -0.1942840814590454
+            },
+            "repeatedWorldPoint": {
+                "x": 0.9261833429336548,
+                "y": 0.8584813475608826,
+                "z": -0.19426970183849336
+            },
+            "baselineHipsLocalPoint": {
+                "x": -1.875171184539795,
+                "y": 1.0766541957855225,
+                "z": -0.35216641426086428
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -1.8752799034118653,
+                "y": 1.076631784439087,
+                "z": -0.3517778515815735
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.1000000461935997,
+                "y": 0.10000000894069672,
+                "z": 0.1000000387430191
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.1000000461935997,
+                "y": 0.10000000894069672,
+                "z": 0.1000000387430191
+            },
+            "rawHipsLocalDistance": 0.000404107675421983,
+            "contactAnchorErrorM": 0.00004085025648237206,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Plane",
+            "repeatedRenderer": "Plane",
+            "baselineTriangle": 9795,
+            "repeatedTriangle": 9795
+        },
+        {
+            "attacker": "Mankey",
+            "victim": "Pepe",
+            "laneDirection": 1,
+            "pass": 2,
+            "queryOrder": "forward from clip start",
+            "seconds": 0.4749999940395355,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": 0.926220178604126,
+                "y": 0.8584915995597839,
+                "z": -0.1942840814590454
+            },
+            "repeatedWorldPoint": {
+                "x": 0.9261746406555176,
+                "y": 0.8584789633750916,
+                "z": -0.19426748156547547
+            },
+            "baselineHipsLocalPoint": {
+                "x": -1.875171184539795,
+                "y": 1.0766541957855225,
+                "z": -0.35216641426086428
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -1.875304937362671,
+                "y": 1.076627254486084,
+                "z": -0.35168808698654177
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.1000000461935997,
+                "y": 0.10000000894069672,
+                "z": 0.1000000387430191
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.10000003129243851,
+                "y": 0.10000000894069672,
+                "z": 0.1000000387430191
+            },
+            "rawHipsLocalDistance": 0.0004974058829247952,
+            "contactAnchorErrorM": 0.00005008926382288337,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Plane",
+            "repeatedRenderer": "Plane",
+            "baselineTriangle": 9795,
+            "repeatedTriangle": 9795
+        },
+        {
+            "attacker": "Mankey",
+            "victim": "Pepe",
+            "laneDirection": 1,
+            "pass": 2,
+            "queryOrder": "forward from clip start",
+            "seconds": 2.387500047683716,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": 0.641786515712738,
+                "y": 0.7079893350601196,
+                "z": 0.4263669550418854
+            },
+            "repeatedWorldPoint": {
+                "x": 0.6417532563209534,
+                "y": 0.7080024480819702,
+                "z": 0.42632582783699038
+            },
+            "baselineHipsLocalPoint": {
+                "x": -3.517838478088379,
+                "y": 2.629204034805298,
+                "z": 1.917027235031128
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -3.518254280090332,
+                "y": 2.62933611869812,
+                "z": 1.9166333675384522
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.10000002384185791,
+                "y": 0.10000000894069672,
+                "z": 0.10000002384185791
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.10000001639127732,
+                "y": 0.09999999403953552,
+                "z": 0.10000000149011612
+            },
+            "rawHipsLocalDistance": 0.0005877661751583219,
+            "contactAnchorErrorM": 0.000054493903007823974,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Plane",
+            "repeatedRenderer": "Plane",
+            "baselineTriangle": 10937,
+            "repeatedTriangle": 10937
+        },
+        {
+            "attacker": "Mankey",
+            "victim": "Pepe",
+            "laneDirection": 1,
+            "pass": 2,
+            "queryOrder": "backward from clip end",
+            "seconds": 2.387500047683716,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": 0.641786515712738,
+                "y": 0.7079893350601196,
+                "z": 0.4263669550418854
+            },
+            "repeatedWorldPoint": {
+                "x": 0.6417465806007385,
+                "y": 0.7080052495002747,
+                "z": 0.4263181984424591
+            },
+            "baselineHipsLocalPoint": {
+                "x": -3.517838478088379,
+                "y": 2.629204034805298,
+                "z": 1.917027235031128
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -3.518340587615967,
+                "y": 2.629364490509033,
+                "z": 1.9165520668029786
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.10000002384185791,
+                "y": 0.10000000894069672,
+                "z": 0.10000002384185791
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.10000002384185791,
+                "y": 0.10000000149011612,
+                "z": 0.10000003129243851
+            },
+            "rawHipsLocalDistance": 0.0007096793851815164,
+            "contactAnchorErrorM": 0.00006500221934402362,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Plane",
+            "repeatedRenderer": "Plane",
+            "baselineTriangle": 10937,
+            "repeatedTriangle": 10937
+        },
+        {
+            "attacker": "Mankey",
+            "victim": "Pepe",
+            "laneDirection": 1,
+            "pass": 2,
+            "queryOrder": "backward from clip end",
+            "seconds": 0.4749999940395355,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": 0.926220178604126,
+                "y": 0.8584915995597839,
+                "z": -0.1942840814590454
+            },
+            "repeatedWorldPoint": {
+                "x": 0.9261512756347656,
+                "y": 0.8584725260734558,
+                "z": -0.1942579746246338
+            },
+            "baselineHipsLocalPoint": {
+                "x": -1.875171184539795,
+                "y": 1.0766541957855225,
+                "z": -0.35216641426086428
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -1.875374436378479,
+                "y": 1.076614499092102,
+                "z": -0.3514385223388672
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.1000000461935997,
+                "y": 0.10000000894069672,
+                "z": 0.1000000387430191
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.10000002384185791,
+                "y": 0.09999999403953552,
+                "z": 0.10000002384185791
+            },
+            "rawHipsLocalDistance": 0.0007567785796709359,
+            "contactAnchorErrorM": 0.00007611165347043425,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Plane",
+            "repeatedRenderer": "Plane",
+            "baselineTriangle": 9795,
+            "repeatedTriangle": 9795
+        },
+        {
+            "attacker": "Mankey",
+            "victim": "Pepe",
+            "laneDirection": 1,
+            "pass": 3,
+            "queryOrder": "forward from clip start",
+            "seconds": 0.4749999940395355,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": 0.926220178604126,
+                "y": 0.8584915995597839,
+                "z": -0.1942840814590454
+            },
+            "repeatedWorldPoint": {
+                "x": 0.9261446595191956,
+                "y": 0.858470618724823,
+                "z": -0.19425633549690247
+            },
+            "baselineHipsLocalPoint": {
+                "x": -1.875171184539795,
+                "y": 1.0766541957855225,
+                "z": -0.35216641426086428
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -1.8753933906555176,
+                "y": 1.0766106843948365,
+                "z": -0.3513707220554352
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.1000000461935997,
+                "y": 0.10000000894069672,
+                "z": 0.1000000387430191
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.10000002384185791,
+                "y": 0.09999999403953552,
+                "z": 0.10000002384185791
+            },
+            "rawHipsLocalDistance": 0.0008272816194221377,
+            "contactAnchorErrorM": 0.00008314545266330242,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Plane",
+            "repeatedRenderer": "Plane",
+            "baselineTriangle": 9795,
+            "repeatedTriangle": 9795
+        },
+        {
+            "attacker": "Mankey",
+            "victim": "Pepe",
+            "laneDirection": 1,
+            "pass": 3,
+            "queryOrder": "forward from clip start",
+            "seconds": 2.387500047683716,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": 0.641786515712738,
+                "y": 0.7079893350601196,
+                "z": 0.4263669550418854
+            },
+            "repeatedWorldPoint": {
+                "x": 0.6417331099510193,
+                "y": 0.7080106139183044,
+                "z": 0.42630067467689516
+            },
+            "baselineHipsLocalPoint": {
+                "x": -3.517838478088379,
+                "y": 2.629204034805298,
+                "z": 1.917027235031128
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -3.518510103225708,
+                "y": 2.6294188499450685,
+                "z": 1.9163897037506104
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.10000002384185791,
+                "y": 0.10000000894069672,
+                "z": 0.10000002384185791
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.10000002384185791,
+                "y": 0.10000000149011612,
+                "z": 0.10000003129243851
+            },
+            "rawHipsLocalDistance": 0.0009506166679784656,
+            "contactAnchorErrorM": 0.00008773854642640799,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Plane",
+            "repeatedRenderer": "Plane",
+            "baselineTriangle": 10937,
+            "repeatedTriangle": 10937
+        },
+        {
+            "attacker": "Mankey",
+            "victim": "Pepe",
+            "laneDirection": 1,
+            "pass": 3,
+            "queryOrder": "backward from clip end",
+            "seconds": 2.387500047683716,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": 0.641786515712738,
+                "y": 0.7079893350601196,
+                "z": 0.4263669550418854
+            },
+            "repeatedWorldPoint": {
+                "x": 0.6417253613471985,
+                "y": 0.7080137133598328,
+                "z": 0.42629194259643557
+            },
+            "baselineHipsLocalPoint": {
+                "x": -3.517838478088379,
+                "y": 2.629204034805298,
+                "z": 1.917027235031128
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -3.518606662750244,
+                "y": 2.6294515132904054,
+                "z": 1.9162986278533936
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.10000002384185791,
+                "y": 0.10000000894069672,
+                "z": 0.10000002384185791
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.10000002384185791,
+                "y": 0.10000000149011612,
+                "z": 0.10000003129243851
+            },
+            "rawHipsLocalDistance": 0.0010873001301661134,
+            "contactAnchorErrorM": 0.00009980493632610887,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": false,
+            "baselineRenderer": "Plane",
+            "repeatedRenderer": "Plane",
+            "baselineTriangle": 10937,
+            "repeatedTriangle": 10937
+        },
+        {
+            "attacker": "Mankey",
+            "victim": "Pepe",
+            "laneDirection": 1,
+            "pass": 3,
+            "queryOrder": "backward from clip end",
+            "seconds": 0.4749999940395355,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": 0.926220178604126,
+                "y": 0.8584915995597839,
+                "z": -0.1942840814590454
+            },
+            "repeatedWorldPoint": {
+                "x": 0.9261205196380615,
+                "y": 0.8584640622138977,
+                "z": -0.19424676895141602
+            },
+            "baselineHipsLocalPoint": {
+                "x": -1.875171184539795,
+                "y": 1.0766541957855225,
+                "z": -0.35216641426086428
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -1.8754643201828004,
+                "y": 1.0765962600708008,
+                "z": -0.35111579298973086
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.1000000461935997,
+                "y": 0.10000000894069672,
+                "z": 0.1000000387430191
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.10000002384185791,
+                "y": 0.09999999403953552,
+                "z": 0.10000002384185791
+            },
+            "rawHipsLocalDistance": 0.0010922866640612484,
+            "contactAnchorErrorM": 0.00010992014722432941,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": false,
+            "baselineRenderer": "Plane",
+            "repeatedRenderer": "Plane",
+            "baselineTriangle": 9795,
+            "repeatedTriangle": 9795
+        },
+        {
+            "attacker": "Mankey",
+            "victim": "Pepe",
+            "laneDirection": -1,
+            "pass": 1,
+            "queryOrder": "forward from clip start",
+            "seconds": 0.4749999940395355,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": -0.9262200593948364,
+                "y": 0.8584915995597839,
+                "z": 0.1942836493253708
+            },
+            "repeatedWorldPoint": {
+                "x": -0.9262077212333679,
+                "y": 0.8584880232810974,
+                "z": 0.1942790448665619
+            },
+            "baselineHipsLocalPoint": {
+                "x": -1.8751709461212159,
+                "y": 1.0766541957855225,
+                "z": -0.35216569900512698
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -1.875207781791687,
+                "y": 1.0766457319259644,
+                "z": -0.3520357310771942
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.10000008344650269,
+                "y": 0.10000001639127732,
+                "z": 0.10000007599592209
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.10000002384185791,
+                "y": 0.10000000149011612,
+                "z": 0.10000003129243851
+            },
+            "rawHipsLocalDistance": 0.00013535200559999794,
+            "contactAnchorErrorM": 0.000013646283150592353,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Plane",
+            "repeatedRenderer": "Plane",
+            "baselineTriangle": 9795,
+            "repeatedTriangle": 9795
+        },
+        {
+            "attacker": "Mankey",
+            "victim": "Pepe",
+            "laneDirection": -1,
+            "pass": 1,
+            "queryOrder": "forward from clip start",
+            "seconds": 2.387500047683716,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": -0.641787052154541,
+                "y": 0.7079891562461853,
+                "z": -0.4263676404953003
+            },
+            "repeatedWorldPoint": {
+                "x": -0.6417767405509949,
+                "y": 0.7079930901527405,
+                "z": -0.42635488510131838
+            },
+            "baselineHipsLocalPoint": {
+                "x": -3.517834424972534,
+                "y": 2.6292030811309816,
+                "z": 1.917029619216919
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -3.5179638862609865,
+                "y": 2.629244089126587,
+                "z": 1.9169073104858399
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.1000000536441803,
+                "y": 0.09999999403953552,
+                "z": 0.1000000387430191
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.1000000610947609,
+                "y": 0.10000000894069672,
+                "z": 0.1000000536441803
+            },
+            "rawHipsLocalDistance": 0.00018276023911312222,
+            "contactAnchorErrorM": 0.000016867272279341705,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Plane",
+            "repeatedRenderer": "Plane",
+            "baselineTriangle": 10937,
+            "repeatedTriangle": 10937
+        },
+        {
+            "attacker": "Mankey",
+            "victim": "Pepe",
+            "laneDirection": -1,
+            "pass": 1,
+            "queryOrder": "backward from clip end",
+            "seconds": 2.387500047683716,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": -0.641787052154541,
+                "y": 0.7079891562461853,
+                "z": -0.4263676404953003
+            },
+            "repeatedWorldPoint": {
+                "x": -0.6417701244354248,
+                "y": 0.7079958915710449,
+                "z": -0.42634716629981997
+            },
+            "baselineHipsLocalPoint": {
+                "x": -3.517834424972534,
+                "y": 2.6292030811309816,
+                "z": 1.917029619216919
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -3.51804780960083,
+                "y": 2.6292715072631838,
+                "z": 1.916825771331787
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.1000000536441803,
+                "y": 0.09999999403953552,
+                "z": 0.1000000387430191
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.1000000536441803,
+                "y": 0.09999999403953552,
+                "z": 0.1000000387430191
+            },
+            "rawHipsLocalDistance": 0.00030293414602056146,
+            "contactAnchorErrorM": 0.000027406294975662604,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Plane",
+            "repeatedRenderer": "Plane",
+            "baselineTriangle": 10937,
+            "repeatedTriangle": 10937
+        },
+        {
+            "attacker": "Mankey",
+            "victim": "Pepe",
+            "laneDirection": -1,
+            "pass": 1,
+            "queryOrder": "backward from clip end",
+            "seconds": 0.4749999940395355,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": -0.9262200593948364,
+                "y": 0.8584915995597839,
+                "z": 0.1942836493253708
+            },
+            "repeatedWorldPoint": {
+                "x": -0.9261829257011414,
+                "y": 0.8584813475608826,
+                "z": 0.19426944851875306
+            },
+            "baselineHipsLocalPoint": {
+                "x": -1.8751709461212159,
+                "y": 1.0766541957855225,
+                "z": -0.35216569900512698
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -1.8752803802490235,
+                "y": 1.0766321420669556,
+                "z": -0.3517753481864929
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.10000008344650269,
+                "y": 0.10000001639127732,
+                "z": 0.10000007599592209
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.10000008344650269,
+                "y": 0.10000001639127732,
+                "z": 0.10000007599592209
+            },
+            "rawHipsLocalDistance": 0.0004059999482706189,
+            "contactAnchorErrorM": 0.00004105700281797908,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Plane",
+            "repeatedRenderer": "Plane",
+            "baselineTriangle": 9795,
+            "repeatedTriangle": 9795
+        },
+        {
+            "attacker": "Mankey",
+            "victim": "Pepe",
+            "laneDirection": -1,
+            "pass": 2,
+            "queryOrder": "forward from clip start",
+            "seconds": 0.4749999940395355,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": -0.9262200593948364,
+                "y": 0.8584915995597839,
+                "z": 0.1942836493253708
+            },
+            "repeatedWorldPoint": {
+                "x": -0.9261764287948608,
+                "y": 0.8584794998168945,
+                "z": 0.19426780939102174
+            },
+            "baselineHipsLocalPoint": {
+                "x": -1.8751709461212159,
+                "y": 1.0766541957855225,
+                "z": -0.35216569900512698
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -1.875299334526062,
+                "y": 1.0766286849975587,
+                "z": -0.3517085015773773
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.10000008344650269,
+                "y": 0.10000001639127732,
+                "z": 0.10000007599592209
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.1000000610947609,
+                "y": 0.10000000894069672,
+                "z": 0.1000000610947609
+            },
+            "rawHipsLocalDistance": 0.0004755668924190104,
+            "contactAnchorErrorM": 0.000047968078433768824,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Plane",
+            "repeatedRenderer": "Plane",
+            "baselineTriangle": 9795,
+            "repeatedTriangle": 9795
+        },
+        {
+            "attacker": "Mankey",
+            "victim": "Pepe",
+            "laneDirection": -1,
+            "pass": 2,
+            "queryOrder": "forward from clip start",
+            "seconds": 2.387500047683716,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": -0.641787052154541,
+                "y": 0.7079891562461853,
+                "z": -0.4263676404953003
+            },
+            "repeatedWorldPoint": {
+                "x": -0.6417567729949951,
+                "y": 0.7080010771751404,
+                "z": -0.42633020877838137
+            },
+            "baselineHipsLocalPoint": {
+                "x": -3.517834424972534,
+                "y": 2.6292030811309816,
+                "z": 1.917029619216919
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -3.5182137489318849,
+                "y": 2.6293225288391115,
+                "z": 1.9166679382324219
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.1000000536441803,
+                "y": 0.09999999403953552,
+                "z": 0.1000000387430191
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.10000007599592209,
+                "y": 0.09999999403953552,
+                "z": 0.10000007599592209
+            },
+            "rawHipsLocalDistance": 0.0005375570035539568,
+            "contactAnchorErrorM": 0.00004959908619639464,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Plane",
+            "repeatedRenderer": "Plane",
+            "baselineTriangle": 10937,
+            "repeatedTriangle": 10937
+        },
+        {
+            "attacker": "Mankey",
+            "victim": "Pepe",
+            "laneDirection": -1,
+            "pass": 2,
+            "queryOrder": "backward from clip end",
+            "seconds": 2.387500047683716,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": -0.641787052154541,
+                "y": 0.7079891562461853,
+                "z": -0.4263676404953003
+            },
+            "repeatedWorldPoint": {
+                "x": -0.6417502760887146,
+                "y": 0.7080038189888,
+                "z": -0.4263227880001068
+            },
+            "baselineHipsLocalPoint": {
+                "x": -3.517834424972534,
+                "y": 2.6292030811309816,
+                "z": 1.917029619216919
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -3.5182948112487795,
+                "y": 2.629350423812866,
+                "z": 1.9165918827056885
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.1000000536441803,
+                "y": 0.09999999403953552,
+                "z": 0.1000000387430191
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.10000007599592209,
+                "y": 0.09999999403953552,
+                "z": 0.10000007599592209
+            },
+            "rawHipsLocalDistance": 0.0006521338946186006,
+            "contactAnchorErrorM": 0.00005982659422443248,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Plane",
+            "repeatedRenderer": "Plane",
+            "baselineTriangle": 10937,
+            "repeatedTriangle": 10937
+        },
+        {
+            "attacker": "Mankey",
+            "victim": "Pepe",
+            "laneDirection": -1,
+            "pass": 2,
+            "queryOrder": "backward from clip end",
+            "seconds": 0.4749999940395355,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": -0.9262200593948364,
+                "y": 0.8584915995597839,
+                "z": 0.1942836493253708
+            },
+            "repeatedWorldPoint": {
+                "x": -0.9261529445648193,
+                "y": 0.8584730625152588,
+                "z": 0.19425836205482484
+            },
+            "baselineHipsLocalPoint": {
+                "x": -1.8751709461212159,
+                "y": 1.0766541957855225,
+                "z": -0.35216569900512698
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -1.8753693103790284,
+                "y": 1.0766152143478394,
+                "z": -0.35145771503448489
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.10000008344650269,
+                "y": 0.10000001639127732,
+                "z": 0.10000007599592209
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.1000000536441803,
+                "y": 0.09999999403953552,
+                "z": 0.1000000387430191
+            },
+            "rawHipsLocalDistance": 0.0007362806936725974,
+            "contactAnchorErrorM": 0.00007407744851661846,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Plane",
+            "repeatedRenderer": "Plane",
+            "baselineTriangle": 9795,
+            "repeatedTriangle": 9795
+        },
+        {
+            "attacker": "Mankey",
+            "victim": "Pepe",
+            "laneDirection": -1,
+            "pass": 3,
+            "queryOrder": "forward from clip start",
+            "seconds": 0.4749999940395355,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": -0.9262200593948364,
+                "y": 0.8584915995597839,
+                "z": 0.1942836493253708
+            },
+            "repeatedWorldPoint": {
+                "x": -0.9261484742164612,
+                "y": 0.858471691608429,
+                "z": 0.1942572444677353
+            },
+            "baselineHipsLocalPoint": {
+                "x": -1.8751709461212159,
+                "y": 1.0766541957855225,
+                "z": -0.35216569900512698
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -1.8753819465637208,
+                "y": 1.0766124725341797,
+                "z": -0.35141175985336306
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.10000008344650269,
+                "y": 0.10000001639127732,
+                "z": 0.10000007599592209
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.1000000536441803,
+                "y": 0.09999999403953552,
+                "z": 0.1000000387430191
+            },
+            "rawHipsLocalDistance": 0.0007840192993171513,
+            "contactAnchorErrorM": 0.00007885417289799079,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Plane",
+            "repeatedRenderer": "Plane",
+            "baselineTriangle": 9795,
+            "repeatedTriangle": 9795
+        },
+        {
+            "attacker": "Mankey",
+            "victim": "Pepe",
+            "laneDirection": -1,
+            "pass": 3,
+            "queryOrder": "forward from clip start",
+            "seconds": 2.387500047683716,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": -0.641787052154541,
+                "y": 0.7079891562461853,
+                "z": -0.4263676404953003
+            },
+            "repeatedWorldPoint": {
+                "x": -0.6417365074157715,
+                "y": 0.7080093622207642,
+                "z": -0.42630529403686526
+            },
+            "baselineHipsLocalPoint": {
+                "x": -3.517834424972534,
+                "y": 2.6292030811309816,
+                "z": 1.917029619216919
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -3.5184671878814699,
+                "y": 2.629405975341797,
+                "z": 1.9164278507232667
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.1000000536441803,
+                "y": 0.09999999403953552,
+                "z": 0.1000000387430191
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.10000007599592209,
+                "y": 0.09999999403953552,
+                "z": 0.10000007599592209
+            },
+            "rawHipsLocalDistance": 0.0008964821463450789,
+            "contactAnchorErrorM": 0.00008276553126052022,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Plane",
+            "repeatedRenderer": "Plane",
+            "baselineTriangle": 10937,
+            "repeatedTriangle": 10937
+        },
+        {
+            "attacker": "Mankey",
+            "victim": "Pepe",
+            "laneDirection": -1,
+            "pass": 3,
+            "queryOrder": "backward from clip end",
+            "seconds": 2.387500047683716,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": -0.641787052154541,
+                "y": 0.7079891562461853,
+                "z": -0.4263676404953003
+            },
+            "repeatedWorldPoint": {
+                "x": -0.6417295336723328,
+                "y": 0.7080121040344238,
+                "z": -0.42629724740982058
+            },
+            "baselineHipsLocalPoint": {
+                "x": -3.517834424972534,
+                "y": 2.6292030811309816,
+                "z": 1.917029619216919
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -3.5185587406158449,
+                "y": 2.629434823989868,
+                "z": 1.9163408279418946
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.1000000536441803,
+                "y": 0.09999999403953552,
+                "z": 0.1000000387430191
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.10000007599592209,
+                "y": 0.09999999403953552,
+                "z": 0.10000007599592209
+            },
+            "rawHipsLocalDistance": 0.0010260464623570443,
+            "contactAnchorErrorM": 0.0000937558725127019,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": false,
+            "baselineRenderer": "Plane",
+            "repeatedRenderer": "Plane",
+            "baselineTriangle": 10937,
+            "repeatedTriangle": 10937
+        },
+        {
+            "attacker": "Mankey",
+            "victim": "Pepe",
+            "laneDirection": -1,
+            "pass": 3,
+            "queryOrder": "backward from clip end",
+            "seconds": 0.4749999940395355,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": -0.9262200593948364,
+                "y": 0.8584915995597839,
+                "z": 0.1942836493253708
+            },
+            "repeatedWorldPoint": {
+                "x": -0.9261248111724854,
+                "y": 0.8584652543067932,
+                "z": 0.1942475587129593
+            },
+            "baselineHipsLocalPoint": {
+                "x": -1.8751709461212159,
+                "y": 1.0766541957855225,
+                "z": -0.35216569900512698
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -1.8754523992538453,
+                "y": 1.0765994787216187,
+                "z": -0.35115954279899599
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.10000008344650269,
+                "y": 0.10000001639127732,
+                "z": 0.10000007599592209
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.1000000536441803,
+                "y": 0.09999999403953552,
+                "z": 0.1000000387430191
+            },
+            "rawHipsLocalDistance": 0.0010462122736498714,
+            "contactAnchorErrorM": 0.00010520849900785834,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": false,
+            "baselineRenderer": "Plane",
+            "repeatedRenderer": "Plane",
+            "baselineTriangle": 9795,
+            "repeatedTriangle": 9795
+        },
+        {
+            "attacker": "Pepe",
+            "victim": "Mankey",
+            "laneDirection": 1,
+            "pass": 1,
+            "queryOrder": "forward from clip start",
+            "seconds": 0.4749999940395355,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": 0.7437416315078735,
+                "y": 0.8823859691619873,
+                "z": -0.023128865286707879
+            },
+            "repeatedWorldPoint": {
+                "x": 0.7437427639961243,
+                "y": 0.88238525390625,
+                "z": -0.023126205429434778
+            },
+            "baselineHipsLocalPoint": {
+                "x": -0.32073983550071719,
+                "y": 0.25945940613746645,
+                "z": 0.18442606925964356
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -0.32073888182640078,
+                "y": 0.25945985317230227,
+                "z": 0.18442434072494508
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.7000003457069397,
+                "y": 0.7000003457069397,
+                "z": 0.7000002264976502
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.7000001072883606,
+                "y": 0.7000002861022949,
+                "z": 0.699999988079071
+            },
+            "rawHipsLocalDistance": 0.0000020241459424141796,
+            "contactAnchorErrorM": 0.000002978080146931461,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Mahgnkey",
+            "repeatedRenderer": "Mahgnkey",
+            "baselineTriangle": 1354,
+            "repeatedTriangle": 1354
+        },
+        {
+            "attacker": "Pepe",
+            "victim": "Mankey",
+            "laneDirection": 1,
+            "pass": 1,
+            "queryOrder": "forward from clip start",
+            "seconds": 2.387500047683716,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": 0.7690312266349793,
+                "y": 0.7633707523345947,
+                "z": 0.4707667827606201
+            },
+            "repeatedWorldPoint": {
+                "x": 0.7690351009368897,
+                "y": 0.7633628845214844,
+                "z": 0.4707648456096649
+            },
+            "baselineHipsLocalPoint": {
+                "x": -0.27858686447143557,
+                "y": 0.38523414731025698,
+                "z": 0.29174724221229555
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -0.27857697010040285,
+                "y": 0.38522663712501528,
+                "z": 0.29174304008483889
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.7000002861022949,
+                "y": 0.7000002861022949,
+                "z": 0.7000001668930054
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.7000002264976502,
+                "y": 0.7000002264976502,
+                "z": 0.7000001668930054
+            },
+            "rawHipsLocalDistance": 0.000013113326531311031,
+            "contactAnchorErrorM": 0.000008981383871287107,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Mahgnkey",
+            "repeatedRenderer": "Mahgnkey",
+            "baselineTriangle": 1360,
+            "repeatedTriangle": 1360
+        },
+        {
+            "attacker": "Pepe",
+            "victim": "Mankey",
+            "laneDirection": 1,
+            "pass": 1,
+            "queryOrder": "backward from clip end",
+            "seconds": 2.387500047683716,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": 0.7690312266349793,
+                "y": 0.7633707523345947,
+                "z": 0.4707667827606201
+            },
+            "repeatedWorldPoint": {
+                "x": 0.7690374851226807,
+                "y": 0.7633579969406128,
+                "z": 0.4707638621330261
+            },
+            "baselineHipsLocalPoint": {
+                "x": -0.27858686447143557,
+                "y": 0.38523414731025698,
+                "z": 0.29174724221229555
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -0.27857112884521487,
+                "y": 0.38522061705589297,
+                "z": 0.2917408347129822
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.7000002861022949,
+                "y": 0.7000002861022949,
+                "z": 0.7000001668930054
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.7000002861022949,
+                "y": 0.7000002861022949,
+                "z": 0.7000001668930054
+            },
+            "rawHipsLocalDistance": 0.000021719431970268488,
+            "contactAnchorErrorM": 0.000014505130820907652,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Mahgnkey",
+            "repeatedRenderer": "Mahgnkey",
+            "baselineTriangle": 1360,
+            "repeatedTriangle": 1360
+        },
+        {
+            "attacker": "Pepe",
+            "victim": "Mankey",
+            "laneDirection": 1,
+            "pass": 1,
+            "queryOrder": "backward from clip end",
+            "seconds": 0.4749999940395355,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": 0.7437416315078735,
+                "y": 0.8823859691619873,
+                "z": -0.023128865286707879
+            },
+            "repeatedWorldPoint": {
+                "x": 0.7437441945075989,
+                "y": 0.8823841214179993,
+                "z": -0.02312156930565834
+            },
+            "baselineHipsLocalPoint": {
+                "x": -0.32073983550071719,
+                "y": 0.25945940613746645,
+                "z": 0.18442606925964356
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -0.32073745131492617,
+                "y": 0.25946035981178286,
+                "z": 0.1844223141670227
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.7000003457069397,
+                "y": 0.7000003457069397,
+                "z": 0.7000002264976502
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.7000003457069397,
+                "y": 0.7000003457069397,
+                "z": 0.7000002264976502
+            },
+            "rawHipsLocalDistance": 0.000004549126970232464,
+            "contactAnchorErrorM": 0.000007950752660690341,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Mahgnkey",
+            "repeatedRenderer": "Mahgnkey",
+            "baselineTriangle": 1354,
+            "repeatedTriangle": 1354
+        },
+        {
+            "attacker": "Pepe",
+            "victim": "Mankey",
+            "laneDirection": 1,
+            "pass": 2,
+            "queryOrder": "forward from clip start",
+            "seconds": 0.4749999940395355,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": 0.7437416315078735,
+                "y": 0.8823859691619873,
+                "z": -0.023128865286707879
+            },
+            "repeatedWorldPoint": {
+                "x": 0.7437447905540466,
+                "y": 0.8823837637901306,
+                "z": -0.023120056837797166
+            },
+            "baselineHipsLocalPoint": {
+                "x": -0.32073983550071719,
+                "y": 0.25945940613746645,
+                "z": 0.18442606925964356
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -0.32073691487312319,
+                "y": 0.2594611346721649,
+                "z": 0.18442022800445558
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.7000003457069397,
+                "y": 0.7000003457069397,
+                "z": 0.7000002264976502
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.7000002861022949,
+                "y": 0.7000003457069397,
+                "z": 0.7000002861022949
+            },
+            "rawHipsLocalDistance": 0.000006755602043995168,
+            "contactAnchorErrorM": 0.000009614156624593306,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Mahgnkey",
+            "repeatedRenderer": "Mahgnkey",
+            "baselineTriangle": 1354,
+            "repeatedTriangle": 1354
+        },
+        {
+            "attacker": "Pepe",
+            "victim": "Mankey",
+            "laneDirection": 1,
+            "pass": 2,
+            "queryOrder": "forward from clip start",
+            "seconds": 2.387500047683716,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": 0.7690312266349793,
+                "y": 0.7633707523345947,
+                "z": 0.4707667827606201
+            },
+            "repeatedWorldPoint": {
+                "x": 0.7690433263778687,
+                "y": 0.7633457183837891,
+                "z": 0.4707612097263336
+            },
+            "baselineHipsLocalPoint": {
+                "x": -0.27858686447143557,
+                "y": 0.38523414731025698,
+                "z": 0.29174724221229555
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -0.2785554826259613,
+                "y": 0.3852103650569916,
+                "z": 0.2917340099811554
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.7000002861022949,
+                "y": 0.7000002861022949,
+                "z": 0.7000001668930054
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.7000003457069397,
+                "y": 0.7000002861022949,
+                "z": 0.7000001668930054
+            },
+            "rawHipsLocalDistance": 0.00004153923146077432,
+            "contactAnchorErrorM": 0.0000283577355730813,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Mahgnkey",
+            "repeatedRenderer": "Mahgnkey",
+            "baselineTriangle": 1360,
+            "repeatedTriangle": 1360
+        },
+        {
+            "attacker": "Pepe",
+            "victim": "Mankey",
+            "laneDirection": 1,
+            "pass": 2,
+            "queryOrder": "backward from clip end",
+            "seconds": 2.387500047683716,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": 0.7690312266349793,
+                "y": 0.7633707523345947,
+                "z": 0.4707667827606201
+            },
+            "repeatedWorldPoint": {
+                "x": 0.769045352935791,
+                "y": 0.7633416652679443,
+                "z": 0.4707602858543396
+            },
+            "baselineHipsLocalPoint": {
+                "x": -0.27858686447143557,
+                "y": 0.38523414731025698,
+                "z": 0.29174724221229555
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -0.2785506546497345,
+                "y": 0.3852050006389618,
+                "z": 0.2917320430278778
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.7000002861022949,
+                "y": 0.7000002861022949,
+                "z": 0.7000001668930054
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.7000003457069397,
+                "y": 0.7000002861022949,
+                "z": 0.7000001668930054
+            },
+            "rawHipsLocalDistance": 0.00004890495620202273,
+            "contactAnchorErrorM": 0.000032982108677970245,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Mahgnkey",
+            "repeatedRenderer": "Mahgnkey",
+            "baselineTriangle": 1360,
+            "repeatedTriangle": 1360
+        },
+        {
+            "attacker": "Pepe",
+            "victim": "Mankey",
+            "laneDirection": 1,
+            "pass": 2,
+            "queryOrder": "backward from clip end",
+            "seconds": 0.4749999940395355,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": 0.7437416315078735,
+                "y": 0.8823859691619873,
+                "z": -0.023128865286707879
+            },
+            "repeatedWorldPoint": {
+                "x": 0.7437465190887451,
+                "y": 0.8823826909065247,
+                "z": -0.023114919662475587
+            },
+            "baselineHipsLocalPoint": {
+                "x": -0.32073983550071719,
+                "y": 0.25945940613746645,
+                "z": 0.18442606925964356
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -0.32073572278022768,
+                "y": 0.259461909532547,
+                "z": 0.18441765010356904
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.7000003457069397,
+                "y": 0.7000003457069397,
+                "z": 0.7000002264976502
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.7000002264976502,
+                "y": 0.7000004053115845,
+                "z": 0.7000003457069397
+            },
+            "rawHipsLocalDistance": 0.000009698641406430397,
+            "contactAnchorErrorM": 0.000015136572983465157,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Mahgnkey",
+            "repeatedRenderer": "Mahgnkey",
+            "baselineTriangle": 1354,
+            "repeatedTriangle": 1354
+        },
+        {
+            "attacker": "Pepe",
+            "victim": "Mankey",
+            "laneDirection": 1,
+            "pass": 3,
+            "queryOrder": "forward from clip start",
+            "seconds": 0.4749999940395355,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": 0.7437416315078735,
+                "y": 0.8823859691619873,
+                "z": -0.023128865286707879
+            },
+            "repeatedWorldPoint": {
+                "x": 0.7437471747398377,
+                "y": 0.8823822736740112,
+                "z": -0.0231130700558424
+            },
+            "baselineHipsLocalPoint": {
+                "x": -0.32073983550071719,
+                "y": 0.25945940613746645,
+                "z": 0.18442606925964356
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -0.32073527574539187,
+                "y": 0.25946280360221865,
+                "z": 0.1844150573015213
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.7000003457069397,
+                "y": 0.7000003457069397,
+                "z": 0.7000002264976502
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.7000002264976502,
+                "y": 0.7000004053115845,
+                "z": 0.7000003457069397
+            },
+            "rawHipsLocalDistance": 0.000012393439646984916,
+            "contactAnchorErrorM": 0.00001714273457764648,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Mahgnkey",
+            "repeatedRenderer": "Mahgnkey",
+            "baselineTriangle": 1354,
+            "repeatedTriangle": 1354
+        },
+        {
+            "attacker": "Pepe",
+            "victim": "Mankey",
+            "laneDirection": 1,
+            "pass": 3,
+            "queryOrder": "forward from clip start",
+            "seconds": 2.387500047683716,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": 0.7690312266349793,
+                "y": 0.7633707523345947,
+                "z": 0.4707667827606201
+            },
+            "repeatedWorldPoint": {
+                "x": 0.769051194190979,
+                "y": 0.7633299231529236,
+                "z": 0.47075825929641726
+            },
+            "baselineHipsLocalPoint": {
+                "x": -0.27858686447143557,
+                "y": 0.38523414731025698,
+                "z": 0.29174724221229555
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -0.27853548526763918,
+                "y": 0.38519594073295596,
+                "z": 0.2917255163192749
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.7000002861022949,
+                "y": 0.7000002861022949,
+                "z": 0.7000001668930054
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.7000003457069397,
+                "y": 0.7000002861022949,
+                "z": 0.7000001668930054
+            },
+            "rawHipsLocalDistance": 0.00006761345866834745,
+            "contactAnchorErrorM": 0.00004624256325769238,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Mahgnkey",
+            "repeatedRenderer": "Mahgnkey",
+            "baselineTriangle": 1360,
+            "repeatedTriangle": 1360
+        },
+        {
+            "attacker": "Pepe",
+            "victim": "Mankey",
+            "laneDirection": 1,
+            "pass": 3,
+            "queryOrder": "backward from clip end",
+            "seconds": 2.387500047683716,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": 0.7690312266349793,
+                "y": 0.7633707523345947,
+                "z": 0.4707667827606201
+            },
+            "repeatedWorldPoint": {
+                "x": 0.7690533399581909,
+                "y": 0.763324499130249,
+                "z": 0.4707568883895874
+            },
+            "baselineHipsLocalPoint": {
+                "x": -0.27858686447143557,
+                "y": 0.38523414731025698,
+                "z": 0.29174724221229555
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -0.2785292863845825,
+                "y": 0.3851892650127411,
+                "z": 0.2917233109474182
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.7000002861022949,
+                "y": 0.7000002861022949,
+                "z": 0.7000001668930054
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.7000003457069397,
+                "y": 0.7000002861022949,
+                "z": 0.7000001668930054
+            },
+            "rawHipsLocalDistance": 0.00007682682917220518,
+            "contactAnchorErrorM": 0.00005221356695983559,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Mahgnkey",
+            "repeatedRenderer": "Mahgnkey",
+            "baselineTriangle": 1360,
+            "repeatedTriangle": 1360
+        },
+        {
+            "attacker": "Pepe",
+            "victim": "Mankey",
+            "laneDirection": 1,
+            "pass": 3,
+            "queryOrder": "backward from clip end",
+            "seconds": 0.4749999940395355,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": 0.7437416315078735,
+                "y": 0.8823859691619873,
+                "z": -0.023128865286707879
+            },
+            "repeatedWorldPoint": {
+                "x": 0.7437489032745361,
+                "y": 0.8823812007904053,
+                "z": -0.02310854010283947
+            },
+            "baselineHipsLocalPoint": {
+                "x": -0.32073983550071719,
+                "y": 0.25945940613746645,
+                "z": 0.18442606925964356
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -0.3207337558269501,
+                "y": 0.2594631016254425,
+                "z": 0.18441320955753327
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.7000003457069397,
+                "y": 0.7000003457069397,
+                "z": 0.7000002264976502
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.7000002264976502,
+                "y": 0.7000004053115845,
+                "z": 0.7000003457069397
+            },
+            "rawHipsLocalDistance": 0.000014696632206323557,
+            "contactAnchorErrorM": 0.00002210721686424222,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Mahgnkey",
+            "repeatedRenderer": "Mahgnkey",
+            "baselineTriangle": 1354,
+            "repeatedTriangle": 1354
+        },
+        {
+            "attacker": "Pepe",
+            "victim": "Mankey",
+            "laneDirection": -1,
+            "pass": 1,
+            "queryOrder": "forward from clip start",
+            "seconds": 0.4749999940395355,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": -0.7437417507171631,
+                "y": 0.8823860287666321,
+                "z": 0.023128537461161615
+            },
+            "repeatedWorldPoint": {
+                "x": -0.7437426447868347,
+                "y": 0.88238525390625,
+                "z": 0.02312551997601986
+            },
+            "baselineHipsLocalPoint": {
+                "x": -0.3207399249076843,
+                "y": 0.2594592571258545,
+                "z": 0.1844261884689331
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -0.32073891162872317,
+                "y": 0.2594599723815918,
+                "z": 0.18442410230636598
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.7000003457069397,
+                "y": 0.7000004053115845,
+                "z": 0.7000000476837158
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.7000003457069397,
+                "y": 0.7000002861022949,
+                "z": 0.7000001072883606
+            },
+            "rawHipsLocalDistance": 0.0000024270145786431387,
+            "contactAnchorErrorM": 0.0000032411396659881577,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Mahgnkey",
+            "repeatedRenderer": "Mahgnkey",
+            "baselineTriangle": 1354,
+            "repeatedTriangle": 1354
+        },
+        {
+            "attacker": "Pepe",
+            "victim": "Mankey",
+            "laneDirection": -1,
+            "pass": 1,
+            "queryOrder": "forward from clip start",
+            "seconds": 2.387500047683716,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": -0.7690312266349793,
+                "y": 0.7633712887763977,
+                "z": -0.4707673192024231
+            },
+            "repeatedWorldPoint": {
+                "x": -0.769034743309021,
+                "y": 0.7633634209632874,
+                "z": -0.4707656502723694
+            },
+            "baselineHipsLocalPoint": {
+                "x": -0.2785876989364624,
+                "y": 0.3852345645427704,
+                "z": 0.29174739122390749
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -0.2785778045654297,
+                "y": 0.3852272927761078,
+                "z": 0.2917434275150299
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.7000002861022949,
+                "y": 0.7000002861022949,
+                "z": 0.7000001072883606
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.7000003457069397,
+                "y": 0.7000003457069397,
+                "z": 0.7000001668930054
+            },
+            "rawHipsLocalDistance": 0.000012903028618893586,
+            "contactAnchorErrorM": 0.000008778086339589208,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Mahgnkey",
+            "repeatedRenderer": "Mahgnkey",
+            "baselineTriangle": 1360,
+            "repeatedTriangle": 1360
+        },
+        {
+            "attacker": "Pepe",
+            "victim": "Mankey",
+            "laneDirection": -1,
+            "pass": 1,
+            "queryOrder": "backward from clip end",
+            "seconds": 2.387500047683716,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": -0.7690312266349793,
+                "y": 0.7633712887763977,
+                "z": -0.4707673192024231
+            },
+            "repeatedWorldPoint": {
+                "x": -0.7690370082855225,
+                "y": 0.7633587718009949,
+                "z": -0.470764696598053
+            },
+            "baselineHipsLocalPoint": {
+                "x": -0.2785876989364624,
+                "y": 0.3852345645427704,
+                "z": 0.29174739122390749
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -0.2785722613334656,
+                "y": 0.3852216899394989,
+                "z": 0.29174113273620608
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.7000002861022949,
+                "y": 0.7000002861022949,
+                "z": 0.7000001072883606
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.7000002861022949,
+                "y": 0.7000002861022949,
+                "z": 0.7000001072883606
+            },
+            "rawHipsLocalDistance": 0.000021053352611488663,
+            "contactAnchorErrorM": 0.00001403496389684733,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Mahgnkey",
+            "repeatedRenderer": "Mahgnkey",
+            "baselineTriangle": 1360,
+            "repeatedTriangle": 1360
+        },
+        {
+            "attacker": "Pepe",
+            "victim": "Mankey",
+            "laneDirection": -1,
+            "pass": 1,
+            "queryOrder": "backward from clip end",
+            "seconds": 0.4749999940395355,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": -0.7437417507171631,
+                "y": 0.8823860287666321,
+                "z": 0.023128537461161615
+            },
+            "repeatedWorldPoint": {
+                "x": -0.7437440156936646,
+                "y": 0.8823842406272888,
+                "z": 0.023121166974306108
+            },
+            "baselineHipsLocalPoint": {
+                "x": -0.3207399249076843,
+                "y": 0.2594592571258545,
+                "z": 0.1844261884689331
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -0.3207375407218933,
+                "y": 0.25946030020713808,
+                "z": 0.18442247807979585
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.7000003457069397,
+                "y": 0.7000004053115845,
+                "z": 0.7000000476837158
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.7000003457069397,
+                "y": 0.7000004053115845,
+                "z": 0.7000000476837158
+            },
+            "rawHipsLocalDistance": 0.0000045320357457967479,
+            "contactAnchorErrorM": 0.00000791527872934239,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Mahgnkey",
+            "repeatedRenderer": "Mahgnkey",
+            "baselineTriangle": 1354,
+            "repeatedTriangle": 1354
+        },
+        {
+            "attacker": "Pepe",
+            "victim": "Mankey",
+            "laneDirection": -1,
+            "pass": 2,
+            "queryOrder": "forward from clip start",
+            "seconds": 0.4749999940395355,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": -0.7437417507171631,
+                "y": 0.8823860287666321,
+                "z": 0.023128537461161615
+            },
+            "repeatedWorldPoint": {
+                "x": -0.7437446117401123,
+                "y": 0.8823839426040649,
+                "z": 0.02311960607767105
+            },
+            "baselineHipsLocalPoint": {
+                "x": -0.3207399249076843,
+                "y": 0.2594592571258545,
+                "z": 0.1844261884689331
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -0.320737361907959,
+                "y": 0.2594611346721649,
+                "z": 0.1844204068183899
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.7000003457069397,
+                "y": 0.7000004053115845,
+                "z": 0.7000000476837158
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.7000002861022949,
+                "y": 0.7000003457069397,
+                "z": 0.7000000476837158
+            },
+            "rawHipsLocalDistance": 0.000006597092578886077,
+            "contactAnchorErrorM": 0.000009607660103938542,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Mahgnkey",
+            "repeatedRenderer": "Mahgnkey",
+            "baselineTriangle": 1354,
+            "repeatedTriangle": 1354
+        },
+        {
+            "attacker": "Pepe",
+            "victim": "Mankey",
+            "laneDirection": -1,
+            "pass": 2,
+            "queryOrder": "forward from clip start",
+            "seconds": 2.387500047683716,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": -0.7690312266349793,
+                "y": 0.7633712887763977,
+                "z": -0.4707673192024231
+            },
+            "repeatedWorldPoint": {
+                "x": -0.7690422534942627,
+                "y": 0.7633484601974487,
+                "z": -0.4707629382610321
+            },
+            "baselineHipsLocalPoint": {
+                "x": -0.2785876989364624,
+                "y": 0.3852345645427704,
+                "z": 0.29174739122390749
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -0.2785588800907135,
+                "y": 0.38521328568458559,
+                "z": 0.29173538088798525
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.7000002861022949,
+                "y": 0.7000002861022949,
+                "z": 0.7000001072883606
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.7000002264976502,
+                "y": 0.7000002264976502,
+                "z": 0.7000001072883606
+            },
+            "rawHipsLocalDistance": 0.000037783116567879915,
+            "contactAnchorErrorM": 0.000025727966203703545,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Mahgnkey",
+            "repeatedRenderer": "Mahgnkey",
+            "baselineTriangle": 1360,
+            "repeatedTriangle": 1360
+        },
+        {
+            "attacker": "Pepe",
+            "victim": "Mankey",
+            "laneDirection": -1,
+            "pass": 2,
+            "queryOrder": "backward from clip end",
+            "seconds": 2.387500047683716,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": -0.7690312266349793,
+                "y": 0.7633712887763977,
+                "z": -0.4707673192024231
+            },
+            "repeatedWorldPoint": {
+                "x": -0.7690442800521851,
+                "y": 0.7633437514305115,
+                "z": -0.47076210379600527
+            },
+            "baselineHipsLocalPoint": {
+                "x": -0.2785876989364624,
+                "y": 0.3852345645427704,
+                "z": 0.29174739122390749
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -0.2785530686378479,
+                "y": 0.3852081596851349,
+                "z": 0.2917329668998718
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.7000002861022949,
+                "y": 0.7000002861022949,
+                "z": 0.7000001072883606
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.7000004053115845,
+                "y": 0.7000004053115845,
+                "z": 0.7000002264976502
+            },
+            "rawHipsLocalDistance": 0.00004587521470966749,
+            "contactAnchorErrorM": 0.00003091759208473377,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Mahgnkey",
+            "repeatedRenderer": "Mahgnkey",
+            "baselineTriangle": 1360,
+            "repeatedTriangle": 1360
+        },
+        {
+            "attacker": "Pepe",
+            "victim": "Mankey",
+            "laneDirection": -1,
+            "pass": 2,
+            "queryOrder": "backward from clip end",
+            "seconds": 0.4749999940395355,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": -0.7437417507171631,
+                "y": 0.8823860287666321,
+                "z": 0.023128537461161615
+            },
+            "repeatedWorldPoint": {
+                "x": -0.7437462210655212,
+                "y": 0.8823829293251038,
+                "z": 0.023114588111639024
+            },
+            "baselineHipsLocalPoint": {
+                "x": -0.3207399249076843,
+                "y": 0.2594592571258545,
+                "z": 0.1844261884689331
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -0.3207360506057739,
+                "y": 0.2594619393348694,
+                "z": 0.18441776931285859
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.7000003457069397,
+                "y": 0.7000004053115845,
+                "z": 0.7000000476837158
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.7000004649162293,
+                "y": 0.7000004649162293,
+                "z": 0.7000000476837158
+            },
+            "rawHipsLocalDistance": 0.000009648142622609157,
+            "contactAnchorErrorM": 0.000014972471944929566,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Mahgnkey",
+            "repeatedRenderer": "Mahgnkey",
+            "baselineTriangle": 1354,
+            "repeatedTriangle": 1354
+        },
+        {
+            "attacker": "Pepe",
+            "victim": "Mankey",
+            "laneDirection": -1,
+            "pass": 3,
+            "queryOrder": "forward from clip start",
+            "seconds": 0.4749999940395355,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": -0.7437417507171631,
+                "y": 0.8823860287666321,
+                "z": 0.023128537461161615
+            },
+            "repeatedWorldPoint": {
+                "x": -0.7437468767166138,
+                "y": 0.8823826909065247,
+                "z": 0.02311275713145733
+            },
+            "baselineHipsLocalPoint": {
+                "x": -0.3207399249076843,
+                "y": 0.2594592571258545,
+                "z": 0.1844261884689331
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -0.32073602080345156,
+                "y": 0.25946295261383059,
+                "z": 0.1844152957201004
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.7000003457069397,
+                "y": 0.7000004053115845,
+                "z": 0.7000000476837158
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.7000004649162293,
+                "y": 0.7000004649162293,
+                "z": 0.7000000476837158
+            },
+            "rawHipsLocalDistance": 0.0000121470420708647,
+            "contactAnchorErrorM": 0.000016924419469432905,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Mahgnkey",
+            "repeatedRenderer": "Mahgnkey",
+            "baselineTriangle": 1354,
+            "repeatedTriangle": 1354
+        },
+        {
+            "attacker": "Pepe",
+            "victim": "Mankey",
+            "laneDirection": -1,
+            "pass": 3,
+            "queryOrder": "forward from clip start",
+            "seconds": 2.387500047683716,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": -0.7690312266349793,
+                "y": 0.7633712887763977,
+                "z": -0.4707673192024231
+            },
+            "repeatedWorldPoint": {
+                "x": -0.7690499424934387,
+                "y": 0.7633329033851624,
+                "z": -0.470760315656662
+            },
+            "baselineHipsLocalPoint": {
+                "x": -0.2785876989364624,
+                "y": 0.3852345645427704,
+                "z": 0.29174739122390749
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -0.2785392999649048,
+                "y": 0.38519948720932009,
+                "z": 0.29172688722610476
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.7000002861022949,
+                "y": 0.7000002861022949,
+                "z": 0.7000001072883606
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.7000004053115845,
+                "y": 0.7000004053115845,
+                "z": 0.7000002264976502
+            },
+            "rawHipsLocalDistance": 0.00006319251406239346,
+            "contactAnchorErrorM": 0.00004327552596805617,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Mahgnkey",
+            "repeatedRenderer": "Mahgnkey",
+            "baselineTriangle": 1360,
+            "repeatedTriangle": 1360
+        },
+        {
+            "attacker": "Pepe",
+            "victim": "Mankey",
+            "laneDirection": -1,
+            "pass": 3,
+            "queryOrder": "backward from clip end",
+            "seconds": 2.387500047683716,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": -0.7690312266349793,
+                "y": 0.7633712887763977,
+                "z": -0.4707673192024231
+            },
+            "repeatedWorldPoint": {
+                "x": -0.7690519690513611,
+                "y": 0.7633282542228699,
+                "z": -0.4707591235637665
+            },
+            "baselineHipsLocalPoint": {
+                "x": -0.2785876989364624,
+                "y": 0.3852345645427704,
+                "z": 0.29174739122390749
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -0.27853405475616457,
+                "y": 0.3851930797100067,
+                "z": 0.29172512888908389
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.7000002861022949,
+                "y": 0.7000002861022949,
+                "z": 0.7000001072883606
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.7000004053115845,
+                "y": 0.7000004053115845,
+                "z": 0.7000002264976502
+            },
+            "rawHipsLocalDistance": 0.0000713743720552884,
+            "contactAnchorErrorM": 0.00004847049785894342,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Mahgnkey",
+            "repeatedRenderer": "Mahgnkey",
+            "baselineTriangle": 1360,
+            "repeatedTriangle": 1360
+        },
+        {
+            "attacker": "Pepe",
+            "victim": "Mankey",
+            "laneDirection": -1,
+            "pass": 3,
+            "queryOrder": "backward from clip end",
+            "seconds": 0.4749999940395355,
+            "attackClip": "3e685dd57e9c78b49b20bef3e8358ae3:7400006",
+            "reactionClip": "b01b411d366a5a344bddf3428a7bc8f7:7400006",
+            "baselineWorldPoint": {
+                "x": -0.7437417507171631,
+                "y": 0.8823860287666321,
+                "z": 0.023128537461161615
+            },
+            "repeatedWorldPoint": {
+                "x": -0.7437485456466675,
+                "y": 0.8823816180229187,
+                "z": 0.02310802973806858
+            },
+            "baselineHipsLocalPoint": {
+                "x": -0.3207399249076843,
+                "y": 0.2594592571258545,
+                "z": 0.1844261884689331
+            },
+            "repeatedHipsLocalPoint": {
+                "x": -0.32073450088500979,
+                "y": 0.2594633102416992,
+                "z": 0.18441341817378999
+            },
+            "baselineHipsLossyScale": {
+                "x": 0.7000003457069397,
+                "y": 0.7000004053115845,
+                "z": 0.7000000476837158
+            },
+            "repeatedHipsLossyScale": {
+                "x": 0.7000004649162293,
+                "y": 0.7000004649162293,
+                "z": 0.7000000476837158
+            },
+            "rawHipsLocalDistance": 0.000014454349184234161,
+            "contactAnchorErrorM": 0.000022049771359888837,
+            "contactGapErrorM": 0.0,
+            "withinOneMillimeter": true,
+            "legacyLocalComparisonWithinThreshold": true,
+            "baselineRenderer": "Mahgnkey",
+            "repeatedRenderer": "Mahgnkey",
+            "baselineTriangle": 1354,
+            "repeatedTriangle": 1354
+        }
+    ]
+}

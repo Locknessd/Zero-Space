@@ -9,12 +9,15 @@ namespace FrankRetarget
         public const int ReceiverFloorSamplesPerSecond = 480;
         public FrankTestDriver attackerDriver, receiverDriver;
         public AnimationClip attack, reaction;
+        public FrankAttackTrack attacks;
         public FrankReactionTrack reactions;
         public AnimationClip getUp;
         public AnimationClip attackerGetUp;
-        [Min(0)] public float entryBlendSeconds;
-        [Min(0)] public float recoveryBlendSeconds;
         public FrankPairGrounding recoveryGrounding;
+        [Min(0)] public float recoveryBlendSeconds;
+        [Range(0, 1)] public float standingRecoverySeconds;
+        [Min(0)] public float entryBlendSeconds;
+        public bool transferReceiverFingers;
         public bool constrainDepthAfterSpacing;
         [Min(0)] public float maximumAlignmentError;
         public Vector3 receiverOffset;
@@ -110,6 +113,16 @@ namespace FrankRetarget
         public bool Begin(CharacterCombat source, CharacterCombat target, CombatTripletData move, bool isLethal)
         {
             if (move.sourcePair == null || !move.sourcePair.Valid) return false;
+            if (!float.IsFinite(move.sourcePair.standingRecoverySeconds) ||
+                move.sourcePair.standingRecoverySeconds < 0 || move.sourcePair.standingRecoverySeconds > 1)
+                throw new ArgumentException("Standing recovery must be between zero and one second.", nameof(move));
+            if (move.sourcePair.attacks)
+            {
+                if (move.grapple)
+                    throw new ArgumentException("A pair cannot combine an attack track with a grapple.", nameof(move));
+                if (!move.sourcePair.attacks.TryValidate(out string error))
+                    throw new ArgumentException(error, nameof(move));
+            }
             if (move.sourcePair.reactions)
             {
                 if (move.grapple)
@@ -117,13 +130,27 @@ namespace FrankRetarget
                 if (!move.sourcePair.reactions.TryValidate(out string error))
                     throw new ArgumentException(error, nameof(move));
             }
+            var selectionBank = source.battleSfx ? source.battleSfx.bank
+                : source.battleVfx ? source.battleVfx.timeline : null;
+            if (!CombatLethalPairVariant.TrySelect(move, isLethal, selectionBank,
+                source.Animator.avatar, target.Animator.avatar, out var selectedVariant, out string variantError))
+            {
+                Debug.LogWarning("Rejected lethal receiver variant: " + variantError, this);
+                return false;
+            }
+            if (selectedVariant != null && !selectedVariant.TryValidateReceiver(target.Animator, out variantError))
+            {
+                Debug.LogWarning("Rejected lethal receiver contacts: " + variantError, this);
+                return false;
+            }
+            lethalVariant = selectedVariant;
             pair = move.sourcePair;
             Move = move;
             attacker = source;
             receiver = target;
             lethal = isLethal;
             ResetRecovery();
-            lightDepthLocked = pair.unarmedIndex >= 0;
+            lightDepthLocked = pair.unarmedIndex >= 0 || pair.constrainDepthAfterSpacing;
             float initialAttackHipsDepth = source.Animator.GetBoneTransform(HumanBodyBones.Hips).position.z;
             float initialHitHipsDepth = target.Animator.GetBoneTransform(HumanBodyBones.Hips).position.z;
             source.weaponRig?.Release();
@@ -151,8 +178,10 @@ namespace FrankRetarget
                 attackActor = Actor(source, pair.attackerDriver, pair.attack, true,
                     pair.showWeapon || move.weapon != TrumpWeaponManager.WeaponType.None, pair.unarmedIndex >= 0,
                     entryBlend, pair.attackerWeaponPrefab, pair.attackerWeaponSocket);
-                hitActor = Actor(target, pair.receiverDriver, pair.reaction, false, false, pair.unarmedIndex >= 0, entryBlend);
-                hitActor.SetReactionTrack(pair.reactions, lethal);
+                attackActor.SetAttackTrack(pair.attacks);
+                hitActor = Actor(target, pair.receiverDriver, ReceiverClip, false, false, pair.unarmedIndex >= 0, entryBlend);
+                hitActor.SetReactionTrack(lethalVariant == null ? pair.reactions : null, lethal);
+                if (pair.transferReceiverFingers) hitActor.Pose.transferFingers = true;
                 // Grapples constrain the complete pair after spacing. Applying a
                 // pelvis lock before optional spacing would move the hands twice
                 // when the baked separation passes through zero.
@@ -219,7 +248,9 @@ namespace FrankRetarget
             if (!Playing || waitingForGetUp) return;
             SampleTime = Mathf.Clamp(seconds, 0, Duration);
             attackActor.Evaluate(SampleTime);
-            hitActor.Evaluate(pair.reactions ? SampleTime : Mathf.Max(0, SampleTime - pair.reactionDelay));
+            hitActor.Evaluate(lethalVariant != null || pair.reactions
+                ? SampleTime : Mathf.Max(0, SampleTime - pair.reactionDelay));
+            Vector3 originalAttackHips = attackActor.Pose.targetHips.position;
             if (pair.spacing && pair.unarmedIndex >= 0 && pair.bodySpacing > 0)
             {
                 Vector3 separation = PairSeparation(SampleTime) * pair.bodySpacing;
@@ -231,9 +262,11 @@ namespace FrankRetarget
             }
             CombatPositioningController.Instance?.ConstrainDepthNow();
             ConstrainLightHipsDepth();
-            if (Move.grounding)
-                Move.grounding.Apply(SampleTime, attacker.Animator, receiver.Animator, attackActor);
+            if (ActiveGrounding)
+                ActiveGrounding.Apply(SampleTime, attacker.Animator, receiver.Animator);
             ApplyReceiverFloorLift();
+            attackActor.ApplySourceWeaponDisplacement(attackActor.Pose.targetHips.position - originalAttackHips);
+            attackActor.ApplySourceWeaponEntryGrip(SampleTime);
         }
 
         void ApplyReceiverFloorLift()
@@ -272,11 +305,18 @@ namespace FrankRetarget
                 // The source Animator can refresh native weapon bones between manual samples.
                 // Reassert the held pose without advancing time or redispatching contact events.
                 if (!waitingForGetUp) EvaluateAt(SampleTime);
+                else
+                {
+                    EvaluateRecoveryPose();
+                    ConstrainLightHipsDepth();
+                }
                 return;
             }
             if (waitingForGetUp)
             {
+                EvaluateRecoveryPose();
                 ConstrainLightHipsDepth();
+                ObserveStandingRecovery();
                 if (!attackRecoveryPending && !hitRecoveryPending) CompleteNow();
                 return;
             }

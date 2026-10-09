@@ -1,0 +1,495 @@
+RUNNING: 4 range guards; 12 queued old-new-old; 4 accepted lethal; 4 source interrupts.
+Extension: 4 reset after contact; 4 receiver disable after contact; 4 supine pause/resume; 4 repeated pairs of queued Samurai activations (44 plays total).
+Each queue orientation runs Light_1, Samurai_Execution10, Heavy_6.
+Visual contact choreography and subjective quality require separate visual review.
+EXECUTION10_SOURCE attack=3e685dd57e9c78b49b20bef3e8358ae3:7400020 reaction=b01b411d366a5a344bddf3428a7bc8f7:7400020 attackSeconds=2.56666684 reactionSeconds=2.66666675 attackAlias=True reactionAlias=True getUpAlias=True
+START case=1 scenario=range guard action=Samurai_Execution10 source=Mankey avatar=MankeyAvatar direction=1
+SETTLE case=1 quietWallSeconds=0.658 activeEffects=0 activeVoices=0 scale=1.000 unscaledTime=7.937 dspTime=1754.389
+SETTLE bounds particleUnscaledSeconds=0.667 voiceDspSeconds=0.085; existing case30s/suite600s watchdog unchanged.
+SETTLE CLEAN case=1 extraWallSeconds=0.006 extraUnscaledSeconds=0.000 extraDspSeconds=0.000 effects=0 voices=0
+MEASURE case=1 play=1 frames=101 wallFrameMedianMs=5.982 p95Ms=10.174 maxMs=34.626 mainThreadAllocatedBytes=unavailable_counter_did_not_observe_probe_allocation managedHeapDeltaBytes=524288 objects=915->915 nativeActors=0/0/0 pooledVoices=13->13 pooledEffects=0->0
+MEASURE scope=Editor main thread including harness, screenshots, logging, queue movement, pause and settle frames; heap delta is not allocation; pooled objects may be retained. Small repeated samples are raw evidence, not a performance target verdict or standalone build benchmark.
+PASS case=1/40 scenario=range guard action=Samurai_Execution10 source=Mankey avatar=MankeyAvatar direction=1 contacts=0 starts=0 callbacks=0/0 getUpFrames=0 progress=0.000 audio=0 vfx=0 hold=0 light=0 shake=0 trail=False flash=False seconds=0.702
+EXECUTION10_SOURCE attack=3e685dd57e9c78b49b20bef3e8358ae3:7400020 reaction=b01b411d366a5a344bddf3428a7bc8f7:7400020 attackSeconds=2.56666684 reactionSeconds=2.66666675 attackAlias=True reactionAlias=True getUpAlias=True
+START case=2 scenario=range guard action=Samurai_Execution10 source=Pepe avatar=PepeAvatar direction=1
+SETTLE case=2 quietWallSeconds=0.658 activeEffects=0 activeVoices=0 scale=1.000 unscaledTime=8.621 dspTime=1755.072
+SETTLE bounds particleUnscaledSeconds=0.667 voiceDspSeconds=0.085; existing case30s/suite600s watchdog unchanged.
+SETTLE CLEAN case=2 extraWallSeconds=0.000 extraUnscaledSeconds=0.000 extraDspSeconds=0.000 effects=0 voices=0
+MEASURE case=2 play=1 frames=131 wallFrameMedianMs=4.208 p95Ms=7.442 maxMs=10.909 mainThreadAllocatedBytes=unavailable_counter_did_not_observe_probe_allocation managedHeapDeltaBytes=1224704 objects=915->915 nativeActors=0/0/0 pooledVoices=13->13 pooledEffects=0->0
+MEASURE scope=Editor main thread including harness, screenshots, logging, queue movement, pause and settle frames; heap delta is not allocation; pooled objects may be retained. Small repeated samples are raw evidence, not a performance target verdict or standalone build benchmark.
+PASS case=2/40 scenario=range guard action=Samurai_Execution10 source=Pepe avatar=PepeAvatar direction=1 contacts=0 starts=0 callbacks=0/0 getUpFrames=0 progress=0.000 audio=0 vfx=0 hold=0 light=0 shake=0 trail=False flash=False seconds=0.666
+EXECUTION10_SOURCE attack=3e685dd57e9c78b49b20bef3e8358ae3:7400020 reaction=b01b411d366a5a344bddf3428a7bc8f7:7400020 attackSeconds=2.56666684 reactionSeconds=2.66666675 attackAlias=True reactionAlias=True getUpAlias=True
+START case=3 scenario=range guard action=Samurai_Execution10 source=Mankey avatar=MankeyAvatar direction=-1
+SETTLE case=3 quietWallSeconds=0.652 activeEffects=0 activeVoices=0 scale=1.000 unscaledTime=9.290 dspTime=1755.733
+SETTLE bounds particleUnscaledSeconds=0.667 voiceDspSeconds=0.085; existing case30s/suite600s watchdog unchanged.
+SETTLE CLEAN case=3 extraWallSeconds=0.000 extraUnscaledSeconds=0.000 extraDspSeconds=0.000 effects=0 voices=0
+MEASURE case=3 play=1 frames=137 wallFrameMedianMs=4.118 p95Ms=7.251 maxMs=9.183 mainThreadAllocatedBytes=unavailable_counter_did_not_observe_probe_allocation managedHeapDeltaBytes=1863680 objects=915->915 nativeActors=0/0/0 pooledVoices=13->13 pooledEffects=0->0
+MEASURE scope=Editor main thread including harness, screenshots, logging, queue movement, pause and settle frames; heap delta is not allocation; pooled objects may be retained. Small repeated samples are raw evidence, not a performance target verdict or standalone build benchmark.
+PASS case=3/40 scenario=range guard action=Samurai_Execution10 source=Mankey avatar=MankeyAvatar direction=-1 contacts=0 starts=0 callbacks=0/0 getUpFrames=0 progress=0.000 audio=0 vfx=0 hold=0 light=0 shake=0 trail=False flash=False seconds=0.662
+EXECUTION10_SOURCE attack=3e685dd57e9c78b49b20bef3e8358ae3:7400020 reaction=b01b411d366a5a344bddf3428a7bc8f7:7400020 attackSeconds=2.56666684 reactionSeconds=2.66666675 attackAlias=True reactionAlias=True getUpAlias=True
+START case=4 scenario=range guard action=Samurai_Execution10 source=Pepe avatar=PepeAvatar direction=-1
+SETTLE case=4 quietWallSeconds=0.653 activeEffects=0 activeVoices=0 scale=1.000 unscaledTime=9.954 dspTime=1756.395
+SETTLE bounds particleUnscaledSeconds=0.667 voiceDspSeconds=0.085; existing case30s/suite600s watchdog unchanged.
+SETTLE CLEAN case=4 extraWallSeconds=0.000 extraUnscaledSeconds=0.000 extraDspSeconds=0.000 effects=0 voices=0
+MEASURE case=4 play=1 frames=150 wallFrameMedianMs=3.916 p95Ms=7.177 maxMs=9.099 mainThreadAllocatedBytes=unavailable_counter_did_not_observe_probe_allocation managedHeapDeltaBytes=2289664 objects=915->915 nativeActors=0/0/0 pooledVoices=13->13 pooledEffects=0->0
+MEASURE scope=Editor main thread including harness, screenshots, logging, queue movement, pause and settle frames; heap delta is not allocation; pooled objects may be retained. Small repeated samples are raw evidence, not a performance target verdict or standalone build benchmark.
+PASS case=4/40 scenario=range guard action=Samurai_Execution10 source=Pepe avatar=PepeAvatar direction=-1 contacts=0 starts=0 callbacks=0/0 getUpFrames=0 progress=0.000 audio=0 vfx=0 hold=0 light=0 shake=0 trail=False flash=False seconds=0.658
+START case=5 scenario=queued action=Light_1 source=Mankey avatar=MankeyAvatar direction=1
+SETTLE case=5 quietWallSeconds=0.653 activeEffects=0 activeVoices=0 scale=1.000 unscaledTime=13.816 dspTime=1760.256
+SETTLE bounds particleUnscaledSeconds=0.667 voiceDspSeconds=0.085; existing case30s/suite600s watchdog unchanged.
+SETTLE CLEAN case=5 extraWallSeconds=0.001 extraUnscaledSeconds=0.000 extraDspSeconds=0.000 effects=0 voices=0
+MEASURE case=5 play=1 frames=837 wallFrameMedianMs=4.221 p95Ms=6.106 maxMs=47.248 mainThreadAllocatedBytes=unavailable_counter_did_not_observe_probe_allocation managedHeapDeltaBytes=-1036288 objects=915->936 nativeActors=0/2/0 pooledVoices=13->13 pooledEffects=0->4
+MEASURE scope=Editor main thread including harness, screenshots, logging, queue movement, pause and settle frames; heap delta is not allocation; pooled objects may be retained. Small repeated samples are raw evidence, not a performance target verdict or standalone build benchmark.
+PASS case=5/40 scenario=queued action=Light_1 source=Mankey avatar=MankeyAvatar direction=1 contacts=1 starts=1 callbacks=1/1 getUpFrames=225 progress=0.999 audio=6 vfx=5 hold=1 light=1 shake=1 trail=False flash=True seconds=3.858
+EXECUTION10_SOURCE attack=3e685dd57e9c78b49b20bef3e8358ae3:7400020 reaction=b01b411d366a5a344bddf3428a7bc8f7:7400020 attackSeconds=2.56666684 reactionSeconds=2.66666675 attackAlias=True reactionAlias=True getUpAlias=True
+START case=6 scenario=queued action=Samurai_Execution10 source=Mankey avatar=MankeyAvatar direction=1
+STALE rejected phase=source old=1/1 current=2/2
+EQUIPMENT two requests while suppressed: Katana,Katana
+FRAME phase=NativeEnd file=Mankey_1_Case6_Play1_NativeEnd.png frame=1944 sourceSeconds=2.666667 recoveryNormalized=0.000000
+RECOVERY_TRAJECTORY file=GeneratedAssets/CombatExpansion/SamuraiStudy/Execution10PlayMode/RecoveryTrajectory/Mankey_Pepe_1_Case6_Play1.csv provenance=reconstructed raw controller pose from stored locals before grounding/custom blend; live scales and nonmapped ancestors cannot recover pre-evaluation ancestor changes; not a direct evaluation-hook measurement; player-loop harness/reflection/screenshots/CSV add overhead; controller_dt uses successive sampled GetUp clocks; first delta is blank; first 0.25s plus crossing frame.
+RECOVERY_BOUNDARY nativeFrame=1944 frame=1945 sourceSeconds=2.666667/2.666667 recoverySeconds=0.000000 blendDuration=0.120000 blendWeight=0.000000 maxLandmarkDeltaMeters=0.000001 toleranceMeters=0.002000
+BOUNDARY_BONE Hips native=(-0.180476, 0.269348, -1.802682) recovery=(-0.180476, 0.269348, -1.802683) delta=0.000000
+BOUNDARY_BONE Head native=(0.249216, 0.256866, -1.565515) recovery=(0.249216, 0.256866, -1.565515) delta=0.000001
+BOUNDARY_BONE LeftHand native=(0.228204, 0.220557, -2.190699) recovery=(0.228204, 0.220557, -2.190699) delta=0.000000
+BOUNDARY_BONE RightHand native=(-0.296724, 0.215116, -1.238585) recovery=(-0.296724, 0.215116, -1.238586) delta=0.000000
+BOUNDARY_BONE LeftFoot native=(-0.446194, 0.255864, -2.573510) recovery=(-0.446194, 0.255864, -2.573511) delta=0.000000
+BOUNDARY_BONE RightFoot native=(-0.736256, 0.209861, -2.242845) recovery=(-0.736256, 0.209861, -2.242845) delta=0.000001
+BLEND_INTERNAL sourceHipsWorld=(-0.18, 0.27, -1.80) rawHipsLocal=(0.00, 1.35, -0.78) outputHipsLocal=(-13.03, 2.69, -0.78)
+BLEND_BONE mixamorig:Hips sourceToRawDegrees=33.585560 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftUpLeg sourceToRawDegrees=44.203680 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightUpLeg sourceToRawDegrees=47.120910 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftLeg sourceToRawDegrees=43.815440 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightLeg sourceToRawDegrees=55.042090 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftFoot sourceToRawDegrees=24.616370 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightFoot sourceToRawDegrees=30.302530 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:Spine sourceToRawDegrees=4.305538 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:Spine1 sourceToRawDegrees=3.635370 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:Neck sourceToRawDegrees=26.015330 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:Head sourceToRawDegrees=34.986520 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftShoulder sourceToRawDegrees=17.908850 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightShoulder sourceToRawDegrees=13.835280 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftArm sourceToRawDegrees=71.183960 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightArm sourceToRawDegrees=65.787260 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftForeArm sourceToRawDegrees=78.945500 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightForeArm sourceToRawDegrees=85.840800 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHand sourceToRawDegrees=34.900860 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHand sourceToRawDegrees=57.715480 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftToeBase sourceToRawDegrees=0.000000 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightToeBase sourceToRawDegrees=0.000000 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandThumb1 sourceToRawDegrees=29.218800 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandThumb2 sourceToRawDegrees=2.410894 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandThumb3 sourceToRawDegrees=12.769140 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandIndex1 sourceToRawDegrees=17.338550 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandIndex2 sourceToRawDegrees=1.161618 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandIndex3 sourceToRawDegrees=7.949567 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandMiddle1 sourceToRawDegrees=3.446121 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandMiddle2 sourceToRawDegrees=3.540240 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandMiddle3 sourceToRawDegrees=18.804860 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandRing1 sourceToRawDegrees=4.053226 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandRing2 sourceToRawDegrees=11.267620 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandRing3 sourceToRawDegrees=25.795440 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandThumb1 sourceToRawDegrees=22.048600 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandThumb2 sourceToRawDegrees=24.314580 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandThumb3 sourceToRawDegrees=61.826550 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandIndex1 sourceToRawDegrees=43.311000 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandIndex2 sourceToRawDegrees=43.012290 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandIndex3 sourceToRawDegrees=68.253150 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandMiddle1 sourceToRawDegrees=54.460870 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandMiddle2 sourceToRawDegrees=43.502000 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandMiddle3 sourceToRawDegrees=53.637830 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandRing1 sourceToRawDegrees=53.997760 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandRing2 sourceToRawDegrees=30.934820 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandRing3 sourceToRawDegrees=57.265500 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:Spine2 sourceToRawDegrees=2.499523 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+FRAME phase=RecoveryEarly file=Mankey_1_Case6_Play1_RecoveryEarly.png frame=1945 sourceSeconds=2.666667 recoveryNormalized=0.000000
+BLEND frame=1945 recoverySeconds=0.000000 weight=0.000000 hips=(-0.180476, 0.269348, -1.802683)
+STALE rejected phase=recovery old=1/1 current=2/2
+BLEND frame=1946 recoverySeconds=0.088829 weight=0.832627 hips=(-0.182506, 0.199061, -0.704011)
+BLEND frame=1947 recoverySeconds=0.098094 weight=0.912190 hips=(-0.183308, 0.194977, -0.596407)
+BLEND frame=1948 recoverySeconds=0.104627 weight=0.954970 hips=(-0.184135, 0.193327, -0.537870)
+BLEND frame=1949 recoverySeconds=0.109488 weight=0.978323 hips=(-0.184843, 0.192783, -0.505431)
+BLEND frame=1950 recoverySeconds=0.114143 weight=0.993087 hips=(-0.185584, 0.192826, -0.484408)
+BLEND frame=1951 recoverySeconds=0.118825 weight=0.999714 hips=(-0.186401, 0.193425, -0.474182)
+FRAME phase=RecoveryMid file=Mankey_1_Case6_Play1_RecoveryMid.png frame=2063 sourceSeconds=2.666667 recoveryNormalized=0.450815
+FRAME phase=RecoveryLate file=Mankey_1_Case6_Play1_RecoveryLate.png frame=2173 sourceSeconds=2.666667 recoveryNormalized=0.850410
+SETTLE case=6 quietWallSeconds=0.653 activeEffects=0 activeVoices=0 scale=1.000 unscaledTime=18.916 dspTime=1765.355
+SETTLE bounds particleUnscaledSeconds=0.667 voiceDspSeconds=0.085; existing case30s/suite600s watchdog unchanged.
+SETTLE CLEAN case=6 extraWallSeconds=0.000 extraUnscaledSeconds=0.000 extraDspSeconds=0.000 effects=0 voices=0
+RECOVERY_EVIDENCE maxBoundaryMeters=0.000001 blendFrames=7 screenshotsRequested=4; rendered appearance requires visual review.
+MEASURE case=6 play=1 frames=998 wallFrameMedianMs=4.648 p95Ms=6.205 maxMs=86.418 mainThreadAllocatedBytes=unavailable_counter_did_not_observe_probe_allocation managedHeapDeltaBytes=-638976 objects=936->955 nativeActors=0/2/0 pooledVoices=13->13 pooledEffects=4->7
+MEASURE scope=Editor main thread including harness, screenshots, logging, queue movement, pause and settle frames; heap delta is not allocation; pooled objects may be retained. Small repeated samples are raw evidence, not a performance target verdict or standalone build benchmark.
+PASS case=6/40 scenario=queued action=Samurai_Execution10 source=Mankey avatar=MankeyAvatar direction=1 contacts=2 starts=1 callbacks=1/1 getUpFrames=260 progress=0.999 audio=5 vfx=5 hold=2 light=2 shake=2 trail=True flash=True seconds=5.094
+START case=7 scenario=queued action=Heavy_6 source=Mankey avatar=MankeyAvatar direction=1
+SETTLE case=7 quietWallSeconds=0.652 activeEffects=0 activeVoices=0 scale=1.000 unscaledTime=27.332 dspTime=1773.781
+SETTLE bounds particleUnscaledSeconds=0.667 voiceDspSeconds=0.085; existing case30s/suite600s watchdog unchanged.
+SETTLE CLEAN case=7 extraWallSeconds=0.000 extraUnscaledSeconds=0.000 extraDspSeconds=0.000 effects=0 voices=0
+MEASURE case=7 play=1 frames=1525 wallFrameMedianMs=5.248 p95Ms=7.714 maxMs=27.181 mainThreadAllocatedBytes=unavailable_counter_did_not_observe_probe_allocation managedHeapDeltaBytes=1261568 objects=955->967 nativeActors=0/2/0 pooledVoices=13->13 pooledEffects=7->9
+MEASURE scope=Editor main thread including harness, screenshots, logging, queue movement, pause and settle frames; heap delta is not allocation; pooled objects may be retained. Small repeated samples are raw evidence, not a performance target verdict or standalone build benchmark.
+PASS case=7/40 scenario=queued action=Heavy_6 source=Mankey avatar=MankeyAvatar direction=1 contacts=5 starts=1 callbacks=1/1 getUpFrames=192 progress=0.994 audio=14 vfx=11 hold=5 light=5 shake=5 trail=True flash=True seconds=8.409
+START case=8 scenario=queued action=Light_1 source=Pepe avatar=PepeAvatar direction=1
+SETTLE case=8 quietWallSeconds=0.653 activeEffects=0 activeVoices=0 scale=1.000 unscaledTime=31.192 dspTime=1777.643
+SETTLE bounds particleUnscaledSeconds=0.667 voiceDspSeconds=0.085; existing case30s/suite600s watchdog unchanged.
+SETTLE CLEAN case=8 extraWallSeconds=0.001 extraUnscaledSeconds=0.000 extraDspSeconds=0.000 effects=0 voices=0
+MEASURE case=8 play=1 frames=729 wallFrameMedianMs=4.958 p95Ms=7.654 maxMs=16.691 mainThreadAllocatedBytes=unavailable_counter_did_not_observe_probe_allocation managedHeapDeltaBytes=2445312 objects=967->967 nativeActors=0/2/0 pooledVoices=13->13 pooledEffects=9->9
+MEASURE scope=Editor main thread including harness, screenshots, logging, queue movement, pause and settle frames; heap delta is not allocation; pooled objects may be retained. Small repeated samples are raw evidence, not a performance target verdict or standalone build benchmark.
+PASS case=8/40 scenario=queued action=Light_1 source=Pepe avatar=PepeAvatar direction=1 contacts=1 starts=1 callbacks=1/1 getUpFrames=189 progress=0.996 audio=5 vfx=5 hold=1 light=1 shake=1 trail=False flash=True seconds=3.855
+EXECUTION10_SOURCE attack=3e685dd57e9c78b49b20bef3e8358ae3:7400020 reaction=b01b411d366a5a344bddf3428a7bc8f7:7400020 attackSeconds=2.56666684 reactionSeconds=2.66666675 attackAlias=True reactionAlias=True getUpAlias=True
+START case=9 scenario=queued action=Samurai_Execution10 source=Pepe avatar=PepeAvatar direction=1
+STALE rejected phase=source old=4/4 current=5/5
+EQUIPMENT two requests while suppressed: DualDaggers,DualDaggers
+FRAME phase=NativeEnd file=Pepe_1_Case9_Play1_NativeEnd.png frame=5103 sourceSeconds=2.666667 recoveryNormalized=0.000000
+RECOVERY_TRAJECTORY file=GeneratedAssets/CombatExpansion/SamuraiStudy/Execution10PlayMode/RecoveryTrajectory/Pepe_Mankey_1_Case9_Play1.csv provenance=reconstructed raw controller pose from stored locals before grounding/custom blend; live scales and nonmapped ancestors cannot recover pre-evaluation ancestor changes; not a direct evaluation-hook measurement; player-loop harness/reflection/screenshots/CSV add overhead; controller_dt uses successive sampled GetUp clocks; first delta is blank; first 0.25s plus crossing frame.
+RECOVERY_BOUNDARY nativeFrame=5103 frame=5104 sourceSeconds=2.666667/2.666667 recoverySeconds=0.000000 blendDuration=0.120000 blendWeight=0.000000 maxLandmarkDeltaMeters=0.000000 toleranceMeters=0.002000
+BOUNDARY_BONE Hips native=(-0.094674, 0.324092, -1.707998) recovery=(-0.094674, 0.324091, -1.707998) delta=0.000000
+BOUNDARY_BONE Head native=(0.535764, 0.275743, -1.380384) recovery=(0.535764, 0.275742, -1.380384) delta=0.000000
+BOUNDARY_BONE LeftHand native=(0.284302, 0.278847, -2.067813) recovery=(0.284302, 0.278847, -2.067812) delta=0.000000
+BOUNDARY_BONE RightHand native=(-0.202473, 0.273801, -1.184902) recovery=(-0.202473, 0.273801, -1.184902) delta=0.000000
+BOUNDARY_BONE LeftFoot native=(-0.341078, 0.311587, -2.422799) recovery=(-0.341078, 0.311587, -2.422799) delta=0.000000
+BOUNDARY_BONE RightFoot native=(-0.610058, 0.268928, -2.116168) recovery=(-0.610058, 0.268927, -2.116167) delta=0.000000
+BLEND_INTERNAL sourceHipsWorld=(-0.09, 0.32, -1.71) rawHipsLocal=(0.00, 0.14, 0.03) outputHipsLocal=(-1.73, 0.46, 0.03)
+BLEND_BONE Base HumanPelvis sourceToRawDegrees=34.761540 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLLeg1 sourceToRawDegrees=38.954280 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRLeg1 sourceToRawDegrees=49.725560 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLLeg2 sourceToRawDegrees=22.266000 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRLeg2 sourceToRawDegrees=34.252900 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLLegAnkle sourceToRawDegrees=30.680810 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRLegAnkle sourceToRawDegrees=25.249210 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanSpine1 sourceToRawDegrees=4.305538 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanSpine3 sourceToRawDegrees=3.635154 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanNeck1 sourceToRawDegrees=22.648330 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanHead sourceToRawDegrees=34.772630 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLCollarbone sourceToRawDegrees=17.908940 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRArmCollarbone sourceToRawDegrees=13.835280 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLUpperarm sourceToRawDegrees=31.740550 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRArmUpperarm sourceToRawDegrees=32.598950 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLForearm sourceToRawDegrees=53.576030 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRArmForearm sourceToRawDegrees=59.291790 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLPalm sourceToRawDegrees=14.144150 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRArmPalm sourceToRawDegrees=60.465210 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLLegDigit11 sourceToRawDegrees=0.000000 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRLegDigit11 sourceToRawDegrees=0.000000 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Object001 sourceToRawDegrees=0.000000 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Monkey_eyes sourceToRawDegrees=0.000000 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanHeadBone001 sourceToRawDegrees=0.000000 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLDigit11 sourceToRawDegrees=22.496550 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLDigit12 sourceToRawDegrees=5.618330 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLDigit13 sourceToRawDegrees=12.769140 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLDigit21 sourceToRawDegrees=9.205325 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLDigit22 sourceToRawDegrees=3.241033 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLDigit23 sourceToRawDegrees=18.804820 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLDigit31 sourceToRawDegrees=6.293690 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLDigit32 sourceToRawDegrees=10.977670 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLDigit33 sourceToRawDegrees=25.795380 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLDigit41 sourceToRawDegrees=6.246607 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLDigit42 sourceToRawDegrees=25.147730 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLDigit43 sourceToRawDegrees=36.824810 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRArmDigit11 sourceToRawDegrees=19.377650 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRArmDigit12 sourceToRawDegrees=26.478840 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRArmDigit13 sourceToRawDegrees=61.826550 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRArmDigit21 sourceToRawDegrees=52.905160 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRArmDigit22 sourceToRawDegrees=43.088590 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRArmDigit23 sourceToRawDegrees=53.637810 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRArmDigit31 sourceToRawDegrees=54.467330 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRArmDigit32 sourceToRawDegrees=30.548550 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRArmDigit33 sourceToRawDegrees=57.265500 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRArmDigit41 sourceToRawDegrees=58.320420 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRArmDigit42 sourceToRawDegrees=29.786720 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRArmDigit43 sourceToRawDegrees=60.014330 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanSpine4 sourceToRawDegrees=2.499836 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+FRAME phase=RecoveryEarly file=Pepe_1_Case9_Play1_RecoveryEarly.png frame=5104 sourceSeconds=2.666667 recoveryNormalized=0.000000
+BLEND frame=5104 recoverySeconds=0.000000 weight=0.000000 hips=(-0.094674, 0.324091, -1.707998)
+STALE rejected phase=recovery old=4/4 current=5/5
+BLEND frame=5105 recoverySeconds=0.080747 weight=0.749006 hips=(-0.090007, 0.281275, -0.811590)
+BLEND frame=5106 recoverySeconds=0.088436 weight=0.828839 hips=(-0.088293, 0.275244, -0.717179)
+BLEND frame=5107 recoverySeconds=0.095318 weight=0.890486 hips=(-0.086325, 0.270131, -0.644481)
+BLEND frame=5108 recoverySeconds=0.100322 weight=0.928145 hips=(-0.084800, 0.266761, -0.600189)
+BLEND frame=5109 recoverySeconds=0.105095 weight=0.957549 hips=(-0.083319, 0.263933, -0.565705)
+BLEND frame=5110 recoverySeconds=0.113648 weight=0.991891 hips=(-0.080607, 0.259657, -0.525715)
+BLEND frame=5111 recoverySeconds=0.118851 weight=0.999727 hips=(-0.079055, 0.257898, -0.516881)
+FRAME phase=RecoveryMid file=Pepe_1_Case9_Play1_RecoveryMid.png frame=5209 sourceSeconds=2.666667 recoveryNormalized=0.451477
+FRAME phase=RecoveryLate file=Pepe_1_Case9_Play1_RecoveryLate.png frame=5298 sourceSeconds=2.666667 recoveryNormalized=0.851781
+SETTLE case=9 quietWallSeconds=0.651 activeEffects=0 activeVoices=0 scale=1.000 unscaledTime=36.285 dspTime=1782.720
+SETTLE bounds particleUnscaledSeconds=0.667 voiceDspSeconds=0.085; existing case30s/suite600s watchdog unchanged.
+SETTLE CLEAN case=9 extraWallSeconds=0.001 extraUnscaledSeconds=0.000 extraDspSeconds=0.000 effects=0 voices=0
+RECOVERY_EVIDENCE maxBoundaryMeters=0.000000 blendFrames=8 screenshotsRequested=4; rendered appearance requires visual review.
+MEASURE case=9 play=1 frames=843 wallFrameMedianMs=5.151 p95Ms=8.771 maxMs=89.288 mainThreadAllocatedBytes=unavailable_counter_did_not_observe_probe_allocation managedHeapDeltaBytes=2236416 objects=967->967 nativeActors=0/2/0 pooledVoices=13->13 pooledEffects=9->9
+MEASURE scope=Editor main thread including harness, screenshots, logging, queue movement, pause and settle frames; heap delta is not allocation; pooled objects may be retained. Small repeated samples are raw evidence, not a performance target verdict or standalone build benchmark.
+PASS case=9/40 scenario=queued action=Samurai_Execution10 source=Pepe avatar=PepeAvatar direction=1 contacts=2 starts=1 callbacks=1/1 getUpFrames=218 progress=0.997 audio=5 vfx=5 hold=2 light=2 shake=2 trail=True flash=True seconds=5.087
+START case=10 scenario=queued action=Heavy_6 source=Pepe avatar=PepeAvatar direction=1
+SETTLE case=10 quietWallSeconds=0.654 activeEffects=0 activeVoices=0 scale=1.000 unscaledTime=44.707 dspTime=1791.147
+SETTLE bounds particleUnscaledSeconds=0.667 voiceDspSeconds=0.085; existing case30s/suite600s watchdog unchanged.
+SETTLE CLEAN case=10 extraWallSeconds=0.001 extraUnscaledSeconds=0.000 extraDspSeconds=0.000 effects=0 voices=0
+MEASURE case=10 play=1 frames=1349 wallFrameMedianMs=5.939 p95Ms=9.505 maxMs=31.149 mainThreadAllocatedBytes=unavailable_counter_did_not_observe_probe_allocation managedHeapDeltaBytes=-4202496 objects=967->967 nativeActors=0/2/0 pooledVoices=13->13 pooledEffects=9->9
+MEASURE scope=Editor main thread including harness, screenshots, logging, queue movement, pause and settle frames; heap delta is not allocation; pooled objects may be retained. Small repeated samples are raw evidence, not a performance target verdict or standalone build benchmark.
+PASS case=10/40 scenario=queued action=Heavy_6 source=Pepe avatar=PepeAvatar direction=1 contacts=5 starts=1 callbacks=1/1 getUpFrames=198 progress=0.997 audio=14 vfx=11 hold=5 light=5 shake=5 trail=True flash=True seconds=8.416
+START case=11 scenario=queued action=Light_1 source=Mankey avatar=MankeyAvatar direction=-1
+SETTLE case=11 quietWallSeconds=0.654 activeEffects=0 activeVoices=0 scale=1.000 unscaledTime=48.561 dspTime=1795.008
+SETTLE bounds particleUnscaledSeconds=0.667 voiceDspSeconds=0.085; existing case30s/suite600s watchdog unchanged.
+SETTLE CLEAN case=11 extraWallSeconds=0.001 extraUnscaledSeconds=0.000 extraDspSeconds=0.000 effects=0 voices=0
+MEASURE case=11 play=1 frames=740 wallFrameMedianMs=4.887 p95Ms=7.672 maxMs=14.810 mainThreadAllocatedBytes=unavailable_counter_did_not_observe_probe_allocation managedHeapDeltaBytes=491520 objects=967->967 nativeActors=0/2/0 pooledVoices=13->13 pooledEffects=9->9
+MEASURE scope=Editor main thread including harness, screenshots, logging, queue movement, pause and settle frames; heap delta is not allocation; pooled objects may be retained. Small repeated samples are raw evidence, not a performance target verdict or standalone build benchmark.
+PASS case=11/40 scenario=queued action=Light_1 source=Mankey avatar=MankeyAvatar direction=-1 contacts=1 starts=1 callbacks=1/1 getUpFrames=195 progress=0.993 audio=5 vfx=5 hold=1 light=1 shake=1 trail=False flash=True seconds=3.849
+EXECUTION10_SOURCE attack=3e685dd57e9c78b49b20bef3e8358ae3:7400020 reaction=b01b411d366a5a344bddf3428a7bc8f7:7400020 attackSeconds=2.56666684 reactionSeconds=2.66666675 attackAlias=True reactionAlias=True getUpAlias=True
+START case=12 scenario=queued action=Samurai_Execution10 source=Mankey avatar=MankeyAvatar direction=-1
+STALE rejected phase=source old=7/7 current=8/8
+EQUIPMENT two requests while suppressed: Katana,Katana
+FRAME phase=NativeEnd file=Mankey_-1_Case12_Play1_NativeEnd.png frame=8051 sourceSeconds=2.666667 recoveryNormalized=0.000000
+RECOVERY_TRAJECTORY file=GeneratedAssets/CombatExpansion/SamuraiStudy/Execution10PlayMode/RecoveryTrajectory/Mankey_Pepe_-1_Case12_Play1.csv provenance=reconstructed raw controller pose from stored locals before grounding/custom blend; live scales and nonmapped ancestors cannot recover pre-evaluation ancestor changes; not a direct evaluation-hook measurement; player-loop harness/reflection/screenshots/CSV add overhead; controller_dt uses successive sampled GetUp clocks; first delta is blank; first 0.25s plus crossing frame.
+RECOVERY_BOUNDARY nativeFrame=8051 frame=8052 sourceSeconds=2.666667/2.666667 recoverySeconds=0.000000 blendDuration=0.120000 blendWeight=0.000000 maxLandmarkDeltaMeters=0.000000 toleranceMeters=0.002000
+BOUNDARY_BONE Hips native=(0.180476, 0.269348, 0.802682) recovery=(0.180476, 0.269348, 0.802682) delta=0.000000
+BOUNDARY_BONE Head native=(-0.249216, 0.256866, 0.565514) recovery=(-0.249216, 0.256866, 0.565515) delta=0.000000
+BOUNDARY_BONE LeftHand native=(-0.228204, 0.220557, 1.190699) recovery=(-0.228204, 0.220557, 1.190699) delta=0.000000
+BOUNDARY_BONE RightHand native=(0.296724, 0.215116, 0.238585) recovery=(0.296724, 0.215116, 0.238585) delta=0.000000
+BOUNDARY_BONE LeftFoot native=(0.446194, 0.255864, 1.573509) recovery=(0.446194, 0.255864, 1.573510) delta=0.000000
+BOUNDARY_BONE RightFoot native=(0.736257, 0.209861, 1.242844) recovery=(0.736257, 0.209861, 1.242845) delta=0.000000
+BLEND_INTERNAL sourceHipsWorld=(0.18, 0.27, 0.80) rawHipsLocal=(0.00, 1.35, -0.78) outputHipsLocal=(-13.03, 2.69, -0.78)
+BLEND_BONE mixamorig:Hips sourceToRawDegrees=33.585560 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftUpLeg sourceToRawDegrees=44.203720 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightUpLeg sourceToRawDegrees=47.120890 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftLeg sourceToRawDegrees=43.815480 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightLeg sourceToRawDegrees=55.042070 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftFoot sourceToRawDegrees=24.616400 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightFoot sourceToRawDegrees=30.302530 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:Spine sourceToRawDegrees=4.305538 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:Spine1 sourceToRawDegrees=3.635370 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:Neck sourceToRawDegrees=26.015300 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:Head sourceToRawDegrees=34.986520 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftShoulder sourceToRawDegrees=17.908850 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightShoulder sourceToRawDegrees=13.835280 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftArm sourceToRawDegrees=71.183910 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightArm sourceToRawDegrees=65.787310 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftForeArm sourceToRawDegrees=78.945370 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightForeArm sourceToRawDegrees=85.840790 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHand sourceToRawDegrees=34.900810 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHand sourceToRawDegrees=57.715520 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftToeBase sourceToRawDegrees=0.000000 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightToeBase sourceToRawDegrees=0.000000 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandThumb1 sourceToRawDegrees=29.218520 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandThumb2 sourceToRawDegrees=2.410569 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandThumb3 sourceToRawDegrees=12.769140 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandIndex1 sourceToRawDegrees=17.338680 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandIndex2 sourceToRawDegrees=1.162964 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandIndex3 sourceToRawDegrees=7.949567 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandMiddle1 sourceToRawDegrees=3.445894 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandMiddle2 sourceToRawDegrees=3.540683 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandMiddle3 sourceToRawDegrees=18.804860 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandRing1 sourceToRawDegrees=4.053033 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandRing2 sourceToRawDegrees=11.268530 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:LeftHandRing3 sourceToRawDegrees=25.795440 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandThumb1 sourceToRawDegrees=22.048850 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandThumb2 sourceToRawDegrees=24.314580 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandThumb3 sourceToRawDegrees=61.826550 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandIndex1 sourceToRawDegrees=43.311210 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandIndex2 sourceToRawDegrees=43.012760 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandIndex3 sourceToRawDegrees=68.253150 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandMiddle1 sourceToRawDegrees=54.460930 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandMiddle2 sourceToRawDegrees=43.501260 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandMiddle3 sourceToRawDegrees=53.637840 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandRing1 sourceToRawDegrees=53.997830 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandRing2 sourceToRawDegrees=30.934610 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:RightHandRing3 sourceToRawDegrees=57.265500 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE mixamorig:Spine2 sourceToRawDegrees=2.499523 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+FRAME phase=RecoveryEarly file=Mankey_-1_Case12_Play1_RecoveryEarly.png frame=8052 sourceSeconds=2.666667 recoveryNormalized=0.000000
+BLEND frame=8052 recoverySeconds=0.000000 weight=0.000000 hips=(0.180476, 0.269348, 0.802682)
+STALE rejected phase=recovery old=7/7 current=8/8
+BLEND frame=8053 recoverySeconds=0.088495 weight=0.829404 hips=(0.182480, 0.199255, -0.291652)
+BLEND frame=8054 recoverySeconds=0.096956 weight=0.903529 hips=(0.183191, 0.195367, -0.391820)
+BLEND frame=8055 recoverySeconds=0.104837 weight=0.956135 hips=(0.184165, 0.193289, -0.463738)
+BLEND frame=8056 recoverySeconds=0.110603 weight=0.982563 hips=(0.185015, 0.192741, -0.500536)
+BLEND frame=8057 recoverySeconds=0.115625 weight=0.996109 hips=(0.185835, 0.192959, -0.520060)
+FRAME phase=RecoveryMid file=Mankey_-1_Case12_Play1_RecoveryMid.png frame=8156 sourceSeconds=2.666667 recoveryNormalized=0.450300
+FRAME phase=RecoveryLate file=Mankey_-1_Case12_Play1_RecoveryLate.png frame=8243 sourceSeconds=2.666667 recoveryNormalized=0.852474
+SETTLE case=12 quietWallSeconds=0.651 activeEffects=0 activeVoices=0 scale=1.000 unscaledTime=53.657 dspTime=1800.107
+SETTLE bounds particleUnscaledSeconds=0.667 voiceDspSeconds=0.085; existing case30s/suite600s watchdog unchanged.
+SETTLE CLEAN case=12 extraWallSeconds=0.004 extraUnscaledSeconds=0.000 extraDspSeconds=0.000 effects=0 voices=0
+RECOVERY_EVIDENCE maxBoundaryMeters=0.000000 blendFrames=6 screenshotsRequested=4; rendered appearance requires visual review.
+MEASURE case=12 play=1 frames=841 wallFrameMedianMs=5.168 p95Ms=8.753 maxMs=86.383 mainThreadAllocatedBytes=unavailable_counter_did_not_observe_probe_allocation managedHeapDeltaBytes=3137536 objects=967->967 nativeActors=0/2/0 pooledVoices=13->13 pooledEffects=9->9
+MEASURE scope=Editor main thread including harness, screenshots, logging, queue movement, pause and settle frames; heap delta is not allocation; pooled objects may be retained. Small repeated samples are raw evidence, not a performance target verdict or standalone build benchmark.
+PASS case=12/40 scenario=queued action=Samurai_Execution10 source=Mankey avatar=MankeyAvatar direction=-1 contacts=2 starts=1 callbacks=1/1 getUpFrames=217 progress=0.998 audio=5 vfx=5 hold=2 light=2 shake=2 trail=True flash=True seconds=5.093
+START case=13 scenario=queued action=Heavy_6 source=Mankey avatar=MankeyAvatar direction=-1
+SETTLE case=13 quietWallSeconds=0.651 activeEffects=0 activeVoices=0 scale=1.000 unscaledTime=62.073 dspTime=1808.512
+SETTLE bounds particleUnscaledSeconds=0.667 voiceDspSeconds=0.085; existing case30s/suite600s watchdog unchanged.
+SETTLE CLEAN case=13 extraWallSeconds=0.001 extraUnscaledSeconds=0.000 extraDspSeconds=0.000 effects=0 voices=0
+MEASURE case=13 play=1 frames=1286 wallFrameMedianMs=6.199 p95Ms=10.200 maxMs=32.936 mainThreadAllocatedBytes=unavailable_counter_did_not_observe_probe_allocation managedHeapDeltaBytes=-4759552 objects=967->967 nativeActors=0/2/0 pooledVoices=13->13 pooledEffects=9->9
+MEASURE scope=Editor main thread including harness, screenshots, logging, queue movement, pause and settle frames; heap delta is not allocation; pooled objects may be retained. Small repeated samples are raw evidence, not a performance target verdict or standalone build benchmark.
+PASS case=13/40 scenario=queued action=Heavy_6 source=Mankey avatar=MankeyAvatar direction=-1 contacts=5 starts=1 callbacks=1/1 getUpFrames=199 progress=0.996 audio=14 vfx=11 hold=5 light=5 shake=5 trail=True flash=True seconds=8.398
+START case=14 scenario=queued action=Light_1 source=Pepe avatar=PepeAvatar direction=-1
+SETTLE case=14 quietWallSeconds=0.654 activeEffects=0 activeVoices=0 scale=1.000 unscaledTime=65.928 dspTime=1812.373
+SETTLE bounds particleUnscaledSeconds=0.667 voiceDspSeconds=0.085; existing case30s/suite600s watchdog unchanged.
+SETTLE CLEAN case=14 extraWallSeconds=0.001 extraUnscaledSeconds=0.000 extraDspSeconds=0.000 effects=0 voices=0
+MEASURE case=14 play=1 frames=709 wallFrameMedianMs=5.022 p95Ms=8.512 maxMs=18.540 mainThreadAllocatedBytes=unavailable_counter_did_not_observe_probe_allocation managedHeapDeltaBytes=2457600 objects=967->967 nativeActors=0/2/0 pooledVoices=13->13 pooledEffects=9->9
+MEASURE scope=Editor main thread including harness, screenshots, logging, queue movement, pause and settle frames; heap delta is not allocation; pooled objects may be retained. Small repeated samples are raw evidence, not a performance target verdict or standalone build benchmark.
+PASS case=14/40 scenario=queued action=Light_1 source=Pepe avatar=PepeAvatar direction=-1 contacts=1 starts=1 callbacks=1/1 getUpFrames=183 progress=0.997 audio=5 vfx=5 hold=1 light=1 shake=1 trail=False flash=True seconds=3.849
+EXECUTION10_SOURCE attack=3e685dd57e9c78b49b20bef3e8358ae3:7400020 reaction=b01b411d366a5a344bddf3428a7bc8f7:7400020 attackSeconds=2.56666684 reactionSeconds=2.66666675 attackAlias=True reactionAlias=True getUpAlias=True
+START case=15 scenario=queued action=Samurai_Execution10 source=Pepe avatar=PepeAvatar direction=-1
+STALE rejected phase=source old=10/10 current=11/11
+EQUIPMENT two requests while suppressed: DualDaggers,DualDaggers
+FRAME phase=NativeEnd file=Pepe_-1_Case15_Play1_NativeEnd.png frame=10882 sourceSeconds=2.666667 recoveryNormalized=0.000000
+RECOVERY_TRAJECTORY file=GeneratedAssets/CombatExpansion/SamuraiStudy/Execution10PlayMode/RecoveryTrajectory/Pepe_Mankey_-1_Case15_Play1.csv provenance=reconstructed raw controller pose from stored locals before grounding/custom blend; live scales and nonmapped ancestors cannot recover pre-evaluation ancestor changes; not a direct evaluation-hook measurement; player-loop harness/reflection/screenshots/CSV add overhead; controller_dt uses successive sampled GetUp clocks; first delta is blank; first 0.25s plus crossing frame.
+RECOVERY_BOUNDARY nativeFrame=10882 frame=10883 sourceSeconds=2.666667/2.666667 recoverySeconds=0.000000 blendDuration=0.120000 blendWeight=0.000000 maxLandmarkDeltaMeters=0.000001 toleranceMeters=0.002000
+BOUNDARY_BONE Hips native=(0.094674, 0.324092, 0.707998) recovery=(0.094674, 0.324091, 0.707998) delta=0.000000
+BOUNDARY_BONE Head native=(-0.535763, 0.275742, 0.380384) recovery=(-0.535763, 0.275742, 0.380384) delta=0.000000
+BOUNDARY_BONE LeftHand native=(-0.284301, 0.278847, 1.067812) recovery=(-0.284301, 0.278847, 1.067812) delta=0.000000
+BOUNDARY_BONE RightHand native=(0.202473, 0.273801, 0.184901) recovery=(0.202473, 0.273801, 0.184902) delta=0.000000
+BOUNDARY_BONE LeftFoot native=(0.341079, 0.311587, 1.422799) recovery=(0.341079, 0.311587, 1.422799) delta=0.000001
+BOUNDARY_BONE RightFoot native=(0.610059, 0.268927, 1.116167) recovery=(0.610059, 0.268927, 1.116168) delta=0.000000
+BLEND_INTERNAL sourceHipsWorld=(0.09, 0.32, 0.71) rawHipsLocal=(0.00, 0.14, 0.03) outputHipsLocal=(-1.73, 0.46, 0.03)
+BLEND_BONE Base HumanPelvis sourceToRawDegrees=34.761570 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLLeg1 sourceToRawDegrees=38.954260 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRLeg1 sourceToRawDegrees=49.725570 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLLeg2 sourceToRawDegrees=22.265790 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRLeg2 sourceToRawDegrees=34.252900 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLLegAnkle sourceToRawDegrees=30.680860 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRLegAnkle sourceToRawDegrees=25.249210 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanSpine1 sourceToRawDegrees=4.305538 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanSpine3 sourceToRawDegrees=3.635154 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanNeck1 sourceToRawDegrees=22.648330 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanHead sourceToRawDegrees=34.772660 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLCollarbone sourceToRawDegrees=17.908940 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRArmCollarbone sourceToRawDegrees=13.835280 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLUpperarm sourceToRawDegrees=31.740630 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRArmUpperarm sourceToRawDegrees=32.598970 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLForearm sourceToRawDegrees=53.576210 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRArmForearm sourceToRawDegrees=59.291850 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLPalm sourceToRawDegrees=14.144310 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRArmPalm sourceToRawDegrees=60.465230 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLLegDigit11 sourceToRawDegrees=0.000000 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRLegDigit11 sourceToRawDegrees=0.000000 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Object001 sourceToRawDegrees=0.000000 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Monkey_eyes sourceToRawDegrees=0.000000 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanHeadBone001 sourceToRawDegrees=0.000000 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLDigit11 sourceToRawDegrees=22.496340 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLDigit12 sourceToRawDegrees=5.618051 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLDigit13 sourceToRawDegrees=12.769140 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLDigit21 sourceToRawDegrees=9.205070 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLDigit22 sourceToRawDegrees=3.241274 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLDigit23 sourceToRawDegrees=18.804820 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLDigit31 sourceToRawDegrees=6.293939 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLDigit32 sourceToRawDegrees=10.977170 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLDigit33 sourceToRawDegrees=25.795380 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLDigit41 sourceToRawDegrees=6.246732 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLDigit42 sourceToRawDegrees=25.147390 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanLDigit43 sourceToRawDegrees=36.824810 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRArmDigit11 sourceToRawDegrees=19.377690 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRArmDigit12 sourceToRawDegrees=26.478630 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRArmDigit13 sourceToRawDegrees=61.826550 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRArmDigit21 sourceToRawDegrees=52.905050 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRArmDigit22 sourceToRawDegrees=43.088690 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRArmDigit23 sourceToRawDegrees=53.637830 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRArmDigit31 sourceToRawDegrees=54.467380 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRArmDigit32 sourceToRawDegrees=30.549360 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRArmDigit33 sourceToRawDegrees=57.265500 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRArmDigit41 sourceToRawDegrees=58.320310 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRArmDigit42 sourceToRawDegrees=29.786430 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanRArmDigit43 sourceToRawDegrees=60.014330 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+BLEND_BONE Base HumanSpine4 sourceToRawDegrees=2.499836 sourceToOutputDegrees=0.000000 outputToVisibleDegrees=0.000000
+FRAME phase=RecoveryEarly file=Pepe_-1_Case15_Play1_RecoveryEarly.png frame=10883 sourceSeconds=2.666667 recoveryNormalized=0.000000
+BLEND frame=10883 recoverySeconds=0.000000 weight=0.000000 hips=(0.094674, 0.324091, 0.707998)
+STALE rejected phase=recovery old=10/10 current=11/11
+BLEND frame=10884 recoverySeconds=0.090145 weight=0.845107 hips=(0.087835, 0.273933, -0.302024)
+BLEND frame=10885 recoverySeconds=0.098452 weight=0.914851 hips=(0.085368, 0.267983, -0.384189)
+BLEND frame=10886 recoverySeconds=0.103767 weight=0.950054 hips=(0.083737, 0.264699, -0.425517)
+BLEND frame=10887 recoverySeconds=0.109111 weight=0.976791 hips=(0.082041, 0.261774, -0.456773)
+BLEND frame=10888 recoverySeconds=0.114400 weight=0.993670 hips=(0.080375, 0.259358, -0.476329)
+BLEND frame=10889 recoverySeconds=0.119514 weight=0.999951 hips=(0.078869, 0.257727, -0.483326)
+FRAME phase=RecoveryMid file=Pepe_-1_Case15_Play1_RecoveryMid.png frame=10988 sourceSeconds=2.666667 recoveryNormalized=0.450174
+FRAME phase=RecoveryLate file=Pepe_-1_Case15_Play1_RecoveryLate.png frame=11070 sourceSeconds=2.666667 recoveryNormalized=0.851429
+SETTLE case=15 quietWallSeconds=0.650 activeEffects=0 activeVoices=0 scale=1.000 unscaledTime=71.045 dspTime=1817.493
+SETTLE bounds particleUnscaledSeconds=0.667 voiceDspSeconds=0.085; existing case30s/suite600s watchdog unchanged.
+SETTLE CLEAN case=15 extraWallSeconds=0.001 extraUnscaledSeconds=0.000 extraDspSeconds=0.000 effects=0 voices=0
+RECOVERY_EVIDENCE maxBoundaryMeters=0.000001 blendFrames=7 screenshotsRequested=4; rendered appearance requires visual review.
+MEASURE case=15 play=1 frames=833 wallFrameMedianMs=5.208 p95Ms=8.932 maxMs=88.473 mainThreadAllocatedBytes=unavailable_counter_did_not_observe_probe_allocation managedHeapDeltaBytes=-430080 objects=967->967 nativeActors=0/2/0 pooledVoices=13->13 pooledEffects=9->9
+MEASURE scope=Editor main thread including harness, screenshots, logging, queue movement, pause and settle frames; heap delta is not allocation; pooled objects may be retained. Small repeated samples are raw evidence, not a performance target verdict or standalone build benchmark.
+PASS case=15/40 scenario=queued action=Samurai_Execution10 source=Pepe avatar=PepeAvatar direction=-1 contacts=2 starts=1 callbacks=1/1 getUpFrames=211 progress=0.995 audio=5 vfx=5 hold=2 light=2 shake=2 trail=True flash=True seconds=5.111
+START case=16 scenario=queued action=Heavy_6 source=Pepe avatar=PepeAvatar direction=-1
+SETTLE case=16 quietWallSeconds=0.652 activeEffects=0 activeVoices=0 scale=1.000 unscaledTime=79.468 dspTime=1825.920
+SETTLE bounds particleUnscaledSeconds=0.667 voiceDspSeconds=0.085; existing case30s/suite600s watchdog unchanged.
+SETTLE CLEAN case=16 extraWallSeconds=0.001 extraUnscaledSeconds=0.000 extraDspSeconds=0.000 effects=0 voices=0
+MEASURE case=16 play=1 frames=1320 wallFrameMedianMs=6.126 p95Ms=9.573 maxMs=26.567 mainThreadAllocatedBytes=unavailable_counter_did_not_observe_probe_allocation managedHeapDeltaBytes=-1093632 objects=967->967 nativeActors=0/2/0 pooledVoices=13->13 pooledEffects=9->9
+MEASURE scope=Editor main thread including harness, screenshots, logging, queue movement, pause and settle frames; heap delta is not allocation; pooled objects may be retained. Small repeated samples are raw evidence, not a performance target verdict or standalone build benchmark.
+PASS case=16/40 scenario=queued action=Heavy_6 source=Pepe avatar=PepeAvatar direction=-1 contacts=5 starts=1 callbacks=1/1 getUpFrames=174 progress=0.999 audio=14 vfx=11 hold=5 light=5 shake=5 trail=True flash=True seconds=8.418
+EXECUTION10_SOURCE attack=3e685dd57e9c78b49b20bef3e8358ae3:7400020 reaction=b01b411d366a5a344bddf3428a7bc8f7:7400020 attackSeconds=2.56666684 reactionSeconds=2.66666675 attackAlias=True reactionAlias=True getUpAlias=True
+START case=17 scenario=lethal action=Samurai_Execution10 source=Mankey avatar=MankeyAvatar direction=1
+STALE rejected phase=source old=12/12 current=13/13
+EQUIPMENT two requests while suppressed: Katana,Katana
+SETTLE case=17 quietWallSeconds=0.655 activeEffects=0 activeVoices=0 scale=1.000 unscaledTime=83.173 dspTime=1829.611
+SETTLE bounds particleUnscaledSeconds=0.667 voiceDspSeconds=0.085; existing case30s/suite600s watchdog unchanged.
+SETTLE CLEAN case=17 extraWallSeconds=0.001 extraUnscaledSeconds=0.000 extraDspSeconds=0.000 effects=0 voices=0
+MEASURE case=17 play=1 frames=656 wallFrameMedianMs=5.197 p95Ms=8.239 maxMs=14.239 mainThreadAllocatedBytes=unavailable_counter_did_not_observe_probe_allocation managedHeapDeltaBytes=-3690496 objects=967->1023 nativeActors=0/2/1 pooledVoices=13->13 pooledEffects=9->9
+MEASURE scope=Editor main thread including harness, screenshots, logging, queue movement, pause and settle frames; heap delta is not allocation; pooled objects may be retained. Small repeated samples are raw evidence, not a performance target verdict or standalone build benchmark.
+PASS case=17/40 scenario=lethal action=Samurai_Execution10 source=Mankey avatar=MankeyAvatar direction=1 contacts=2 starts=1 callbacks=1/1 getUpFrames=0 progress=0.000 audio=4 vfx=5 hold=2 light=2 shake=2 trail=True flash=True seconds=3.698
+PASS lethal reset: native source actors, death and held equipment released.
+EXECUTION10_SOURCE attack=3e685dd57e9c78b49b20bef3e8358ae3:7400020 reaction=b01b411d366a5a344bddf3428a7bc8f7:7400020 attackSeconds=2.56666684 reactionSeconds=2.66666675 attackAlias=True reactionAlias=True getUpAlias=True
+START case=18 scenario=lethal action=Samurai_Execution10 source=Pepe avatar=PepeAvatar direction=1
+STALE rejected phase=source old=13/13 current=15/15
+EQUIPMENT two requests while suppressed: DualDaggers,DualDaggers
+SETTLE case=18 quietWallSeconds=0.652 activeEffects=0 activeVoices=0 scale=1.000 unscaledTime=86.698 dspTime=1833.131
+SETTLE bounds particleUnscaledSeconds=0.667 voiceDspSeconds=0.085; existing case30s/suite600s watchdog unchanged.
+SETTLE CLEAN case=18 extraWallSeconds=0.001 extraUnscaledSeconds=0.000 extraDspSeconds=0.000 effects=0 voices=0
+MEASURE case=18 play=1 frames=612 wallFrameMedianMs=5.211 p95Ms=8.708 maxMs=17.666 mainThreadAllocatedBytes=unavailable_counter_did_not_observe_probe_allocation managedHeapDeltaBytes=958464 objects=967->1023 nativeActors=0/2/1 pooledVoices=13->13 pooledEffects=9->9
+MEASURE scope=Editor main thread including harness, screenshots, logging, queue movement, pause and settle frames; heap delta is not allocation; pooled objects may be retained. Small repeated samples are raw evidence, not a performance target verdict or standalone build benchmark.
+PASS case=18/40 scenario=lethal action=Samurai_Execution10 source=Pepe avatar=PepeAvatar direction=1 contacts=2 starts=1 callbacks=1/1 getUpFrames=0 progress=0.000 audio=4 vfx=5 hold=2 light=2 shake=2 trail=True flash=True seconds=3.518
+PASS lethal reset: native source actors, death and held equipment released.
+EXECUTION10_SOURCE attack=3e685dd57e9c78b49b20bef3e8358ae3:7400020 reaction=b01b411d366a5a344bddf3428a7bc8f7:7400020 attackSeconds=2.56666684 reactionSeconds=2.66666675 attackAlias=True reactionAlias=True getUpAlias=True
+START case=19 scenario=lethal action=Samurai_Execution10 source=Mankey avatar=MankeyAvatar direction=-1
+STALE rejected phase=source old=15/15 current=17/17
+EQUIPMENT two requests while suppressed: Katana,Katana
+SETTLE case=19 quietWallSeconds=0.655 activeEffects=0 activeVoices=0 scale=1.000 unscaledTime=90.234 dspTime=1836.672
+SETTLE bounds particleUnscaledSeconds=0.667 voiceDspSeconds=0.085; existing case30s/suite600s watchdog unchanged.
+SETTLE CLEAN case=19 extraWallSeconds=0.001 extraUnscaledSeconds=0.000 extraDspSeconds=0.000 effects=0 voices=0
+MEASURE case=19 play=1 frames=601 wallFrameMedianMs=5.333 p95Ms=9.093 maxMs=15.157 mainThreadAllocatedBytes=unavailable_counter_did_not_observe_probe_allocation managedHeapDeltaBytes=1019904 objects=967->1023 nativeActors=0/2/1 pooledVoices=13->13 pooledEffects=9->9
+MEASURE scope=Editor main thread including harness, screenshots, logging, queue movement, pause and settle frames; heap delta is not allocation; pooled objects may be retained. Small repeated samples are raw evidence, not a performance target verdict or standalone build benchmark.
+PASS case=19/40 scenario=lethal action=Samurai_Execution10 source=Mankey avatar=MankeyAvatar direction=-1 contacts=2 starts=1 callbacks=1/1 getUpFrames=0 progress=0.000 audio=4 vfx=5 hold=2 light=2 shake=2 trail=True flash=True seconds=3.530
+PASS lethal reset: native source actors, death and held equipment released.
+EXECUTION10_SOURCE attack=3e685dd57e9c78b49b20bef3e8358ae3:7400020 reaction=b01b411d366a5a344bddf3428a7bc8f7:7400020 attackSeconds=2.56666684 reactionSeconds=2.66666675 attackAlias=True reactionAlias=True getUpAlias=True
+START case=20 scenario=lethal action=Samurai_Execution10 source=Pepe avatar=PepeAvatar direction=-1
+STALE rejected phase=source old=17/17 current=19/19
+EQUIPMENT two requests while suppressed: DualDaggers,DualDaggers
+SETTLE case=20 quietWallSeconds=0.653 activeEffects=0 activeVoices=0 scale=1.000 unscaledTime=93.768 dspTime=1840.213
+SETTLE bounds particleUnscaledSeconds=0.667 voiceDspSeconds=0.085; existing case30s/suite600s watchdog unchanged.
+SETTLE CLEAN case=20 extraWallSeconds=0.001 extraUnscaledSeconds=0.000 extraDspSeconds=0.000 effects=0 voices=0
+MEASURE case=20 play=1 frames=717 wallFrameMedianMs=4.758 p95Ms=6.511 maxMs=15.405 mainThreadAllocatedBytes=unavailable_counter_did_not_observe_probe_allocation managedHeapDeltaBytes=-3891200 objects=967->1023 nativeActors=0/2/1 pooledVoices=13->13 pooledEffects=9->9
+MEASURE scope=Editor main thread including harness, screenshots, logging, queue movement, pause and settle frames; heap delta is not allocation; pooled objects may be retained. Small repeated samples are raw evidence, not a performance target verdict or standalone build benchmark.
+PASS case=20/40 scenario=lethal action=Samurai_Execution10 source=Pepe avatar=PepeAvatar direction=-1 contacts=2 starts=1 callbacks=1/1 getUpFrames=0 progress=0.000 audio=4 vfx=5 hold=2 light=2 shake=2 trail=True flash=True seconds=3.521
+PASS lethal reset: native source actors, death and held equipment released.
+EXECUTION10_SOURCE attack=3e685dd57e9c78b49b20bef3e8358ae3:7400020 reaction=b01b411d366a5a344bddf3428a7bc8f7:7400020 attackSeconds=2.56666684 reactionSeconds=2.66666675 attackAlias=True reactionAlias=True getUpAlias=True
+START case=21 scenario=source interrupt action=Samurai_Execution10 source=Mankey avatar=MankeyAvatar direction=1
+STALE rejected phase=source old=19/19 current=21/21
+SETTLE case=21 quietWallSeconds=2.818 activeEffects=0 activeVoices=0 scale=1.000 unscaledTime=96.605 dspTime=1843.051
+SETTLE bounds particleUnscaledSeconds=0.667 voiceDspSeconds=0.085; existing case30s/suite600s watchdog unchanged.
+SETTLE CLEAN case=21 extraWallSeconds=0.001 extraUnscaledSeconds=0.000 extraDspSeconds=0.000 effects=0 voices=0
+MEASURE case=21 play=1 frames=713 wallFrameMedianMs=3.826 p95Ms=4.719 maxMs=10.781 mainThreadAllocatedBytes=unavailable_counter_did_not_observe_probe_allocation managedHeapDeltaBytes=7258112 objects=967->967 nativeActors=0/2/0 pooledVoices=13->13 pooledEffects=9->9
+MEASURE scope=Editor main thread including harness, screenshots, logging, queue movement, pause and settle frames; heap delta is not allocation; pooled objects may be retained. Small repeated samples are raw evidence, not a performance target verdict or standalone build benchmark.
+PASS case=21/40 scenario=source interrupt action=Samurai_Execution10 source=Mankey avatar=MankeyAvatar direction=1 contacts=0 starts=1 callbacks=1/1 getUpFrames=0 progress=0.000 audio=0 vfx=0 hold=0 light=0 shake=0 trail=False flash=False seconds=2.833
+EXECUTION10_SOURCE attack=3e685dd57e9c78b49b20bef3e8358ae3:7400020 reaction=b01b411d366a5a344bddf3428a7bc8f7:7400020 attackSeconds=2.56666684 reactionSeconds=2.66666675 attackAlias=True reactionAlias=True getUpAlias=True
+START case=22 scenario=source interrupt action=Samurai_Execution10 source=Pepe avatar=PepeAvatar direction=1
+STALE rejected phase=source old=21/21 current=22/22
+SETTLE case=22 quietWallSeconds=2.817 activeEffects=0 activeVoices=0 scale=1.000 unscaledTime=99.448 dspTime=1845.888
+SETTLE bounds particleUnscaledSeconds=0.667 voiceDspSeconds=0.085; existing case30s/suite600s watchdog unchanged.
+SETTLE CLEAN case=22 extraWallSeconds=0.001 extraUnscaledSeconds=0.000 extraDspSeconds=0.000 effects=0 voices=0
+MEASURE case=22 play=1 frames=706 wallFrameMedianMs=3.848 p95Ms=4.778 maxMs=10.606 mainThreadAllocatedBytes=unavailable_counter_did_not_observe_probe_allocation managedHeapDeltaBytes=6291456 objects=967->967 nativeActors=0/2/0 pooledVoices=13->13 pooledEffects=9->9
+MEASURE scope=Editor main thread including harness, screenshots, logging, queue movement, pause and settle frames; heap delta is not allocation; pooled objects may be retained. Small repeated samples are raw evidence, not a performance target verdict or standalone build benchmark.
+PASS case=22/40 scenario=source interrupt action=Samurai_Execution10 source=Pepe avatar=PepeAvatar direction=1 contacts=0 starts=1 callbacks=1/1 getUpFrames=0 progress=0.000 audio=0 vfx=0 hold=0 light=0 shake=0 trail=False flash=False seconds=2.829
+EXECUTION10_SOURCE attack=3e685dd57e9c78b49b20bef3e8358ae3:7400020 reaction=b01b411d366a5a344bddf3428a7bc8f7:7400020 attackSeconds=2.56666684 reactionSeconds=2.66666675 attackAlias=True reactionAlias=True getUpAlias=True
+START case=23 scenario=source interrupt action=Samurai_Execution10 source=Mankey avatar=MankeyAvatar direction=-1
+STALE rejected phase=source old=22/22 current=23/23
+SETTLE case=23 quietWallSeconds=2.818 activeEffects=0 activeVoices=0 scale=1.000 unscaledTime=102.283 dspTime=1848.725
+SETTLE bounds particleUnscaledSeconds=0.667 voiceDspSeconds=0.085; existing case30s/suite600s watchdog unchanged.
+SETTLE CLEAN case=23 extraWallSeconds=0.001 extraUnscaledSeconds=0.000 extraDspSeconds=0.000 effects=0 voices=0
+MEASURE case=23 play=1 frames=712 wallFrameMedianMs=3.824 p95Ms=4.875 maxMs=11.819 mainThreadAllocatedBytes=unavailable_counter_did_not_observe_probe_allocation managedHeapDeltaBytes=-1921024 objects=967->967 nativeActors=0/2/0 pooledVoices=13->13 pooledEffects=9->9
+MEASURE scope=Editor main thread including harness, screenshots, logging, queue movement, pause and settle frames; heap delta is not allocation; pooled objects may be retained. Small repeated samples are raw evidence, not a performance target verdict or standalone build benchmark.
+PASS case=23/40 scenario=source interrupt action=Samurai_Execution10 source=Mankey avatar=MankeyAvatar direction=-1 contacts=0 starts=1 callbacks=1/1 getUpFrames=0 progress=0.000 audio=0 vfx=0 hold=0 light=0 shake=0 trail=False flash=False seconds=2.829
+EXECUTION10_SOURCE attack=3e685dd57e9c78b49b20bef3e8358ae3:7400020 reaction=b01b411d366a5a344bddf3428a7bc8f7:7400020 attackSeconds=2.56666684 reactionSeconds=2.66666675 attackAlias=True reactionAlias=True getUpAlias=True
+START case=24 scenario=source interrupt action=Samurai_Execution10 source=Pepe avatar=PepeAvatar direction=-1
+STALE rejected phase=source old=23/23 current=24/24
+SETTLE case=24 quietWallSeconds=2.819 activeEffects=0 activeVoices=0 scale=1.000 unscaledTime=105.120 dspTime=1851.563
+SETTLE bounds particleUnscaledSeconds=0.667 voiceDspSeconds=0.085; existing case30s/suite600s watchdog unchanged.
+SETTLE CLEAN case=24 extraWallSeconds=0.001 extraUnscaledSeconds=0.000 extraDspSeconds=0.000 effects=0 voices=0
+MEASURE case=24 play=1 frames=708 wallFrameMedianMs=3.833 p95Ms=4.685 maxMs=11.064 mainThreadAllocatedBytes=unavailable_counter_did_not_observe_probe_allocation managedHeapDeltaBytes=-1466368 objects=967->967 nativeActors=0/2/0 pooledVoices=13->13 pooledEffects=9->9
+MEASURE scope=Editor main thread including harness, screenshots, logging, queue movement, pause and settle frames; heap delta is not allocation; pooled objects may be retained. Small repeated samples are raw evidence, not a performance target verdict or standalone build benchmark.
+PASS case=24/40 scenario=source interrupt action=Samurai_Execution10 source=Pepe avatar=PepeAvatar direction=-1 contacts=0 starts=1 callbacks=1/1 getUpFrames=0 progress=0.000 audio=0 vfx=0 hold=0 light=0 shake=0 trail=False flash=False seconds=2.830
+EXECUTION10_SOURCE attack=3e685dd57e9c78b49b20bef3e8358ae3:7400020 reaction=b01b411d366a5a344bddf3428a7bc8f7:7400020 attackSeconds=2.56666684 reactionSeconds=2.66666675 attackAlias=True reactionAlias=True getUpAlias=True
+START case=25 scenario=reset after contact action=Samurai_Execution10 source=Mankey avatar=MankeyAvatar direction=1
+STALE rejected phase=source old=24/24 current=25/25
+EQUIPMENT two requests while suppressed: Katana,Katana
+FAIL case=25 action=Samurai_Execution10: System.InvalidOperationException: First contact did not show all confirmed presentation before interruption.   at FrankRetarget.Editor.CombatExpansionGreatSwordPlayCheck.CheckSamuraiCancellation () [0x0012a] in /home/eragon/Project/unity/Zero-Space/Assets/Editor/CombatExpansionGreatSwordPlayCheck.SamuraiLifecycle.cs:157    at FrankRetarget.Editor.CombatExpansionGreatSwordPlayCheck.CheckCompletion () [0x0031b] in /home/eragon/Project/unity/Zero-Space/Assets/Editor/CombatExpansionGreatSwordPlayCheck.Assertions.cs:142    at FrankRetarget.Editor.CombatExpansionGreatSwordPlayCheck.Tick () [0x001f9] in /home/eragon/Project/unity/Zero-Space/Assets/Editor/CombatExpansionGreatSwordPlayCheck.cs:215 

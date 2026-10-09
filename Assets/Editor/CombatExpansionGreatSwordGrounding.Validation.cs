@@ -8,7 +8,11 @@ namespace FrankRetarget.Editor
 {
     public static partial class CombatExpansionGreatSwordGrounding
     {
-        public static void Validate()
+        public static void Validate() => ValidateIndices(new[] { 0, 1, 2, 3 });
+
+        public static void ValidateAmbush() => ValidateIndices(new[] { 0 });
+
+        static void ValidateIndices(int[] indices)
         {
             var rows = new StringBuilder("fighter,action,direction,role,minimumClearance,seconds,samples\n");
             float worst = float.PositiveInfinity;
@@ -23,7 +27,7 @@ namespace FrankRetarget.Editor
                 {
                     // Preflight every required asset before sampling any case.
                     var assets = new FrankPairGrounding[4];
-                    for (int index = 0; index < assets.Length; index++)
+                    foreach (int index in indices)
                     {
                         var move = CombatExpansionGreatSwordStudy.MakeMove(fighters[0], fighters[1], index);
                         string path = AssetPath(move.moveName);
@@ -33,7 +37,7 @@ namespace FrankRetarget.Editor
                         CheckTracks(assets[index], fighters);
                     }
                     foreach (var source in fighters)
-                    for (int index = 0; index < assets.Length; index++)
+                    foreach (int index in indices)
                     foreach (int direction in new[] { 1, -1 })
                     {
                         var target = fighters.Single(f => f != source);
@@ -77,7 +81,8 @@ namespace FrankRetarget.Editor
                         });
                     }
                 });
-                if (cases != 16 || actorCases != 32 || measurements != evaluations * 2)
+                if (cases != indices.Length * 4 || actorCases != indices.Length * 8 ||
+                    measurements != evaluations * 2)
                     throw new InvalidOperationException("Incomplete sampled grounding coverage.");
                 if (!float.IsFinite(worst) || worst < -.025f)
                     throw new InvalidOperationException("Ground clearance below -0.025 m: " + worst);
@@ -96,12 +101,14 @@ namespace FrankRetarget.Editor
                         $"pair evaluations: {evaluations}; clearance measurements: {measurements}."));
                 summary.AppendLine(FormattableString.Invariant(
                     $"Sampling: {ValidationRate} Hz minimum, including endpoints; worst clearance: {worst:R} m."));
-                summary.AppendLine("Four GreatSword pairs, both BattleScene avatars and both directions required.");
+                summary.AppendLine("GreatSword indices " + string.Join(",", indices) +
+                    "; both BattleScene avatars and both directions required.");
                 summary.AppendLine("Sampled grounding only; this is not contact or gameplay approval.");
                 if (failure != null)
                     summary.AppendLine(failure);
                 summary.Append(rows);
-                WriteReport("GreatSwordGroundingValidation.txt", summary.ToString());
+                WriteReport(indices.Length == 4 ? "GreatSwordGroundingValidation.txt" :
+                    "GreatSwordAmbushGroundingValidation.txt", summary.ToString());
             }
         }
 

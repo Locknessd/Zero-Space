@@ -27,18 +27,48 @@ public sealed class CombatActionDefinition : ScriptableObject
         [TextArea] public string continuation;
     }
 
+    [SerializeReference]
+    [Tooltip("Optional complete authored lethal receiver outcome. Null preserves the native pair.")]
+    public CombatLethalPairVariant lethalPairVariant;
+
     public string actionId;
     public string displayName;
     [TextArea] public string gameplayTrigger;
     [TextArea] public string entryAndInterruption;
     [TextArea] public string recovery;
     [TextArea] public string presentation;
+    [SerializeReference]
+    [Tooltip("Optional action-specific cue timeline. Overrides the bank's source-clip lookup; grapples retain priority. " +
+        "Attack and reaction must match this move's source pair. Leave null to use the legacy bank timeline.")]
+    public BattleSfxBank.Move presentationProfile;
+    [Tooltip("Original ordered source clips used to author an adapted attacker animation.")]
+    public AnimationClip[] authoredAttackSources = Array.Empty<AnimationClip>();
     public Contact[] contacts = Array.Empty<Contact>();
 
     public IEnumerable<string> Validate(CombatTripletData move, BattleSfxBank bank)
     {
+        if (lethalPairVariant != null && !lethalPairVariant.TryValidate(move, bank, null, null, out string variantError))
+            yield return "Lethal receiver variant: " + variantError;
         if (move == null || move.moveName != actionId)
             yield return "Move ID does not match its action definition.";
+        if (authoredAttackSources != null && Array.Exists(authoredAttackSources, clip => !clip))
+            yield return "An authored attacker source reference is missing.";
+        if (presentationProfile != null && (move == null || !move.grapple))
+        {
+            if (move?.sourcePair == null)
+                yield return "Explicit presentation profile requires a source pair.";
+            else
+            {
+                if (presentationProfile.attack != move.sourcePair.attack)
+                    yield return "Explicit presentation profile attack disagrees with the move source pair.";
+                if (presentationProfile.reaction != move.sourcePair.reaction)
+                    yield return "Explicit presentation profile reaction disagrees with the move source pair.";
+            }
+            if (presentationProfile.cues == null || presentationProfile.cues.Length == 0)
+                yield return "Explicit presentation profile has no cues.";
+            else if (Array.Exists(presentationProfile.cues, cue => cue == null))
+                yield return "Explicit presentation profile has a null cue record.";
+        }
         if (contacts == null || contacts.Length == 0)
         {
             yield return "Action has no authored contacts.";
@@ -67,9 +97,9 @@ public sealed class CombatActionDefinition : ScriptableObject
             var group = bank ? bank.FindGroup(contact.presentationGroup) : null;
             if (group == null || group.clips == null || group.clips.Length == 0 || !group.output)
                 yield return contact.strikeId + ": missing routed contact audio.";
-            if (profile != null && !Array.Exists(profile.cues, cue => cue != null &&
+            if (profile != null && (profile.cues == null || !Array.Exists(profile.cues, cue => cue != null &&
                 Mathf.Abs(cue.seconds - contact.seconds) < .0001f && cue.group == contact.presentationGroup &&
-                (cue.hasContactPoint || cue.damageOnLanding || contact.nonDamagingInteraction)))
+                (cue.hasContactPoint || cue.damageOnLanding || contact.nonDamagingInteraction))))
                 yield return contact.strikeId + ": missing positioned presentation cue on the shared clock.";
             if (string.IsNullOrWhiteSpace(contact.targetRegion) || string.IsNullOrWhiteSpace(contact.continuation))
                 yield return contact.strikeId + ": contact response policy is incomplete.";

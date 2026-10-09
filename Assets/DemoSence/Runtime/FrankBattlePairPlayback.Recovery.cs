@@ -13,6 +13,7 @@ namespace FrankRetarget
         void ResetRecovery()
         {
             ClearRecoveryPoses();
+            ResetStandingRecovery();
             waitingForGetUp = false;
             attackRecoveryPending = hitRecoveryPending = recoveryFailed = false;
             attackRecoveryStarted = hitRecoveryStarted = false;
@@ -45,9 +46,11 @@ namespace FrankRetarget
         {
             if (!IsRecovering || !fighter || fighter.SourcePlayback != this ||
                 fighter.PlaybackId != playbackId) return false;
-            if (fighter == attacker && playbackId == attackPlaybackId && attackRecoveryPending)
+            if (fighter == attacker && playbackId == attackPlaybackId && attackRecoveryPending &&
+                !attackStandingRecovery)
                 attackRecoveryPending = false;
-            else if (fighter == receiver && playbackId == hitPlaybackId && hitRecoveryPending)
+            else if (fighter == receiver && playbackId == hitPlaybackId && hitRecoveryPending &&
+                !hitStandingRecovery)
                 hitRecoveryPending = false;
             else return false;
             if (!succeeded) recoveryFailed = true;
@@ -72,19 +75,23 @@ namespace FrankRetarget
             }
             // Register both requested recoveries before entering either controller.
             // BeginSourceGetUp retains the original participant playback IDs.
-            attackRecoveryPending = pair.attackerGetUp;
-            hitRecoveryPending = !lethal && RecoveryClip;
+            attackRecoveryPending = pair.attackerGetUp || attackStandingRecovery;
+            hitRecoveryPending = !lethal && (RecoveryClip || hitStandingRecovery);
             waitingForGetUp = attackRecoveryPending || hitRecoveryPending;
             if (attackRecoveryPending)
             {
-                attackRecoveryStarted = attacker && attacker.BeginSourceGetUp(pair.attackerGetUp);
+                attackRecoveryStarted = attacker && (attackStandingRecovery
+                    ? attacker.BeginSourceIdleRecovery(this, attackPlaybackId)
+                    : attacker.BeginSourceGetUp(pair.attackerGetUp));
                 if (attackRecoveryPose != null && hasAttackX)
                     PreserveRootX(attacker ? attacker.Animator : null, attackX);
                 if (!attackRecoveryStarted) recoveryFailed = true;
             }
             if (hitRecoveryPending)
             {
-                hitRecoveryStarted = receiver && receiver.BeginSourceGetUp(RecoveryClip);
+                hitRecoveryStarted = receiver && (hitStandingRecovery
+                    ? receiver.BeginSourceIdleRecovery(this, hitPlaybackId)
+                    : receiver.BeginSourceGetUp(RecoveryClip));
                 if (hitRecoveryPose != null && hasHitX)
                     PreserveRootX(receiver ? receiver.Animator : null, hitX);
                 if (!hitRecoveryStarted) recoveryFailed = true;
@@ -96,7 +103,9 @@ namespace FrankRetarget
             }
             if (waitingForGetUp)
             {
-                if (battleSfx) battleSfx.BeginRecovery(this, attackRecoveryStarted);
+                bool attackGetUp = attackRecoveryStarted && !attackStandingRecovery;
+                bool hitGetUp = hitRecoveryStarted && !hitStandingRecovery;
+                if (battleSfx && (attackGetUp || hitGetUp)) battleSfx.BeginRecovery(this, attackGetUp);
                 CombatPositioningController.Instance?.ConstrainDepthNow();
                 ConstrainLightHipsDepth();
                 RebaseRecoveryPoses();
@@ -110,6 +119,7 @@ namespace FrankRetarget
         void CompleteNow()
         {
             ClearRecoveryPoses();
+            ResetStandingRecovery();
             Playing = false;
             waitingForGetUp = false;
             if (battleSfx) battleSfx.EndSequence(this);
@@ -117,6 +127,7 @@ namespace FrankRetarget
             RestoreRecoverySpeeds();
             ReleaseEquipment();
             attackRecoveryStarted = hitRecoveryStarted = false;
+            attackRecoveryPending = hitRecoveryPending = recoveryFailed = false;
             PublishPairCompletion(true);
             // Retain only an accepted lethal receiver's source actor/model. The
             // existing SourcePlayback reference lets reset restore that terminal pose.
@@ -149,6 +160,7 @@ namespace FrankRetarget
         public void Cancel()
         {
             ClearRecoveryPoses();
+            ResetStandingRecovery();
             if (battleSfx) battleSfx.EndSequence(this, true);
             if (battleVfx) battleVfx.EndSequence(this, true);
             bool interrupted = Playing;

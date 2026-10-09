@@ -26,6 +26,10 @@ namespace FrankRetarget.Editor
         public static void BeginGrapples() => Begin("Grapples", "GrapplePlayMode.txt");
         public static void BeginThrows() => Begin("Throws", "ThrowPlayMode.txt");
         public static void BeginGreatSwordRecovery() => Begin("GreatSwordRecovery", "GreatSwordRecoveryPlayMode.txt");
+        public static void BeginGreatSword() => Begin("GreatSword", "GreatSwordPlayMode.txt");
+        public static void BeginSamurai() => Begin("Samurai", "SamuraiStudy/PlayMode/Report.txt");
+        public static void BeginSamurai10() => Begin("Samurai10", "SamuraiStudy/Execution10PlayMode/Report.txt");
+        public static void BeginSlap() => Begin("Slap", "SlapStudy/PlayMode/Status.txt");
 
         static void Begin(string suite, string report)
         {
@@ -111,8 +115,9 @@ namespace FrankRetarget.Editor
             nextCheck = EditorApplication.timeSinceStartup + .2;
             try
             {
-                if (EditorApplication.timeSinceStartup - SessionState.GetFloat(Key + ".began", 0) > 650)
-                    throw new TimeoutException("Isolated lifecycle suite exceeded 650 seconds.");
+                double timeout = SessionState.GetString(Key + ".suite", "") == "Slap" ? 1300 : 650;
+                if (EditorApplication.timeSinceStartup - SessionState.GetFloat(Key + ".began", 0) > timeout)
+                    throw new TimeoutException($"Isolated lifecycle suite exceeded {timeout} seconds.");
                 if (phase == 2)
                 {
                     string copy = SessionState.GetString(Key + ".copy", "");
@@ -129,6 +134,14 @@ namespace FrankRetarget.Editor
                         CombatExpansionThrowPlayCheck.Begin();
                     else if (suite == "GreatSwordRecovery")
                         CombatExpansionGreatSwordRecoveryPlayCheck.Begin();
+                    else if (suite == "GreatSword")
+                        CombatExpansionGreatSwordPlayCheck.Begin();
+                    else if (suite == "Samurai")
+                        CombatExpansionGreatSwordPlayCheck.BeginSamurai();
+                    else if (suite == "Samurai10")
+                        CombatExpansionGreatSwordPlayCheck.BeginSamurai10();
+                    else if (suite == "Slap")
+                        CombatExpansionSlapPlayCheck.Begin();
                     else
                         throw new InvalidOperationException("Unknown lifecycle suite: " + suite);
                     SessionState.SetInt(Key + ".phase", 3);
@@ -136,8 +149,11 @@ namespace FrankRetarget.Editor
                 else if (phase == 3)
                 {
                     string report = File.ReadAllText(SessionState.GetString(Key + ".report", ""));
-                    if (report.Contains("\nPASS all ") || report.Contains("\nFAIL"))
-                        Finish(report.Contains("\nFAIL") ? "FAIL suite; inspect its report."
+                    bool failed = report.StartsWith("FAIL", StringComparison.Ordinal) || report.Contains("\nFAIL");
+                    bool passed = report.StartsWith("PASS_NONLETHAL", StringComparison.Ordinal) ||
+                        report.Contains("\nPASS all ");
+                    if (passed || failed)
+                        Finish(failed ? "FAIL suite; inspect its report."
                             : "PASS suite; inspect its report for case scope.");
                 }
             }

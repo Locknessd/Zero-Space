@@ -1,0 +1,42 @@
+PROVISIONAL evidence only. No accepted hits, registration or timing changes. Original first-combo native source tracks and reaction onsets 0.1/0.525/1.51s. Both assignments, both directions, spacings 0.65/0.8/0.95m. Strike1 actual LeftHand; strikes2/3 actual RightHand; each versus head and torso separately. Head region is mapped Head and descendants. Torso uses only mapped Hips/Spine/Chest/UpperChest weights, WITHOUT descendants, excluding head, arm and leg bones. Each selected triangle requires >=0.5 summed region weight on every vertex. Exact unsigned skinned triangle gaps are not signed penetration depths; zero may indicate intersection. Nearest samples are candidates, never acceptance. 60Hz entire pair plus exact endpoints/seams; 240Hz in +/-0.1s windows about 0.1/0.525/1.51. Candidate searches restricted to [0,0.4], [0.4,0.8], [0.8,1.8166667]s. Movement is finite-difference world hand-pivot velocity and relative hand-to-target-pivot velocity. Body clearance means minimum full visible body Y relative to preview ground Y=0. Reverse-time replay checks every measured gap, clearance and all diagnostic bone poses. World closest anchors may change for equally close/intersecting faces; stability checks use gaps and poses rather than requiring unique closest points. Existing preview-scene/session cleanup is reused. Native equivalence was previously validated and is not repeated here.
+
+PROVISIONAL_Pepe_LaneNegative_Range95cm
+Started UTC: 2026-10-08T17:53:47.7018800Z
+Each minimum is provisional; entry or recoil minima may not be a credible strike.
+strike1 LeftHand vs Head: gap=0.06480139m at pair=0.1875s; samples=63; <=1mm samples=0.
+strike1 LeftHand vs Torso: gap=0.0300094523m at pair=0.075s; samples=63; <=1mm samples=0.
+strike2 RightHand vs Head: gap=0.0275139417m at pair=0.529166639s; samples=65; <=1mm samples=0.
+strike2 RightHand vs Torso: gap=0.136865124m at pair=0.491666645s; samples=65; <=1mm samples=0.
+strike3 RightHand vs Head: gap=0.112616561m at pair=0.966666639s; samples=113; <=1mm samples=0.
+strike3 RightHand vs Torso: gap=0.295839578m at pair=0.95s; samples=113; <=1mm samples=0.
+Sheet T=0s: strike1 Torso approach context; entry / first reaction context
+Sheet T=0.075s: strike1 Torso minimum
+Sheet T=0.0875s: strike1 Head approach context
+Sheet T=0.1s: entry / first reaction context
+Sheet T=0.12s: entry / first reaction context
+Sheet T=0.175s: strike1 Torso recoil context
+Sheet T=0.1875s: strike1 Head minimum
+Sheet T=0.283333331s: strike1 Head recoil context
+Sheet T=0.399s: reaction onset / source link context
+Sheet T=0.4s: strike2 Torso approach context; reaction onset / source link context
+Sheet T=0.401s: reaction onset / source link context
+Sheet T=0.429166645s: strike2 Head approach context
+Sheet T=0.48s: reaction onset / source link context
+Sheet T=0.491666645s: strike2 Torso minimum
+Sheet T=0.525s: reaction onset / source link context
+Sheet T=0.529166639s: strike2 Head minimum
+Sheet T=0.591666639s: strike2 Torso recoil context
+Sheet T=0.625s: strike2 Head recoil context
+Sheet T=0.799s: reaction onset / source link context
+Sheet T=0.8s: reaction onset / source link context
+Sheet T=0.801s: reaction onset / source link context
+Sheet T=0.85s: strike3 Torso approach context
+Sheet T=0.8666667s: strike3 Head approach context
+Sheet T=0.88s: reaction onset / source link context
+Sheet T=0.95s: strike3 Torso minimum
+Sheet T=0.966666639s: strike3 Head minimum
+Sheet T=1.05s: strike3 Torso recoil context
+Sheet T=1.06666672s: strike3 Head recoil context
+Sheet T=1.51s: reaction onset / source link context
+Sheet T=1.81666684s: attack end / recoil context
+Sheet T=2.34333324s: terminal reaction context

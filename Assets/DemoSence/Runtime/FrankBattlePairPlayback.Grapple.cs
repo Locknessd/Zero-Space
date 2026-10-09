@@ -36,11 +36,13 @@ namespace FrankRetarget
         }
 
         public BattleSfxBank.Move PresentationProfile(BattleSfxBank bank) => IsGrapple
-            ? Move.grapple.Presentation(GrappleOutcome) : bank ? bank.FindMove(Move) : null;
+            ? Move.grapple.Presentation(GrappleOutcome) : lethalVariant != null
+                ? lethalVariant.presentationProfile : bank ? bank.FindMove(Move) : null;
 
         float MotionDuration => IsGrapple && Move.grapple.For(GrappleOutcome) != null
             ? Move.grapple.decisionSeconds + Move.grapple.For(GrappleOutcome).Duration
-            : Mathf.Max(pair.attack.length, pair.reactions ? pair.reactions.Duration
+            : lethalVariant != null ? lethalVariant.Duration(pair)
+            : Mathf.Max(pair.attacks ? pair.attacks.Duration : pair.attack.length, pair.reactions ? pair.reactions.Duration
                 : pair.reactionDelay + pair.reaction.length);
 
         AnimationClip RecoveryClip => IsGrapple

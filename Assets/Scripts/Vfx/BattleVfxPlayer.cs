@@ -5,7 +5,7 @@ using UnityEngine;
 
 [DisallowMultipleComponent]
 [DefaultExecutionOrder(14000)]
-public sealed class BattleVfxPlayer : MonoBehaviour
+public sealed partial class BattleVfxPlayer : MonoBehaviour
 {
     public enum ContactKind { Light, Heavy, Ground }
 
@@ -280,8 +280,8 @@ public sealed class BattleVfxPlayer : MonoBehaviour
                     break;
                 case "body_fall":
                 case "knockout_fall":
-                    var floorAnchor = cue.hasContactPoint ? BoneTransform(receiver, cue.contactBone) : null;
-                    Vector3 ground = floorAnchor ? floorAnchor.TransformPoint(cue.contactOffset) : BonePosition(receiver, HumanBodyBones.Hips);
+                    Vector3 ground = cue.TryContactPosition(receiver ? receiver.Animator : null,
+                        out Vector3 landingPoint) ? landingPoint : BonePosition(receiver, HumanBodyBones.Hips);
                     ground.y = groundHeight + .035f;
                     bool knockout = lethal && cue.finalLanding;
                     Spawn(landingDust, ground, Quaternion.identity, knockout ? 1.35f : 1,
@@ -394,6 +394,7 @@ public sealed class BattleVfxPlayer : MonoBehaviour
     }
 
     bool IsBlade(Renderer renderer) => renderer && renderer.enabled && renderer.gameObject.activeInHierarchy &&
+        (!weaponTrails || weaponTrails.IsRendererMeshEligible(renderer)) &&
         renderer.name.IndexOf("shield", StringComparison.OrdinalIgnoreCase) < 0 &&
         renderer.name.IndexOf("case", StringComparison.OrdinalIgnoreCase) < 0;
 
@@ -635,6 +636,8 @@ public sealed class BattleVfxPlayer : MonoBehaviour
     // Source playback evaluates poses at order 13000. Follow the blade afterwards.
     void LateUpdate()
     {
+        if (SynchronizeParticlePause())
+            return;
         followedBladePoints.Clear();
         foreach (var instance in instances)
         {
@@ -676,10 +679,14 @@ public sealed class BattleVfxPlayer : MonoBehaviour
         }
     }
 
-    static void Release(Instance instance)
+    void Release(Instance instance)
     {
         foreach (var particles in instance.particles)
-            if (particles) particles.Stop(false, ParticleSystemStopBehavior.StopEmittingAndClear);
+        {
+            pausedParticles.Remove(particles);
+            if (particles)
+                particles.Stop(false, ParticleSystemStopBehavior.StopEmittingAndClear);
+        }
         if (instance.root) instance.root.SetActive(false);
         instance.follow = null;
         instance.followRenderer = null;

@@ -1,0 +1,939 @@
+{
+    "status": "CAPTURED_DIAGNOSTIC_NO_REPAIR",
+    "scope": "Diagnostic of forward versus terminal-then-seek Evaluation05 poses. Original runtime actors, native clips, grounding and 1.7m setup. Both fighter assignments and directions. All mapped human bones and animator roots on source and fighter rigs. World and local positions are compared independently; rotations are reported in degrees. No pose repair, tolerance change, contact acceptance or gameplay registration.",
+    "error": "",
+    "cases": [
+        {
+            "name": "Mankey_Pepe_1",
+            "attack": "3e685dd57e9c78b49b20bef3e8358ae3:7400010",
+            "reaction": "b01b411d366a5a344bddf3428a7bc8f7:7400010",
+            "grounding": "02a49c29cec769e6095f7ebed333d7f4:11400000",
+            "status": "CAPTURED_DIAGNOSTIC",
+            "comparisons": [
+                {
+                    "seconds": 5.333333492279053,
+                    "order": "terminal_then_seek",
+                    "node": "attacker/native/AnimatorRoot",
+                    "forwardWorld": {
+                        "x": -0.5805548429489136,
+                        "y": -0.0000031885299449641026,
+                        "z": 0.20487645268440247
+                    },
+                    "repeatedWorld": {
+                        "x": -0.5805548429489136,
+                        "y": -0.0000031885299449641026,
+                        "z": 0.20487645268440247
+                    },
+                    "forwardLocal": {
+                        "x": -0.20487646758556367,
+                        "y": -0.0000031885299449641026,
+                        "z": 0.26944512128829958
+                    },
+                    "repeatedLocal": {
+                        "x": -0.20487646758556367,
+                        "y": -0.0000031885299449641026,
+                        "z": 0.26944512128829958
+                    },
+                    "worldErrorM": 0.0,
+                    "localError": 0.0,
+                    "rotationErrorDegrees": 0.0
+                },
+                {
+                    "seconds": 5.333333492279053,
+                    "order": "terminal_then_seek",
+                    "node": "receiver/native/AnimatorRoot",
+                    "forwardWorld": {
+                        "x": -1.6487022638320923,
+                        "y": -0.7535231113433838,
+                        "z": -2.251610517501831
+                    },
+                    "repeatedWorld": {
+                        "x": -1.6487022638320923,
+                        "y": -0.7535231113433838,
+                        "z": -2.251610517501831
+                    },
+                    "forwardLocal": {
+                        "x": -2.251610279083252,
+                        "y": -0.7535231113433838,
+                        "z": 2.498702049255371
+                    },
+                    "repeatedLocal": {
+                        "x": -2.251610279083252,
+                        "y": -0.7535231113433838,
+                        "z": 2.498702049255371
+                    },
+                    "worldErrorM": 0.0,
+                    "localError": 0.0,
+                    "rotationErrorDegrees": 0.0
+                },
+                {
+                    "seconds": 5.333333492279053,
+                    "order": "terminal_then_seek",
+                    "node": "attacker/fighter/AnimatorRoot",
+                    "forwardWorld": {
+                        "x": -0.8500000238418579,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "repeatedWorld": {
+                        "x": -0.8500000238418579,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "forwardLocal": {
+                        "x": -0.8500000238418579,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "repeatedLocal": {
+                        "x": -0.8500000238418579,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "worldErrorM": 0.0,
+                    "localError": 0.0,
+                    "rotationErrorDegrees": 0.0
+                },
+                {
+                    "seconds": 5.333333492279053,
+                    "order": "terminal_then_seek",
+                    "node": "receiver/fighter/AnimatorRoot",
+                    "forwardWorld": {
+                        "x": 0.850000262260437,
+                        "y": 0.0,
+                        "z": -2.0265579792067e-7
+                    },
+                    "repeatedWorld": {
+                        "x": 0.850000262260437,
+                        "y": 0.0,
+                        "z": -2.0265579792067e-7
+                    },
+                    "forwardLocal": {
+                        "x": 0.850000262260437,
+                        "y": 0.0,
+                        "z": -2.0265579792067e-7
+                    },
+                    "repeatedLocal": {
+                        "x": 0.850000262260437,
+                        "y": 0.0,
+                        "z": -2.0265579792067e-7
+                    },
+                    "worldErrorM": 0.0,
+                    "localError": 0.0,
+                    "rotationErrorDegrees": 0.0
+                },
+                {
+                    "seconds": 5.333333492279053,
+                    "order": "repeat_same_time",
+                    "node": "attacker/native/AnimatorRoot",
+                    "forwardWorld": {
+                        "x": -0.5805548429489136,
+                        "y": -0.0000031885299449641026,
+                        "z": 0.20487645268440247
+                    },
+                    "repeatedWorld": {
+                        "x": -0.5805548429489136,
+                        "y": -0.0000031885299449641026,
+                        "z": 0.20487645268440247
+                    },
+                    "forwardLocal": {
+                        "x": -0.20487646758556367,
+                        "y": -0.0000031885299449641026,
+                        "z": 0.26944512128829958
+                    },
+                    "repeatedLocal": {
+                        "x": -0.20487646758556367,
+                        "y": -0.0000031885299449641026,
+                        "z": 0.26944512128829958
+                    },
+                    "worldErrorM": 0.0,
+                    "localError": 0.0,
+                    "rotationErrorDegrees": 0.0
+                },
+                {
+                    "seconds": 5.333333492279053,
+                    "order": "repeat_same_time",
+                    "node": "receiver/native/AnimatorRoot",
+                    "forwardWorld": {
+                        "x": -1.6487022638320923,
+                        "y": -0.7535231113433838,
+                        "z": -2.251610517501831
+                    },
+                    "repeatedWorld": {
+                        "x": -1.6487022638320923,
+                        "y": -0.7535231113433838,
+                        "z": -2.251610517501831
+                    },
+                    "forwardLocal": {
+                        "x": -2.251610279083252,
+                        "y": -0.7535231113433838,
+                        "z": 2.498702049255371
+                    },
+                    "repeatedLocal": {
+                        "x": -2.251610279083252,
+                        "y": -0.7535231113433838,
+                        "z": 2.498702049255371
+                    },
+                    "worldErrorM": 0.0,
+                    "localError": 0.0,
+                    "rotationErrorDegrees": 0.0
+                },
+                {
+                    "seconds": 5.333333492279053,
+                    "order": "repeat_same_time",
+                    "node": "attacker/fighter/AnimatorRoot",
+                    "forwardWorld": {
+                        "x": -0.8500000238418579,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "repeatedWorld": {
+                        "x": -0.8500000238418579,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "forwardLocal": {
+                        "x": -0.8500000238418579,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "repeatedLocal": {
+                        "x": -0.8500000238418579,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "worldErrorM": 0.0,
+                    "localError": 0.0,
+                    "rotationErrorDegrees": 0.0
+                },
+                {
+                    "seconds": 5.333333492279053,
+                    "order": "repeat_same_time",
+                    "node": "receiver/fighter/AnimatorRoot",
+                    "forwardWorld": {
+                        "x": 0.850000262260437,
+                        "y": 0.0,
+                        "z": -2.0265579792067e-7
+                    },
+                    "repeatedWorld": {
+                        "x": 0.850000262260437,
+                        "y": 0.0,
+                        "z": -2.0265579792067e-7
+                    },
+                    "forwardLocal": {
+                        "x": 0.850000262260437,
+                        "y": 0.0,
+                        "z": -2.0265579792067e-7
+                    },
+                    "repeatedLocal": {
+                        "x": 0.850000262260437,
+                        "y": 0.0,
+                        "z": -2.0265579792067e-7
+                    },
+                    "worldErrorM": 0.0,
+                    "localError": 0.0,
+                    "rotationErrorDegrees": 0.0
+                }
+            ]
+        },
+        {
+            "name": "Mankey_Pepe_-1",
+            "attack": "3e685dd57e9c78b49b20bef3e8358ae3:7400010",
+            "reaction": "b01b411d366a5a344bddf3428a7bc8f7:7400010",
+            "grounding": "02a49c29cec769e6095f7ebed333d7f4:11400000",
+            "status": "CAPTURED_DIAGNOSTIC",
+            "comparisons": [
+                {
+                    "seconds": 5.333333492279053,
+                    "order": "terminal_then_seek",
+                    "node": "attacker/native/AnimatorRoot",
+                    "forwardWorld": {
+                        "x": 0.5805549621582031,
+                        "y": -0.0000031885299449641026,
+                        "z": -0.20487652719020844
+                    },
+                    "repeatedWorld": {
+                        "x": 0.5805549621582031,
+                        "y": -0.0000031885299449641026,
+                        "z": -0.20487652719020844
+                    },
+                    "forwardLocal": {
+                        "x": -0.20487646758556367,
+                        "y": -0.0000031885299449641026,
+                        "z": 0.2694450616836548
+                    },
+                    "repeatedLocal": {
+                        "x": -0.20487646758556367,
+                        "y": -0.0000031885299449641026,
+                        "z": 0.2694450616836548
+                    },
+                    "worldErrorM": 0.0,
+                    "localError": 0.0,
+                    "rotationErrorDegrees": 0.0
+                },
+                {
+                    "seconds": 5.333333492279053,
+                    "order": "terminal_then_seek",
+                    "node": "receiver/native/AnimatorRoot",
+                    "forwardWorld": {
+                        "x": 1.6487025022506714,
+                        "y": -0.7535231113433838,
+                        "z": 2.2516098022460939
+                    },
+                    "repeatedWorld": {
+                        "x": 1.6487025022506714,
+                        "y": -0.7535231113433838,
+                        "z": 2.2516098022460939
+                    },
+                    "forwardLocal": {
+                        "x": -2.251610517501831,
+                        "y": -0.7535231113433838,
+                        "z": 2.498701810836792
+                    },
+                    "repeatedLocal": {
+                        "x": -2.251610517501831,
+                        "y": -0.7535231113433838,
+                        "z": 2.498701810836792
+                    },
+                    "worldErrorM": 0.0,
+                    "localError": 0.0,
+                    "rotationErrorDegrees": 0.0
+                },
+                {
+                    "seconds": 5.333333492279053,
+                    "order": "terminal_then_seek",
+                    "node": "attacker/fighter/AnimatorRoot",
+                    "forwardWorld": {
+                        "x": 0.8500000238418579,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "repeatedWorld": {
+                        "x": 0.8500000238418579,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "forwardLocal": {
+                        "x": 0.8500000238418579,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "repeatedLocal": {
+                        "x": 0.8500000238418579,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "worldErrorM": 0.0,
+                    "localError": 0.0,
+                    "rotationErrorDegrees": 0.0
+                },
+                {
+                    "seconds": 5.333333492279053,
+                    "order": "terminal_then_seek",
+                    "node": "receiver/fighter/AnimatorRoot",
+                    "forwardWorld": {
+                        "x": -0.850000262260437,
+                        "y": 0.0,
+                        "z": -2.0265579792067e-7
+                    },
+                    "repeatedWorld": {
+                        "x": -0.850000262260437,
+                        "y": 0.0,
+                        "z": -2.0265579792067e-7
+                    },
+                    "forwardLocal": {
+                        "x": -0.850000262260437,
+                        "y": 0.0,
+                        "z": -2.0265579792067e-7
+                    },
+                    "repeatedLocal": {
+                        "x": -0.850000262260437,
+                        "y": 0.0,
+                        "z": -2.0265579792067e-7
+                    },
+                    "worldErrorM": 0.0,
+                    "localError": 0.0,
+                    "rotationErrorDegrees": 0.0
+                },
+                {
+                    "seconds": 5.333333492279053,
+                    "order": "repeat_same_time",
+                    "node": "attacker/native/AnimatorRoot",
+                    "forwardWorld": {
+                        "x": 0.5805549621582031,
+                        "y": -0.0000031885299449641026,
+                        "z": -0.20487652719020844
+                    },
+                    "repeatedWorld": {
+                        "x": 0.5805549621582031,
+                        "y": -0.0000031885299449641026,
+                        "z": -0.20487652719020844
+                    },
+                    "forwardLocal": {
+                        "x": -0.20487646758556367,
+                        "y": -0.0000031885299449641026,
+                        "z": 0.2694450616836548
+                    },
+                    "repeatedLocal": {
+                        "x": -0.20487646758556367,
+                        "y": -0.0000031885299449641026,
+                        "z": 0.2694450616836548
+                    },
+                    "worldErrorM": 0.0,
+                    "localError": 0.0,
+                    "rotationErrorDegrees": 0.0
+                },
+                {
+                    "seconds": 5.333333492279053,
+                    "order": "repeat_same_time",
+                    "node": "receiver/native/AnimatorRoot",
+                    "forwardWorld": {
+                        "x": 1.6487025022506714,
+                        "y": -0.7535231113433838,
+                        "z": 2.2516098022460939
+                    },
+                    "repeatedWorld": {
+                        "x": 1.6487025022506714,
+                        "y": -0.7535231113433838,
+                        "z": 2.2516098022460939
+                    },
+                    "forwardLocal": {
+                        "x": -2.251610517501831,
+                        "y": -0.7535231113433838,
+                        "z": 2.498701810836792
+                    },
+                    "repeatedLocal": {
+                        "x": -2.251610517501831,
+                        "y": -0.7535231113433838,
+                        "z": 2.498701810836792
+                    },
+                    "worldErrorM": 0.0,
+                    "localError": 0.0,
+                    "rotationErrorDegrees": 0.0
+                },
+                {
+                    "seconds": 5.333333492279053,
+                    "order": "repeat_same_time",
+                    "node": "attacker/fighter/AnimatorRoot",
+                    "forwardWorld": {
+                        "x": 0.8500000238418579,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "repeatedWorld": {
+                        "x": 0.8500000238418579,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "forwardLocal": {
+                        "x": 0.8500000238418579,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "repeatedLocal": {
+                        "x": 0.8500000238418579,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "worldErrorM": 0.0,
+                    "localError": 0.0,
+                    "rotationErrorDegrees": 0.0
+                },
+                {
+                    "seconds": 5.333333492279053,
+                    "order": "repeat_same_time",
+                    "node": "receiver/fighter/AnimatorRoot",
+                    "forwardWorld": {
+                        "x": -0.850000262260437,
+                        "y": 0.0,
+                        "z": -2.0265579792067e-7
+                    },
+                    "repeatedWorld": {
+                        "x": -0.850000262260437,
+                        "y": 0.0,
+                        "z": -2.0265579792067e-7
+                    },
+                    "forwardLocal": {
+                        "x": -0.850000262260437,
+                        "y": 0.0,
+                        "z": -2.0265579792067e-7
+                    },
+                    "repeatedLocal": {
+                        "x": -0.850000262260437,
+                        "y": 0.0,
+                        "z": -2.0265579792067e-7
+                    },
+                    "worldErrorM": 0.0,
+                    "localError": 0.0,
+                    "rotationErrorDegrees": 0.0
+                }
+            ]
+        },
+        {
+            "name": "Pepe_Mankey_1",
+            "attack": "3e685dd57e9c78b49b20bef3e8358ae3:7400010",
+            "reaction": "b01b411d366a5a344bddf3428a7bc8f7:7400010",
+            "grounding": "02a49c29cec769e6095f7ebed333d7f4:11400000",
+            "status": "CAPTURED_DIAGNOSTIC",
+            "comparisons": [
+                {
+                    "seconds": 5.333333492279053,
+                    "order": "terminal_then_seek",
+                    "node": "attacker/native/AnimatorRoot",
+                    "forwardWorld": {
+                        "x": -0.5594354867935181,
+                        "y": -0.0000034384504488116365,
+                        "z": 0.22093486785888673
+                    },
+                    "repeatedWorld": {
+                        "x": -0.5594354867935181,
+                        "y": -0.0000034384504488116365,
+                        "z": 0.22093486785888673
+                    },
+                    "forwardLocal": {
+                        "x": -0.22093486785888673,
+                        "y": -0.0000034384504488116365,
+                        "z": 0.2905644476413727
+                    },
+                    "repeatedLocal": {
+                        "x": -0.22093486785888673,
+                        "y": -0.0000034384504488116365,
+                        "z": 0.2905644476413727
+                    },
+                    "worldErrorM": 0.0,
+                    "localError": 0.0,
+                    "rotationErrorDegrees": 0.0
+                },
+                {
+                    "seconds": 5.333333492279053,
+                    "order": "terminal_then_seek",
+                    "node": "receiver/native/AnimatorRoot",
+                    "forwardWorld": {
+                        "x": -1.4670864343643189,
+                        "y": -0.698754072189331,
+                        "z": -2.08795428276062
+                    },
+                    "repeatedWorld": {
+                        "x": -1.4670864343643189,
+                        "y": -0.698754072189331,
+                        "z": -2.08795428276062
+                    },
+                    "forwardLocal": {
+                        "x": -2.087954044342041,
+                        "y": -0.698754072189331,
+                        "z": 2.3170862197875978
+                    },
+                    "repeatedLocal": {
+                        "x": -2.087954044342041,
+                        "y": -0.698754072189331,
+                        "z": 2.3170862197875978
+                    },
+                    "worldErrorM": 0.0,
+                    "localError": 0.0,
+                    "rotationErrorDegrees": 0.0
+                },
+                {
+                    "seconds": 5.333333492279053,
+                    "order": "terminal_then_seek",
+                    "node": "attacker/fighter/AnimatorRoot",
+                    "forwardWorld": {
+                        "x": -0.8500000238418579,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "repeatedWorld": {
+                        "x": -0.8500000238418579,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "forwardLocal": {
+                        "x": -0.8500000238418579,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "repeatedLocal": {
+                        "x": -0.8500000238418579,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "worldErrorM": 0.0,
+                    "localError": 0.0,
+                    "rotationErrorDegrees": 0.0
+                },
+                {
+                    "seconds": 5.333333492279053,
+                    "order": "terminal_then_seek",
+                    "node": "receiver/fighter/AnimatorRoot",
+                    "forwardWorld": {
+                        "x": 0.850000262260437,
+                        "y": 0.0,
+                        "z": -2.0265579792067e-7
+                    },
+                    "repeatedWorld": {
+                        "x": 0.850000262260437,
+                        "y": 0.0,
+                        "z": -2.0265579792067e-7
+                    },
+                    "forwardLocal": {
+                        "x": 0.850000262260437,
+                        "y": 0.0,
+                        "z": -2.0265579792067e-7
+                    },
+                    "repeatedLocal": {
+                        "x": 0.850000262260437,
+                        "y": 0.0,
+                        "z": -2.0265579792067e-7
+                    },
+                    "worldErrorM": 0.0,
+                    "localError": 0.0,
+                    "rotationErrorDegrees": 0.0
+                },
+                {
+                    "seconds": 5.333333492279053,
+                    "order": "repeat_same_time",
+                    "node": "attacker/native/AnimatorRoot",
+                    "forwardWorld": {
+                        "x": -0.5594354867935181,
+                        "y": -0.0000034384504488116365,
+                        "z": 0.22093486785888673
+                    },
+                    "repeatedWorld": {
+                        "x": -0.5594354867935181,
+                        "y": -0.0000034384504488116365,
+                        "z": 0.22093486785888673
+                    },
+                    "forwardLocal": {
+                        "x": -0.22093486785888673,
+                        "y": -0.0000034384504488116365,
+                        "z": 0.2905644476413727
+                    },
+                    "repeatedLocal": {
+                        "x": -0.22093486785888673,
+                        "y": -0.0000034384504488116365,
+                        "z": 0.2905644476413727
+                    },
+                    "worldErrorM": 0.0,
+                    "localError": 0.0,
+                    "rotationErrorDegrees": 0.0
+                },
+                {
+                    "seconds": 5.333333492279053,
+                    "order": "repeat_same_time",
+                    "node": "receiver/native/AnimatorRoot",
+                    "forwardWorld": {
+                        "x": -1.4670864343643189,
+                        "y": -0.698754072189331,
+                        "z": -2.08795428276062
+                    },
+                    "repeatedWorld": {
+                        "x": -1.4670864343643189,
+                        "y": -0.698754072189331,
+                        "z": -2.08795428276062
+                    },
+                    "forwardLocal": {
+                        "x": -2.087954044342041,
+                        "y": -0.698754072189331,
+                        "z": 2.3170862197875978
+                    },
+                    "repeatedLocal": {
+                        "x": -2.087954044342041,
+                        "y": -0.698754072189331,
+                        "z": 2.3170862197875978
+                    },
+                    "worldErrorM": 0.0,
+                    "localError": 0.0,
+                    "rotationErrorDegrees": 0.0
+                },
+                {
+                    "seconds": 5.333333492279053,
+                    "order": "repeat_same_time",
+                    "node": "attacker/fighter/AnimatorRoot",
+                    "forwardWorld": {
+                        "x": -0.8500000238418579,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "repeatedWorld": {
+                        "x": -0.8500000238418579,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "forwardLocal": {
+                        "x": -0.8500000238418579,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "repeatedLocal": {
+                        "x": -0.8500000238418579,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "worldErrorM": 0.0,
+                    "localError": 0.0,
+                    "rotationErrorDegrees": 0.0
+                },
+                {
+                    "seconds": 5.333333492279053,
+                    "order": "repeat_same_time",
+                    "node": "receiver/fighter/AnimatorRoot",
+                    "forwardWorld": {
+                        "x": 0.850000262260437,
+                        "y": 0.0,
+                        "z": -2.0265579792067e-7
+                    },
+                    "repeatedWorld": {
+                        "x": 0.850000262260437,
+                        "y": 0.0,
+                        "z": -2.0265579792067e-7
+                    },
+                    "forwardLocal": {
+                        "x": 0.850000262260437,
+                        "y": 0.0,
+                        "z": -2.0265579792067e-7
+                    },
+                    "repeatedLocal": {
+                        "x": 0.850000262260437,
+                        "y": 0.0,
+                        "z": -2.0265579792067e-7
+                    },
+                    "worldErrorM": 0.0,
+                    "localError": 0.0,
+                    "rotationErrorDegrees": 0.0
+                }
+            ]
+        },
+        {
+            "name": "Pepe_Mankey_-1",
+            "attack": "3e685dd57e9c78b49b20bef3e8358ae3:7400010",
+            "reaction": "b01b411d366a5a344bddf3428a7bc8f7:7400010",
+            "grounding": "02a49c29cec769e6095f7ebed333d7f4:11400000",
+            "status": "CAPTURED_DIAGNOSTIC",
+            "comparisons": [
+                {
+                    "seconds": 5.333333492279053,
+                    "order": "terminal_then_seek",
+                    "node": "attacker/native/AnimatorRoot",
+                    "forwardWorld": {
+                        "x": 0.5594354867935181,
+                        "y": -0.0000034384504488116365,
+                        "z": -0.22093495726585389
+                    },
+                    "repeatedWorld": {
+                        "x": 0.5594354867935181,
+                        "y": -0.0000034384504488116365,
+                        "z": -0.22093495726585389
+                    },
+                    "forwardLocal": {
+                        "x": -0.2209348976612091,
+                        "y": -0.0000034384504488116365,
+                        "z": 0.29056453704833987
+                    },
+                    "repeatedLocal": {
+                        "x": -0.2209348976612091,
+                        "y": -0.0000034384504488116365,
+                        "z": 0.29056453704833987
+                    },
+                    "worldErrorM": 0.0,
+                    "localError": 0.0,
+                    "rotationErrorDegrees": 0.0
+                },
+                {
+                    "seconds": 5.333333492279053,
+                    "order": "terminal_then_seek",
+                    "node": "receiver/native/AnimatorRoot",
+                    "forwardWorld": {
+                        "x": 1.467086911201477,
+                        "y": -0.698754072189331,
+                        "z": 2.087953567504883
+                    },
+                    "repeatedWorld": {
+                        "x": 1.467086911201477,
+                        "y": -0.698754072189331,
+                        "z": 2.087953567504883
+                    },
+                    "forwardLocal": {
+                        "x": -2.08795428276062,
+                        "y": -0.698754072189331,
+                        "z": 2.3170862197875978
+                    },
+                    "repeatedLocal": {
+                        "x": -2.08795428276062,
+                        "y": -0.698754072189331,
+                        "z": 2.3170862197875978
+                    },
+                    "worldErrorM": 0.0,
+                    "localError": 0.0,
+                    "rotationErrorDegrees": 0.0
+                },
+                {
+                    "seconds": 5.333333492279053,
+                    "order": "terminal_then_seek",
+                    "node": "attacker/fighter/AnimatorRoot",
+                    "forwardWorld": {
+                        "x": 0.8500000238418579,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "repeatedWorld": {
+                        "x": 0.8500000238418579,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "forwardLocal": {
+                        "x": 0.8500000238418579,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "repeatedLocal": {
+                        "x": 0.8500000238418579,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "worldErrorM": 0.0,
+                    "localError": 0.0,
+                    "rotationErrorDegrees": 0.0
+                },
+                {
+                    "seconds": 5.333333492279053,
+                    "order": "terminal_then_seek",
+                    "node": "receiver/fighter/AnimatorRoot",
+                    "forwardWorld": {
+                        "x": -0.850000262260437,
+                        "y": 0.0,
+                        "z": -2.0265579792067e-7
+                    },
+                    "repeatedWorld": {
+                        "x": -0.850000262260437,
+                        "y": 0.0,
+                        "z": -2.0265579792067e-7
+                    },
+                    "forwardLocal": {
+                        "x": -0.850000262260437,
+                        "y": 0.0,
+                        "z": -2.0265579792067e-7
+                    },
+                    "repeatedLocal": {
+                        "x": -0.850000262260437,
+                        "y": 0.0,
+                        "z": -2.0265579792067e-7
+                    },
+                    "worldErrorM": 0.0,
+                    "localError": 0.0,
+                    "rotationErrorDegrees": 0.0
+                },
+                {
+                    "seconds": 5.333333492279053,
+                    "order": "repeat_same_time",
+                    "node": "attacker/native/AnimatorRoot",
+                    "forwardWorld": {
+                        "x": 0.5594354867935181,
+                        "y": -0.0000034384504488116365,
+                        "z": -0.22093495726585389
+                    },
+                    "repeatedWorld": {
+                        "x": 0.5594354867935181,
+                        "y": -0.0000034384504488116365,
+                        "z": -0.22093495726585389
+                    },
+                    "forwardLocal": {
+                        "x": -0.2209348976612091,
+                        "y": -0.0000034384504488116365,
+                        "z": 0.29056453704833987
+                    },
+                    "repeatedLocal": {
+                        "x": -0.2209348976612091,
+                        "y": -0.0000034384504488116365,
+                        "z": 0.29056453704833987
+                    },
+                    "worldErrorM": 0.0,
+                    "localError": 0.0,
+                    "rotationErrorDegrees": 0.0
+                },
+                {
+                    "seconds": 5.333333492279053,
+                    "order": "repeat_same_time",
+                    "node": "receiver/native/AnimatorRoot",
+                    "forwardWorld": {
+                        "x": 1.467086911201477,
+                        "y": -0.698754072189331,
+                        "z": 2.087953567504883
+                    },
+                    "repeatedWorld": {
+                        "x": 1.467086911201477,
+                        "y": -0.698754072189331,
+                        "z": 2.087953567504883
+                    },
+                    "forwardLocal": {
+                        "x": -2.08795428276062,
+                        "y": -0.698754072189331,
+                        "z": 2.3170862197875978
+                    },
+                    "repeatedLocal": {
+                        "x": -2.08795428276062,
+                        "y": -0.698754072189331,
+                        "z": 2.3170862197875978
+                    },
+                    "worldErrorM": 0.0,
+                    "localError": 0.0,
+                    "rotationErrorDegrees": 0.0
+                },
+                {
+                    "seconds": 5.333333492279053,
+                    "order": "repeat_same_time",
+                    "node": "attacker/fighter/AnimatorRoot",
+                    "forwardWorld": {
+                        "x": 0.8500000238418579,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "repeatedWorld": {
+                        "x": 0.8500000238418579,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "forwardLocal": {
+                        "x": 0.8500000238418579,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "repeatedLocal": {
+                        "x": 0.8500000238418579,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "worldErrorM": 0.0,
+                    "localError": 0.0,
+                    "rotationErrorDegrees": 0.0
+                },
+                {
+                    "seconds": 5.333333492279053,
+                    "order": "repeat_same_time",
+                    "node": "receiver/fighter/AnimatorRoot",
+                    "forwardWorld": {
+                        "x": -0.850000262260437,
+                        "y": 0.0,
+                        "z": -2.0265579792067e-7
+                    },
+                    "repeatedWorld": {
+                        "x": -0.850000262260437,
+                        "y": 0.0,
+                        "z": -2.0265579792067e-7
+                    },
+                    "forwardLocal": {
+                        "x": -0.850000262260437,
+                        "y": 0.0,
+                        "z": -2.0265579792067e-7
+                    },
+                    "repeatedLocal": {
+                        "x": -0.850000262260437,
+                        "y": 0.0,
+                        "z": -2.0265579792067e-7
+                    },
+                    "worldErrorM": 0.0,
+                    "localError": 0.0,
+                    "rotationErrorDegrees": 0.0
+                }
+            ]
+        }
+    ]
+}

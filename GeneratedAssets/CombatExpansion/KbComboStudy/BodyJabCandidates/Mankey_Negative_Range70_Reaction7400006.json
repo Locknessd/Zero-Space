@@ -1,0 +1,443 @@
+{
+    "name": "Mankey_Negative_Range70_Reaction7400006",
+    "attacker": "Mankey",
+    "receiver": "Pepe",
+    "status": "COMPLETE_PROVISIONAL_REVIEW_REQUIRED",
+    "phase": "finished",
+    "failure": "",
+    "assignment": 0,
+    "lane": -1,
+    "spacing": 0.699999988079071,
+    "duration": 1.816666841506958,
+    "entryBlendSeconds": 0.03999999910593033,
+    "linkBlendSeconds": 0.03999999910593033,
+    "targetRegions": [
+        "Head",
+        "Head",
+        "Head"
+    ],
+    "sources": [
+        {
+            "guid": "7934f1476fe2c6e458c230f491769c34",
+            "path": "Assets/Selected/FightingAnimsetPro/Animations/KB_Punches.fbx",
+            "name": "KB_p_Jab_L_1",
+            "fileHash": "C88F50A33CD08E016FDAEDF5E543C7E7E8A680142983BA5D43143021C6A640C6",
+            "metaHash": "9341340CAC52F483F1074E8597619BD19771FCE902A24BBE9E472C9615A52825",
+            "localId": 7400004,
+            "length": 0.9500000476837158
+        },
+        {
+            "guid": "7934f1476fe2c6e458c230f491769c34",
+            "path": "Assets/Selected/FightingAnimsetPro/Animations/KB_Punches.fbx",
+            "name": "KB_p_Jab_R_1",
+            "fileHash": "C88F50A33CD08E016FDAEDF5E543C7E7E8A680142983BA5D43143021C6A640C6",
+            "metaHash": "9341340CAC52F483F1074E8597619BD19771FCE902A24BBE9E472C9615A52825",
+            "localId": 7400006,
+            "length": 0.7666667103767395
+        },
+        {
+            "guid": "7934f1476fe2c6e458c230f491769c34",
+            "path": "Assets/Selected/FightingAnimsetPro/Animations/KB_Punches.fbx",
+            "name": "KB_p_Hook_R",
+            "fileHash": "C88F50A33CD08E016FDAEDF5E543C7E7E8A680142983BA5D43143021C6A640C6",
+            "metaHash": "9341340CAC52F483F1074E8597619BD19771FCE902A24BBE9E472C9615A52825",
+            "localId": 7400014,
+            "length": 1.0166667699813843
+        },
+        {
+            "guid": "932279eb1c22db24385eb04c03856eb1",
+            "path": "Assets/Selected/FightingAnimsetPro/Animations/KB_Hits.fbx",
+            "name": "KB_Hit_p_HighFront_Weak",
+            "fileHash": "EAB1BF3FF94B02694B6787BCCFC4976C11D4E6D46550994A8676D8D78F0F2B18",
+            "metaHash": "02CCDC2A4A06E6B5658D42AC0BC38C4BBC6AC639ADF3332EAF91EE65C69B7668",
+            "localId": 7400004,
+            "length": 0.8333333730697632
+        },
+        {
+            "guid": "932279eb1c22db24385eb04c03856eb1",
+            "path": "Assets/Selected/FightingAnimsetPro/Animations/KB_Hits.fbx",
+            "name": "KB_Hit_p_HighRight_Weak",
+            "fileHash": "EAB1BF3FF94B02694B6787BCCFC4976C11D4E6D46550994A8676D8D78F0F2B18",
+            "metaHash": "02CCDC2A4A06E6B5658D42AC0BC38C4BBC6AC639ADF3332EAF91EE65C69B7668",
+            "localId": 7400006,
+            "length": 0.8333333730697632
+        }
+    ],
+    "attacks": [
+        {
+            "id": "strike1",
+            "guid": "7934f1476fe2c6e458c230f491769c34",
+            "localId": 7400004,
+            "seconds": 0.0,
+            "sourceStartSeconds": 0.0,
+            "sourceEndSeconds": 0.9500000476837158,
+            "blendSeconds": 0.0,
+            "candidateContactSeconds": 0.0,
+            "terminal": false,
+            "lethalHoldSeconds": -1.0
+        },
+        {
+            "id": "strike2",
+            "guid": "7934f1476fe2c6e458c230f491769c34",
+            "localId": 7400006,
+            "seconds": 0.4000000059604645,
+            "sourceStartSeconds": 0.0,
+            "sourceEndSeconds": 0.7666667103767395,
+            "blendSeconds": 0.03999999910593033,
+            "candidateContactSeconds": 0.0,
+            "terminal": false,
+            "lethalHoldSeconds": -1.0
+        },
+        {
+            "id": "strike3",
+            "guid": "7934f1476fe2c6e458c230f491769c34",
+            "localId": 7400014,
+            "seconds": 0.800000011920929,
+            "sourceStartSeconds": 0.0,
+            "sourceEndSeconds": 1.0166667699813843,
+            "blendSeconds": 0.03999999910593033,
+            "candidateContactSeconds": 0.0,
+            "terminal": false,
+            "lethalHoldSeconds": -1.0
+        }
+    ],
+    "reactions": [
+        {
+            "id": "strike1",
+            "guid": "932279eb1c22db24385eb04c03856eb1",
+            "localId": 7400004,
+            "seconds": 0.07250000536441803,
+            "sourceStartSeconds": 0.0,
+            "sourceEndSeconds": 0.8333333730697632,
+            "blendSeconds": 0.03500000014901161,
+            "candidateContactSeconds": 0.0,
+            "terminal": false,
+            "lethalHoldSeconds": -1.0
+        },
+        {
+            "id": "strike2",
+            "guid": "932279eb1c22db24385eb04c03856eb1",
+            "localId": 7400004,
+            "seconds": 0.5016666650772095,
+            "sourceStartSeconds": 0.0,
+            "sourceEndSeconds": 0.8333333730697632,
+            "blendSeconds": 0.03500000014901161,
+            "candidateContactSeconds": 0.0,
+            "terminal": false,
+            "lethalHoldSeconds": -1.0
+        },
+        {
+            "id": "strike3",
+            "guid": "932279eb1c22db24385eb04c03856eb1",
+            "localId": 7400006,
+            "seconds": 0.9508333206176758,
+            "sourceStartSeconds": 0.0,
+            "sourceEndSeconds": 0.8333333730697632,
+            "blendSeconds": 0.03500000014901161,
+            "candidateContactSeconds": 0.0,
+            "terminal": true,
+            "lethalHoldSeconds": -1.0
+        }
+    ],
+    "onsets": [
+        0.07250000536441803,
+        0.5016666650772095,
+        0.9508333206176758
+    ],
+    "strikes": [],
+    "geometry": [
+        "Region selection: actual Animator root bone and descendants; every triangle vertex must have >=0.5 summed influence across all native skin weights on region bones; visible BodySkins only. Geometry: explicit current bone * bindpose world skinning; exact triangle distance; unsigned zero may mean touch or penetration.\nMankey/LeftHand: renderer=Mahgnkey; mesh=59dc3f26824c72872aa4cf6baeec671e:4300000; selected/total triangles=319/3462\nPepe/Head: renderer=Plane; mesh=757d9d3f1766533aa895e81a07aa5197:-462981019419857548; selected/total triangles=4026/20726",
+        "Region selection: actual Animator root bone and descendants; every triangle vertex must have >=0.5 summed influence across all native skin weights on region bones; visible BodySkins only. Geometry: explicit current bone * bindpose world skinning; exact triangle distance; unsigned zero may mean touch or penetration.\nMankey/RightHand: renderer=Mahgnkey; mesh=59dc3f26824c72872aa4cf6baeec671e:4300000; selected/total triangles=319/3462\nPepe/Head: renderer=Plane; mesh=757d9d3f1766533aa895e81a07aa5197:-462981019419857548; selected/total triangles=4026/20726"
+    ],
+    "verification": [
+        {
+            "contact": {
+                "status": "PROVISIONAL_ELIGIBLE_NOT_ACCEPTED",
+                "strike": 1,
+                "limb": "LeftHand",
+                "surface": "Head",
+                "targetAnchorBone": "Head",
+                "seconds": 0.07250000536441803,
+                "pairClock": 0.07250000536441803,
+                "gap": 0.0,
+                "sourceWorld": {
+                    "x": -0.27843591570854189,
+                    "y": 1.30888831615448,
+                    "z": -0.0025062039494514467
+                },
+                "targetWorld": {
+                    "x": -0.27843591570854189,
+                    "y": 1.30888831615448,
+                    "z": -0.0025062039494514467
+                },
+                "sourceBoneLocal": {
+                    "x": 0.013877381570637226,
+                    "y": 0.022948717698454858,
+                    "z": 0.0378192663192749
+                },
+                "targetBoneLocal": {
+                    "x": 0.2413702756166458,
+                    "y": -0.013464471325278283,
+                    "z": 0.856329619884491
+                },
+                "handPivot": {
+                    "x": -0.29283806681632998,
+                    "y": 1.290697455406189,
+                    "z": -0.02519857883453369
+                },
+                "targetPivot": {
+                    "x": -0.3549615442752838,
+                    "y": 1.3458572626113892,
+                    "z": 0.023848051205277444
+                },
+                "handVelocity": {
+                    "x": -0.7900851368904114,
+                    "y": 1.7068276405334473,
+                    "z": -0.10007850080728531
+                },
+                "handDirection": {
+                    "x": -0.41948074102401736,
+                    "y": 0.9062078595161438,
+                    "z": -0.05313478782773018
+                },
+                "relativeVelocity": {
+                    "x": -0.7900851368904114,
+                    "y": 1.7068276405334473,
+                    "z": -0.10007850080728531
+                },
+                "closingSpeed": 1.433760404586792,
+                "velocityAvailable": true,
+                "movementInterval": 0.0041666701436042789,
+                "attackerMinimumY": 0.009999869391322136,
+                "receiverMinimumY": 0.009999964386224747
+            },
+            "floor": {
+                "attackerRaw": -0.013582779094576836,
+                "receiverRaw": -0.00162608886603266,
+                "attackerLift": 0.023582778871059419,
+                "receiverLift": 0.011626088991761208,
+                "attackerAfter": 0.009999869391322136,
+                "receiverAfter": 0.009999964386224747
+            },
+            "targetVelocity": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "forwardSpeed": 0.7900851368904114,
+            "gapClosingSpeed": 0.4009071886539459,
+            "refined": false,
+            "inBlend": false,
+            "windowEntry": false,
+            "advancing": true,
+            "nearSurface": true,
+            "eligible": true,
+            "selected": false,
+            "flags": "UNSIGNED_ZERO_TOUCH_OR_PENETRATION"
+        },
+        {
+            "contact": {
+                "status": "PROVISIONAL_ELIGIBLE_NOT_ACCEPTED",
+                "strike": 2,
+                "limb": "RightHand",
+                "surface": "Head",
+                "targetAnchorBone": "Head",
+                "seconds": 0.5016666650772095,
+                "pairClock": 0.5016666650772095,
+                "gap": 0.0,
+                "sourceWorld": {
+                    "x": -0.3942091464996338,
+                    "y": 1.3467891216278077,
+                    "z": 0.0056975046172738079
+                },
+                "targetWorld": {
+                    "x": -0.3942091464996338,
+                    "y": 1.3467891216278077,
+                    "z": 0.0056975046172738079
+                },
+                "sourceBoneLocal": {
+                    "x": -0.13944630324840547,
+                    "y": 0.0016274156514555216,
+                    "z": -0.0015137230511754752
+                },
+                "targetBoneLocal": {
+                    "x": -0.38476359844207766,
+                    "y": 0.28187817335128786,
+                    "z": 1.0112591981887818
+                },
+                "handPivot": {
+                    "x": -0.30152174830436709,
+                    "y": 1.3342715501785279,
+                    "z": -0.022282898426055909
+                },
+                "targetPivot": {
+                    "x": -0.49621623754501345,
+                    "y": 1.3118900060653687,
+                    "z": -0.023934463039040567
+                },
+                "handVelocity": {
+                    "x": -0.7810885906219482,
+                    "y": 8.346384048461914,
+                    "z": -6.184192657470703
+                },
+                "handDirection": {
+                    "x": -0.0749812126159668,
+                    "y": 0.8012177348136902,
+                    "z": -0.5936564207077026
+                },
+                "relativeVelocity": {
+                    "x": -1.1619340181350709,
+                    "y": 8.015220642089844,
+                    "z": -6.258111000061035
+                },
+                "closingSpeed": 0.2916814982891083,
+                "velocityAvailable": true,
+                "movementInterval": 0.004166662693023682,
+                "attackerMinimumY": 0.010000000707805157,
+                "receiverMinimumY": 0.009999983012676239
+            },
+            "floor": {
+                "attackerRaw": -0.05456205829977989,
+                "receiverRaw": -0.00558515265583992,
+                "attackerLift": 0.06456205993890763,
+                "receiverLift": 0.015585152432322503,
+                "attackerAfter": 0.010000000707805157,
+                "receiverAfter": 0.009999983012676239
+            },
+            "targetVelocity": {
+                "x": 0.38084542751312258,
+                "y": 0.3311637341976166,
+                "z": 0.0739181712269783
+            },
+            "forwardSpeed": 0.7810885906219482,
+            "gapClosingSpeed": 2.6371078491210939,
+            "refined": false,
+            "inBlend": false,
+            "windowEntry": false,
+            "advancing": true,
+            "nearSurface": true,
+            "eligible": true,
+            "selected": false,
+            "flags": "UNSIGNED_ZERO_TOUCH_OR_PENETRATION"
+        },
+        {
+            "contact": {
+                "status": "PROVISIONAL_ELIGIBLE_NOT_ACCEPTED",
+                "strike": 3,
+                "limb": "RightHand",
+                "surface": "Head",
+                "targetAnchorBone": "Head",
+                "seconds": 0.9508333206176758,
+                "pairClock": 0.9508333206176758,
+                "gap": 0.00031439645681530237,
+                "sourceWorld": {
+                    "x": -0.3732469081878662,
+                    "y": 1.3809294700622559,
+                    "z": -0.01240821834653616
+                },
+                "targetWorld": {
+                    "x": -0.37338152527809145,
+                    "y": 1.381128191947937,
+                    "z": -0.012611277401447297
+                },
+                "sourceBoneLocal": {
+                    "x": -0.2341667115688324,
+                    "y": 0.02289489097893238,
+                    "z": -0.042740534991025928
+                },
+                "targetBoneLocal": {
+                    "x": -0.761134922504425,
+                    "y": 0.5669211149215698,
+                    "z": 1.002870798110962
+                },
+                "handPivot": {
+                    "x": -0.2640763819217682,
+                    "y": 1.3979270458221436,
+                    "z": 0.11334371566772461
+                },
+                "targetPivot": {
+                    "x": -0.4780750870704651,
+                    "y": 1.318142056465149,
+                    "z": -0.07692901045084
+                },
+                "handVelocity": {
+                    "x": -2.8394248485565187,
+                    "y": 0.8480366468429565,
+                    "z": -10.782719612121582
+                },
+                "handDirection": {
+                    "x": -0.25391659140586855,
+                    "y": 0.07583598047494888,
+                    "z": -0.964248538017273
+                },
+                "relativeVelocity": {
+                    "x": -3.280466318130493,
+                    "y": 0.549316942691803,
+                    "z": -10.902217864990235
+                },
+                "closingSpeed": 9.19250202178955,
+                "velocityAvailable": true,
+                "movementInterval": 0.004166662693023682,
+                "attackerMinimumY": 0.009999939240515232,
+                "receiverMinimumY": 0.009999982081353665
+            },
+            "floor": {
+                "attackerRaw": -0.09137078374624253,
+                "receiverRaw": -0.0060170721262693409,
+                "attackerLift": 0.10137078166007996,
+                "receiverLift": 0.016017071902751924,
+                "attackerAfter": 0.009999939240515232,
+                "receiverAfter": 0.009999982081353665
+            },
+            "targetVelocity": {
+                "x": 0.44104140996932986,
+                "y": 0.29871970415115359,
+                "z": 0.1194978877902031
+            },
+            "forwardSpeed": 2.8394248485565187,
+            "gapClosingSpeed": 11.253666877746582,
+            "refined": false,
+            "inBlend": false,
+            "windowEntry": false,
+            "advancing": true,
+            "nearSurface": true,
+            "eligible": true,
+            "selected": false,
+            "flags": ""
+        }
+    ],
+    "sheets": [
+        "Mankey_Negative_Range70_Reaction7400006_01.png"
+    ],
+    "sheetSeconds": [
+        0.0,
+        0.05999999865889549,
+        0.07250000536441803,
+        0.11999999731779099,
+        0.23999999463558198,
+        0.36000001430511477,
+        0.39899998903274538,
+        0.4000000059604645,
+        0.4399999976158142,
+        0.47999998927116396,
+        0.5016666650772095,
+        0.6499999761581421,
+        0.7990000247955322,
+        0.800000011920929,
+        0.8399999737739563,
+        0.8799999952316284,
+        0.9508333206176758,
+        1.1200000047683716,
+        1.2999999523162842,
+        1.5,
+        1.649999976158142,
+        1.791666865348816,
+        1.816666841506958,
+        1.816666841506958
+    ],
+    "reverseSamples": 24,
+    "worstPoseMetres": 0.0,
+    "worstPoseDegrees": 0.0,
+    "worstGapReseek": 0.0,
+    "worstLiftReseek": 0.0
+}

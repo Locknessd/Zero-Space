@@ -43,6 +43,7 @@ namespace FrankRetarget.Editor
             public string fighter, pool, id, attack, reaction, recovery, attackerRecovery, avatar;
             public string attackerDriver, receiverDriver;
             public string[] continuationAttacks, continuationReactions, continuationRecoveries;
+            public string[] authoredAttackSources;
             public float range, reactionDelay;
             public bool paired, valid, hasPresentation;
             public int presentationCues;
@@ -97,6 +98,17 @@ namespace FrankRetarget.Editor
                 AddMoves(fighter, fighter.heavyCombatMoves, "Heavy", moves);
             }
 
+            foreach (var move in moves.Where(move => move.authoredAttackSources.Length > 0))
+            foreach (string identity in move.authoredAttackSources.Append(move.attack))
+            {
+                string path = AssetDatabase.GUIDToAssetPath(identity.Split(':')[0]);
+                if (string.IsNullOrEmpty(path))
+                    throw new InvalidOperationException("Missing authored source identity: " + identity);
+                if (!paths.TryGetValue(path, out var scopes))
+                    paths.Add(path, scopes = new HashSet<string>());
+                scopes.Add(Battle + ":" + move.id + ":authored-source");
+            }
+
             var clips = new List<ClipRecord>();
             foreach (var entry in paths.OrderBy(p => p.Key, StringComparer.Ordinal))
             {
@@ -116,6 +128,8 @@ namespace FrankRetarget.Editor
                         string prefix = move.fighter + "/" + move.pool + "/" + move.id;
                         if (move.attack == identity)
                             roles.Add(prefix + ":attacker");
+                        if (Array.IndexOf(move.authoredAttackSources, identity) >= 0)
+                            roles.Add(prefix + ":authored-attacker-source");
                         if (move.reaction == identity)
                             roles.Add(prefix + ":receiver");
                         if (move.recovery == identity)
@@ -191,6 +205,9 @@ namespace FrankRetarget.Editor
                     pool = poolName,
                     id = move.moveName,
                     attack = Identity(pair?.attack ? pair.attack : move.attackAnim),
+                    authoredAttackSources = (move.actionDefinition
+                        ? move.actionDefinition.authoredAttackSources ?? Array.Empty<AnimationClip>()
+                        : Array.Empty<AnimationClip>()).Select(Identity).ToArray(),
                     reaction = Identity(pair?.reaction ? pair.reaction : move.hitAnim),
                     recovery = Identity(pair?.getUp ? pair.getUp : move.getUpAnim),
                     attackerRecovery = Identity(pair?.attackerGetUp),

@@ -1,0 +1,16 @@
+PASS
+SlapFace sequence 2; both assignments and both lane directions; actual source playback.
+Pair cases=4/4; actor cases=8/8; pair evaluations=10644; clearance measurements=21288; violations=0.
+Independent grid minimum rate=361 Hz; endpoints included; acceptance clearance >= -0.001 m.
+Worst clearance=0.009902719 m; maximum evaluated correction=0.14226146 m.
+Measures visible evaluated body skins against world Y=0 using existing geometry helper.
+Sampled grounding only; no contact, recovery or gameplay approval.
+source,target,direction,fighter,role,minimumClearance,seconds,samples,maximumCorrection,violations
+"Mankey","Pepe",1,"Mankey",attacker,0.00999673549,5.14005041,2661,0.14226146,0
+"Mankey","Pepe",1,"Pepe",receiver,0.009902719,1.62288237,2661,0.08188513,0
+"Mankey","Pepe",-1,"Mankey",attacker,0.00999637,5.14005041,2661,0.14226146,0
+"Mankey","Pepe",-1,"Pepe",receiver,0.009902981,1.62288237,2661,0.08188513,0
+"Pepe","Mankey",1,"Pepe",attacker,0.009988798,5.137281,2661,0.07886217,0
+"Pepe","Mankey",1,"Mankey",receiver,0.009948246,1.6644237,2661,0.132307008,0
+"Pepe","Mankey",-1,"Pepe",attacker,0.00998888351,5.137281,2661,0.07886217,0
+"Pepe","Mankey",-1,"Mankey",receiver,0.009948289,1.6644237,2661,0.132307008,0

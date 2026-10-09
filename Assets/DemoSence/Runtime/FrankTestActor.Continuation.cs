@@ -15,6 +15,8 @@ namespace FrankRetarget
         // Keeping the entry input makes arbitrary preview sampling deterministic.
         public void SetContinuation(AnimationClip next, float seconds, float blend)
         {
+            if (next && (attackSteps != null || reactionSegments != null))
+                throw new System.InvalidOperationException("A continuation cannot replace an active clip track.");
             if (!graph.IsValid()) return;
             if (continuationPlayable.IsValid())
             {

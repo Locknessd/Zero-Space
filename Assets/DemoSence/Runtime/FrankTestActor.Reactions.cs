@@ -59,6 +59,8 @@ namespace FrankRetarget
                 throw new InvalidOperationException("Configure the receiver before assigning its reaction track.");
             if (track && continuationMixer.IsValid())
                 throw new InvalidOperationException("Reaction tracks cannot share a grapple continuation clock.");
+            if (track && attackSteps != null)
+                throw new InvalidOperationException("One actor cannot own attack and reaction tracks together.");
             ClearReactionTrack();
             if (!track) return;
 

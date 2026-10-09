@@ -10,10 +10,16 @@ namespace FrankRetarget
 
         void CaptureRecoveryPoses()
         {
-            if (pair.recoveryBlendSeconds <= 0 && !pair.recoveryGrounding) return;
-            if (pair.attackerGetUp)
+            attackStandingRecovery = pair.standingRecoverySeconds > 0 && !pair.attackerGetUp;
+            hitStandingRecovery = pair.standingRecoverySeconds > 0 && !lethal && !RecoveryClip;
+            bool getUpPose = pair.recoveryBlendSeconds > 0 || pair.recoveryGrounding;
+            if (attackStandingRecovery && attacker.idleAnim)
+                attackRecoveryPose = new RecoveryPose(attacker, attacker.idleAnim, attackPlaybackId, true);
+            else if (getUpPose && pair.attackerGetUp)
                 attackRecoveryPose = new RecoveryPose(attacker, pair.attackerGetUp, attackPlaybackId);
-            if (!lethal && RecoveryClip)
+            if (hitStandingRecovery && receiver.idleAnim)
+                hitRecoveryPose = new RecoveryPose(receiver, receiver.idleAnim, hitPlaybackId, true);
+            else if (getUpPose && !lethal && RecoveryClip)
                 hitRecoveryPose = new RecoveryPose(receiver, RecoveryClip, hitPlaybackId);
         }
 
@@ -52,11 +58,16 @@ namespace FrankRetarget
             readonly Animator animator;
             readonly AnimationClip clip;
             readonly int playbackId;
+            readonly bool standing;
+            readonly string stateName;
             readonly Transform hips;
             readonly Transform[] bones;
             readonly Quaternion[] sourceRotations;
             readonly Quaternion[] rawRotations;
             readonly Quaternion[] outputRotations;
+            readonly Vector3[] sourcePositions;
+            readonly Vector3[] rawPositions;
+            readonly Vector3[] outputPositions;
             readonly Vector3 sourceHipsWorld;
             readonly RecoveryArm leftArm;
             readonly RecoveryArm rightArm;
@@ -66,11 +77,13 @@ namespace FrankRetarget
             float appliedNormalizedTime;
             bool applied;
 
-            public RecoveryPose(CharacterCombat fighter, AnimationClip clip, int playbackId)
+            public RecoveryPose(CharacterCombat fighter, AnimationClip clip, int playbackId, bool standing = false)
             {
                 this.fighter = fighter;
                 this.clip = clip;
                 this.playbackId = playbackId;
+                this.standing = standing;
+                stateName = standing ? "Base Layer.Idle" : "Base Layer.GetUp";
                 animator = fighter.Animator;
                 hips = animator.GetBoneTransform(HumanBodyBones.Hips);
                 sourceHipsWorld = hips.position;
@@ -86,8 +99,14 @@ namespace FrankRetarget
                 sourceRotations = new Quaternion[bones.Length];
                 rawRotations = new Quaternion[bones.Length];
                 outputRotations = new Quaternion[bones.Length];
+                sourcePositions = new Vector3[bones.Length];
+                rawPositions = new Vector3[bones.Length];
+                outputPositions = new Vector3[bones.Length];
                 for (int index = 0; index < bones.Length; index++)
+                {
                     sourceRotations[index] = bones[index].localRotation;
+                    sourcePositions[index] = bones[index].localPosition;
+                }
             }
 
             public void Rebase()
@@ -106,8 +125,13 @@ namespace FrankRetarget
             {
                 if ((hips.localPosition - outputHipsLocal).sqrMagnitude > 1e-12f) return false;
                 for (int index = 0; index < bones.Length; index++)
-                    if (bones[index] && Quaternion.Angle(bones[index].localRotation,
-                        outputRotations[index]) > .001f) return false;
+                    if (bones[index])
+                    {
+                        if (Quaternion.Angle(bones[index].localRotation, outputRotations[index]) > .001f)
+                            return false;
+                        if ((bones[index].localPosition - outputPositions[index]).sqrMagnitude > 1e-12f)
+                            return false;
+                    }
                 return true;
             }
 
@@ -116,12 +140,16 @@ namespace FrankRetarget
                 if (!applied) return;
                 // A fresh Animator sample or a new owner must never be rolled back.
                 if (Owns(owner) &&
-                    animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.GetUp") &&
+                    animator.GetCurrentAnimatorStateInfo(0).IsName(stateName) &&
                     animator.GetCurrentAnimatorStateInfo(0).normalizedTime == appliedNormalizedTime &&
                     OutputStillPresent())
                 {
                     for (int index = 0; index < bones.Length; index++)
-                        if (bones[index]) bones[index].localRotation = rawRotations[index];
+                        if (bones[index])
+                        {
+                            bones[index].localRotation = rawRotations[index];
+                            bones[index].localPosition = rawPositions[index];
+                        }
                     hips.localPosition = rawHipsLocal;
                 }
                 applied = false;
@@ -131,7 +159,7 @@ namespace FrankRetarget
             {
                 if (!Owns(owner)) return;
                 var state = animator.GetCurrentAnimatorStateInfo(0);
-                if (!state.IsName("Base Layer.GetUp"))
+                if (!state.IsName(stateName))
                 {
                     Restore(owner);
                     return;
@@ -145,21 +173,33 @@ namespace FrankRetarget
                 applied = false;
                 rawHipsLocal = hips.localPosition;
                 for (int index = 0; index < bones.Length; index++)
-                    if (bones[index]) rawRotations[index] = bones[index].localRotation;
-                float seconds = Mathf.Clamp01(normalized) * clip.length;
-                float lift = GroundingLift(owner.pair.recoveryGrounding, receiverRole, seconds);
+                    if (bones[index])
+                    {
+                        rawRotations[index] = bones[index].localRotation;
+                        rawPositions[index] = bones[index].localPosition;
+                    }
+                float seconds = (standing ? Mathf.Max(0, normalized) : Mathf.Clamp01(normalized)) * clip.length;
+                float lift = standing ? 0 : GroundingLift(owner.pair.recoveryGrounding, receiverRole, seconds);
                 hips.position += Vector3.up * lift;
-                float duration = owner.pair.recoveryBlendSeconds;
+                float duration = standing ? owner.pair.standingRecoverySeconds : owner.pair.recoveryBlendSeconds;
                 float blend = duration > 0 ? Mathf.SmoothStep(0, 1, seconds / duration) : 1;
                 if (blend < 1)
                 {
                     leftArm.CaptureController();
                     rightArm.CaptureController();
                     for (int index = 0; index < bones.Length; index++)
-                        if (bones[index]) bones[index].localRotation = Quaternion.Slerp(
-                            sourceRotations[index], rawRotations[index], blend);
-                    // Translate the pelvis as a unit. All other bone offsets and scales
-                    // remain those of the fresh humanoid pose, preserving bone lengths.
+                        if (bones[index])
+                        {
+                            bones[index].localRotation = Quaternion.Slerp(
+                                sourceRotations[index], rawRotations[index], blend);
+                            // Native contact IK may have bounded reach compensation. Return
+                            // those offsets gradually instead of shrinking limbs at handoff.
+                            if (bones[index] != hips)
+                                bones[index].localPosition = Vector3.Lerp(
+                                    sourcePositions[index], rawPositions[index], blend);
+                        }
+                    // Translate the pelvis as a unit while both standing and grounded
+                    // recovery release native bone offsets over the same entry blend.
                     hips.position = Vector3.Lerp(animator.transform.TransformPoint(sourceHipsLocal),
                         hips.position, blend);
                     leftArm.Blend(blend);
@@ -171,7 +211,11 @@ namespace FrankRetarget
                     SetHipsDepth(animator, receiverRole ? owner.lockedHitHipsDepth : owner.lockedAttackHipsDepth);
                 outputHipsLocal = hips.localPosition;
                 for (int index = 0; index < bones.Length; index++)
-                    if (bones[index]) outputRotations[index] = bones[index].localRotation;
+                    if (bones[index])
+                    {
+                        outputRotations[index] = bones[index].localRotation;
+                        outputPositions[index] = bones[index].localPosition;
+                    }
                 appliedNormalizedTime = normalized;
                 applied = true;
             }

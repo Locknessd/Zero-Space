@@ -1,0 +1,146 @@
+{
+    "status": "PROVISIONAL",
+    "name": "PROVISIONAL_Pepe_LaneNegative_Range65cm",
+    "attacker": "Pepe",
+    "receiver": "Mankey",
+    "attackerDriver": "Assets/CombatExpansion/HumanoidStudy/Drivers/Pepe_7934f1476fe2c6e458c230f491769c34.prefab",
+    "receiverDriver": "Assets/CombatExpansion/HumanoidStudy/Drivers/Mankey_932279eb1c22db24385eb04c03856eb1.prefab",
+    "trajectory": "PROVISIONAL_Pepe_LaneNegative_Range65cm.csv",
+    "seams": "PROVISIONAL_Pepe_LaneNegative_Range65cm_Seams.csv",
+    "nativeEquivalence": "PROVISIONAL_Pepe_LaneNegative_Range65cm_NativeEquivalence.csv",
+    "laneSign": -1,
+    "sampleCount": 303,
+    "backwardsSeekSamples": 303,
+    "nativeSamples": 277,
+    "spacing": 0.6499999761581421,
+    "duration": 2.3433332443237306,
+    "entryBlend": 0.11999999731779099,
+    "maximumAlignmentError": 0.15000000596046449,
+    "receiverYaw": 180.0,
+    "worstBackwardsSeekMetres": 0.0,
+    "worstBackwardsSeekDegrees": 0.0,
+    "worstNativePositionMetres": 1.3662219089383144e-7,
+    "worstNativeRotationDegrees": 0.0,
+    "carriedHorizontalHips": [
+        {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        },
+        {
+            "x": -0.0426013357937336,
+            "y": 0.0,
+            "z": 0.03953911364078522
+        },
+        {
+            "x": -0.03831927478313446,
+            "y": 0.0,
+            "z": 0.09231051057577133
+        }
+    ],
+    "sheetSeconds": [
+        0.0,
+        0.05000000074505806,
+        0.10000000149011612,
+        0.11999999731779099,
+        0.20000000298023225,
+        0.3499999940395355,
+        0.39899998903274538,
+        0.4000000059604645,
+        0.4399999976158142,
+        0.47999998927116396,
+        0.5249999761581421,
+        0.6000000238418579,
+        0.7200000286102295,
+        0.7990000247955322,
+        0.800000011920929,
+        0.8399999737739563,
+        0.8799999952316284,
+        1.0800000429153443,
+        1.350000023841858,
+        1.5099999904632569,
+        1.559999942779541,
+        1.6799999475479127,
+        1.816666841506958,
+        2.3433332443237306
+    ],
+    "sheets": [
+        "PROVISIONAL_Pepe_LaneNegative_Range65cm_01.png"
+    ],
+    "attacks": [
+        {
+            "id": "strike1",
+            "guid": "7934f1476fe2c6e458c230f491769c34",
+            "localId": 7400004,
+            "seconds": 0.0,
+            "sourceStartSeconds": 0.0,
+            "sourceEndSeconds": 0.6000000238418579,
+            "blendSeconds": 0.0,
+            "candidateContactSeconds": 0.10000000149011612,
+            "terminal": false,
+            "lethalHoldSeconds": -1.0
+        },
+        {
+            "id": "strike2",
+            "guid": "7934f1476fe2c6e458c230f491769c34",
+            "localId": 7400006,
+            "seconds": 0.4000000059604645,
+            "sourceStartSeconds": 0.0,
+            "sourceEndSeconds": 0.6000000238418579,
+            "blendSeconds": 0.07999999821186066,
+            "candidateContactSeconds": 0.5249999761581421,
+            "terminal": false,
+            "lethalHoldSeconds": -1.0
+        },
+        {
+            "id": "strike3",
+            "guid": "7934f1476fe2c6e458c230f491769c34",
+            "localId": 7400014,
+            "seconds": 0.800000011920929,
+            "sourceStartSeconds": 0.0,
+            "sourceEndSeconds": 1.0166667699813843,
+            "blendSeconds": 0.07999999821186066,
+            "candidateContactSeconds": 1.5099999904632569,
+            "terminal": false,
+            "lethalHoldSeconds": -1.0
+        }
+    ],
+    "reactions": [
+        {
+            "id": "strike1",
+            "guid": "932279eb1c22db24385eb04c03856eb1",
+            "localId": 7400018,
+            "seconds": 0.10000000149011612,
+            "sourceStartSeconds": 0.0,
+            "sourceEndSeconds": 0.8333333730697632,
+            "blendSeconds": 0.03500000014901161,
+            "candidateContactSeconds": 0.10000000149011612,
+            "terminal": false,
+            "lethalHoldSeconds": -1.0
+        },
+        {
+            "id": "strike2",
+            "guid": "932279eb1c22db24385eb04c03856eb1",
+            "localId": 7400018,
+            "seconds": 0.5249999761581421,
+            "sourceStartSeconds": 0.0,
+            "sourceEndSeconds": 0.8333333730697632,
+            "blendSeconds": 0.03500000014901161,
+            "candidateContactSeconds": 0.5249999761581421,
+            "terminal": false,
+            "lethalHoldSeconds": -1.0
+        },
+        {
+            "id": "strike3",
+            "guid": "932279eb1c22db24385eb04c03856eb1",
+            "localId": 7400004,
+            "seconds": 1.5099999904632569,
+            "sourceStartSeconds": 0.0,
+            "sourceEndSeconds": 0.8333333730697632,
+            "blendSeconds": 0.03500000014901161,
+            "candidateContactSeconds": 1.5099999904632569,
+            "terminal": true,
+            "lethalHoldSeconds": -1.0
+        }
+    ]
+}
