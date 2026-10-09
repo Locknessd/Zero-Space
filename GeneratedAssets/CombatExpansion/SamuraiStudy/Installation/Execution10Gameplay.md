@@ -4,7 +4,8 @@
 Its per-attacker action assets are `Samurai_Execution10_Mankey.asset` and
 `Samurai_Execution10_Pepe.asset` under `Assets/CombatExpansion/Actions`.
 Gameplay acceptance remains incomplete. The latest real Play Mode run passed
-24 of 40 cases, then failed the first post-contact reset presentation check.
+34 of 40 cases, then failed a pause-coverage precondition at recovery entry.
+The earlier post-contact reset/disable presentation failures are resolved.
 
 Use `EnqueueCombatAction(side, "Samurai_Execution10")`, the exact server animation
 ID, or the existing animation browser. Explicit selection keeps it out of random
@@ -28,13 +29,20 @@ Neither is marked `finalLanding`, so landing does not end feedback before the
 later stab. Early blade overlap during the grab is excluded from damage.
 Both use measured victim anchors and the existing confirmed outcome pathway.
 
-`heavy_swing` at 1.2 s and `thrust_swing` at 1.8 s use the established sound/VFX
-timeline. Their timing and visual fit remain provisional until reviewed in play.
-The newer installer and validation code expect `grapple_release` at 1.2 s to
-remove the sword arc during the throw. That change is not yet persisted in the
-two action assets: reinstall stopped on stale recovery evidence for
-`Assets/BeatEmUp_GameTemplate3D/Textures/NightSkyTile.png.meta` after reimport.
-Refresh the guarded evidence before reinstalling and rerunning the suite.
+`grapple_release` at 1.2 s supplies movement dust/whoosh during the throw;
+`thrust_swing` at 1.8 s supplies the blade preparation cue. Both are now saved
+in the action assets. Fresh guarded recovery evidence and a full contact
+remeasurement resolved the stale-import evidence block before reinstalling.
+The corrected run passed all first-contact reset/disable cases with landing
+feedback active and no early weapon trail. Actual contact screenshots for both
+attackers show the former throw sword arc removed. Full motion review is pending.
+The latest run stopped at case 35 because no particle remained active at get-up
+entry. The revised suite separately pauses live particles at the stab and the
+recovery blend; its rerun is pending.
+`CombatExpansionRecoveryLocomotionStudy.CaptureCandidates` is installed to inspect
+both sidesteps and the existing walk on the saved fighter Avatars. It has not
+been run in Unity. Recovery depth ownership remains a local staged draft;
+no recovery movement change is installed in gameplay.
 The stab resolves the explicit Katana impact assignment through the existing
 `stab` override or Katana `light` route. Native blade trails retain the existing
 calibrated endpoints and sheath exclusions. Hit-stop, impact light, shake, flash

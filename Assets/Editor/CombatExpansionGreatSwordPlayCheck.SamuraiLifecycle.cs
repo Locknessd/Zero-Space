@@ -177,6 +177,7 @@ namespace FrankRetarget.Editor
             }
             if (LifecyclePause)
                 Require(pauseResumed && samuraiPresentationResumed && pausedSamuraiFrames >= 2 &&
+                    (!Samurai10 || samuraiContactPauseVerified) &&
                     targetRecoveryProgress > pausedRecoveryProgress + .1f,
                     $"Paused {SamuraiRecoveryPose} recovery did not stop across real frames and then resume progression.");
             if (LifecycleRepeat && samuraiRepeat == 1)

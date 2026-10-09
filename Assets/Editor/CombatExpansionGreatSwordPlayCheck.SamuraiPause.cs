@@ -10,6 +10,7 @@ namespace FrankRetarget.Editor
     public static partial class CombatExpansionGreatSwordPlayCheck
     {
         static bool pauseActive, pauseResumed, samuraiPresentationResumed;
+        static bool samuraiContactPauseVerified, samuraiPausingSource;
         static int pausedSamuraiFrames;
         static double samuraiPausedAt;
         static float pausedRecoveryProgress, pausedSourceSample;
@@ -70,6 +71,12 @@ namespace FrankRetarget.Editor
 
         static void ResetSamuraiPause()
         {
+            samuraiContactPauseVerified = samuraiPausingSource = false;
+            ResetSamuraiPauseClocks();
+        }
+
+        static void ResetSamuraiPauseClocks()
+        {
             pauseActive = pauseResumed = samuraiPresentationResumed = false;
             pausedSamuraiFrames = 0;
             samuraiPausedClocks.Clear();
@@ -86,14 +93,32 @@ namespace FrankRetarget.Editor
                 foreach (var particles in samuraiPausedParticles)
                     if (particles && particles.gameObject.activeInHierarchy)
                         Require(!particles.isPaused, "Menu-paused particles did not resume.");
-                return;
+                if (!Samurai10 || !samuraiPausingSource || !samuraiPresentationResumed)
+                    return;
+                samuraiContactPauseVerified = true;
+                samuraiPausingSource = false;
+                report.AppendLine("PAUSE_CONTACT_VERIFIED live particles/audio, both poses and owned clocks resumed.");
+                ResetSamuraiPauseClocks();
             }
             if (!pauseActive)
             {
-                if (!pair.IsRecovering || !targetRecovered)
-                    return;
-                Require(targetRecoveryProgress * move.sourcePair.getUp.length < move.sourcePair.recoveryBlendSeconds,
-                    $"Missed the real-frame {SamuraiRecoveryPose} recovery blend window; pause coverage cannot be claimed.");
+                if (Samurai10 && !samuraiContactPauseVerified)
+                {
+                    if (!pair.Playing || contacts < expectedCues.Length)
+                        return;
+                    Require(!pair.IsRecovering &&
+                        Mathf.Abs(pair.SampleTime - expectedCues.Last().seconds) < .0001f,
+                        "Missed the live stab contact hold for independent particle pause coverage.");
+                    samuraiPausingSource = true;
+                }
+                else
+                {
+                    if (!pair.IsRecovering || !targetRecovered)
+                        return;
+                    Require(targetRecoveryProgress * move.sourcePair.getUp.length <
+                        move.sourcePair.recoveryBlendSeconds,
+                        $"Missed the real-frame {SamuraiRecoveryPose} recovery blend window; pause coverage cannot be claimed.");
+                }
                 samuraiPausedBones = fighters.SelectMany(f =>
                     f.Animator.GetComponentsInChildren<Transform>(true)).ToArray();
                 samuraiPausedPositions = samuraiPausedBones.Select(b => b.position).ToArray();
@@ -118,20 +143,25 @@ namespace FrankRetarget.Editor
                     .Where(clock => clock.label.StartsWith("instances/") && clock.root)
                     .SelectMany(clock => clock.root.GetComponentsInChildren<ParticleSystem>())
                     .Where(particles => particles.isPlaying).Distinct().ToArray();
-                Require(samuraiPausedParticles.Length > 0,
-                    $"{SamuraiRecoveryTitle} pause must cover live particle simulation, not only presentation counters.");
+                if (!Samurai10 || samuraiPausingSource)
+                    Require(samuraiPausedParticles.Length > 0,
+                        "Contact pause must cover live particle simulation, not only presentation counters.");
+                else
+                    Require(samuraiContactPauseVerified,
+                        "Recovery pause requires prior live-particle pause and resume evidence.");
                 samuraiPausedParticleTimes = samuraiPausedParticles.Select(particles => particles.time).ToArray();
                 samuraiPausedAt = Now;
                 pauseActive = true;
                 // Tick is appended after PostLateUpdate: this is the completed-frame
                 // baseline. The next Update must pause native particles before simulation.
                 Time.timeScale = 0;
-                report.AppendLine($"PAUSE source={pausedSourceSample:F6} recovery={pausedRecoveryProgress:F6} " +
+                report.AppendLine($"PAUSE phase={(samuraiPausingSource ? "contact" : "recovery")} " +
+                    $"source={pausedSourceSample:F6} recovery={pausedRecoveryProgress:F6} " +
                     $"presentationClocks={samuraiPausedClocks.Count} liveVoices={samuraiPausedVoices.Length} " +
                     $"liveParticles={samuraiPausedParticles.Length} frame={Time.frameCount}");
                 return;
             }
-            Require(Time.timeScale == 0 && pair.IsRecovering &&
+            Require(Time.timeScale == 0 && pair.Playing && pair.IsRecovering != samuraiPausingSource &&
                 Mathf.Abs(pair.SampleTime - pausedSourceSample) < .00001f &&
                 Mathf.Abs(targetRecoveryProgress - pausedRecoveryProgress) < .00001f,
                 "Pause released source ownership or advanced its clock.");
