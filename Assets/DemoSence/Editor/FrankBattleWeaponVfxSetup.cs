@@ -46,6 +46,7 @@ namespace FrankRetarget.Editor
                     TrailStyle(TrumpWeaponManager.WeaponType.DualDaggers, new Color(.18f,.75f,1,.8f), .075f, .28f),
                     TrailStyle(TrumpWeaponManager.WeaponType.Assassin, new Color(.78f,.35f,1,.78f), .095f, .26f)
                 };
+                ConfigureAssassinSlashStyle(trails.styles.Single(s => s.weapon == TrumpWeaponManager.WeaponType.Assassin));
                 vfx.weaponTrails = trails;
                 foreach (var variant in vfx.impactVariants)
                     if (variant.weapon == TrumpWeaponManager.WeaponType.Spear || variant.weapon == TrumpWeaponManager.WeaponType.DualDaggers ||

@@ -94,6 +94,6 @@ Các menu `Validate video combat feel`, `Validate video combat feel in Play Mode
 
 ## Build WebGL và khôi phục
 
-Cần build WebGL lại sau các thay đổi này để FE nhận phiên bản mới. Bản `Build/WebGL-Desktop` tạo trong lượt tối ưu trước đó chưa chứa thay đổi combat này. Dùng menu release trong [hướng dẫn build](WEBGL_BUILD_OPTIMIZATION.md), tiếp tục giữ `Startup Mode = Frontend` khi bàn giao FE.
+Cần build WebGL lại sau các thay đổi này để FE nhận phiên bản mới. Bản `Build/WebGL-Desktop` tạo trong lượt tối ưu trước đó chưa chứa thay đổi combat này. Dùng menu release trong [hướng dẫn build](WEBGL_BUILD_OPTIMIZATION.md); bản WebGL tự dùng Frontend khi bàn giao FE.
 
 Bản trước khi chỉnh nằm tại `BuildOptimization/Originals/VideoReference`, gồm BattleScene và các script đã sửa. Khôi phục scene và các script liên quan cùng nhau khi cần trả lại phiên bản trước. Nếu trả về API VFX cũ, đưa ba script mới cùng `.meta` ra ngoài `Assets`: `Assets/Scripts/Vfx/BattleKnockbackFeedback.cs`, `Assets/DemoSence/Editor/FrankBattleCombatFeel.cs` và `Assets/DemoSence/Editor/CombatFeelPlayValidation.cs`; chúng tham chiếu API va chạm mới. Giữ các file này trong thư mục backup để có thể áp dụng lại.

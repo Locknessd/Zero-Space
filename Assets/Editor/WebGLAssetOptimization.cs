@@ -364,6 +364,10 @@ public static class WebGLAssetOptimization
     [MenuItem("Tools/WebGL/Build Release Desktop")]
     public static void BuildDesktop() => BuildRelease(WebGLTextureSubtarget.DXT, "Build/WebGL-Desktop");
 
+    // GameCI starts Unity with -buildTarget WebGL before invoking this method.
+    // Startup mode is selected by the player platform, with no scene option to configure.
+    public static void BuildDesktopCI() => BuildDesktop();
+
     [MenuItem("Tools/WebGL/Build Release Mobile")]
     public static void BuildMobile() => BuildRelease(WebGLTextureSubtarget.ASTC, "Build/WebGL-Mobile");
 

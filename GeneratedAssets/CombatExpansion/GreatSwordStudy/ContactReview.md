@@ -39,3 +39,9 @@ or emitting trail. The suite stopped before the queued GreatSword cases, accepte
 lethal cases, and interruption cases; those checks remain unverified. See
 ../GreatSwordPlayMode.txt for the recorded failure. Ambush retreat motion was
 studied in RetreatCandidates but has not yet been authored into gameplay.
+
+The measurements and Play Mode report describe the local checkpoint 31fcde0d.
+The publication merge preserves the newer remote scene and sound-bank changes
+and adds only eight GreatSword registry entries and four shared profiles. Its
+registry has 19 moves per fighter; source inventory and coverage files remain
+snapshots of the local capture state. The merged scene has not been replayed.

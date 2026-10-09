@@ -6,7 +6,7 @@ using SocketIOClient;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-public class WebSocketManager : MonoBehaviour
+public partial class WebSocketManager : MonoBehaviour
 {
     public enum StartupMode
     {
@@ -16,11 +16,13 @@ public class WebSocketManager : MonoBehaviour
 
     public static WebSocketManager Instance { get; private set; }
 
-    [Header("Startup")]
-    [Tooltip("Client Input uses IDs entered in Unity. Frontend waits for FE. Applies on all platforms.")]
-    [SerializeField] private StartupMode _startupMode = StartupMode.ClientInput;
-
-    public StartupMode ActiveStartupMode => _startupMode;
+    // Editor always uses client input, including when the build target is WebGL.
+    // A WebGL player waits for FE regardless of any previous scene settings.
+#if UNITY_WEBGL && !UNITY_EDITOR
+    public StartupMode ActiveStartupMode => StartupMode.Frontend;
+#else
+    public StartupMode ActiveStartupMode => StartupMode.ClientInput;
+#endif
 
     public bool IsFrontendControlled => ActiveStartupMode == StartupMode.Frontend;
     public bool IsWaitingForFrontend => IsFrontendControlled && !_frontendStartRequested;
@@ -60,7 +62,8 @@ public class WebSocketManager : MonoBehaviour
     private string _frontendMatchId;
     private string _frontendRequestId;
     private string _currentMatchId;
-    private long _lastAppliedSequence = 0;
+    // Only events retained in the battle inbox acknowledge replay; snapshot state is not an event.
+    private long _lastReceivedSequence = 0;
     private readonly System.Collections.Concurrent.ConcurrentQueue<(float, string)> _progressQueue = new System.Collections.Concurrent.ConcurrentQueue<(float, string)>();
     private readonly System.Collections.Concurrent.ConcurrentQueue<(string code, string msg)> _errorQueue = new System.Collections.Concurrent.ConcurrentQueue<(string code, string msg)>();
     private System.Threading.CancellationTokenSource _connectProgressCts;
@@ -123,7 +126,7 @@ public class WebSocketManager : MonoBehaviour
     {
         if (!IsFrontendControlled)
         {
-            EnqueueError("FRONTEND_START_DISABLED", "Select Frontend startup mode before calling the FE API.");
+            EnqueueError("FRONTEND_START_DISABLED", "Frontend startup is available in WebGL builds. Unity Editor uses Client Input automatically.");
             return;
         }
 
@@ -180,10 +183,10 @@ public class WebSocketManager : MonoBehaviour
             if (!_frontendStartRequested)
             {
                 _currentMatchId = matchId;
-                _lastAppliedSequence = 0;
+                _lastReceivedSequence = 0;
             }
             _frontendStartRequested = true;
-            // Loading subscribes and buffers before the backend can send its first snapshot.
+            // The persistent battle inbox captures messages even before LoadingScene subscribes.
             OnFrontendStartRequested?.Invoke();
             _ = ConnectAsync();
         }
@@ -271,7 +274,7 @@ public class WebSocketManager : MonoBehaviour
             try
             {
                 LogInfo($"WebSocketManager DISPATCH INCOMING [{System.DateTime.UtcNow:o}] -> {msg}", false);
-                OnRawMessageReceived?.Invoke(msg);
+                RetainBattleMessage(msg);
             }
             catch (Exception ex)
             {
@@ -343,7 +346,7 @@ public class WebSocketManager : MonoBehaviour
             // auto-resubscribe if we had a match before disconnect
             if (!string.IsNullOrEmpty(_currentMatchId))
             {
-                await SubscribeToMatch(_currentMatchId, _lastAppliedSequence);
+                await SubscribeToMatch(_currentMatchId, _lastReceivedSequence);
             }
             // Optionally emit a test/start-match event after successful connect
             bool shouldStartMatch = IsFrontendControlled
@@ -465,34 +468,10 @@ public class WebSocketManager : MonoBehaviour
                     return;
                 }
 
-                if (snapResp.snapshot != null)
-                {
-                    // set last applied sequence from snapshot
-                    _lastAppliedSequence = snapResp.snapshot.latestSequence;
-                    LogInfo($"WebSocketManager INCOMING [{System.DateTime.UtcNow:o}]: meme_battle_snapshot matchId={snapResp.snapshot.matchId} latestSeq={snapResp.snapshot.latestSequence}", true);
-                    // enqueue snapshot for consumers
-                    _incomingMessages.Enqueue(JsonConvert.SerializeObject(new { type = "meme_battle_snapshot", snapshot = snapResp.snapshot }));
-                }
-
-                // apply additional events that server included (events with sequence > afterSequence)
-                if (snapResp.events != null)
-                {
-                    // ensure events are sorted
-                    snapResp.events.Sort((a, b) => a.sequence.CompareTo(b.sequence));
-                    foreach (var ev in snapResp.events)
-                    {
-                        if (ev.sequence <= _lastAppliedSequence)
-                        {
-                            // skip duplicates
-                            continue;
-                        }
-                        // enqueue the raw event JSON for consumers
-                        var raw = JsonConvert.SerializeObject(new { type = "meme_battle_event", @event = ev });
-                        LogInfo($"WebSocketManager INCOMING [{System.DateTime.UtcNow:o}]: enqueue snapshot event seq={ev.sequence} type={ev.eventType}", false);
-                        _incomingMessages.Enqueue(raw);
-                        _lastAppliedSequence = ev.sequence;
-                    }
-                }
+                // Normalize on the main thread, retaining history before acknowledging sequences.
+                _incomingMessages.Enqueue(JsonConvert.SerializeObject(new {
+                    type = "meme_battle_snapshot", snapshot = snapResp.snapshot, events = snapResp.events
+                }));
             }
             catch (Exception ex)
             {
@@ -510,31 +489,8 @@ public class WebSocketManager : MonoBehaviour
                 string rawText = response.ToString();
                 LogInfo($"WebSocketManager INCOMING [{System.DateTime.UtcNow:o}]: meme_battle_start_result rawText={rawText}", true);
 
-                // Try to parse inner JSON to extract matchId and snapshot.latestSequence so server-side state
-                // is reflected in WebSocketManager (current match and last sequence).
-                string parsedRequestId = null;
-                try
-                {
-                    var token = JToken.Parse(rawText);
-                    // token may be an array or object
-                    JToken inner = token;
-                    if (token.Type == JTokenType.Array && token.HasValues) inner = token.First;
-                    if (inner != null && inner.Type == JTokenType.Object)
-                    {
-                        var mid = inner.Value<string>("matchId");
-                        if (!string.IsNullOrEmpty(mid)) _currentMatchId = mid;
-                        var snap = inner["snapshot"];
-                        if (snap != null)
-                        {
-                            var seq = snap.Value<long?>("latestSequence");
-                            if (seq.HasValue) _lastAppliedSequence = seq.Value;
-                        }
-                        parsedRequestId = inner.Value<string>("requestId");
-                    }
-                }
-                catch (Exception) { /* ignore parse errors, still enqueue raw payload for consumers */ }
-
-                var wrapped = JsonConvert.SerializeObject(new { type = "meme_battle_start_result", requestId = parsedRequestId, raw = rawText });
+                // Snapshot watermarks are not received-event cursors.
+                var wrapped = JsonConvert.SerializeObject(new { type = "meme_battle_start_result", raw = rawText });
                 _incomingMessages.Enqueue(wrapped);
             }
             catch (Exception ex)
@@ -551,86 +507,16 @@ public class WebSocketManager : MonoBehaviour
                 string rawText = response.ToString();
                 LogInfo($"WebSocketManager INCOMING meme_battle_event raw: {rawText}", false);
 
-                // Backend may send event as array or single object
-                JToken token = null;
-                try
-                {
-                    token = JToken.Parse(rawText);
-                    // Socket.IO arguments wrap a backend array in another array.
-                    if (token is JArray args && args.Count == 1 && args[0] is JArray)
-                        token = args[0];
-                }
-                catch
-                {
-                    // If can't parse as JSON, try to deserialize directly
-                    var ev = response.GetValue<MemeBattleEvent>();
-                    if (ev != null && ev.sequence > _lastAppliedSequence)
-                    {
-                        var rawEvent = JsonConvert.SerializeObject(new { type = "meme_battle_event", @event = ev });
-                        LogInfo($"WebSocketManager INCOMING [{System.DateTime.UtcNow:o}]: enqueue meme_battle_event seq={ev.sequence} type={ev.eventType}", true);
-                        _incomingMessages.Enqueue(rawEvent);
-                        _lastAppliedSequence = ev.sequence;
-                    }
-                    return;
-                }
-
-                // Handle array of events
-                if (token.Type == JTokenType.Array)
-                {
-                    var events = token as JArray;
-                    if (events == null) return;
-
-                    foreach (var item in events)
-                    {
-                        if (item.Type != JTokenType.Object) continue;
-
-                        try
-                        {
-                            var ev = item.ToObject<MemeBattleEvent>();
-                            if (ev == null) continue;
-
-                            // sequence handling: ignore duplicates
-                            if (ev.sequence <= _lastAppliedSequence)
-                            {
-                                LogInfo($"WebSocketManager: skipping duplicate event seq={ev.sequence} (last={_lastAppliedSequence})", false);
-                                continue;
-                            }
-
-                            // in-order event: enqueue and advance sequence
-                            var rawEvent = JsonConvert.SerializeObject(new { type = "meme_battle_event", @event = ev });
-                            LogInfo($"WebSocketManager INCOMING [{System.DateTime.UtcNow:o}]: enqueue meme_battle_event seq={ev.sequence} type={ev.eventType}", true);
-                            _incomingMessages.Enqueue(rawEvent);
-                            _lastAppliedSequence = ev.sequence;
-                        }
-                        catch (Exception ex)
-                        {
-                            Debug.LogWarning($"WebSocketManager: failed to parse event from array: {ex}");
-                        }
-                    }
-                }
-                // Handle single object
-                else if (token.Type == JTokenType.Object)
-                {
-                    var ev = token.ToObject<MemeBattleEvent>();
-                    if (ev == null)
-                    {
-                        Debug.LogWarning("WebSocketManager: received null meme_battle_event");
-                        return;
-                    }
-
-                    // sequence handling: ignore duplicates
-                    if (ev.sequence <= _lastAppliedSequence)
-                    {
-                        LogInfo($"WebSocketManager: skipping duplicate event seq={ev.sequence} (last={_lastAppliedSequence})", false);
-                        return;
-                    }
-
-                    // in-order event: enqueue and advance sequence
-                    var rawEvent = JsonConvert.SerializeObject(new { type = "meme_battle_event", @event = ev });
-                    LogInfo($"WebSocketManager INCOMING [{System.DateTime.UtcNow:o}]: enqueue meme_battle_event seq={ev.sequence} type={ev.eventType}", true);
-                    _incomingMessages.Enqueue(rawEvent);
-                    _lastAppliedSequence = ev.sequence;
-                }
+                var token = ReadSocketPayload(rawText);
+                var events = token is JArray array
+                    ? array.ToObject<System.Collections.Generic.List<MemeBattleEvent>>()
+                    : new System.Collections.Generic.List<MemeBattleEvent> { token?.ToObject<MemeBattleEvent>() };
+                events.RemoveAll(ev => ev == null);
+                events.Sort((a, b) => a.sequence.CompareTo(b.sequence));
+                foreach (var battleEvent in events)
+                    _incomingMessages.Enqueue(JsonConvert.SerializeObject(new {
+                        type = "meme_battle_event", @event = battleEvent
+                    }));
             }
             catch (Exception ex)
             {

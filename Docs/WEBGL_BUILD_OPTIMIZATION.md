@@ -49,7 +49,7 @@ Chưa có bản player build trước tối ưu để đối chiếu, nên khôn
 
 ## Build và bàn giao FE
 
-1. Trong LoadingScene, chọn `Startup Mode = Frontend` trên NetworkManager rồi lưu scene nếu bản build dùng với FE.
+1. Dùng LoadingScene làm scene khởi động. WebGL tự dùng Frontend và đợi FE gọi hàm; Editor tự dùng Client Input để test.
 2. Chuyển Build Profiles sang WebGL.
 3. Chọn `Tools → WebGL → Build Release Desktop` để tạo `Build/WebGL-Desktop`, dùng texture DXT.
 4. Nếu cần bản tối ưu cho điện thoại, chọn `Tools → WebGL → Build Release Mobile` để tạo `Build/WebGL-Mobile`, dùng ASTC. Dùng trên các thiết bị/trình duyệt hỗ trợ ASTC.

@@ -1,0 +1,5 @@
+PASS both attackers, lethal/nonlethal: a frame crossing a whole combo pauses at each exact contact; carried time resumes every hit once; KO slow motion once; cancel restores time.
+PASS resetting feedback preserves an external pause.
+OK complete native match buffered before GameManager readiness; no premature delivery or duplicate.
+PASS real Left Light + Right Heavy FIFO playback, four completion callbacks, GetUp recovery and no stuck time scale.
+PASS FINISHED snapshot history received before readiness, duplicate/live delivery, and result after both real combat pairs.

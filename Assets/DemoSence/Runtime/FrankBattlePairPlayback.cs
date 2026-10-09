@@ -6,6 +6,7 @@ namespace FrankRetarget
     [Serializable]
     public sealed class FrankBattlePair
     {
+        public const int ReceiverFloorSamplesPerSecond = 480;
         public FrankTestDriver attackerDriver, receiverDriver;
         public AnimationClip attack, reaction;
         public FrankAttackTrack attacks;
@@ -30,6 +31,7 @@ namespace FrankRetarget
         public GameObject attackerWeaponPrefab;
         public string attackerWeaponSocket = "";
         public float reactionDelay;
+        [HideInInspector] public float[] receiverFloorLift;
         public bool Valid => attackerDriver && receiverDriver && attack && reaction;
     }
 
@@ -262,8 +264,32 @@ namespace FrankRetarget
             ConstrainLightHipsDepth();
             if (ActiveGrounding)
                 ActiveGrounding.Apply(SampleTime, attacker.Animator, receiver.Animator);
+            ApplyReceiverFloorLift();
             attackActor.ApplySourceWeaponDisplacement(attackActor.Pose.targetHips.position - originalAttackHips);
             attackActor.ApplySourceWeaponEntryGrip(SampleTime);
+        }
+
+        void ApplyReceiverFloorLift()
+        {
+            var liftSamples = pair.receiverFloorLift;
+            if (liftSamples == null || liftSamples.Length == 0 || !hitActor || !hitActor.Pose) return;
+            float frame = Mathf.Min(SampleTime * FrankBattlePair.ReceiverFloorSamplesPerSecond, liftSamples.Length - 1);
+            int index = (int)frame;
+            float lift = Mathf.Lerp(liftSamples[index], liftSamples[Mathf.Min(index + 1, liftSamples.Length - 1)], frame - index);
+            if (lift <= 0) return;
+            // These offsets are baked from the receiving character's body mesh.
+            // Only the three new throws opt in; runtime never skins a body mesh.
+            hitActor.Pose.targetHips.position += Vector3.up * lift;
+            if (!attackActor || !attackActor.Pose) return;
+            foreach (var arm in attackActor.Pose.limbs)
+            {
+                if (!arm.sourceKnuckle) continue;
+                float distance = Vector3.Distance(arm.sourceEnd.position, hitActor.Pose.sourceHips.position);
+                foreach (var held in hitActor.Pose.limbs)
+                    distance = Mathf.Min(distance, Vector3.Distance(arm.sourceEnd.position, held.sourceEnd.position));
+                float holding = 1 - Mathf.SmoothStep(0, 1, Mathf.InverseLerp(.10f, .28f, distance));
+                if (holding > 0) arm.Solve(arm.Goal + Vector3.up * (lift * holding));
+            }
         }
 
         void LateUpdate()

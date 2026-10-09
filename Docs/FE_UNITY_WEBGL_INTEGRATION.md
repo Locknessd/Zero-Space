@@ -7,14 +7,14 @@ Trong chế độ Frontend, Unity chờ lời gọi từ FE trước khi mở k�
 
 ## 1. Điều kiện tích hợp
 
-- Bản WebGL được build với `Startup Mode = Frontend` trên `NetworkManager` trong LoadingScene.
+- Bản WebGL khởi động từ LoadingScene; startup mode tự chuyển sang Frontend khi chạy trên trình duyệt.
 - GameObject nhận lời gọi có tên chính xác là `NetworkManager`.
 - FE đã tải file `*.loader.js` của build và tạo một `<canvas>` để Unity hiển thị.
 - FE có Match ID của một trận đã tồn tại, hoặc request ID dùng để yêu cầu BE bắt đầu trận.
 
-Unity chỉ có một mục `Startup Mode` áp dụng cho cả Editor và bản build:
-`Client Input` dùng ID nhập trong Unity để test; `Frontend` chờ FE gọi hàm.
-Phía Unity chọn `Frontend`, lưu scene rồi build WebGL trước khi bàn giao cho FE.
+Startup mode được chọn tự động: Unity Editor dùng `Client Input`, bản WebGL dùng `Frontend`.
+Inspector không còn mục chọn mode. Phía Unity build WebGL rồi bàn giao cho FE;
+bản build chờ FE gọi hàm trước khi kết nối BE, kể cả khi scene còn ID nhập sẵn để test trong Editor.
 
 Lấy cấu hình `unityConfig` và đường dẫn loader từ `index.html` đi kèm bản build.
 Giữ đúng tên các file build, kể cả đuôi nén. Khi đổi vị trí host, cập nhật các URL tương ứng.

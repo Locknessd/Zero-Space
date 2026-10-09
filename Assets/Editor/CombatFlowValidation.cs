@@ -90,6 +90,8 @@ public static class CombatFlowValidation
             left.ResetCombat();
             right.ResetCombat();
 
+            ValidateLoadingDelivery(left, right);
+
             var managerRoot = new GameObject("Queue Validation");
             SceneManager.MoveGameObjectToScene(managerRoot, _testScene);
             Created.Add(managerRoot);
@@ -175,6 +177,153 @@ public static class CombatFlowValidation
             EditorSceneManager.ClosePreviewScene(scene);
         }
     }
+
+    private static void ValidateLoadingDelivery(CharacterCombat left, CharacterCombat right)
+    {
+        foreach (bool slowLoad in new[] { false, true })
+        {
+            string label = "Editor Client Input" + (slowLoad ? " slow" : " fast");
+            var socketRoot = new GameObject("Loading Inbox " + label);
+            var managerRoot = new GameObject("Loading Game " + label);
+            SceneManager.MoveGameObjectToScene(socketRoot, _testScene);
+            SceneManager.MoveGameObjectToScene(managerRoot, _testScene);
+            Created.Add(socketRoot); Created.Add(managerRoot);
+            var socket = socketRoot.AddComponent<WebSocketManager>();
+            Require(socket.ActiveStartupMode == WebSocketManager.StartupMode.ClientInput &&
+                !socket.IsFrontendControlled && !socket.IsWaitingForFrontend,
+                label + " platform selects client input even with WebGL build target");
+            var manager = managerRoot.AddComponent<GameManager>();
+            manager.leftCombat = left; manager.rightCombat = right;
+            manager.enableLocalInputTesting = false; manager.choreographAttackPositions = false; manager.debugMode = false;
+            var history = new JArray
+            {
+                Event(1, null, "MATCH_CREATED", new JObject { ["characterIds"] = new JArray("bot_a", "bot_b"), ["initialHpAtomic"] = 1000 }),
+                Event(2, "one", "ARGUMENT_SELECTED", Argument("bot_a", "bot_b", "attack_light")),
+                Event(3, "one", "DAMAGE_APPLIED", Damage("bot_a", "bot_b", 900)),
+                Event(4, "one", "HP_CHANGED", new JObject { ["characterId"] = "bot_b", ["hpAfterAtomic"] = 900 }),
+                Event(5, "two", "ARGUMENT_SELECTED", Argument("bot_b", "bot_a", "attack_heavy")),
+                Event(6, "two", "DAMAGE_APPLIED", Damage("bot_b", "bot_a", 800)),
+                Event(7, "two", "HP_CHANGED", new JObject { ["characterId"] = "bot_a", ["hpAfterAtomic"] = 800 }),
+                Event(8, null, "WINNER_DECLARED", new JObject())
+            };
+            var snapshot = new JObject { ["matchId"] = "loading-validation", ["state"] = "FINISHED", ["latestSequence"] = 8,
+                ["characterHpAtomic"] = new JObject { ["bot_a"] = 0, ["bot_b"] = 900 },
+                ["characterMaxHpAtomic"] = new JObject { ["bot_a"] = 1000, ["bot_b"] = 1000 } };
+            Set(manager, "_socket", socket);
+            // State may arrive before its historical events. It cannot advance the replay cursor.
+            Retain(socket, new JObject { ["type"] = "meme_battle_start_result", ["result"] = new JObject {
+                ["matchId"] = "loading-validation", ["snapshot"] = snapshot.DeepClone() } });
+            Require((long)Get(socket, "_lastReceivedSequence") == 0, label + " start snapshot does not acknowledge missing history");
+            Require(socket.HasBattleState, label + " late LoadingManager can detect already received match state");
+            if (slowLoad) Retain(socket, new JObject { ["type"] = "meme_battle_snapshot", ["snapshot"] = snapshot, ["events"] = new JArray(history.Reverse()) });
+            int buffered = socket.PendingBattleMessageCount;
+            for (int frame = 0; frame < (slowLoad ? 600 : 1); frame++) Invoke(manager, "ReceivePendingBattleMessages");
+            Require(socket.PendingBattleMessageCount == buffered && manager.PendingEventCount == 0,
+                label + " no event is consumed before battle initialization, regardless of delay");
+            Invoke(manager, "Start"); Set(manager, "_socket", socket);
+            Require(manager.IsReadyForBattleEvents, label + " explicit readiness after initialization");
+            var loadingRoot = new GameObject("Loading Presentation " + label); Created.Add(loadingRoot);
+            SceneManager.MoveGameObjectToScene(loadingRoot, _testScene);
+            var loading = loadingRoot.AddComponent<LoaddingManager>();
+            loading.loadSceneOnConnected = false; // Verify detection without loading a scene in this preview fixture.
+            var singleton = typeof(WebSocketManager).GetField("<Instance>k__BackingField", BindingFlags.Static | BindingFlags.NonPublic);
+            object previousSocket = singleton.GetValue(null);
+            try
+            {
+                singleton.SetValue(null, socket);
+                Invoke(loading, "TrySubscribe");
+                Require((bool)Get(loading, "_matchStarted"), label + " late loading listener detects match state without receiving a new event");
+            }
+            finally
+            {
+                try { Invoke(loading, "OnDestroy"); }
+                finally { singleton.SetValue(null, previousSocket); }
+            }
+            Set(manager, "_loadingScene", loading);
+            buffered = socket.PendingBattleMessageCount;
+            Invoke(manager, "ReceivePendingBattleMessages");
+            Require(socket.PendingBattleMessageCount == buffered && manager.PendingEventCount == 0,
+                label + " initialized game waits until the loading screen releases playback");
+            typeof(LoaddingManager).GetProperty("IsBattlePresentationReady").GetSetMethod(true).Invoke(loading, new object[] { true });
+            if (!slowLoad) Retain(socket, new JObject { ["type"] = "meme_battle_snapshot", ["snapshot"] = snapshot, ["events"] = history });
+            // Retransmit the same history. Observe a live message arriving during the handoff.
+            Retain(socket, new JObject { ["type"] = "meme_battle_snapshot", ["snapshot"] = snapshot.DeepClone(), ["events"] = history.DeepClone() });
+            int before = socket.PendingBattleMessageCount;
+            Retain(socket, new JObject { ["type"] = "meme_battle_event", ["event"] = history[3].DeepClone() });
+            Require(socket.PendingBattleMessageCount == before, label + " duplicate live event is retained once");
+            Require((long)Get(socket, "_lastReceivedSequence") == 8, label + " reconnect cursor follows retained contiguous history");
+            left.ResetCombat(); right.ResetCombat();
+            int completed = 0;
+            Action<CharacterCombat, int, bool> onComplete = (fighter, playback, succeeded) =>
+            {
+                if (!succeeded || (bool)Get(manager, "_matchEnded"))
+                    throw new InvalidOperationException("Combat was interrupted or result ran before animation completion");
+                completed++;
+            };
+            Invoke(manager, "ReceivePendingBattleMessages");
+            Retain(socket, new JObject { ["type"] = "meme_battle_event", ["event"] = Event(9, null, "VALIDATION_LIVE", new JObject()) });
+            Invoke(manager, "ReceivePendingBattleMessages");
+            Require(socket.PendingBattleMessageCount == 0, label + " old backlog and new live message reach one game queue");
+            left.SequenceEnded += onComplete; right.SequenceEnded += onComplete;
+            try { PumpQueue(manager, left, right); }
+            finally { left.SequenceEnded -= onComplete; right.SequenceEnded -= onComplete; }
+            Require(manager.QueueError == null && manager.PendingEventCount == 0 &&
+                completed == 4 && ((HashSet<string>)Get(manager, "_playedTurns")).Count == 2,
+                label + " FINISHED history plays both complete combat pairs exactly once");
+            Require((bool)Get(manager, "_matchEnded"), label + " result follows combat playback");
+            left.ResetCombat(); right.ResetCombat();
+        }
+
+        var burstRoot = new GameObject("Large Loading Inbox"); Created.Add(burstRoot);
+        SceneManager.MoveGameObjectToScene(burstRoot, _testScene);
+        var burst = burstRoot.AddComponent<WebSocketManager>();
+        for (int i = 1; i <= 1024; i++) Retain(burst, new JObject { ["type"] = "meme_battle_event", ["event"] = Event(i, null, "VALIDATION", new JObject()) });
+        Require(burst.PendingBattleMessageCount == 1024, "Long loads retain a backlog larger than the per-frame dispatch budget");
+        var bulkRoot = new GameObject("Budgeted Game Inbox"); Created.Add(bulkRoot);
+        SceneManager.MoveGameObjectToScene(bulkRoot, _testScene);
+        var bulkGame = bulkRoot.AddComponent<GameManager>();
+        bulkGame.leftCombat = left; bulkGame.rightCombat = right; bulkGame.enableLocalInputTesting = false;
+        Invoke(bulkGame, "Start"); Set(bulkGame, "_socket", burst);
+        Invoke(bulkGame, "ReceivePendingBattleMessages");
+        Require(burst.PendingBattleMessageCount == 768 && bulkGame.PendingEventCount == 256,
+            "Per-frame delivery budget leaves remaining events retained");
+        for (int frame = 0; frame < 3; frame++) Invoke(bulkGame, "ReceivePendingBattleMessages");
+        var stacks = ((IEnumerable)Get(bulkGame, "_queue")).Cast<object>();
+        var sequences = stacks.SelectMany(stack => (List<MemeBattleEvent>)stack.GetType().GetField("events").GetValue(stack))
+            .Select(ev => ev.sequence);
+        Require(burst.PendingBattleMessageCount == 0 && bulkGame.PendingEventCount == 1024 &&
+            sequences.SequenceEqual(Enumerable.Range(1, 1024).Select(v => (long)v)),
+            "Entire large backlog delivered FIFO without eviction across four frames");
+        bulkGame.ClearEventQueue();
+        Retain(burst, new JObject { ["type"] = "meme_battle_event", ["event"] = Event(1025, null, "VALIDATION", new JObject()) });
+        try { burst.DispatchNextBattleMessage(raw => throw new InvalidOperationException("Expected consumer failure")); }
+        catch (InvalidOperationException) { }
+        Require(burst.PendingBattleMessageCount == 1, "A failed consumer retains its message for retry");
+        var orderedRoot = new GameObject("Live Overtakes History"); Created.Add(orderedRoot);
+        SceneManager.MoveGameObjectToScene(orderedRoot, _testScene);
+        var ordered = orderedRoot.AddComponent<WebSocketManager>();
+        Retain(ordered, new JObject { ["type"] = "meme_battle_event", ["event"] = Event(3, null, "WINNER_DECLARED", new JObject()) });
+        Require(ordered.PendingBattleMessageCount == 1 && !ordered.DispatchNextBattleMessage(raw => { }) &&
+            (long)Get(ordered, "_lastReceivedSequence") == 0,
+            "Live winner waits for missing historical events; reconnect cursor stays before the gap");
+        Retain(ordered, new JObject { ["type"] = "meme_battle_event", ["event"] = Event(1, null, "MATCH_CREATED", new JObject()) });
+        Retain(ordered, new JObject { ["type"] = "meme_battle_event", ["event"] = Event(2, null, "TURN_RESOLVED", new JObject()) });
+        long sequence = 0;
+        while (ordered.DispatchNextBattleMessage(raw => {
+            if (JObject.Parse(raw)["event"].Value<long>("sequence") != ++sequence)
+                throw new InvalidOperationException("Live/history order was inverted");
+        })) { }
+        Require(sequence == 3 && (long)Get(ordered, "_lastReceivedSequence") == 3,
+            "Missing history releases the live winner strictly in sequence order");
+    }
+
+    private static JObject Event(long sequence, string turn, string type, JObject payload) => new JObject {
+        ["matchId"] = "loading-validation", ["turnId"] = turn, ["eventId"] = sequence.ToString(),
+        ["sequence"] = sequence, ["eventType"] = type, ["payload"] = payload };
+    private static void Retain(WebSocketManager socket, JObject message) => Invoke(socket, "RetainBattleMessage", message.ToString());
+    private static object Get(object target, string name) => target.GetType().GetField(name, BindingFlags.Instance | BindingFlags.NonPublic).GetValue(target);
+    private static void Set(object target, string name, object value) => target.GetType().GetField(name, BindingFlags.Instance | BindingFlags.NonPublic).SetValue(target, value);
+    private static object Invoke(object target, string name, params object[] args) => target.GetType().GetMethod(name, BindingFlags.Instance | BindingFlags.NonPublic).Invoke(target, args);
 
     private static CharacterCombat Actor(string name, Vector3 position)
     {
