@@ -179,7 +179,7 @@ namespace FrankRetarget.Editor
                 var camera = scene.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<Camera>(true)).Single(c => c.CompareTag("MainCamera"));
                 var director = camera.GetComponent<FrankCinematicCamera>();
                 Undo.RecordObject(director, "Bring battle camera closer");
-                director.battleDistanceScale = .82f;
+                director.battleDistanceScale = .90f;
                 var vfx = game.battleVfx;
                 Undo.RecordObject(vfx, "Stronger battle impacts");
                 vfx.lightHit = BuildPowerEffect(AssetDatabase.LoadAssetAtPath<GameObject>(VfxFolder + "/MageLightHit.prefab"), "BattlePowerLightHit", 0);

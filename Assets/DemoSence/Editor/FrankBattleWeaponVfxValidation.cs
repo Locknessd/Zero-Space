@@ -24,8 +24,10 @@ namespace FrankRetarget.Editor
             {
                 var game = scene.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<GameManager>(true)).Single();
                 var vfx = game.battleVfx; var trails = vfx.weaponTrails;
-                if (!trails || !trails.material || trails.styles.Length != 7 || !vfx.shieldImpact ||
-                    trails.styles.Select(s => s.color).Distinct().Count() != 7 || ShaderUtil.ShaderHasError(trails.material.shader))
+                int expectedStyles = Enum.GetValues(typeof(TrumpWeaponManager.WeaponType)).Length - 1;
+                if (!trails || !trails.material || trails.styles.Length != expectedStyles || !vfx.shieldImpact ||
+                    trails.styles.Select(s => s.weapon).Distinct().Count() != expectedStyles ||
+                    trails.styles.Select(s => s.color).Distinct().Count() < 7 || ShaderUtil.ShaderHasError(trails.material.shader))
                     throw new Exception("Saved trail styles/material/contact bindings missing.");
                 foreach (var weapon in new[] { TrumpWeaponManager.WeaponType.Spear, TrumpWeaponManager.WeaponType.DualDaggers, TrumpWeaponManager.WeaponType.Assassin })
                     if (!vfx.impactVariants.Single(v => v.weapon == weapon).stab) throw new Exception("Missing piercing contact " + weapon);
@@ -47,7 +49,7 @@ namespace FrankRetarget.Editor
                             throw new Exception("Weapon sweep fell back to camera-facing prefab: " + move.moveName + "/" + id);
                         if (id == "light_hit" || id == "heavy_hit")
                         {
-                            var timing = vfx.timeline.FindMove(move).cues.First(c =>
+                            var timing = attacker.SourcePlayback.PresentationProfile(vfx.timeline).cues.First(c =>
                                 Mathf.Abs(c.seconds-attacker.SourcePlayback.SampleTime) < .00001f &&
                                 (c.group == "light_hit" || c.group == "heavy_hit" || c.group == "stab_hit"));
                             GameObject expected = null;
@@ -62,7 +64,7 @@ namespace FrankRetarget.Editor
                     try
                     {
                         if (!attacker.ExecuteAttack(move, receiver, lethal)) throw new Exception("Attack rejected.");
-                        var pair = attacker.SourcePlayback; var profile = vfx.timeline.FindMove(move);
+                        var pair = attacker.SourcePlayback; var profile = pair.PresentationProfile(vfx.timeline);
                         var times = new SortedSet<float>(profile.cues.Select(c => c.seconds));
                         foreach (var cue in profile.cues.Where(c => c.group.EndsWith("swing", StringComparison.Ordinal)))
                         { times.Add(cue.seconds + .035f); times.Add(cue.seconds + .07f); }

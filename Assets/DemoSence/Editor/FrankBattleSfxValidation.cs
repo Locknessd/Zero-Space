@@ -24,7 +24,8 @@ namespace FrankRetarget.Editor
                     throw new Exception("Missing scene/fighter audio bindings");
                 if (audio.masterVolume <= 0) throw new Exception("Battle SFX muted");
                 var bank = audio.bank;
-                if (bank.groups.SelectMany(g => g.clips).Distinct().Count() != 37) throw new Exception("Expected the 37 reviewed playback clips");
+                if (bank.groups.Length == 0 || bank.groups.Select(g => g.id).Distinct().Count() != bank.groups.Length)
+                    throw new Exception("Battle audio groups are empty or duplicated");
                 foreach (var group in bank.groups)
                 {
                     if (group.clips.Length != group.clipGains.Length || group.clips.Any(c => !c || c.samples <= 0 || c.length <= 0))
@@ -57,6 +58,7 @@ namespace FrankRetarget.Editor
                     {
                         if (!attacker.ExecuteAttack(move, receiver, lethal)) throw new Exception("Attack rejected");
                         var pair = attacker.SourcePlayback;
+                        profile = pair.PresentationProfile(bank);
                         int playbackId = receiver.PlaybackId;
                         audio.PlayFightOnce();
                         // Irregular steps cross timestamps; repeats and reverse seeking must not replay cues.
@@ -72,7 +74,8 @@ namespace FrankRetarget.Editor
                         var expected = new List<string> { "fight_start" };
                         foreach (var cue in profile.cues)
                         {
-                            string id = lethal && cue.finalLanding ? "knockout_fall" : cue.group;
+                            string id = lethal && cue.finalLanding ? "knockout_fall" :
+                                bank.ResolveWeaponGroup(move, cue, profile);
                             expected.Add(id);
                             if (audio.enableContactLayers) expected.AddRange(bank.FindGroup(id).layers);
                         }

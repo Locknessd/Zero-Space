@@ -17,14 +17,14 @@ public static partial class BattleUrpPolishSetup
             director.battleMaximumAuthoredDistance = 6.8f;
             director.battleActionCenterBlend = .75f;
             director.battleTransitionSeconds = .36f;
-            director.battleDistanceScale = .82f;
+            director.battleDistanceScale = .90f;
             EditorUtility.SetDirty(director);
         }
         var shake = camera.GetComponent<BattleCameraShake>();
         if (shake)
         {
             shake.screenSpaceImpulse = true;
-            shake.motionScale = 1;
+            shake.motionScale = .75f;
             shake.lightPixels = 2;
             shake.heavyPixels = 6;
             shake.groundPixels = 4;

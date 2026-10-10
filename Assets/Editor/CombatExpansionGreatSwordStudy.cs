@@ -19,6 +19,14 @@ namespace FrankRetarget.Editor
         {
             var library = AssetDatabase.LoadAssetAtPath<FrankGreatSwordLibrary>(Root + "GreatSwordExecutionLibrary.asset");
             var original = library.pairs[index];
+            var receiverOffset = original.receiverOffset;
+            // Battle avatars need closer entries than the source demo's mannequin spacing.
+            if (index == 1)
+                receiverOffset.z = 3.675f;
+            else if (index == 2)
+                receiverOffset.z = 3.2f;
+            else if (index == 3)
+                receiverOffset.z = 2.6f;
             var attack = index == 0 && !originalAmbush
                 ? AssetDatabase.LoadAssetAtPath<AnimationClip>(AmbushRetreat) : original.attacker;
             if (!attack)
@@ -36,7 +44,7 @@ namespace FrankRetarget.Editor
                 attackAnim = attack,
                 hitAnim = original.receiver,
                 getUpAnim = getUp,
-                attackRange = Mathf.Abs(original.receiverOffset.z),
+                attackRange = Mathf.Abs(receiverOffset.z),
                 weapon = TrumpWeaponManager.WeaponType.GreatSword,
                 grounding = AssetDatabase.LoadAssetAtPath<FrankPairGrounding>("Assets/CombatExpansion/Actions/Frank_" +
                     original.sourceName + "_Grounding.asset"),
@@ -51,7 +59,7 @@ namespace FrankRetarget.Editor
                     recoveryGrounding = AssetDatabase.LoadAssetAtPath<FrankPairGrounding>(
                         "Assets/CombatExpansion/Actions/Frank_GreatSword_" +
                         (index < 2 ? "Prone" : "Supine") + "Recovery_Grounding.asset"),
-                    receiverOffset = original.receiverOffset,
+                    receiverOffset = receiverOffset,
                     receiverRotation = original.receiverRotation,
                     entryBlendSeconds = .12f,
                     maximumAlignmentError = .15f,

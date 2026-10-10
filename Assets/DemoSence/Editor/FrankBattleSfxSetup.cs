@@ -41,6 +41,8 @@ namespace FrankRetarget.Editor
                 clipGains = g.clips.Select(c => string.IsNullOrEmpty(c.playbackPath) ?
                     Mathf.Min(4f, Mathf.Pow(10f, (-6f - c.peakDbFS) / 20f)) : 1f).ToArray()
             }).ToArray();
+            foreach (var group in bank.groups)
+                group.startOffsets = BattleAudioTimingSetup.Offsets(group);
             var scene = SceneManager.GetSceneByPath(SfxScene);
             bool opened = !scene.IsValid() || !scene.isLoaded;
             if (opened) scene = EditorSceneManager.OpenScene(SfxScene, OpenSceneMode.Additive);

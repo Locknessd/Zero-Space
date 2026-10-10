@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 
 [CreateAssetMenu(menuName = "Battle/SFX Bank")]
-public sealed class BattleSfxBank : ScriptableObject
+public sealed partial class BattleSfxBank : ScriptableObject
 {
     public enum Fighter { Both, Mankey, Pepe }
     [Serializable]

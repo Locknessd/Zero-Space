@@ -39,6 +39,8 @@ public static partial class BattlePresentationContactSetup
             {
                 if (!Visible(renderer) || renderer.name.IndexOf("case", StringComparison.OrdinalIgnoreCase) >= 0)
                     continue;
+                if (renderer.name.IndexOf("gun", StringComparison.OrdinalIgnoreCase) >= 0)
+                    continue;
                 bool isShield = renderer.name.IndexOf("shield", StringComparison.OrdinalIgnoreCase) >= 0;
                 if (isShield == shield) AddMesh(result, renderer, null, geometry);
             }
@@ -48,13 +50,20 @@ public static partial class BattlePresentationContactSetup
             if (!Enum.TryParse(selection, out HumanBodyBones bone) ||
                 (bone != HumanBodyBones.LeftHand && bone != HumanBodyBones.RightHand &&
                 bone != HumanBodyBones.LeftFoot && bone != HumanBodyBones.RightFoot &&
-                bone != HumanBodyBones.LeftLowerArm && bone != HumanBodyBones.RightLowerArm))
+                bone != HumanBodyBones.LeftLowerArm && bone != HumanBodyBones.RightLowerArm &&
+                bone != HumanBodyBones.LeftUpperLeg && bone != HumanBodyBones.RightUpperLeg &&
+                bone != HumanBodyBones.LeftLowerLeg && bone != HumanBodyBones.RightLowerLeg))
                 throw new InvalidOperationException("Unsupported authored striker: " + selection);
             var anchor = fighter.Animator.GetBoneTransform(bone);
             if (!anchor) throw new InvalidOperationException("Missing striker bone: " + selection);
             var excluded = bone == HumanBodyBones.LeftLowerArm
                 ? fighter.Animator.GetBoneTransform(HumanBodyBones.LeftHand)
-                : bone == HumanBodyBones.RightLowerArm ? fighter.Animator.GetBoneTransform(HumanBodyBones.RightHand) : null;
+                : bone == HumanBodyBones.RightLowerArm ? fighter.Animator.GetBoneTransform(HumanBodyBones.RightHand)
+                : bone == HumanBodyBones.LeftUpperLeg ? fighter.Animator.GetBoneTransform(HumanBodyBones.LeftLowerLeg)
+                : bone == HumanBodyBones.RightUpperLeg ? fighter.Animator.GetBoneTransform(HumanBodyBones.RightLowerLeg)
+                : bone == HumanBodyBones.LeftLowerLeg ? fighter.Animator.GetBoneTransform(HumanBodyBones.LeftFoot)
+                : bone == HumanBodyBones.RightLowerLeg ? fighter.Animator.GetBoneTransform(HumanBodyBones.RightFoot)
+                : null;
             foreach (var skin in fighter.Animator.GetComponentsInChildren<SkinnedMeshRenderer>())
                 if (Visible(skin) && skin.sharedMesh && skin.sharedMesh.vertexCount >= 1000)
                     AddMesh(result, skin, anchor, geometry, excluded);
@@ -93,8 +102,15 @@ public static partial class BattlePresentationContactSetup
                 matrix = renderer.localToWorldMatrix;
             }
             if (!mesh) return;
-            var local = rendered ?? mesh.vertices;
-            var triangles = mesh.triangles;
+            Vector3[] local;
+            int[] triangles;
+            if (!mesh.isReadable)
+                ReadContactMesh(mesh, out local, out triangles);
+            else
+            {
+                local = rendered ?? mesh.vertices;
+                triangles = mesh.triangles;
+            }
             int offset = surface.vertices.Count;
             foreach (var vertex in local)
             {

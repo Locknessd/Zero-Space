@@ -23,7 +23,8 @@ public partial class TrumpWeaponManager : MonoBehaviour
         Katana = 4,
         DualDaggers = 5,
         Assassin = 6,
-        TwoHandedAxe = 7
+        TwoHandedAxe = 7,
+        GunSword = 8
     }
 
     [Header("Current Weapon")]

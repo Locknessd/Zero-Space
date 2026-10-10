@@ -229,6 +229,9 @@ public sealed partial class BattleVfxPlayer : MonoBehaviour
                 IsFinishingContact = lethal && Mathf.Abs(cue.seconds - finishingTime) < .001f;
                 switch (cue.group)
                 {
+                case "gun_shot":
+                    PlayGunShot(cue);
+                    break;
                 case "grapple_grip":
                 case "grapple_release":
                 case "grapple_break":
@@ -377,7 +380,7 @@ public sealed partial class BattleVfxPlayer : MonoBehaviour
         group == "stab_hit" || group == "body_fall" || group == "knockout_fall" ||
         group == "light_swing" || group == "thrust_swing" || group == "blade_swing" || group == "heavy_swing" ||
         group == "skill_cast" || group == "skill_shot" || group == "grapple_grip" ||
-        group == "grapple_release" || group == "grapple_break";
+        group == "grapple_release" || group == "grapple_break" || group == "gun_shot";
 
     void RememberStrikePoints()
     {
@@ -396,6 +399,7 @@ public sealed partial class BattleVfxPlayer : MonoBehaviour
     bool IsBlade(Renderer renderer) => renderer && renderer.enabled && renderer.gameObject.activeInHierarchy &&
         (!weaponTrails || weaponTrails.IsRendererMeshEligible(renderer)) &&
         renderer.name.IndexOf("shield", StringComparison.OrdinalIgnoreCase) < 0 &&
+        renderer.name.IndexOf("gun", StringComparison.OrdinalIgnoreCase) < 0 &&
         renderer.name.IndexOf("case", StringComparison.OrdinalIgnoreCase) < 0;
 
     Vector3 BladeCenter(Renderer renderer)

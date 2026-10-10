@@ -51,7 +51,7 @@ public static class BattlePresentationAudioSetup
             group.output = routes[Route(group.id)];
             group.maxConcurrent = group.id == "heavy_weight" ? 2 : 3;
             group.gainVariationDb = group.id == "fight_start" || group.id == "victory" ? 0 : .65f;
-            group.startOffsets = new float[group.clips.Length];
+            group.startOffsets = BattleAudioTimingSetup.Offsets(group);
             group.layers = group.id == "heavy_hit" ? new[] { "heavy_weight" } : Array.Empty<string>();
 
         }

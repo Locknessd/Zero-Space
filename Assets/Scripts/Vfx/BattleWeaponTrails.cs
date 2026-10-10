@@ -126,15 +126,24 @@ public sealed class BattleWeaponTrails : MonoBehaviour
                 if (candidate.seconds > cue.seconds && candidate.seconds - cue.seconds <= .65f &&
                     (candidate.group == "light_hit" || candidate.group == "heavy_hit" || candidate.group == "stab_hit") &&
                     !assignedHits.Contains(candidate)) { hit = candidate; break; }
-            if (hit == null || (hit.contactSource != "Weapon" && hit.contactSource != "Shield")) continue;
-            assignedHits.Add(hit);
-            float end = Mathf.Min(playback.Duration, hit.seconds + style.followThroughSeconds);
+            bool weaponHit = hit != null && (hit.contactSource == "Weapon" || hit.contactSource == "Shield");
+            bool weaponSwing = hit == null && cue.group != "light_swing" &&
+                (string.IsNullOrEmpty(cue.contactSource) || cue.contactSource == "Weapon" ||
+                    cue.contactSource == "Shield");
+            if (!weaponHit && !weaponSwing)
+                continue;
+            if (hit != null)
+                assignedHits.Add(hit);
+            // A withdrawal or feint still sweeps the actual blade without adding a damage contact.
+            float strikeTime = hit != null ? hit.seconds : cue.seconds + style.lifetime;
+            float end = Mathf.Min(playback.Duration, strikeTime + style.followThroughSeconds);
             // A rapid combo needs the return motion too, but each new stroke owns
             // its own sweep rather than extending the preceding ribbon into it.
             foreach (var next in profile.cues)
-                if (next.seconds > hit.seconds && next.group != null && next.group.EndsWith("swing", StringComparison.Ordinal))
+                if (next.seconds > (hit != null ? hit.seconds : cue.seconds) && next.group != null &&
+                    next.group.EndsWith("swing", StringComparison.Ordinal))
                 { end = Mathf.Min(end, next.seconds); break; }
-            windows.Add(new Window { cue = cue, shield = hit.contactSource == "Shield",
+            windows.Add(new Window { cue = cue, shield = (hit?.contactSource ?? cue.contactSource) == "Shield",
                 start = Mathf.Max(0, cue.seconds - 1f / 30f),
                 end = end });
         }
@@ -247,6 +256,7 @@ public sealed class BattleWeaponTrails : MonoBehaviour
         return inner + axis * ((projected < 0 ? -width : width) - projected);
     }
     bool Usable(Renderer r) => r && r.enabled && r.gameObject.activeInHierarchy &&
+        r.name.IndexOf("gun", StringComparison.OrdinalIgnoreCase) < 0 &&
         IsRendererMeshEligible(r) && r.name.IndexOf("case", StringComparison.OrdinalIgnoreCase) < 0;
 
     /// <summary>Allocation-free identity filter; a missing mesh or configuration preserves legacy eligibility.</summary>

@@ -12109,11 +12109,12 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 312027172}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: -0.02617695, w: 0.99965733}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 887146133}
   - {fileID: 1909190977}
   - {fileID: 1639868466}
   - {fileID: 334817825}
@@ -12122,8 +12123,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 26}
-  m_SizeDelta: {x: 780, y: 340}
+  m_AnchoredPosition: {x: 0, y: 24}
+  m_SizeDelta: {x: 1180, y: 660}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &315962369
 GameObject:
@@ -12697,7 +12698,7 @@ MonoBehaviour:
   tester: {fileID: 0}
   battle: {fileID: 1096794216}
   battleIdleDistance: 5
-  battleDistanceScale: 0.82
+  battleDistanceScale: 0.9
   keepBattleCameraInFront: 1
   readableBattleFraming: 1
   battleMaximumPitch: 12
@@ -12723,7 +12724,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BattleCameraShake
   vfx: {fileID: 1096794218}
-  motionScale: 1
+  motionScale: 0.75
   screenSpaceImpulse: 1
   lightPixels: 2
   heavyPixels: 6
@@ -12814,8 +12815,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -113}
-  m_SizeDelta: {x: 640, y: 54}
+  m_AnchoredPosition: {x: 0, y: 219}
+  m_SizeDelta: {x: 700, y: 86}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &334817826
 MonoBehaviour:
@@ -12838,19 +12839,19 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 385dce3fc9f7d434cb640e4d4d497263, type: 3}
-    m_FontSize: 26
-    m_FontStyle: 1
+    m_Font: {fileID: 12800000, guid: d9ea0c84eeb372c478852043e5737a22, type: 3}
+    m_FontSize: 56
+    m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 56
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: K N O C K O U T
+  m_Text: KNOCKOUT
 --- !u!222 &334817827
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -26144,7 +26145,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &617200621
 RectTransform:
   m_ObjectHideFlags: 0
@@ -34285,6 +34286,72 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 887087155}
   m_Mesh: {fileID: 4300000, guid: b9d64e7020ef663429b25d163f2bc0e6, type: 3}
+--- !u!1 &887146132
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 887146133}
+  - component: {fileID: 887146135}
+  - component: {fileID: 887146134}
+  m_Layer: 5
+  m_Name: Purple knockout paint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &887146133
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 887146132}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 312027173}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1180, y: 660}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &887146134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 887146132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce6b5d0355d298a4fae3fa449abec62d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BattleKoInkGraphic
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  progress: 0
+--- !u!222 &887146135
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 887146132}
+  m_CullTransparentMesh: 1
 --- !u!1 &887226131
 GameObject:
   m_ObjectHideFlags: 0
@@ -45455,7 +45522,7 @@ MonoBehaviour:
     hitAnim: {fileID: 7400000, guid: 8a8cfa30410d4de4eaeee65cbe422897, type: 3}
     getUpAnim: {fileID: 1827226128182048838, guid: 157da7dff6b3b3148a29246060747ce5,
       type: 3}
-    attackRange: 4
+    attackRange: 3.675
     weapon: 2
     skill: 0
     sourcePair:
@@ -45475,7 +45542,7 @@ MonoBehaviour:
       entryBlendSeconds: 0.12
       constrainDepthAfterSpacing: 1
       maximumAlignmentError: 0.15
-      receiverOffset: {x: 0, y: 0, z: 4}
+      receiverOffset: {x: 0, y: 0, z: 3.675}
       receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
       spacing: {fileID: 0}
       bodySpacing: 0
@@ -45497,7 +45564,7 @@ MonoBehaviour:
     hitAnim: {fileID: 7400000, guid: ace62d913ecb84646a9d95d649c77378, type: 3}
     getUpAnim: {fileID: 1827226128182048838, guid: f83ba830485ff2b46ba1d67ec650f1e0,
       type: 3}
-    attackRange: 3.5
+    attackRange: 3.2
     weapon: 2
     skill: 0
     sourcePair:
@@ -45517,7 +45584,7 @@ MonoBehaviour:
       entryBlendSeconds: 0.12
       constrainDepthAfterSpacing: 1
       maximumAlignmentError: 0.15
-      receiverOffset: {x: 0, y: 0, z: 3.5}
+      receiverOffset: {x: 0, y: 0, z: 3.2}
       receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
       spacing: {fileID: 0}
       bodySpacing: 0
@@ -45539,7 +45606,7 @@ MonoBehaviour:
     hitAnim: {fileID: 7400000, guid: 6c5dd4f4f7bf14d4ba40eadba2ef8cc1, type: 3}
     getUpAnim: {fileID: 1827226128182048838, guid: f83ba830485ff2b46ba1d67ec650f1e0,
       type: 3}
-    attackRange: 2.8
+    attackRange: 2.6
     weapon: 2
     skill: 0
     sourcePair:
@@ -45559,7 +45626,7 @@ MonoBehaviour:
       entryBlendSeconds: 0.12
       constrainDepthAfterSpacing: 1
       maximumAlignmentError: 0.15
-      receiverOffset: {x: 0, y: 0, z: 2.8}
+      receiverOffset: {x: 0, y: 0, z: 2.6}
       receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
       spacing: {fileID: 0}
       bodySpacing: 0
@@ -45663,6 +45730,138 @@ MonoBehaviour:
     grapple: {fileID: 0}
     grappleOutcome: 0
     requiresExplicitSelection: 1
+  - moveName: combo_01
+    actionDefinition: {fileID: 0}
+    attackAnim: {fileID: 7400000, guid: 52046464c4418bf799dd91bf9709dfd7, type: 2}
+    hitAnim: {fileID: 7400000, guid: 54a8494418477be0a86082ba18b51a64, type: 2}
+    getUpAnim: {fileID: 1783586326346866118, guid: 3f1b177ffbc845d495792ddeae5216ff,
+      type: 3}
+    attackRange: 1.6941674
+    weapon: 8
+    skill: 0
+    sourcePair:
+      attackerDriver: {fileID: 8779926035666831242, guid: 468f86c81ffce8e76b30aa35a09b5d4f,
+        type: 3}
+      receiverDriver: {fileID: 2023132364146122315, guid: ba437859d904d3467b5904c3bc78f63c,
+        type: 3}
+      attack: {fileID: 7400000, guid: 52046464c4418bf799dd91bf9709dfd7, type: 2}
+      reaction: {fileID: 7400000, guid: 54a8494418477be0a86082ba18b51a64, type: 2}
+      attacks: {fileID: 0}
+      reactions: {fileID: 0}
+      getUp: {fileID: 1783586326346866118, guid: 3f1b177ffbc845d495792ddeae5216ff,
+        type: 3}
+      attackerGetUp: {fileID: 0}
+      recoveryGrounding: {fileID: 0}
+      recoveryBlendSeconds: 0
+      standingRecoverySeconds: 0
+      entryBlendSeconds: 0.08
+      transferReceiverFingers: 1
+      constrainDepthAfterSpacing: 0
+      maximumAlignmentError: 0
+      receiverOffset: {x: 0, y: 0, z: 1.6941674}
+      receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+      spacing: {fileID: 0}
+      bodySpacing: 0
+      unarmedIndex: -1
+      pepeAttacks: 1
+      cameraKey: 
+      showWeapon: 1
+      attackerWeaponPrefab: {fileID: 0}
+      attackerWeaponSocket: 
+      reactionDelay: 0
+      receiverFloorLift: []
+    grounding: {fileID: 11400000, guid: ead0ecd2cd82fd6499261ef3fb602ac3, type: 2}
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
+  - moveName: combo_02
+    actionDefinition: {fileID: 0}
+    attackAnim: {fileID: 7400000, guid: 63e4520b0eb5af4b0b5dddf10af47ede, type: 2}
+    hitAnim: {fileID: 7400000, guid: a2376aa93cceb6d559623f278accad40, type: 2}
+    getUpAnim: {fileID: 1783586326346866118, guid: 3f1b177ffbc845d495792ddeae5216ff,
+      type: 3}
+    attackRange: 3.5123746
+    weapon: 8
+    skill: 0
+    sourcePair:
+      attackerDriver: {fileID: 8779926035666831242, guid: 468f86c81ffce8e76b30aa35a09b5d4f,
+        type: 3}
+      receiverDriver: {fileID: 2023132364146122315, guid: ba437859d904d3467b5904c3bc78f63c,
+        type: 3}
+      attack: {fileID: 7400000, guid: 63e4520b0eb5af4b0b5dddf10af47ede, type: 2}
+      reaction: {fileID: 7400000, guid: a2376aa93cceb6d559623f278accad40, type: 2}
+      attacks: {fileID: 0}
+      reactions: {fileID: 0}
+      getUp: {fileID: 1783586326346866118, guid: 3f1b177ffbc845d495792ddeae5216ff,
+        type: 3}
+      attackerGetUp: {fileID: 0}
+      recoveryGrounding: {fileID: 0}
+      recoveryBlendSeconds: 0
+      standingRecoverySeconds: 0
+      entryBlendSeconds: 0.08
+      transferReceiverFingers: 1
+      constrainDepthAfterSpacing: 0
+      maximumAlignmentError: 0
+      receiverOffset: {x: 0, y: 0, z: 3.5123746}
+      receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+      spacing: {fileID: 0}
+      bodySpacing: 0
+      unarmedIndex: -1
+      pepeAttacks: 1
+      cameraKey: 
+      showWeapon: 1
+      attackerWeaponPrefab: {fileID: 0}
+      attackerWeaponSocket: 
+      reactionDelay: 0
+      receiverFloorLift: []
+    grounding: {fileID: 11400000, guid: cf56544049c6dfe41adc4eed5161f031, type: 2}
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
+  - moveName: combo_03
+    actionDefinition: {fileID: 0}
+    attackAnim: {fileID: 7400000, guid: 5c27a5e1248c3c5da8706d67b773b232, type: 2}
+    hitAnim: {fileID: 7400000, guid: 83fb592ff7e1c5e3c897b8bd8ff0b675, type: 2}
+    getUpAnim: {fileID: 1783586326346866118, guid: 3f1b177ffbc845d495792ddeae5216ff,
+      type: 3}
+    attackRange: 3.5536988
+    weapon: 8
+    skill: 0
+    sourcePair:
+      attackerDriver: {fileID: 8779926035666831242, guid: 468f86c81ffce8e76b30aa35a09b5d4f,
+        type: 3}
+      receiverDriver: {fileID: 2023132364146122315, guid: ba437859d904d3467b5904c3bc78f63c,
+        type: 3}
+      attack: {fileID: 7400000, guid: 5c27a5e1248c3c5da8706d67b773b232, type: 2}
+      reaction: {fileID: 7400000, guid: 83fb592ff7e1c5e3c897b8bd8ff0b675, type: 2}
+      attacks: {fileID: 0}
+      reactions: {fileID: 0}
+      getUp: {fileID: 1783586326346866118, guid: 3f1b177ffbc845d495792ddeae5216ff,
+        type: 3}
+      attackerGetUp: {fileID: 0}
+      recoveryGrounding: {fileID: 0}
+      recoveryBlendSeconds: 0
+      standingRecoverySeconds: 0
+      entryBlendSeconds: 0.08
+      transferReceiverFingers: 1
+      constrainDepthAfterSpacing: 0
+      maximumAlignmentError: 0
+      receiverOffset: {x: 0, y: 0, z: 3.5536988}
+      receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+      spacing: {fileID: 0}
+      bodySpacing: 0
+      unarmedIndex: -1
+      pepeAttacks: 1
+      cameraKey: 
+      showWeapon: 1
+      attackerWeaponPrefab: {fileID: 0}
+      attackerWeaponSocket: 
+      reactionDelay: 0
+      receiverFloorLift: []
+    grounding: {fileID: 11400000, guid: b96e0f467e0a4544d8d35c1d3b9f4371, type: 2}
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
   targetAttackClip: {fileID: 7400002, guid: fa94eee224779fd478087a0594d47928, type: 2}
   targetHitClip: {fileID: 7400003, guid: fa94eee224779fd478087a0594d47928, type: 2}
   targetGetUpClip: {fileID: 7400004, guid: fa94eee224779fd478087a0594d47928, type: 2}
@@ -49541,6 +49740,10 @@ MonoBehaviour:
     prefab: {fileID: 5600834785906565180, guid: 769bca20aae900270bc61c834d354828,
       type: 3}
     scale: 1
+  - weapon: 8
+    prefab: {fileID: 2084650932036888059, guid: 323c24f4ca2fe4ab594f928fc73c29c4,
+      type: 3}
+    scale: 1
   impactVariants:
   - weapon: 7
     light: {fileID: 4771785166241295307, guid: 4b86b5891cc662445b0cc03f4dd72ecc, type: 3}
@@ -49577,6 +49780,11 @@ MonoBehaviour:
     heavy: {fileID: 3539346901189719994, guid: 31aad4472a6491a4e926e9f05ef20e45, type: 3}
     stab: {fileID: 0}
     scale: 1
+  - weapon: 8
+    light: {fileID: 5242283615583964380, guid: e46616abb03883d42829241f6a53ebf1, type: 3}
+    heavy: {fileID: 8042012231476244484, guid: 9b05b2a809f53be40b6147f34803f063, type: 3}
+    stab: {fileID: 0}
+    scale: 1
   skillVariants: []
   lightSwing: {fileID: 1613561441298628373, guid: e48f243afafa8212cbfdc79cbb059534,
     type: 3}
@@ -49591,6 +49799,8 @@ MonoBehaviour:
   maxInstances: 48
   lightContactScale: 1.4
   heavyContactScale: 1.55
+  gunMuzzleFlash: {fileID: 7050786460454766805, guid: ab0736f64118c384ba067c926e87c729,
+    type: 3}
 --- !u!114 &1096794219
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49728,6 +49938,14 @@ MonoBehaviour:
     thrustWidth: 0.08
     followThroughSeconds: 0.14
     material: {fileID: 2100000, guid: e8949fa031786824f8fff8460140963d, type: 2}
+  - weapon: 8
+    color: {r: 1, g: 0.78, b: 0.5, a: 0.72}
+    lifetime: 0.085
+    bladeStart: 0.24
+    thrustBladeStart: 0.9
+    thrustWidth: 0
+    followThroughSeconds: 0.025
+    material: {fileID: 0}
   staticBlades:
   - mesh: {fileID: -1272481795433867914, guid: d8dd30cce5c56764b847fc7ea75a2ff3, type: 3}
     bladeBase: {x: 0.08226412, y: 0.13189182, z: -0.0167174}
@@ -49842,6 +50060,11 @@ MonoBehaviour:
   - mesh: {fileID: 4300002, guid: 3e685dd57e9c78b49b20bef3e8358ae3, type: 3}
     bladeBase: {x: -0.037367444, y: 0.0013889992, z: -0.3353859}
     bladeTip: {x: 0.1354254, y: -0.008273766, z: -2.3919592}
+    baseBones: []
+    tipBones: []
+  - mesh: {fileID: 8456831307905354113, guid: c80ead7ac0634a539b64f1ce6f3a0efc, type: 3}
+    bladeBase: {x: -0.014635601, y: -0.0063570496, z: 0.04324855}
+    bladeTip: {x: -0.074077226, y: -0.000000042915342, z: -0.62632227}
     baseBones: []
     tipBones: []
   excludedMeshes:
@@ -65835,7 +66058,7 @@ MonoBehaviour:
     hitAnim: {fileID: 7400000, guid: 8a8cfa30410d4de4eaeee65cbe422897, type: 3}
     getUpAnim: {fileID: 1827226128182048838, guid: 157da7dff6b3b3148a29246060747ce5,
       type: 3}
-    attackRange: 4
+    attackRange: 3.675
     weapon: 2
     skill: 0
     sourcePair:
@@ -65855,7 +66078,7 @@ MonoBehaviour:
       entryBlendSeconds: 0.12
       constrainDepthAfterSpacing: 1
       maximumAlignmentError: 0.15
-      receiverOffset: {x: 0, y: 0, z: 4}
+      receiverOffset: {x: 0, y: 0, z: 3.675}
       receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
       spacing: {fileID: 0}
       bodySpacing: 0
@@ -65877,7 +66100,7 @@ MonoBehaviour:
     hitAnim: {fileID: 7400000, guid: ace62d913ecb84646a9d95d649c77378, type: 3}
     getUpAnim: {fileID: 1827226128182048838, guid: f83ba830485ff2b46ba1d67ec650f1e0,
       type: 3}
-    attackRange: 3.5
+    attackRange: 3.2
     weapon: 2
     skill: 0
     sourcePair:
@@ -65897,7 +66120,7 @@ MonoBehaviour:
       entryBlendSeconds: 0.12
       constrainDepthAfterSpacing: 1
       maximumAlignmentError: 0.15
-      receiverOffset: {x: 0, y: 0, z: 3.5}
+      receiverOffset: {x: 0, y: 0, z: 3.2}
       receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
       spacing: {fileID: 0}
       bodySpacing: 0
@@ -65919,7 +66142,7 @@ MonoBehaviour:
     hitAnim: {fileID: 7400000, guid: 6c5dd4f4f7bf14d4ba40eadba2ef8cc1, type: 3}
     getUpAnim: {fileID: 1827226128182048838, guid: f83ba830485ff2b46ba1d67ec650f1e0,
       type: 3}
-    attackRange: 2.8
+    attackRange: 2.6
     weapon: 2
     skill: 0
     sourcePair:
@@ -65939,7 +66162,7 @@ MonoBehaviour:
       entryBlendSeconds: 0.12
       constrainDepthAfterSpacing: 1
       maximumAlignmentError: 0.15
-      receiverOffset: {x: 0, y: 0, z: 2.8}
+      receiverOffset: {x: 0, y: 0, z: 2.6}
       receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
       spacing: {fileID: 0}
       bodySpacing: 0
@@ -66043,6 +66266,138 @@ MonoBehaviour:
     grapple: {fileID: 0}
     grappleOutcome: 0
     requiresExplicitSelection: 1
+  - moveName: combo_01
+    actionDefinition: {fileID: 0}
+    attackAnim: {fileID: 7400000, guid: 52046464c4418bf799dd91bf9709dfd7, type: 2}
+    hitAnim: {fileID: 7400000, guid: 54a8494418477be0a86082ba18b51a64, type: 2}
+    getUpAnim: {fileID: 1783586326346866118, guid: 3f1b177ffbc845d495792ddeae5216ff,
+      type: 3}
+    attackRange: 1.6941674
+    weapon: 8
+    skill: 0
+    sourcePair:
+      attackerDriver: {fileID: 2023132364146122315, guid: ba437859d904d3467b5904c3bc78f63c,
+        type: 3}
+      receiverDriver: {fileID: 8779926035666831242, guid: 468f86c81ffce8e76b30aa35a09b5d4f,
+        type: 3}
+      attack: {fileID: 7400000, guid: 52046464c4418bf799dd91bf9709dfd7, type: 2}
+      reaction: {fileID: 7400000, guid: 54a8494418477be0a86082ba18b51a64, type: 2}
+      attacks: {fileID: 0}
+      reactions: {fileID: 0}
+      getUp: {fileID: 1783586326346866118, guid: 3f1b177ffbc845d495792ddeae5216ff,
+        type: 3}
+      attackerGetUp: {fileID: 0}
+      recoveryGrounding: {fileID: 0}
+      recoveryBlendSeconds: 0
+      standingRecoverySeconds: 0
+      entryBlendSeconds: 0.08
+      transferReceiverFingers: 1
+      constrainDepthAfterSpacing: 0
+      maximumAlignmentError: 0
+      receiverOffset: {x: 0, y: 0, z: 1.6941674}
+      receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+      spacing: {fileID: 0}
+      bodySpacing: 0
+      unarmedIndex: -1
+      pepeAttacks: 0
+      cameraKey: 
+      showWeapon: 1
+      attackerWeaponPrefab: {fileID: 0}
+      attackerWeaponSocket: 
+      reactionDelay: 0
+      receiverFloorLift: []
+    grounding: {fileID: 11400000, guid: ead0ecd2cd82fd6499261ef3fb602ac3, type: 2}
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
+  - moveName: combo_02
+    actionDefinition: {fileID: 0}
+    attackAnim: {fileID: 7400000, guid: 63e4520b0eb5af4b0b5dddf10af47ede, type: 2}
+    hitAnim: {fileID: 7400000, guid: a2376aa93cceb6d559623f278accad40, type: 2}
+    getUpAnim: {fileID: 1783586326346866118, guid: 3f1b177ffbc845d495792ddeae5216ff,
+      type: 3}
+    attackRange: 3.5123746
+    weapon: 8
+    skill: 0
+    sourcePair:
+      attackerDriver: {fileID: 2023132364146122315, guid: ba437859d904d3467b5904c3bc78f63c,
+        type: 3}
+      receiverDriver: {fileID: 8779926035666831242, guid: 468f86c81ffce8e76b30aa35a09b5d4f,
+        type: 3}
+      attack: {fileID: 7400000, guid: 63e4520b0eb5af4b0b5dddf10af47ede, type: 2}
+      reaction: {fileID: 7400000, guid: a2376aa93cceb6d559623f278accad40, type: 2}
+      attacks: {fileID: 0}
+      reactions: {fileID: 0}
+      getUp: {fileID: 1783586326346866118, guid: 3f1b177ffbc845d495792ddeae5216ff,
+        type: 3}
+      attackerGetUp: {fileID: 0}
+      recoveryGrounding: {fileID: 0}
+      recoveryBlendSeconds: 0
+      standingRecoverySeconds: 0
+      entryBlendSeconds: 0.08
+      transferReceiverFingers: 1
+      constrainDepthAfterSpacing: 0
+      maximumAlignmentError: 0
+      receiverOffset: {x: 0, y: 0, z: 3.5123746}
+      receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+      spacing: {fileID: 0}
+      bodySpacing: 0
+      unarmedIndex: -1
+      pepeAttacks: 0
+      cameraKey: 
+      showWeapon: 1
+      attackerWeaponPrefab: {fileID: 0}
+      attackerWeaponSocket: 
+      reactionDelay: 0
+      receiverFloorLift: []
+    grounding: {fileID: 11400000, guid: cf56544049c6dfe41adc4eed5161f031, type: 2}
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
+  - moveName: combo_03
+    actionDefinition: {fileID: 0}
+    attackAnim: {fileID: 7400000, guid: 5c27a5e1248c3c5da8706d67b773b232, type: 2}
+    hitAnim: {fileID: 7400000, guid: 83fb592ff7e1c5e3c897b8bd8ff0b675, type: 2}
+    getUpAnim: {fileID: 1783586326346866118, guid: 3f1b177ffbc845d495792ddeae5216ff,
+      type: 3}
+    attackRange: 3.5536988
+    weapon: 8
+    skill: 0
+    sourcePair:
+      attackerDriver: {fileID: 2023132364146122315, guid: ba437859d904d3467b5904c3bc78f63c,
+        type: 3}
+      receiverDriver: {fileID: 8779926035666831242, guid: 468f86c81ffce8e76b30aa35a09b5d4f,
+        type: 3}
+      attack: {fileID: 7400000, guid: 5c27a5e1248c3c5da8706d67b773b232, type: 2}
+      reaction: {fileID: 7400000, guid: 83fb592ff7e1c5e3c897b8bd8ff0b675, type: 2}
+      attacks: {fileID: 0}
+      reactions: {fileID: 0}
+      getUp: {fileID: 1783586326346866118, guid: 3f1b177ffbc845d495792ddeae5216ff,
+        type: 3}
+      attackerGetUp: {fileID: 0}
+      recoveryGrounding: {fileID: 0}
+      recoveryBlendSeconds: 0
+      standingRecoverySeconds: 0
+      entryBlendSeconds: 0.08
+      transferReceiverFingers: 1
+      constrainDepthAfterSpacing: 0
+      maximumAlignmentError: 0
+      receiverOffset: {x: 0, y: 0, z: 3.5536988}
+      receiverRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+      spacing: {fileID: 0}
+      bodySpacing: 0
+      unarmedIndex: -1
+      pepeAttacks: 0
+      cameraKey: 
+      showWeapon: 1
+      attackerWeaponPrefab: {fileID: 0}
+      attackerWeaponSocket: 
+      reactionDelay: 0
+      receiverFloorLift: []
+    grounding: {fileID: 11400000, guid: b96e0f467e0a4544d8d35c1d3b9f4371, type: 2}
+    grapple: {fileID: 0}
+    grappleOutcome: 0
+    requiresExplicitSelection: 0
   targetAttackClip: {fileID: 7400002, guid: fa94eee224779fd478087a0594d47928, type: 2}
   targetHitClip: {fileID: 7400003, guid: fa94eee224779fd478087a0594d47928, type: 2}
   targetGetUpClip: {fileID: 7400004, guid: fa94eee224779fd478087a0594d47928, type: 2}
@@ -77698,15 +78053,15 @@ RectTransform:
   m_GameObject: {fileID: 1639868465}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.65, y: 1.65, z: 1.65}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 312027173}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 119, y: 4}
-  m_SizeDelta: {x: 250, y: 278}
+  m_AnchoredPosition: {x: 238, y: -24}
+  m_SizeDelta: {x: 320, y: 340}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1639868467
 MonoBehaviour:
@@ -77720,8 +78075,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Shadow
-  m_EffectColor: {r: 0.45, g: 0.018, b: 0.01, a: 1}
-  m_EffectDistance: {x: 8, y: -9}
+  m_EffectColor: {r: 0.035, g: 0.012, b: 0.065, a: 1}
+  m_EffectDistance: {x: 9, y: -14}
   m_UseGraphicAlpha: 1
 --- !u!114 &1639868468
 MonoBehaviour:
@@ -77735,8 +78090,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Outline
-  m_EffectColor: {r: 0.035, g: 0.005, b: 0.008, a: 1}
-  m_EffectDistance: {x: 4, y: -4}
+  m_EffectColor: {r: 0.055, g: 0.02, b: 0.085, a: 1}
+  m_EffectDistance: {x: 6, y: -6}
   m_UseGraphicAlpha: 1
 --- !u!114 &1639868469
 MonoBehaviour:
@@ -77750,8 +78105,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5275bb37e6bf9684893fa1c8ebe682c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BattleTextGradient
-  top: {r: 1, g: 0.9, b: 0.45, a: 1}
-  bottom: {r: 0.9, g: 0.09, b: 0.03, a: 1}
+  top: {r: 1, g: 0.98, b: 0.78, a: 1}
+  bottom: {r: 1, g: 0.64, b: 0.12, a: 1}
 --- !u!114 &1639868470
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77773,19 +78128,19 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 385dce3fc9f7d434cb640e4d4d497263, type: 3}
-    m_FontSize: 252
-    m_FontStyle: 3
+    m_Font: {fileID: 12800000, guid: d9ea0c84eeb372c478852043e5737a22, type: 3}
+    m_FontSize: 300
+    m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
-    m_MaxSize: 252
+    m_MaxSize: 300
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: O
+  m_Text: O.
 --- !u!222 &1639868471
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -78133,8 +78488,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -160}
-  m_SizeDelta: {x: 640, y: 42}
+  m_AnchoredPosition: {x: 0, y: -254}
+  m_SizeDelta: {x: 700, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1656761901
 MonoBehaviour:
@@ -78157,9 +78512,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 385dce3fc9f7d434cb640e4d4d497263, type: 3}
-    m_FontSize: 20
-    m_FontStyle: 1
+    m_Font: {fileID: 12800000, guid: d9ea0c84eeb372c478852043e5737a22, type: 3}
+    m_FontSize: 30
+    m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
     m_MaxSize: 40
@@ -84884,15 +85239,15 @@ RectTransform:
   m_GameObject: {fileID: 1909190976}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.65, y: 1.65, z: 1.65}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 312027173}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -119, y: 4}
-  m_SizeDelta: {x: 250, y: 278}
+  m_AnchoredPosition: {x: -238, y: -24}
+  m_SizeDelta: {x: 320, y: 340}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1909190978
 MonoBehaviour:
@@ -84906,8 +85261,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Shadow
-  m_EffectColor: {r: 0.45, g: 0.018, b: 0.01, a: 1}
-  m_EffectDistance: {x: 8, y: -9}
+  m_EffectColor: {r: 0.035, g: 0.012, b: 0.065, a: 1}
+  m_EffectDistance: {x: 9, y: -14}
   m_UseGraphicAlpha: 1
 --- !u!114 &1909190979
 MonoBehaviour:
@@ -84921,8 +85276,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Outline
-  m_EffectColor: {r: 0.035, g: 0.005, b: 0.008, a: 1}
-  m_EffectDistance: {x: 4, y: -4}
+  m_EffectColor: {r: 0.055, g: 0.02, b: 0.085, a: 1}
+  m_EffectDistance: {x: 6, y: -6}
   m_UseGraphicAlpha: 1
 --- !u!114 &1909190980
 MonoBehaviour:
@@ -84936,8 +85291,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5275bb37e6bf9684893fa1c8ebe682c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BattleTextGradient
-  top: {r: 1, g: 0.9, b: 0.45, a: 1}
-  bottom: {r: 0.9, g: 0.09, b: 0.03, a: 1}
+  top: {r: 1, g: 0.98, b: 0.78, a: 1}
+  bottom: {r: 1, g: 0.64, b: 0.12, a: 1}
 --- !u!114 &1909190981
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -84959,19 +85314,19 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 385dce3fc9f7d434cb640e4d4d497263, type: 3}
-    m_FontSize: 252
-    m_FontStyle: 3
+    m_Font: {fileID: 12800000, guid: d9ea0c84eeb372c478852043e5737a22, type: 3}
+    m_FontSize: 300
+    m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
-    m_MaxSize: 252
+    m_MaxSize: 300
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: K
+  m_Text: K.
 --- !u!222 &1909190982
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -93511,7 +93866,8 @@ MonoBehaviour:
   subtitle: {fileID: 334817826}
   defeatedLabel: {fileID: 1656761901}
   burst: {fileID: 879066799}
-  holdSeconds: 1.8
+  ink: {fileID: 887146134}
+  holdSeconds: 1.05
 --- !u!1 &2010775450
 GameObject:
   m_ObjectHideFlags: 0

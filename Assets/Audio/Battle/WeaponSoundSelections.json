@@ -1,0 +1,242 @@
+{
+  "groups": [
+    {
+      "id": "steel_swing",
+      "clips": [
+        "Assets/Audio/Battle/Clips/WeaponPacks/Sword_Woosh_3_swing.wav",
+        "Assets/Audio/Battle/Clips/WeaponPacks/Sword_Woosh_7_swing.wav",
+        "Assets/Audio/Battle/Clips/WeaponPacks/Sword_Woosh_12_swing.wav"
+      ],
+      "volume": 0.4,
+      "pitchLow": 0.97,
+      "pitchHigh": 1.03,
+      "bus": "Weapons",
+      "priority": 100,
+      "layers": [],
+      "maxConcurrent": 3
+    },
+    {
+      "id": "heavy_blade_swing",
+      "clips": [
+        "Assets/Audio/Battle/Clips/WeaponPacks/Heavy_sword_woosh_4_swing.wav",
+        "Assets/Audio/Battle/Clips/WeaponPacks/Heavy_sword_woosh_9_swing.wav",
+        "Assets/Audio/Battle/Clips/WeaponPacks/Heavy_sword_woosh_15_swing.wav"
+      ],
+      "volume": 0.48,
+      "pitchLow": 0.97,
+      "pitchHigh": 1.03,
+      "bus": "Weapons",
+      "priority": 100,
+      "layers": [],
+      "maxConcurrent": 3
+    },
+    {
+      "id": "axe_swing",
+      "clips": [
+        "Assets/Audio/Battle/Clips/WeaponPacks/Heavy_sword_woosh_3_swing.wav",
+        "Assets/Audio/Battle/Clips/WeaponPacks/Heavy_sword_woosh_12_swing.wav",
+        "Assets/Audio/Battle/Clips/WeaponPacks/Heavy_sword_woosh_18_swing.wav"
+      ],
+      "volume": 0.5,
+      "pitchLow": 0.86,
+      "pitchHigh": 0.94,
+      "bus": "Weapons",
+      "priority": 100,
+      "layers": [],
+      "maxConcurrent": 3
+    },
+    {
+      "id": "dagger_swing",
+      "clips": [
+        "Assets/Audio/Battle/Clips/WeaponPacks/Dagger_woosh_2_swing.wav",
+        "Assets/Audio/Battle/Clips/WeaponPacks/Dagger_woosh_6_swing.wav",
+        "Assets/Audio/Battle/Clips/WeaponPacks/Dagger_woosh_8_swing.wav"
+      ],
+      "volume": 0.34,
+      "pitchLow": 0.97,
+      "pitchHigh": 1.03,
+      "bus": "Weapons",
+      "priority": 100,
+      "layers": [],
+      "maxConcurrent": 3
+    },
+    {
+      "id": "spear_swing",
+      "clips": [
+        "Assets/Audio/Battle/Clips/WeaponPacks/Sword_Woosh_2_swing.wav",
+        "Assets/Audio/Battle/Clips/WeaponPacks/Sword_Woosh_6_swing.wav",
+        "Assets/Audio/Battle/Clips/WeaponPacks/Sword_Woosh_17_swing.wav"
+      ],
+      "volume": 0.36,
+      "pitchLow": 0.92,
+      "pitchHigh": 0.98,
+      "bus": "Weapons",
+      "priority": 100,
+      "layers": [],
+      "maxConcurrent": 3
+    },
+    {
+      "id": "magic_swipe",
+      "clips": [
+        "Assets/Audio/Battle/Clips/WeaponPacks/Magic_Sword_Whoosh_Fast_01_swing.wav",
+        "Assets/Audio/Battle/Clips/WeaponPacks/Magic_Sword_Whoosh_Fast_02_swing.wav",
+        "Assets/Audio/Battle/Clips/WeaponPacks/Magic_Sword_Whoosh_Fast_03_swing.wav"
+      ],
+      "volume": 0.1,
+      "pitchLow": 0.97,
+      "pitchHigh": 1.03,
+      "bus": "Weapons",
+      "priority": 100,
+      "layers": [],
+      "maxConcurrent": 3
+    },
+    {
+      "id": "ice_dagger_swing",
+      "clips": [
+        "Assets/Audio/Battle/Clips/WeaponPacks/Dagger_woosh_2_swing.wav",
+        "Assets/Audio/Battle/Clips/WeaponPacks/Dagger_woosh_6_swing.wav",
+        "Assets/Audio/Battle/Clips/WeaponPacks/Dagger_woosh_8_swing.wav"
+      ],
+      "volume": 0.34,
+      "pitchLow": 0.97,
+      "pitchHigh": 1.03,
+      "bus": "Weapons",
+      "priority": 100,
+      "layers": [
+        "magic_swipe"
+      ],
+      "maxConcurrent": 3
+    },
+    {
+      "id": "steel_light_hit",
+      "clips": [
+        "Assets/Audio/Battle/Clips/WeaponPacks/Fantasy_Dagger_Cut_01_hit.wav",
+        "Assets/Audio/Battle/Clips/WeaponPacks/Fantasy_Dagger_Cut_02_hit.wav",
+        "Assets/Audio/Battle/Clips/WeaponPacks/Fantasy_Dagger_Cut_03_hit.wav"
+      ],
+      "volume": 0.48,
+      "pitchLow": 0.97,
+      "pitchHigh": 1.03,
+      "bus": "Impacts",
+      "priority": 64,
+      "layers": [
+        "blade_body"
+      ],
+      "maxConcurrent": 3
+    },
+    {
+      "id": "steel_heavy_hit",
+      "clips": [
+        "Assets/Audio/Battle/Clips/WeaponPacks/Dark_Sword_Hit_01_hit.wav",
+        "Assets/Audio/Battle/Clips/WeaponPacks/Dark_Sword_Hit_02_hit.wav",
+        "Assets/Audio/Battle/Clips/WeaponPacks/Dark_Sword_Hit_03_Critical_hit.wav"
+      ],
+      "volume": 0.61,
+      "pitchLow": 0.94,
+      "pitchHigh": 1.0,
+      "bus": "Impacts",
+      "priority": 64,
+      "layers": [
+        "heavy_weight"
+      ],
+      "maxConcurrent": 3
+    },
+    {
+      "id": "katana_heavy_hit",
+      "clips": [
+        "Assets/Audio/Battle/Clips/WeaponPacks/Fantasy_Dagger_Cut_01_hit.wav",
+        "Assets/Audio/Battle/Clips/WeaponPacks/Fantasy_Dagger_Cut_02_hit.wav",
+        "Assets/Audio/Battle/Clips/WeaponPacks/Fantasy_Dagger_Cut_03_hit.wav"
+      ],
+      "volume": 0.66,
+      "pitchLow": 0.97,
+      "pitchHigh": 1.03,
+      "bus": "Impacts",
+      "priority": 64,
+      "layers": [
+        "heavy_weight"
+      ],
+      "maxConcurrent": 3
+    },
+    {
+      "id": "blade_stab_hit",
+      "clips": [
+        "Assets/Audio/Battle/Clips/WeaponPacks/Fantasy_Dagger_Stab_01_hit.wav",
+        "Assets/Audio/Battle/Clips/WeaponPacks/Fantasy_Dagger_Stab_02_hit.wav",
+        "Assets/Audio/Battle/Clips/WeaponPacks/Fantasy_Dagger_Stab_04_hit.wav"
+      ],
+      "volume": 0.55,
+      "pitchLow": 0.97,
+      "pitchHigh": 1.03,
+      "bus": "Impacts",
+      "priority": 64,
+      "layers": [
+        "blade_body"
+      ],
+      "maxConcurrent": 3
+    },
+    {
+      "id": "dagger_hit",
+      "clips": [
+        "Assets/Audio/Battle/Clips/WeaponPacks/Fantasy_Dagger_Hit_hit.wav",
+        "Assets/Audio/Battle/Clips/WeaponPacks/Fantasy_Dagger_Cut_03_hit.wav"
+      ],
+      "volume": 0.52,
+      "pitchLow": 0.97,
+      "pitchHigh": 1.03,
+      "bus": "Impacts",
+      "priority": 64,
+      "layers": [
+        "blade_body"
+      ],
+      "maxConcurrent": 3
+    },
+    {
+      "id": "shield_bash_hit",
+      "clips": [
+        "Assets/Audio/Battle/Clips/WeaponPacks/Club_3_hit.wav",
+        "Assets/Audio/Battle/Clips/WeaponPacks/Club_6_hit.wav",
+        "Assets/Audio/Battle/Clips/WeaponPacks/Club_9_hit.wav"
+      ],
+      "volume": 0.6,
+      "pitchLow": 0.97,
+      "pitchHigh": 1.03,
+      "bus": "Impacts",
+      "priority": 64,
+      "layers": [
+        "heavy_weight"
+      ],
+      "maxConcurrent": 3
+    },
+    {
+      "id": "metal_clash",
+      "clips": [
+        "Assets/Audio/Battle/Clips/WeaponPacks/Sword_hit_another_sword_4_hit.wav",
+        "Assets/Audio/Battle/Clips/WeaponPacks/Sword_hit_another_sword_6_hit.wav",
+        "Assets/Audio/Battle/Clips/WeaponPacks/Sword_hit_another_sword_8_hit.wav"
+      ],
+      "volume": 0.32,
+      "pitchLow": 0.97,
+      "pitchHigh": 1.03,
+      "bus": "Impacts",
+      "priority": 64,
+      "layers": [],
+      "maxConcurrent": 3
+    },
+    {
+      "id": "shield_block",
+      "clips": [
+        "Assets/Audio/Battle/Clips/WeaponPacks/Sword_hit_shield_3_hit.wav",
+        "Assets/Audio/Battle/Clips/WeaponPacks/Sword_hit_shield_5_hit.wav",
+        "Assets/Audio/Battle/Clips/WeaponPacks/Sword_hit_shield_7_hit.wav"
+      ],
+      "volume": 0.38,
+      "pitchLow": 0.97,
+      "pitchHigh": 1.03,
+      "bus": "Impacts",
+      "priority": 64,
+      "layers": [],
+      "maxConcurrent": 3
+    }
+  ]
+}

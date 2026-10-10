@@ -57,5 +57,8 @@ public static partial class BattlePresentationContactSetup
 
         public float BladeDistance(Vector3 world) => blade.Distance(world);
         public float BodyDistance(Vector3 world) => body.Distance(world);
+        public Vector3 BodyPoint(Vector3 world) => body.Nearest(world);
+        public Vector3 BladePoint(Vector3 world) => blade.Nearest(world);
+        public float MeasureReceiverShift(Vector3 shift) => ReceiverShiftGap(blade, body, shift);
     }
 }

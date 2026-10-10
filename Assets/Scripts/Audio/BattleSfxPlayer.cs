@@ -123,9 +123,10 @@ public sealed partial class BattleSfxPlayer : MonoBehaviour
     void PlayTimelineCue(BattleSfxBank.Cue cue)
     {
         if (cue == null) return;
-        string id = lethal && cue.finalLanding ? "knockout_fall" : cue.group;
+        string id = lethal && cue.finalLanding ? "knockout_fall" : bank.ResolveWeaponGroup(owner.Move, cue, sequence);
         PlayGroup(id);
-        if (enableHurtVoices && (id == "heavy_hit" || id == "stab_hit" || id == "light_hit")) PlayGroup("hurt_voice");
+        if (enableHurtVoices && (cue.group == "heavy_hit" || cue.group == "stab_hit" || cue.group == "light_hit"))
+            PlayGroup("hurt_voice");
     }
 
     public void BeginRecovery(FrankBattlePairPlayback playback, bool allowLethalAttacker = false)
