@@ -41,6 +41,7 @@ namespace FrankRetarget
         public void EvaluateRecoveryPose()
         {
             if (!IsRecovering || pair == null) return;
+            EvaluateStandingRecoverySpacing();
             attackRecoveryPose?.Evaluate(this, false);
             hitRecoveryPose?.Evaluate(this, true);
         }

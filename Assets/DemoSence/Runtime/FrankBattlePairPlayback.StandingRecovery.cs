@@ -11,6 +11,7 @@ namespace FrankRetarget
         {
             attackStandingRecovery = false;
             hitStandingRecovery = false;
+            standingSpacingExpansion = 0;
         }
 
         void ObserveStandingRecovery()

@@ -23,6 +23,7 @@ namespace FrankRetarget.Editor
                 throw new InvalidOperationException("Missing saved SlapFace grounding: " + sequence);
             move.sourcePair.transferReceiverFingers = true;
             move.sourcePair.standingRecoverySeconds = .3f;
+            move.sourcePair.standingRecoverySpacing = 1.6f;
             return move;
         }
     }

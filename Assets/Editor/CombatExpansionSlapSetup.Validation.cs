@@ -18,7 +18,8 @@ namespace FrankRetarget.Editor
                 Vector3.Distance(move.sourcePair.receiverOffset, Vector3.forward * .8f) > .0001f ||
                 Quaternion.Angle(move.sourcePair.receiverRotation, Quaternion.Euler(0, 180, 0)) > .001f ||
                 Mathf.Abs(move.sourcePair.entryBlendSeconds - .12f) > .0001f ||
-                Mathf.Abs(move.sourcePair.standingRecoverySeconds - .3f) > .0001f)
+                Mathf.Abs(move.sourcePair.standingRecoverySeconds - .3f) > .0001f ||
+                Mathf.Abs(move.sourcePair.standingRecoverySpacing - 1.6f) > .0001f)
                 throw new InvalidOperationException("Incomplete grounded unarmed SlapFace source pair " + spec.Key);
             float duration = Mathf.Max(move.attackAnim.length, move.hitAnim.length);
             if (!float.IsFinite(spec.seconds) || spec.seconds < .1f ||

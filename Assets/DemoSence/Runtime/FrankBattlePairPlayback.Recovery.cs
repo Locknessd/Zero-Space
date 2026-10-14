@@ -108,6 +108,7 @@ namespace FrankRetarget
                 if (battleSfx && (attackGetUp || hitGetUp)) battleSfx.BeginRecovery(this, attackGetUp);
                 CombatPositioningController.Instance?.ConstrainDepthNow();
                 ConstrainLightHipsDepth();
+                CaptureStandingRecoverySpacing();
                 RebaseRecoveryPoses();
                 Update();
                 EvaluateRecoveryPose();

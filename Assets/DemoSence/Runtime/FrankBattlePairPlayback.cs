@@ -16,6 +16,7 @@ namespace FrankRetarget
         public FrankPairGrounding recoveryGrounding;
         [Min(0)] public float recoveryBlendSeconds;
         [Range(0, 1)] public float standingRecoverySeconds;
+        [Min(0)] public float standingRecoverySpacing;
         [Min(0)] public float entryBlendSeconds;
         public bool transferReceiverFingers;
         public bool constrainDepthAfterSpacing;
@@ -116,6 +117,8 @@ namespace FrankRetarget
             if (!float.IsFinite(move.sourcePair.standingRecoverySeconds) ||
                 move.sourcePair.standingRecoverySeconds < 0 || move.sourcePair.standingRecoverySeconds > 1)
                 throw new ArgumentException("Standing recovery must be between zero and one second.", nameof(move));
+            if (!float.IsFinite(move.sourcePair.standingRecoverySpacing) || move.sourcePair.standingRecoverySpacing < 0)
+                throw new ArgumentException("Standing recovery spacing must be finite and nonnegative.", nameof(move));
             if (move.sourcePair.attacks)
             {
                 if (move.grapple)
