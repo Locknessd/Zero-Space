@@ -34,7 +34,9 @@ namespace FrankRetarget
 
         public void ApplySourceWeaponDisplacement(Vector3 displacement)
         {
-            if (!sourceWeapon || !activeDriver) return;
+            if (!activeDriver) return;
+            var renderers = activeDriver.pose.weaponRenderers;
+            if (!sourceWeapon && (renderers == null || !Array.Exists(renderers, r => r && r.enabled))) return;
             activeDriver.transform.position += displacement - sourceWeaponLift;
             sourceWeaponLift = displacement;
         }

@@ -183,6 +183,11 @@ namespace FrankRetarget
             SafetyDolly = 0;
         }
 
+        public void InvalidateCharacterGeometry()
+        {
+            ReleaseMeshes();
+        }
+
         void ReleaseMeshes()
         {
             foreach (var entry in framingRenderers)

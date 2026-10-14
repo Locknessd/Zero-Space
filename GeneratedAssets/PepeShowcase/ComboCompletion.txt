@@ -1,0 +1,35 @@
+ASSASSIN LONG COMBO - COMPLETE - 2026-10-12
+
+Sequence
+Combo04 -> Combo03 -> Combo04 -> Combo03 -> Skill05.
+10.143 seconds of connected motion, five source segments, four transitions, 31 native weapon slash cues.
+One actor and native weapon rig throughout; carried horizontal travel; 0.12s smooth crossfades.
+Trimmed inter-attack recovery; no per-segment idle/lead/hold.
+Original weapon effects and sound cues follow their re-timed source animation moments.
+Skill05 retains the final landing/recovery.
+
+Assets
+Assets/Scenes/PepeAssassinCombo.unity
+Assets/PepeShowcase/AssassinComboLibrary.asset
+Assets/PepeShowcase/AssassinLongCombo.asset
+The combo scene includes extra checker-floor coverage for the longer forward movement.
+Open the scene and press Play. Character replacement, replay, speed and whole-chain looping are available.
+
+Validation
+PASS Unity compilation; final Editor assembly 2026-10-12 11:37:21.
+PASS Pepe, Mankey and custom replacement: 610 sampled poses each at 60 Hz.
+PASS 31 visible native slash cues for each character.
+PASS Same actor across the chain; deterministic seeking; smooth transition boundaries.
+PASS Camera framing, supported materials and floor coverage for all samples.
+PASS Final actual Play-mode capture: 1920x1080 at 60 fps, H.264, AAC 48 kHz stereo.
+PASS Visual review of native effects and all four transitions in the actual video.
+PASS Full audio/video decode exit code 0.
+Detailed proof: ComboValidation.txt, ComboRecording.txt, ComboDecode.txt and ComboPipeline.txt.
+Video: GeneratedAssets/PepeShowcase/PepeAssassinLongCombo.mp4.
+Video includes opening/closing titles, approximately 11.9 seconds total.
+
+Preservation
+PASS All six protected file hashes unchanged; ComboPreservation.After.json.
+PASS Original scene restored: Assets/Frank_Slash_Pack/Demo/Frank_Slash_Pack.unity; playing=False.
+The current Editor was kept open without restarting.
+The original standalone showcase scene/library and BattleScene configuration are unchanged.

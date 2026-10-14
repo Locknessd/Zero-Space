@@ -1,0 +1,106 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dcfa8577ab5249259fa110adbb5792e, type: 3}
+  m_Name: Samurai_Execution10_Pepe
+  m_EditorClassIdentifier: Assembly-CSharp::CombatActionDefinition
+  lethalPairVariant:
+    rid: -2
+  actionId: Samurai_Execution10
+  displayName: Samurai Execution 10
+  gameplayTrigger: Explicit heavy action through EnqueueCombatAction(side, Samurai_Execution10), exact server animationId Samurai_Execution10 or the existing animation browser. Explicit selection excludes random pools. Existing server outcome alone owns accepted damage; no local damage authority.
+  entryAndInterruption: Native 1.7m spacing, receiver yaw 180, entry blend 0.12s, alignment error 0.15m; original clips and calibrated drivers; Katana attacker and owned unarmed receiver, receiver finger transfer enabled. No trajectory scaling, clamping or depth constraint. Existing cancellation restores both roles and owned equipment and cleans feedback. No added armor, stun or reaction restart.
+  recovery: Preserve full 2.666666746s native pair and face-up knockdown after throw and stab. Existing supine getup f83ba830485ff2b46ba1d67ec650f1e0:1827226128182048838, grounding Assets/CombatExpansion/Actions/Frank_GreatSword_SupineRecovery_Grounding.asset, recovery blend 0.12s. Four controller recovery cases must pass entry 0.01m, floor -0.025m, repeat/held 0.00002m gates. Actual gameplay surviving/lethal recovery remains pending.
+  presentation: 'Shared bank/VFX with per-attacker measured anchors: damaging body_fall at 1.4625s then stab_hit at 1.8625s. Both finalLanding=false; only body_fall has damageOnLanding=true. Early grab blade overlap is excluded. Existing grapple_release at 1.2s supplies throw movement dust/whoosh without a sword arc; thrust_swing at 1.8s fits stab preparation (1.75..1.84s). Exact noncontact sound timing is provisional pending gameplay listening. Native weapon trails and measured contact feedback require visible gameplay review. Evidence GeneratedAssets/CombatExpansion/SamuraiStudy/Execution10ContactAuthoring/Report.json; original clip, driver, Avatar, mesh and grounding identities verified. Exact unsigned blade triangle minimum and all ties within 0.00001m retained; representative Head does not erase anatomical ambiguity. Selected landing is first reviewed cushioned non-leg support, not the later global minimum.'
+  presentationProfile:
+    rid: 3912399029882323200
+  authoredAttackSources: []
+  contacts:
+  - strikeId: Samurai_Execution10/throw_landing
+    attack: {fileID: 7400020, guid: 3e685dd57e9c78b49b20bef3e8358ae3, type: 3}
+    reaction: {fileID: 7400020, guid: b01b411d366a5a344bddf3428a7bc8f7, type: 3}
+    seconds: 1.4625
+    activeWindowSeconds: {x: 1.4583333, y: 1.4666667}
+    strikingLimb: 18
+    targetRegion: Mankey Hips non-leg supporting skin vertex; 59dc3f26824c72872aa4cf6baeec671e:4300000; Mahgnkey; triangle=1726; vertex=1125
+    directionInVictimSpace: {x: -0.48568735, y: -0.030685026, z: 0.87359387}
+    reactionPolicy: 0
+    result: 2
+    presentationGroup: body_fall
+    nonDamagingInteraction: 0
+    continuation: Native receiver continues in knockdown without restart or added stun/armor. Server outcome owns damage. First cushioned non-leg support, not global minimum; direction from measured support vertex approach velocity in victim space. finalLanding=false preserves later stab VFX.
+  - strikeId: Samurai_Execution10/downward_stab
+    attack: {fileID: 7400020, guid: 3e685dd57e9c78b49b20bef3e8358ae3, type: 3}
+    reaction: {fileID: 7400020, guid: b01b411d366a5a344bddf3428a7bc8f7, type: 3}
+    seconds: 1.8625
+    activeWindowSeconds: {x: 1.8583332, y: 1.8666667}
+    strikingLimb: 18
+    targetRegion: HeadNeck; Head representative anchor on Mankey
+    directionInVictimSpace: {x: -0.6787622, y: -0.22081538, z: -0.700373}
+    reactionPolicy: 0
+    result: 2
+    presentationGroup: stab_hit
+    nonDamagingInteraction: 0
+    continuation: Native receiver continues in knockdown without restart or added stun/armor. Server outcome owns damage. Downward blade direction from target-relative velocity; Head is representative, all tied anatomy retained in evidence. Maintain supine continuation through endpoint.
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3912399029882323200
+      type: {class: BattleSfxBank/Move, ns: , asm: Assembly-CSharp}
+      data:
+        label: Samurai_Execution10
+        attack: {fileID: 7400020, guid: 3e685dd57e9c78b49b20bef3e8358ae3, type: 3}
+        reaction: {fileID: 7400020, guid: b01b411d366a5a344bddf3428a7bc8f7, type: 3}
+        cues:
+        - seconds: 1.2
+          group: grapple_release
+          finalLanding: 0
+          hasContactPoint: 0
+          contactBone: 8
+          contactOffset: {x: 0, y: 0, z: 0}
+          contactSource: 
+          avatarContacts: []
+          damageOnLanding: 0
+        - seconds: 1.4625
+          group: body_fall
+          finalLanding: 0
+          hasContactPoint: 1
+          contactBone: 0
+          contactOffset: {x: -0.21482979, y: -0.36945698, z: -0.11861527}
+          contactSource: Body
+          avatarContacts:
+          - avatar: {fileID: 9000000, guid: 59dc3f26824c72872aa4cf6baeec671e, type: 3}
+            bone: 0
+            offset: {x: -0.21482979, y: -0.36945698, z: -0.11861527}
+          damageOnLanding: 1
+        - seconds: 1.8
+          group: thrust_swing
+          finalLanding: 0
+          hasContactPoint: 0
+          contactBone: 8
+          contactOffset: {x: 0, y: 0, z: 0}
+          contactSource: 
+          avatarContacts: []
+          damageOnLanding: 0
+        - seconds: 1.8625
+          group: stab_hit
+          finalLanding: 0
+          hasContactPoint: 1
+          contactBone: 10
+          contactOffset: {x: 0.235386, y: 0.28129488, z: 0.11410359}
+          contactSource: Weapon
+          avatarContacts:
+          - avatar: {fileID: 9000000, guid: 59dc3f26824c72872aa4cf6baeec671e, type: 3}
+            bone: 10
+            offset: {x: 0.235386, y: 0.28129488, z: 0.11410359}
+          damageOnLanding: 0

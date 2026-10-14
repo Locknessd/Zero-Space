@@ -51,7 +51,9 @@ namespace FrankRetarget
             public Quaternion rotationOffset = Quaternion.identity;
             public Vector3 positionOffset;
             public Vector3 middleRest, endRest;
+            [Range(1, 1.5f)] public float maximumStretch = 1.16f;
             public Transform sourceKnuckle, sourceFingerJoint, targetKnuckle, targetFingerJoint;
+            public Transform sourceToeContact, targetToeContact;
             public bool alignGrip;
             [NonSerialized] public float error;
             public Vector3 SourceGrip => (sourceKnuckle.position+sourceFingerJoint.position)*0.5f;
@@ -60,7 +62,15 @@ namespace FrankRetarget
             {
                 get
                 {
-                    if(!alignGrip)return sourceEnd.position+sourceEnd.rotation*positionOffset;
+                    if (!alignGrip)
+                    {
+                        if (sourceToeContact && targetToeContact)
+                        {
+                            var toeOffset = Quaternion.Inverse(end.rotation) * (targetToeContact.position - end.position);
+                            return sourceToeContact.position - sourceEnd.rotation * rotationOffset * toeOffset;
+                        }
+                        return sourceEnd.position + sourceEnd.rotation * positionOffset;
+                    }
                     Quaternion desired=sourceEnd.rotation*rotationOffset;
                     Vector3 gripFromWrist=Quaternion.Inverse(end.rotation)*(TargetGrip-end.position);
                     return SourceGrip-desired*gripFromWrist;
@@ -79,7 +89,7 @@ namespace FrankRetarget
                 float distance=delta.magnitude;
                 if(distance<0.00001f || a<0.00001f || b<0.00001f)return;
                 // Small reach compensation accommodates different proportions at authored contacts.
-                float stretch=Mathf.Clamp((distance+0.00001f)/(a+b),1f,1.16f);
+                float stretch=Mathf.Clamp((distance+0.00001f)/(a+b),1f,Mathf.Max(1.16f,maximumStretch));
                 middle.localPosition=middleRest*stretch;
                 end.localPosition=endRest*stretch;
                 a*=stretch; b*=stretch;

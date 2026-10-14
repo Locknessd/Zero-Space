@@ -1,0 +1,35 @@
+ASSASSIN SHOWCASE - COMPLETE - 2026-10-11
+
+Compilation
+PASS Unity Editor assembly compiled after all source fixes at 22:24:46.
+Fixed two FrankBattlePair null checks and two ambiguous BlendMode constants.
+Fixed the native rig source: animation-only FBX files do not contain weapon meshes.
+
+Assets
+PASS Six drivers generated: Pepe and Mankey x Combo04, Skill05 and Combo03.
+PASS Native sword and slash renderers retained with supported additive materials.
+PASS Showcase library contains five selected takes, including the three new Assassin attacks.
+Native slash onsets: Combo04 6; Skill05 7; Combo03 6.
+Scope is the showcase. BattleScene combat configuration was not edited.
+
+Validation
+PASS 15 sampled pose/material/framing cases in Validation.txt.
+PASS 15 weapon VFX cases in WeaponVfxValidation.txt.
+PASS Actual isolated Play-mode recording of the five Pepe takes.
+PASS Visual review of the three Assassin attacks in the rendered video.
+Skill05 uses a wider camera view for its airborne motion.
+PASS Full audio/video decode, FFmpeg exit code 0 in AssassinDecode.txt.
+Video: 1920x1080, H.264, 60 fps; AAC 48000 Hz stereo; approximately 27.8 seconds.
+Output: GeneratedAssets/PepeShowcase/PepeAttackShowcase_Assassin.mp4
+
+Preservation
+PASS All five hashes match AssassinPreservation.Before.json.
+Evidence: AssassinPreservation.After.json.
+Protected: BattleScene, BattleSfxBank, package manifest, Unity version and showcase scene.
+PASS Original active scene restored in Edit mode after recording.
+Editor: Unity process 7780, still running; no restart performed.
+Original scene: Assets/Frank_Slash_Pack/Demo/Frank_Slash_Pack.unity.
+Dirty scene snapshot: GeneratedAssets/PepeShowcase/UnsavedScenes/20261011_222945/.
+User instruction: keep the current Editor open; do not restart or discard unsaved scene changes.
+
+No pending work for this showcase continuation.

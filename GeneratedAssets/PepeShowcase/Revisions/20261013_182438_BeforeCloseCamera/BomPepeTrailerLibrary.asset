@@ -1,0 +1,671 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ef13dca95a84884c9dc1ac992adcd0d, type: 3}
+  m_Name: BomPepeTrailerLibrary
+  m_EditorClassIdentifier: Assembly-CSharp::ZeroSpace.Showcase.PepeShowcaseLibrary
+  pepePrefab: {fileID: 1221134045731980345, guid: fea5878b7ced08e41a059d381aca4ca0,
+    type: 3}
+  mankeyPrefab: {fileID: 3045007571586123555, guid: f936097d515fc1644b97883e46f42f1c,
+    type: 3}
+  takes:
+  - title: CRITICAL DUAL
+    animation: {fileID: 7400000, guid: 1ad3d996a0d19d8e6a467d4df0bbfb72, type: 2}
+    attackTrack: {fileID: 0}
+    sourceStartSeconds: 0
+    sourceEndSeconds: 5.3225
+    pepeDriver: {fileID: 8114078721016791534, guid: aa0bf593cbb26a64d970dd8935c1d1b6,
+      type: 3}
+    mankeyDriver: {fileID: 5163707076589726611, guid: 5966d2653b9df7141b51baabe8c4ad54,
+      type: 3}
+    grounding: {fileID: 0}
+    animatorName: 
+    nativeWeaponEffects: 0
+    cues:
+    - seconds: 0.96917
+      group: ice_dagger_swing
+      gun: 0
+      swing: 1
+      effectStart: 0.9358366
+      effectEnd: 0.97916293
+      sounds:
+      - clip: {fileID: 8300000, guid: 8947596e1256c0242b5faedccd72f13d, type: 3}
+        offset: 0.02201814
+        volume: 0.289
+        pitch: 1
+      - clip: {fileID: 8300000, guid: df3c99920dbbb0d49b10a59e43b437ac, type: 3}
+        offset: 0.022063492
+        volume: 0.085
+        pitch: 1
+    - seconds: 0.97916293
+      group: ice_dagger_swing
+      gun: 0
+      swing: 1
+      effectStart: 0.9458296
+      effectEnd: 1.3675
+      sounds:
+      - clip: {fileID: 8300000, guid: b1efc6401eac5174b9172a89e94962bf, type: 3}
+        offset: 0.023786848
+        volume: 0.289
+        pitch: 1
+      - clip: {fileID: 8300000, guid: 85a2a175cb7c8f24892c9bda75a12fd3, type: 3}
+        offset: 0.008321996
+        volume: 0.085
+        pitch: 1
+    - seconds: 1.6320829
+      group: ice_dagger_swing
+      gun: 0
+      swing: 1
+      effectStart: 1.5987496
+      effectEnd: 1.8870829
+      sounds:
+      - clip: {fileID: 8300000, guid: e2069659ee300c447925d039248866fa, type: 3}
+        offset: 0.015873017
+        volume: 0.289
+        pitch: 1
+      - clip: {fileID: 8300000, guid: 23ee92473f9b6e1479591064f65f2912, type: 3}
+        offset: 0.020362811
+        volume: 0.085
+        pitch: 1
+    - seconds: 2.203333
+      group: ice_dagger_swing
+      gun: 0
+      swing: 1
+      effectStart: 2.1699996
+      effectEnd: 2.303333
+      sounds:
+      - clip: {fileID: 8300000, guid: 8947596e1256c0242b5faedccd72f13d, type: 3}
+        offset: 0.02201814
+        volume: 0.289
+        pitch: 1
+      - clip: {fileID: 8300000, guid: df3c99920dbbb0d49b10a59e43b437ac, type: 3}
+        offset: 0.022063492
+        volume: 0.085
+        pitch: 1
+    - seconds: 2.513333
+      group: ice_dagger_swing
+      gun: 0
+      swing: 1
+      effectStart: 2.4799998
+      effectEnd: 2.6433332
+      sounds:
+      - clip: {fileID: 8300000, guid: b1efc6401eac5174b9172a89e94962bf, type: 3}
+        offset: 0.023786848
+        volume: 0.289
+        pitch: 1
+      - clip: {fileID: 8300000, guid: 85a2a175cb7c8f24892c9bda75a12fd3, type: 3}
+        offset: 0.008321996
+        volume: 0.085
+        pitch: 1
+    - seconds: 2.87125
+      group: ice_dagger_swing
+      gun: 0
+      swing: 1
+      effectStart: 2.8379166
+      effectEnd: 3.12625
+      sounds:
+      - clip: {fileID: 8300000, guid: e2069659ee300c447925d039248866fa, type: 3}
+        offset: 0.015873017
+        volume: 0.289
+        pitch: 1
+      - clip: {fileID: 8300000, guid: 23ee92473f9b6e1479591064f65f2912, type: 3}
+        offset: 0.020362811
+        volume: 0.085
+        pitch: 1
+    - seconds: 3.423333
+      group: ice_dagger_swing
+      gun: 0
+      swing: 1
+      effectStart: 3.3899996
+      effectEnd: 3.553333
+      sounds:
+      - clip: {fileID: 8300000, guid: 8947596e1256c0242b5faedccd72f13d, type: 3}
+        offset: 0.02201814
+        volume: 0.289
+        pitch: 1
+      - clip: {fileID: 8300000, guid: df3c99920dbbb0d49b10a59e43b437ac, type: 3}
+        offset: 0.022063492
+        volume: 0.085
+        pitch: 1
+    - seconds: 3.719167
+      group: ice_dagger_swing
+      gun: 0
+      swing: 1
+      effectStart: 3.6858337
+      effectEnd: 3.8741672
+      sounds:
+      - clip: {fileID: 8300000, guid: b1efc6401eac5174b9172a89e94962bf, type: 3}
+        offset: 0.023786848
+        volume: 0.289
+        pitch: 1
+      - clip: {fileID: 8300000, guid: 85a2a175cb7c8f24892c9bda75a12fd3, type: 3}
+        offset: 0.008321996
+        volume: 0.085
+        pitch: 1
+    - seconds: 4.9725003
+      group: ice_dagger_swing
+      gun: 0
+      swing: 1
+      effectStart: 4.939167
+      effectEnd: 5.0725
+      sounds:
+      - clip: {fileID: 8300000, guid: e2069659ee300c447925d039248866fa, type: 3}
+        offset: 0.015873017
+        volume: 0.289
+        pitch: 1
+      - clip: {fileID: 8300000, guid: 23ee92473f9b6e1479591064f65f2912, type: 3}
+        offset: 0.020362811
+        volume: 0.085
+        pitch: 1
+    slashPrefab: {fileID: 5088202215307316892, guid: c6b637cde6412b7b49a766433fe722a8,
+      type: 3}
+    slashScale: 1.2705
+    trailColor: {r: 0.3, g: 0.9, b: 1, a: 0.9}
+    trailLifetime: 0.17
+    bladeStart: 0.28
+    yawStart: -12
+    yawEnd: -12
+    cameraDistance: 9
+    lockCamera: 0
+  - title: COMBO 03
+    animation: {fileID: 7400000, guid: 5c27a5e1248c3c5da8706d67b773b232, type: 2}
+    attackTrack: {fileID: 0}
+    sourceStartSeconds: 0.049999967
+    sourceEndSeconds: 2.6333332
+    pepeDriver: {fileID: 8779926035666831242, guid: 468f86c81ffce8e76b30aa35a09b5d4f,
+      type: 3}
+    mankeyDriver: {fileID: 2023132364146122315, guid: ba437859d904d3467b5904c3bc78f63c,
+      type: 3}
+    grounding: {fileID: 11400000, guid: b96e0f467e0a4544d8d35c1d3b9f4371, type: 2}
+    animatorName: 
+    nativeWeaponEffects: 0
+    cues:
+    - seconds: 0.23333333
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 0.2
+      effectEnd: 0.35833335
+      sounds:
+      - clip: {fileID: 8300000, guid: d06e62ca9e9dd7143ac7a057c7d3cf5c, type: 3}
+        offset: 0.0261678
+        volume: 0.34
+        pitch: 1
+    - seconds: 0.98333335
+      group: gun_shot
+      gun: 1
+      swing: 0
+      effectStart: 0
+      effectEnd: 0
+      sounds:
+      - clip: {fileID: 8300000, guid: 0a72938603bb2e84b8e838d07ed2fa52, type: 3}
+        offset: 0
+        volume: 0.3825
+        pitch: 1
+    - seconds: 1.1833334
+      group: gun_shot
+      gun: 1
+      swing: 0
+      effectStart: 0
+      effectEnd: 0
+      sounds:
+      - clip: {fileID: 8300000, guid: 9bd48373d0616e44aaadbabebca96c7e, type: 3}
+        offset: 0
+        volume: 0.3825
+        pitch: 1
+    - seconds: 1.5916667
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 1.5583334
+      effectEnd: 1.7166667
+      sounds:
+      - clip: {fileID: 8300000, guid: d06e62ca9e9dd7143ac7a057c7d3cf5c, type: 3}
+        offset: 0.0261678
+        volume: 0.34
+        pitch: 1
+    - seconds: 2.3333333
+      group: gun_shot
+      gun: 1
+      swing: 0
+      effectStart: 0
+      effectEnd: 0
+      sounds:
+      - clip: {fileID: 8300000, guid: 0a72938603bb2e84b8e838d07ed2fa52, type: 3}
+        offset: 0
+        volume: 0.3825
+        pitch: 1
+    slashPrefab: {fileID: 2084650932036888059, guid: 323c24f4ca2fe4ab594f928fc73c29c4,
+      type: 3}
+    slashScale: 1.155
+    trailColor: {r: 0.3, g: 0.9, b: 1, a: 0.9}
+    trailLifetime: 0.17
+    bladeStart: 0.24
+    yawStart: -12
+    yawEnd: -12
+    cameraDistance: 9
+    lockCamera: 0
+  - title: ASSASSIN / COMBO04
+    animation: {fileID: 7400000, guid: 925ec25bebb58b845a5d62595b6dcc8b, type: 3}
+    attackTrack: {fileID: 0}
+    sourceStartSeconds: 0
+    sourceEndSeconds: 2.0166667
+    pepeDriver: {fileID: 9116350480421428431, guid: a2b012303fe949f43a9ca8e2f853d87c,
+      type: 3}
+    mankeyDriver: {fileID: 5664941482650303579, guid: 2c4c77c26503c544098a3aa43ce306fa,
+      type: 3}
+    grounding: {fileID: 0}
+    animatorName: Frank_Assassin_Combo04
+    nativeWeaponEffects: 1
+    cues:
+    - seconds: 0.16666667
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 0
+      effectEnd: 0
+      sounds:
+      - clip: {fileID: 8300000, guid: d06e62ca9e9dd7143ac7a057c7d3cf5c, type: 3}
+        offset: 0.0261678
+        volume: 0.34
+        pitch: 1
+    - seconds: 0.36666667
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 0
+      effectEnd: 0
+      sounds:
+      - clip: {fileID: 8300000, guid: 986bbc0999a025947bb88fe1e27c0902, type: 3}
+        offset: 0.027188208
+        volume: 0.34
+        pitch: 1
+    - seconds: 0.81666666
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 0
+      effectEnd: 0
+      sounds:
+      - clip: {fileID: 8300000, guid: 06b0b421fe39838478c1b1799ced8362, type: 3}
+        offset: 0.014739229
+        volume: 0.34
+        pitch: 1
+    - seconds: 1.3166667
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 0
+      effectEnd: 0
+      sounds:
+      - clip: {fileID: 8300000, guid: d06e62ca9e9dd7143ac7a057c7d3cf5c, type: 3}
+        offset: 0.0261678
+        volume: 0.34
+        pitch: 1
+    - seconds: 1.5
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 0
+      effectEnd: 0
+      sounds:
+      - clip: {fileID: 8300000, guid: 986bbc0999a025947bb88fe1e27c0902, type: 3}
+        offset: 0.027188208
+        volume: 0.34
+        pitch: 1
+    - seconds: 1.7666667
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 0
+      effectEnd: 0
+      sounds:
+      - clip: {fileID: 8300000, guid: 06b0b421fe39838478c1b1799ced8362, type: 3}
+        offset: 0.014739229
+        volume: 0.34
+        pitch: 1
+    slashPrefab: {fileID: 0}
+    slashScale: 1.65
+    trailColor: {r: 0.3, g: 0.9, b: 1, a: 0.9}
+    trailLifetime: 0.17
+    bladeStart: 0.24
+    yawStart: -12
+    yawEnd: -12
+    cameraDistance: 9
+    lockCamera: 0
+  - title: ASSASSIN / COMBO03
+    animation: {fileID: 7400000, guid: 2125d22ce5f456645a4bc1bd26c7fd27, type: 3}
+    attackTrack: {fileID: 0}
+    sourceStartSeconds: 0.03333333
+    sourceEndSeconds: 1.9166666
+    pepeDriver: {fileID: 1471710748463246526, guid: 617cf0cc6b44e884f80a23cb9b5b3b40,
+      type: 3}
+    mankeyDriver: {fileID: 2931289678523593048, guid: adad398ad685bc54ba9bb7866e745216,
+      type: 3}
+    grounding: {fileID: 0}
+    animatorName: Frank_Assassin_Combo03
+    nativeWeaponEffects: 1
+    cues:
+    - seconds: 0.2
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 0
+      effectEnd: 0
+      sounds:
+      - clip: {fileID: 8300000, guid: d06e62ca9e9dd7143ac7a057c7d3cf5c, type: 3}
+        offset: 0.0261678
+        volume: 0.34
+        pitch: 1
+    - seconds: 0.43333334
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 0
+      effectEnd: 0
+      sounds:
+      - clip: {fileID: 8300000, guid: 986bbc0999a025947bb88fe1e27c0902, type: 3}
+        offset: 0.027188208
+        volume: 0.34
+        pitch: 1
+    - seconds: 0.6333333
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 0
+      effectEnd: 0
+      sounds:
+      - clip: {fileID: 8300000, guid: 06b0b421fe39838478c1b1799ced8362, type: 3}
+        offset: 0.014739229
+        volume: 0.34
+        pitch: 1
+    - seconds: 1
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 0
+      effectEnd: 0
+      sounds:
+      - clip: {fileID: 8300000, guid: d06e62ca9e9dd7143ac7a057c7d3cf5c, type: 3}
+        offset: 0.0261678
+        volume: 0.34
+        pitch: 1
+    - seconds: 1.25
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 0
+      effectEnd: 0
+      sounds:
+      - clip: {fileID: 8300000, guid: 986bbc0999a025947bb88fe1e27c0902, type: 3}
+        offset: 0.027188208
+        volume: 0.34
+        pitch: 1
+    - seconds: 1.6333333
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 0
+      effectEnd: 0
+      sounds:
+      - clip: {fileID: 8300000, guid: 06b0b421fe39838478c1b1799ced8362, type: 3}
+        offset: 0.014739229
+        volume: 0.34
+        pitch: 1
+    slashPrefab: {fileID: 0}
+    slashScale: 1.65
+    trailColor: {r: 0.3, g: 0.9, b: 1, a: 0.9}
+    trailLifetime: 0.17
+    bladeStart: 0.24
+    yawStart: -12
+    yawEnd: -12
+    cameraDistance: 9
+    lockCamera: 0
+  - title: ASSASSIN / SKILL05
+    animation: {fileID: 7400000, guid: 4b66c7588502d6b4b8c3beeaaaf3bc78, type: 3}
+    attackTrack: {fileID: 0}
+    sourceStartSeconds: 0.53333336
+    sourceEndSeconds: 3.2833335
+    pepeDriver: {fileID: 8779352979810737795, guid: 9cd13134d77bd2c45b9a2b96ae308eb6,
+      type: 3}
+    mankeyDriver: {fileID: 5621928609786559441, guid: e025c7ebd35aa5e40ab3882feb0f0f4a,
+      type: 3}
+    grounding: {fileID: 0}
+    animatorName: Frank_Assassin_Skill05
+    nativeWeaponEffects: 1
+    cues:
+    - seconds: 0.19999999
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 0
+      effectEnd: 0
+      sounds:
+      - clip: {fileID: 8300000, guid: d06e62ca9e9dd7143ac7a057c7d3cf5c, type: 3}
+        offset: 0.0261678
+        volume: 0.34
+        pitch: 1
+    - seconds: 0.39999998
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 0
+      effectEnd: 0
+      sounds:
+      - clip: {fileID: 8300000, guid: 986bbc0999a025947bb88fe1e27c0902, type: 3}
+        offset: 0.027188208
+        volume: 0.34
+        pitch: 1
+    - seconds: 0.6666667
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 0
+      effectEnd: 0
+      sounds:
+      - clip: {fileID: 8300000, guid: 06b0b421fe39838478c1b1799ced8362, type: 3}
+        offset: 0.014739229
+        volume: 0.34
+        pitch: 1
+    - seconds: 0.8
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 0
+      effectEnd: 0
+      sounds:
+      - clip: {fileID: 8300000, guid: d06e62ca9e9dd7143ac7a057c7d3cf5c, type: 3}
+        offset: 0.0261678
+        volume: 0.34
+        pitch: 1
+    - seconds: 0.96666664
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 0
+      effectEnd: 0
+      sounds:
+      - clip: {fileID: 8300000, guid: 986bbc0999a025947bb88fe1e27c0902, type: 3}
+        offset: 0.027188208
+        volume: 0.34
+        pitch: 1
+    - seconds: 1.2166667
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 0
+      effectEnd: 0
+      sounds:
+      - clip: {fileID: 8300000, guid: 06b0b421fe39838478c1b1799ced8362, type: 3}
+        offset: 0.014739229
+        volume: 0.34
+        pitch: 1
+    - seconds: 1.5833333
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 0
+      effectEnd: 0
+      sounds:
+      - clip: {fileID: 8300000, guid: d06e62ca9e9dd7143ac7a057c7d3cf5c, type: 3}
+        offset: 0.0261678
+        volume: 0.34
+        pitch: 1
+    slashPrefab: {fileID: 0}
+    slashScale: 1.65
+    trailColor: {r: 0.3, g: 0.9, b: 1, a: 0.9}
+    trailLifetime: 0.17
+    bladeStart: 0.24
+    yawStart: -12
+    yawEnd: -12
+    cameraDistance: 9
+    lockCamera: 1
+  weaponTrailMaterial: {fileID: 2100000, guid: c2a2e34187896844e9b1552f8880f74e, type: 2}
+  muzzlePrefab: {fileID: 610250729418347942, guid: 0dbfdf4710b45ce41a554f39160e2712,
+    type: 3}
+  bladeGeometry:
+  - mesh: {fileID: -1272481795433867914, guid: d8dd30cce5c56764b847fc7ea75a2ff3, type: 3}
+    bladeBase: {x: 0.08226412, y: 0.13189182, z: -0.0167174}
+    bladeTip: {x: -0.085597865, y: -0.6307515, z: -0.011958685}
+    baseBones:
+    - bone: 5
+      point: {x: -0.016717462, y: 0.13189174, z: -0.08226412}
+      weight: 1
+    tipBones:
+    - bone: 23
+      point: {x: -0.22377057, y: -0.011613956, z: -0.08559784}
+      weight: 1
+  - mesh: {fileID: -6558988271104613897, guid: d8dd30cce5c56764b847fc7ea75a2ff3, type: 3}
+    bladeBase: {x: 0.00000026538854, y: 0.14208625, z: 0.05907829}
+    bladeTip: {x: 0.00000029404214, y: -0.9047675, z: -0.0000003814697}
+    baseBones:
+    - bone: 0
+      point: {x: -0.00000056439285, y: 0.059079062, z: -0.14208615}
+      weight: 1
+    tipBones:
+    - bone: 8
+      point: {x: -0.21750155, y: 0.0000008689211, z: -0.00000036136456}
+      weight: 1
+  - mesh: {fileID: -7822665905410339645, guid: 60816012dd2c96449be704f9ba3e7bdc, type: 3}
+    bladeBase: {x: 0.00000010574111, y: 0.023428118, z: 0.08340893}
+    bladeTip: {x: 0.00000078167074, y: -0.12074976, z: 1.63281}
+    baseBones:
+    - bone: 0
+      point: {x: 0.00000024686895, y: 0.02342825, z: 0.083409}
+      weight: 1
+    tipBones:
+    - bone: 0
+      point: {x: 0.00000088426805, y: -0.12074965, z: 1.6328092}
+      weight: 1
+  - mesh: {fileID: 8142724638417267561, guid: 378caf935aaa27a48a2ce063a9b9f60c, type: 3}
+    bladeBase: {x: 0.5922219, y: 0.19806623, z: 1.0930794}
+    bladeTip: {x: 0.66889906, y: -1.5573279, z: 0.6401363}
+    baseBones:
+    - bone: 0
+      point: {x: 0.0064838883, y: 0.019956185, z: -0.245443}
+      weight: 1
+    tipBones:
+    - bone: 2
+      point: {x: -0.8895859, y: 0.00000080145816, z: 0.000001328423}
+      weight: 1
+  - mesh: {fileID: 6469963104974706124, guid: 23f690a146a2b8e418e1ab3e0aea5064, type: 3}
+    bladeBase: {x: -0.041075725, y: 0.007210151, z: 0.5331046}
+    bladeTip: {x: 0.018077556, y: 0.0019492721, z: -0.38602677}
+    baseBones:
+    - bone: 0
+      point: {x: -0.041075874, y: 0.0072101625, z: 0.5331044}
+      weight: 1
+    tipBones:
+    - bone: 0
+      point: {x: 0.018077562, y: 0.0019494685, z: -0.38602683}
+      weight: 1
+  - mesh: {fileID: -4025173070523901678, guid: 3f4878697c191ea46886ad1a0c45435e, type: 3}
+    bladeBase: {x: 0.000000043551907, y: -0.014403165, z: -0.051559083}
+    bladeTip: {x: 0.000000123726, y: -0.00000022681664, z: 0.53653485}
+    baseBones:
+    - bone: 0
+      point: {x: -0.00000006077696, y: -0.023878971, z: -0.08547994}
+      weight: 1
+    tipBones:
+    - bone: 0
+      point: {x: 0.00000013588472, y: -0.00000021805906, z: 0.88952035}
+      weight: 1
+  - mesh: {fileID: -6558988271104613897, guid: 3f4878697c191ea46886ad1a0c45435e, type: 3}
+    bladeBase: {x: 0.00000026538854, y: 0.14208625, z: 0.05907829}
+    bladeTip: {x: 0.00000029404214, y: -0.9047675, z: -0.0000003814697}
+    baseBones:
+    - bone: 0
+      point: {x: -0.0000005175269, y: 0.05907906, z: -0.14208624}
+      weight: 1
+    tipBones:
+    - bone: 8
+      point: {x: -0.21750149, y: 0.00000077723814, z: -0.0000005385047}
+      weight: 1
+  - mesh: {fileID: -8935808266683310346, guid: 7e2666062ee2d55429beea6899bf89dc, type: 3}
+    bladeBase: {x: -0.4884759, y: 0.5605189, z: 0.38159308}
+    bladeTip: {x: 0.014894562, y: -0.43593603, z: 1.3475429}
+    baseBones:
+    - bone: 0
+      point: {x: -1.0683202, y: -0.0013546519, z: -0.09072973}
+      weight: 1
+    tipBones:
+    - bone: 0
+      point: {x: 0.40472195, y: -0.004236333, z: 0.0067464532}
+      weight: 1
+  - mesh: {fileID: -8745498709488003525, guid: 7e2666062ee2d55429beea6899bf89dc, type: 3}
+    bladeBase: {x: 0.58210504, y: -0.10272227, z: 1.0010974}
+    bladeTip: {x: 0.5899489, y: -0.9625499, z: 0.8115127}
+    baseBones:
+    - bone: 0
+      point: {x: -0.0606242, y: 0.00042985546, z: -0.044235513}
+      weight: 1
+    tipBones:
+    - bone: 1
+      point: {x: -0.8604591, y: -0.0013540293, z: -0.077409916}
+      weight: 1
+  - mesh: {fileID: 4686849319519084627, guid: 2c73e3dd92553e942b71dcb39237c52c, type: 3}
+    bladeBase: {x: 0.5912469, y: 0.13412572, z: 1.0408287}
+    bladeTip: {x: 0.5963388, y: -0.7426327, z: 0.8520157}
+    baseBones:
+    - bone: 0
+      point: {x: 0.0002429985, y: 0.018614175, z: -0.17833704}
+      weight: 1
+    tipBones:
+    - bone: 0
+      point: {x: -0.0005053465, y: 0.057558738, z: 0.7176897}
+      weight: 1
+  - mesh: {fileID: 4300002, guid: 3e685dd57e9c78b49b20bef3e8358ae3, type: 3}
+    bladeBase: {x: -0.037367444, y: 0.0013889992, z: -0.3353859}
+    bladeTip: {x: 0.1354254, y: -0.008273766, z: -2.3919592}
+    baseBones: []
+    tipBones: []
+  - mesh: {fileID: 8456831307905354113, guid: c80ead7ac0634a539b64f1ce6f3a0efc, type: 3}
+    bladeBase: {x: -0.014635601, y: -0.0063570496, z: 0.04324855}
+    bladeTip: {x: -0.074077226, y: -0.000000042915342, z: -0.62632227}
+    baseBones: []
+    tipBones: []
+  excludedBladeMeshes:
+  - {fileID: 4300004, guid: 3e685dd57e9c78b49b20bef3e8358ae3, type: 3}
+  - {fileID: 4300004, guid: b01b411d366a5a344bddf3428a7bc8f7, type: 3}
+  introSeconds: 17
+  leadSeconds: 0
+  holdSeconds: 0
+  outroSeconds: 2.2
+  continuous: 1
+  entryBlendSeconds: 0.12
+  motionAccentMaterial: {fileID: 2100000, guid: 11db68f5fcec83d479e979ab16fb7a62,
+    type: 2}
+  bomTrailer: 1
+  startupAnimation: {fileID: -203655887218126122, guid: 48e06044aac78f16185b91fa955fc334,
+    type: 3}
+  startupPoseSeconds: 1.7000002
+  slashPower: 1.7
+  slashAfterglow: 0.28

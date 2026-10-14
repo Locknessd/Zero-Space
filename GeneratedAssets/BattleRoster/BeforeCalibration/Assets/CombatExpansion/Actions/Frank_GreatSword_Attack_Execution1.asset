@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dcfa8577ab5249259fa110adbb5792e, type: 3}
+  m_Name: Frank_GreatSword_Attack_Execution1
+  m_EditorClassIdentifier: Assembly-CSharp::CombatActionDefinition
+  actionId: Frank_GreatSword_Attack_Execution1
+  displayName: GreatSword thrust and throw
+  gameplayTrigger: Heavy exchange queue, exact server animationId, EnqueueCombatAction(side,
+    ID), and the existing animation browser.
+  entryAndInterruption: Living available participants approach the authored range
+    in the existing combat lane; bounded 0.15m alignment and 0.12s entry blend. Source-owned
+    GreatSword attacker equipment and unarmed victim state. Cancel/reset/disable
+    cleanly releases both roles, cues, trails, camera and equipment ownership. No
+    instantkill, extra armor, or invented local damage; server health is unchanged
+    in local preview.
+  recovery: The native authored receiver track continues through knockdown. A surviving
+    victim uses the grounded existing getup recovery and its automatic recovery sound;
+    an accepted lethal victim holds the authored final pose. Attacker completes its
+    source clip.
+  presentation: Exact source-second shared sound and VFX cues with measured per-victim-avatar
+    Weapon anchors; established GreatSword weapon variant and trail routing, routed
+    audio, hitstop, impact light, flash, cinematic camera impulse and final landing
+    accent. Existing cancellation and recovery clean up transient feedback. Landing
+    is non-damaging; only accepted server damage is distributed over weapon contacts.
+  authoredAttackSources: []
+  contacts:
+  - strikeId: Frank_GreatSword_Attack_Execution1/01
+    attack: {fileID: 7400000, guid: 139b0ae28ee0b4f4daa324a3b26584c3, type: 3}
+    reaction: {fileID: 7400000, guid: 8a8cfa30410d4de4eaeee65cbe422897, type: 3}
+    seconds: 0.85
+    activeWindowSeconds: {x: 0.8333334, y: 0.8666667}
+    strikingLimb: 18
+    targetRegion: 'Upper chest and neck on the forward thrust; measured avatar anchors:
+      PepeAvatar/Neck, MankeyAvatar/UpperChest'
+    directionInVictimSpace: {x: 0, y: 0, z: -1}
+    reactionPolicy: 0
+    result: 2
+    presentationGroup: stab_hit
+    nonDamagingInteraction: 0
+    continuation: Native authored paired receiver continuation on the accepted exchange
+      clock; contact does not restart the reaction. Early Ex3 cuts remain standing/staggered
+      until the final knockdown. Single-hit actions continue through their native
+      takedown and landing. No independent reaction, extra armor, or unconditional
+      kill is introduced.
+  - strikeId: Frank_GreatSword_Attack_Execution1/02-landing
+    attack: {fileID: 7400000, guid: 139b0ae28ee0b4f4daa324a3b26584c3, type: 3}
+    reaction: {fileID: 7400000, guid: 8a8cfa30410d4de4eaeee65cbe422897, type: 3}
+    seconds: 2.3333333
+    activeWindowSeconds: {x: 2.3166666, y: 2.35}
+    strikingLimb: 0
+    targetRegion: Victim body contacting the ground in the native receiver continuation
+    directionInVictimSpace: {x: 0, y: -1, z: 0}
+    reactionPolicy: 0
+    result: 2
+    presentationGroup: body_fall
+    nonDamagingInteraction: 1
+    continuation: Final non-damaging ground contact accents the existing receiver
+      continuation; survivors recover through getup and accepted lethal victims retain
+      their final pose.

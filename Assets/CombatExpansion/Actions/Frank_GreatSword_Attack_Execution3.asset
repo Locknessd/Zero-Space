@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0dcfa8577ab5249259fa110adbb5792e, type: 3}
   m_Name: Frank_GreatSword_Attack_Execution3
   m_EditorClassIdentifier: Assembly-CSharp::CombatActionDefinition
+  lethalPairVariant:
+    rid: -2
   actionId: Frank_GreatSword_Attack_Execution3
   displayName: GreatSword three-cut takedown
   gameplayTrigger: Heavy exchange queue, exact server animationId, EnqueueCombatAction(side,
@@ -31,6 +33,8 @@ MonoBehaviour:
     audio, hitstop, impact light, flash, cinematic camera impulse and final landing
     accent. Existing cancellation and recovery clean up transient feedback. Landing
     is non-damaging; only accepted server damage is distributed over weapon contacts.
+  presentationProfile:
+    rid: -2
   authoredAttackSources: []
   contacts:
   - strikeId: Frank_GreatSword_Attack_Execution3/01
@@ -102,3 +106,8 @@ MonoBehaviour:
     continuation: Final non-damaging ground contact accents the existing receiver
       continuation; survivors recover through getup and accepted lethal victims retain
       their final pose.
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }

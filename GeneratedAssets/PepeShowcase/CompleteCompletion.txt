@@ -1,0 +1,33 @@
+COMPLETE COMBO VIDEO - COMPLETE - 2026-10-12
+
+Critical Dual -> Combo 03 (gun/sword) -> Assassin Combo04 -> Assassin Combo03 -> Assassin Skill05.
+Five distinct clips, no repeated attack, no playback loop.
+Connected body motion with carried horizontal position and 0.12s entry-pose blends between weapon rigs.
+Original calibrated weapons, native Assassin effects, procedural sword/dagger ribbons and muzzle particles.
+All 30 slash cues and 3 gun flashes retained, with corresponding sounds and effect tails.
+
+Camera
+One fixed safe distance throughout the sequence: 9.448m for Pepe, 9.225m for Mankey/custom replacement.
+Fixed yaw; continuous focus across rig changes. Wider than the previous Assassin-only video.
+
+Output
+GeneratedAssets/PepeShowcase/PepeCompleteCombo.mp4
+1920x1080, H.264, 60 fps, AAC 48 kHz stereo, approximately 16.16 seconds including titles.
+Recorded from actual isolated Play mode; completed at 12:01:29.
+Scene: Assets/Scenes/PepeCompleteCombo.unity
+Library: Assets/PepeShowcase/CompleteComboLibrary.asset
+
+Validation
+PASS Unity Runtime/Editor compilation after final source changes.
+PASS 15 character/attack cases: 880 poses per character, with all 30 slash cues and 3 muzzle flashes.
+PASS all four rig transitions, deterministic seeking, camera framing, material support and floor coverage.
+PASS visual review from actual video frames: CompleteVideoFrames.png and CompleteTransitions.png.
+PASS full video/audio decode, exit code 0: CompleteDecode.txt.
+Editor stills may cache body skin poses across renders in one Editor frame; use actual video for visual review.
+
+Preservation
+PASS all eight protected file hashes unchanged; CompletePreservation.After.json.
+PASS original active scene restored in Edit mode after recording.
+Assets/Frank_Slash_Pack/Demo/Frank_Slash_Pack.unity; playing=False.
+Existing Unity Editor remained open; no restart performed.
+The original standalone showcase, Assassin combo scenes/libraries and BattleScene configuration are preserved.

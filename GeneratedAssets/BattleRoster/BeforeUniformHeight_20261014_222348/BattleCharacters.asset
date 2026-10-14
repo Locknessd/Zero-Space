@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5ca4f803e8c94f4ba0f4619791273ea, type: 3}
+  m_Name: BattleCharacters
+  m_EditorClassIdentifier: Assembly-CSharp::BattleCharacterCatalog
+  characters:
+  - id: mankey
+    displayName: Mankey
+    prefab: {fileID: 6787808010026698883, guid: db1543c310864894ea76d7a4085a1633,
+      type: 3}
+    portrait: {fileID: 21300000, guid: b17f3e742bf888c45a9176b26ec55af8, type: 3}
+    referenceLegLength: 1.0295696
+  - id: pepe
+    displayName: Meme
+    prefab: {fileID: 8739656219870037640, guid: ccdc8f7198d5b5547a5eaa7e1ad14965,
+      type: 3}
+    portrait: {fileID: 21300000, guid: 2b4bf9f974ad6ac459bb42d6535b8fa5, type: 3}
+    referenceLegLength: 7.7718782
+  - id: cash_monkey
+    displayName: Cash Monkey
+    prefab: {fileID: 603728788921977546, guid: ac80577bd5aa6ae46b3aa5d8a1bd282e, type: 3}
+    portrait: {fileID: 21300000, guid: 3bc842edb0845394780e8fa90b97e8a2, type: 3}
+    referenceLegLength: 0.63953006
+  - id: neon_nutcase
+    displayName: Neon Nutcase
+    prefab: {fileID: 4785796707582690812, guid: de709b2b0b300d946b9c16aa7fcb1d67,
+      type: 3}
+    portrait: {fileID: 21300000, guid: d32c9cc931cf81c488169a5c87d032f7, type: 3}
+    referenceLegLength: 0.62273014
+  - id: neon_streetcat
+    displayName: Neon Streetcat
+    prefab: {fileID: 7459106747321466736, guid: 68bfdbda9de6190488bf55713673a413,
+      type: 3}
+    portrait: {fileID: 21300000, guid: 4c834febae1a3184083cc566314bb11a, type: 3}
+    referenceLegLength: 0.6917213
+  - id: ninja_neko
+    displayName: Ninja Neko
+    prefab: {fileID: 3385196778475919935, guid: acf0dd60f643d1d42a42da628498ce6b,
+      type: 3}
+    portrait: {fileID: 21300000, guid: 5dd7e6efa45372548bd11dc853c20445, type: 3}
+    referenceLegLength: 0.7356906

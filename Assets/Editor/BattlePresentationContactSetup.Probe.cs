@@ -5,6 +5,39 @@ using UnityEngine;
 
 public static partial class BattlePresentationContactSetup
 {
+    public static Bounds EvaluatedBounds(Animator animator)
+    {
+        bool first = true;
+        var bounds = new Bounds();
+        var baked = new Mesh();
+        try
+        {
+            foreach (var skin in animator.GetComponentsInChildren<SkinnedMeshRenderer>())
+            {
+                if (!Visible(skin) || !skin.sharedMesh || skin.sharedMesh.vertexCount < 1000)
+                    continue;
+                skin.BakeMesh(baked, false);
+                foreach (var point in RenderedVertices(skin, baked, new List<string>()))
+                {
+                    if (first)
+                    {
+                        bounds = new Bounds(point, Vector3.zero);
+                        first = false;
+                    }
+                    else
+                        bounds.Encapsulate(point);
+                }
+            }
+            if (first)
+                throw new System.InvalidOperationException("No character skin: " + animator.name);
+            return bounds;
+        }
+        finally
+        {
+            Object.DestroyImmediate(baked);
+        }
+    }
+
     public static float EvaluatedFloor(CharacterCombat fighter)
     {
         float minimum = float.PositiveInfinity;
@@ -72,6 +105,41 @@ public static partial class BattlePresentationContactSetup
         }
 
         public Vector3 BodyPoint(Vector3 near) => body.Nearest(near);
+
+        public Vector3 FacePoint(Vector3 hand)
+        {
+            var head = new Surface();
+            var bone = receiver.Animator.GetBoneTransform(HumanBodyBones.Head);
+            foreach (var skin in receiver.Animator.GetComponentsInChildren<SkinnedMeshRenderer>())
+                if (Visible(skin) && skin.sharedMesh && skin.sharedMesh.vertexCount >= 1000)
+                    AddMesh(head, skin, bone, new List<string>());
+            head.Build();
+            var center = head.Bounds.center;
+            var direction = Vector3.ProjectOnPlane(hand - center, Vector3.up).normalized;
+            return head.Nearest(center + direction * head.Bounds.size.magnitude);
+        }
+
+        public float MeasureSparse(out Vector3 contact, out HumanBodyBones bone, out Vector3 offset)
+        {
+            float best = float.PositiveInfinity;
+            contact = Vector3.zero;
+            int step = Mathf.Max(1, striker.vertices.Count / 384);
+            for (int i = 0; i < striker.vertices.Count; i += step)
+            {
+                var point = striker.vertices[i];
+                var candidate = body.Nearest(point);
+                float gap = (candidate - point).sqrMagnitude;
+                if (gap >= best)
+                    continue;
+                best = gap;
+                contact = candidate;
+            }
+            for (int i = 0; i < 16; i++)
+                contact = body.Nearest(striker.Nearest(contact));
+            var anchor = NearestAnchor(receiver, contact, out bone);
+            offset = anchor.InverseTransformPoint(contact);
+            return striker.Distance(contact);
+        }
         public float BodyDistance(Vector3 point) => body.Distance(point);
         public float SourceDistance(Vector3 point) => striker == null ? 0 : striker.Distance(point);
         public float FloorHeight => body.vertices.Min(p => p.y);

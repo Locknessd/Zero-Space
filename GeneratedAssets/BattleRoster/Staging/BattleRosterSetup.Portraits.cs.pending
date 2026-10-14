@@ -1,0 +1,117 @@
+using System.IO;
+using System.Linq;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using Object = UnityEngine.Object;
+
+public static partial class BattleRosterSetup
+{
+    public static void CreatePortraits()
+    {
+        Directory.CreateDirectory(Root + "/Portraits");
+        var scene = SceneManager.GetSceneByPath(BattlePath);
+        bool opened = !scene.IsValid() || !scene.isLoaded;
+        if (opened)
+            scene = EditorSceneManager.OpenScene(BattlePath, OpenSceneMode.Additive);
+        try
+        {
+            var game = scene.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<GameManager>(true)).Single();
+            var selector = game.GetComponent<BattleCharacterSelector>();
+            var images = scene.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<Image>(true)).ToArray();
+            selector.leftPortrait = images.Single(i => i.name == "Image" && i.transform.parent.name == "AvatarBg1");
+            selector.rightPortrait = images.Single(i => i.name == "Image" && i.transform.parent.name == "AvatarBg1 red");
+            var entries = game.characterCatalog.characters;
+            entries[0].portrait = selector.leftPortrait.sprite;
+            entries[1].portrait = selector.rightPortrait.sprite;
+            foreach (var entry in entries.Skip(2))
+                entry.portrait = RenderPortrait(entry);
+            EditorUtility.SetDirty(game.characterCatalog);
+            EditorUtility.SetDirty(selector);
+            AssetDatabase.SaveAssets();
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+        }
+        finally
+        {
+            if (opened)
+                EditorSceneManager.CloseScene(scene, true);
+        }
+    }
+
+    static Sprite RenderPortrait(BattleCharacterCatalog.Entry entry)
+    {
+        string path = Root + "/Portraits/" + entry.id + ".png";
+        var preview = EditorSceneManager.NewPreviewScene();
+        var model = Object.Instantiate(entry.prefab);
+        SceneManager.MoveGameObjectToScene(model, preview);
+        var cameraObject = new GameObject("Portrait camera");
+        SceneManager.MoveGameObjectToScene(cameraObject, preview);
+        var camera = cameraObject.AddComponent<Camera>();
+        var target = new RenderTexture(384, 384, 24);
+        var previous = RenderTexture.active;
+        var pixels = new Texture2D(384, 384, TextureFormat.RGB24, false);
+        try
+        {
+            var animator = model.GetComponent<Animator>();
+            RestoreReferencePose(animator);
+            var head = animator.GetBoneTransform(HumanBodyBones.Head);
+            Vector3 focus = head.position + Vector3.up * .08f;
+            camera.scene = preview;
+            camera.clearFlags = CameraClearFlags.SolidColor;
+            camera.backgroundColor = new Color(.075f, .11f, .16f);
+            camera.orthographic = true;
+            camera.orthographicSize = .40f;
+            camera.nearClipPlane = .01f;
+            camera.farClipPlane = 8;
+            camera.transform.position = focus + new Vector3(.25f, .08f, 1.8f);
+            camera.transform.LookAt(focus);
+            camera.targetTexture = target;
+            AddPortraitLight(preview, focus + new Vector3(-1, 2, 3), focus, 1.2f);
+            AddPortraitLight(preview, focus + new Vector3(2, 1, 1), focus, .5f);
+            camera.Render();
+            RenderTexture.active = target;
+            pixels.ReadPixels(new Rect(0, 0, 384, 384), 0, 0);
+            pixels.Apply();
+            File.WriteAllBytes(path, pixels.EncodeToPNG());
+        }
+        finally
+        {
+            RenderTexture.active = previous;
+            camera.targetTexture = null;
+            Object.DestroyImmediate(target);
+            Object.DestroyImmediate(pixels);
+            EditorSceneManager.ClosePreviewScene(preview);
+        }
+        AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceUpdate);
+        var importer = (TextureImporter)AssetImporter.GetAtPath(path);
+        importer.textureType = TextureImporterType.Sprite;
+        importer.spriteImportMode = SpriteImportMode.Single;
+        importer.maxTextureSize = 512;
+        importer.mipmapEnabled = false;
+        importer.isReadable = false;
+        importer.SaveAndReimport();
+        return AssetDatabase.LoadAssetAtPath<Sprite>(path);
+    }
+
+    static void AddPortraitLight(Scene scene, Vector3 position, Vector3 focus, float intensity)
+    {
+        var root = new GameObject("Portrait light");
+        SceneManager.MoveGameObjectToScene(root, scene);
+        root.transform.position = position;
+        root.transform.LookAt(focus);
+        var light = root.AddComponent<Light>();
+        light.type = LightType.Directional;
+        light.intensity = intensity;
+    }
+}
+
+namespace FrankRetarget.Editor
+{
+    public static partial class FrankRetargetBuilder
+    {
+        public static void CreateBattleRosterPortraits() => BattleRosterSetup.CreatePortraits();
+    }
+}

@@ -52,18 +52,22 @@ public sealed partial class BattleSfxBank : ScriptableObject
         public bool TryContactPosition(Animator receiver, out Vector3 position)
         {
             position = Vector3.zero;
-            if (!hasContactPoint || !receiver || !receiver.isHuman)
+            if (!receiver || !receiver.isHuman)
                 return false;
             var bone = contactBone;
             var offset = contactOffset;
+            bool hasAnchor = hasContactPoint;
             foreach (var entry in avatarContacts ?? Array.Empty<ContactAnchor>())
             {
                 if (entry == null || entry.avatar != receiver.avatar)
                     continue;
                 bone = entry.bone;
                 offset = entry.offset;
+                hasAnchor = true;
                 break;
             }
+            if (!hasAnchor)
+                return false;
             var anchor = receiver.GetBoneTransform(bone);
             if (!anchor)
                 return false;

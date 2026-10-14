@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dcfa8577ab5249259fa110adbb5792e, type: 3}
+  m_Name: Vol10_CmnAtemi2
+  m_EditorClassIdentifier: Assembly-CSharp::CombatActionDefinition
+  actionId: Vol10_CmnAtemi2
+  displayName: Atemi 2
+  gameplayTrigger: Resolved light exchange pool; exact animationId; EnqueueCombatAction(side,
+    ID).
+  entryAndInterruption: Living idle participants in the existing grounded lane; unarmed
+    paired drivers; normal 0.22 second approach. Cancel/reset/disable releases both
+    source actors.
+  recovery: Authored stagger and separation, then the existing idle and facing restoration.
+  presentation: Shared light_swing and light_hit; per-avatar surface anchor; existing
+    body audio layer, light hit-stop, flash, impact light and camera impulse. No
+    weapon trail or cinematic override. Health follows the accepted server total;
+    local queue playback does not invent server damage.
+  contacts:
+  - strikeId: Vol10_CmnAtemi2/1
+    attack: {fileID: 7400000, guid: d082b73724850ba88a521877a9fcd7a1, type: 2}
+    reaction: {fileID: 7400000, guid: cc15ef8c89dae9f908ac3ce63d084646, type: 2}
+    seconds: 0.51666665
+    activeWindowSeconds: {x: 0.49999997, y: 0.5333333}
+    strikingLimb: 17
+    targetRegion: Upper body interception
+    directionInVictimSpace: {x: 0, y: 0, z: -1}
+    reactionPolicy: 0
+    result: 1
+    presentationGroup: light_hit
+    continuation: The authored receiver clip shares the pair clock from entry through
+      recoil. Do not restart it at contact. Interruptions cancel the clock and pending
+      cues.

@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0dcfa8577ab5249259fa110adbb5792e, type: 3}
   m_Name: Samurai_Execution01_Pepe
   m_EditorClassIdentifier: Assembly-CSharp::CombatActionDefinition
+  lethalPairVariant:
+    rid: -2
   actionId: Samurai_Execution01
   displayName: Samurai Execution 01
   gameplayTrigger: Explicit heavy action via EnqueueCombatAction(side, Samurai_Execution01),
@@ -95,10 +97,13 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
     - rid: 3912399012286431747
       type: {class: BattleSfxBank/Move, ns: , asm: Assembly-CSharp}
       data:
         label: Samurai_Execution01
+        fighter: 0
         attack: {fileID: 7400002, guid: 3e685dd57e9c78b49b20bef3e8358ae3, type: 3}
         reaction: {fileID: 7400002, guid: b01b411d366a5a344bddf3428a7bc8f7, type: 3}
         cues:
@@ -108,7 +113,7 @@ MonoBehaviour:
           hasContactPoint: 0
           contactBone: 8
           contactOffset: {x: 0, y: 0, z: 0}
-          contactSource:
+          contactSource: 
           avatarContacts: []
           damageOnLanding: 0
         - seconds: 0.3875
@@ -120,8 +125,23 @@ MonoBehaviour:
           contactSource: Weapon
           avatarContacts:
           - avatar: {fileID: 9000000, guid: 59dc3f26824c72872aa4cf6baeec671e, type: 3}
-            bone: 54
-            offset: {x: -0.052857846, y: 0.20075849, z: 0.2287793}
+            bone: 13
+            offset: {x: -0.1189111, y: 0.13992226, z: 0.01155735}
+          - avatar: {fileID: 9000000, guid: 757d9d3f1766533aa895e81a07aa5197, type: 3}
+            bone: 13
+            offset: {x: 1.0263977, y: 0.24807087, z: 0.18404993}
+          - avatar: {fileID: 9000000, guid: 46d0603e6212b5242ad90eb976c3e01b, type: 2}
+            bone: 13
+            offset: {x: -0.008848922, y: 0.089844696, z: -0.046803556}
+          - avatar: {fileID: 9000000, guid: 58fd8a42fecda0f4298e69db74b8608c, type: 2}
+            bone: 15
+            offset: {x: 0.08504257, y: -0.1179309, z: -0.032578174}
+          - avatar: {fileID: 9000000, guid: 4c271a71c98028b4db0b975b9e23ebf1, type: 2}
+            bone: 13
+            offset: {x: -0.025219295, y: 0.108431265, z: -0.09799675}
+          - avatar: {fileID: 9000000, guid: bd3ffe6b6816506428774d2517d3da07, type: 2}
+            bone: 13
+            offset: {x: -0.005435784, y: 0.08825481, z: -0.08131518}
           damageOnLanding: 0
         - seconds: 1.9
           group: blade_swing
@@ -129,7 +149,7 @@ MonoBehaviour:
           hasContactPoint: 0
           contactBone: 8
           contactOffset: {x: 0, y: 0, z: 0}
-          contactSource:
+          contactSource: 
           avatarContacts: []
           damageOnLanding: 0
         - seconds: 2.0291667
@@ -141,8 +161,23 @@ MonoBehaviour:
           contactSource: Weapon
           avatarContacts:
           - avatar: {fileID: 9000000, guid: 59dc3f26824c72872aa4cf6baeec671e, type: 3}
-            bone: 54
-            offset: {x: -0.08493292, y: 0.0039118165, z: 0.32418728}
+            bone: 13
+            offset: {x: -0.06976209, y: -0.03321872, z: -0.06855309}
+          - avatar: {fileID: 9000000, guid: 757d9d3f1766533aa895e81a07aa5197, type: 3}
+            bone: 13
+            offset: {x: 0.39131165, y: 0.68630964, z: -0.15547884}
+          - avatar: {fileID: 9000000, guid: 46d0603e6212b5242ad90eb976c3e01b, type: 2}
+            bone: 13
+            offset: {x: -0.06566209, y: -0.02846707, z: -0.028839773}
+          - avatar: {fileID: 9000000, guid: 58fd8a42fecda0f4298e69db74b8608c, type: 2}
+            bone: 13
+            offset: {x: -0.020084962, y: -0.031946555, z: -0.10823594}
+          - avatar: {fileID: 9000000, guid: 4c271a71c98028b4db0b975b9e23ebf1, type: 2}
+            bone: 13
+            offset: {x: -0.041539542, y: -0.00010124594, z: -0.09936012}
+          - avatar: {fileID: 9000000, guid: bd3ffe6b6816506428774d2517d3da07, type: 2}
+            bone: 13
+            offset: {x: -0.05524872, y: 0.061909012, z: -0.058133803}
           damageOnLanding: 0
         - seconds: 2.7125
           group: body_fall
@@ -154,5 +189,20 @@ MonoBehaviour:
           avatarContacts:
           - avatar: {fileID: 9000000, guid: 59dc3f26824c72872aa4cf6baeec671e, type: 3}
             bone: 10
-            offset: {x: -0.114054605, y: -0.069224976, z: 0.41796014}
+            offset: {x: -0.11405456, y: -0.069225185, z: 0.41796017}
+          - avatar: {fileID: 9000000, guid: 757d9d3f1766533aa895e81a07aa5197, type: 3}
+            bone: 15
+            offset: {x: -0.33464327, y: -0.19320369, z: -0.07072308}
+          - avatar: {fileID: 9000000, guid: 46d0603e6212b5242ad90eb976c3e01b, type: 2}
+            bone: 10
+            offset: {x: -0.006266997, y: 0.15129545, z: -0.21848097}
+          - avatar: {fileID: 9000000, guid: 58fd8a42fecda0f4298e69db74b8608c, type: 2}
+            bone: 9
+            offset: {x: -0.03925533, y: 0.0056261965, z: -0.19366427}
+          - avatar: {fileID: 9000000, guid: 4c271a71c98028b4db0b975b9e23ebf1, type: 2}
+            bone: 10
+            offset: {x: -0.07341741, y: 0.2846366, z: -0.17384419}
+          - avatar: {fileID: 9000000, guid: bd3ffe6b6816506428774d2517d3da07, type: 2}
+            bone: 10
+            offset: {x: -0.07685161, y: 0.2559933, z: -0.15240921}
           damageOnLanding: 0

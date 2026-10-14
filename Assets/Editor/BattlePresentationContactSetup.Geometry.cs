@@ -11,6 +11,7 @@ public static partial class BattlePresentationContactSetup
         public readonly List<int> triangles = new List<int>();
         readonly List<Node> nodes = new List<Node>();
         int[] order;
+        Vector3[] centers;
         struct Node
         {
             public Bounds bounds;
@@ -20,7 +21,12 @@ public static partial class BattlePresentationContactSetup
         {
             if (triangles.Count == 0) throw new InvalidOperationException("No rendered contact triangles.");
             order = new int[triangles.Count / 3];
-            for (int i = 0; i < order.Length; i++) order[i] = i;
+            centers = new Vector3[order.Length];
+            for (int i = 0; i < order.Length; i++)
+            {
+                order[i] = i;
+                centers[i] = Center(i);
+            }
             nodes.Clear();
             Split(0, order.Length);
         }
@@ -38,7 +44,7 @@ public static partial class BattlePresentationContactSetup
                 int axis = size.x > size.y ? 0 : 1;
                 if (size.z > size[axis]) axis = 2;
                 Array.Sort(order, start, count,
-                    Comparer<int>.Create((a, b) => Center(a)[axis].CompareTo(Center(b)[axis])));
+                    Comparer<int>.Create((a, b) => centers[a][axis].CompareTo(centers[b][axis])));
                 int half = count / 2;
                 node.left = Split(start, half);
                 node.right = Split(start + half, count - half);

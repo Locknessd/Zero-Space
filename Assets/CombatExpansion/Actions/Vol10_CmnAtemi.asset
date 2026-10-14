@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0dcfa8577ab5249259fa110adbb5792e, type: 3}
   m_Name: Vol10_CmnAtemi
   m_EditorClassIdentifier: Assembly-CSharp::CombatActionDefinition
+  lethalPairVariant:
+    rid: -2
   actionId: Vol10_CmnAtemi
   displayName: Atemi 1
   gameplayTrigger: Resolved light exchange pool; exact animationId; EnqueueCombatAction(side,
@@ -24,6 +26,9 @@ MonoBehaviour:
     body audio layer, light hit-stop, flash, impact light and camera impulse. No
     weapon trail or cinematic override. Health follows the accepted server total;
     local queue playback does not invent server damage.
+  presentationProfile:
+    rid: -2
+  authoredAttackSources: []
   contacts:
   - strikeId: Vol10_CmnAtemi/1
     attack: {fileID: 7400000, guid: e47354cd8b0fa220b9e0b4c75f9f0fba, type: 2}
@@ -36,6 +41,12 @@ MonoBehaviour:
     reactionPolicy: 0
     result: 2
     presentationGroup: light_hit
+    nonDamagingInteraction: 0
     continuation: The authored receiver clip shares the pair clock from entry through
       recoil. Do not restart it at contact. Interruptions cancel the clock and pending
       cues.
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }

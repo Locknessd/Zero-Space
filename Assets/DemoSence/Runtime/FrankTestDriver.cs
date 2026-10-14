@@ -4,7 +4,7 @@ using UnityEngine;
 namespace FrankRetarget
 {
     // A source skeleton and its calibration only: no visible character is stored here.
-    public sealed class FrankTestDriver : MonoBehaviour
+    public sealed partial class FrankTestDriver : MonoBehaviour
     {
         public FrankPoseRetarget pose;
         public Vector3 characterScale;
@@ -24,7 +24,8 @@ namespace FrankRetarget
             pose.enabled=false;
             if (preserveCharacterScale)
             {
-                var scale = character.transform.localScale;
+                var appearance = character.GetComponent<BattleCharacterAppearance>();
+                var scale = appearance ? appearance.SourceMotionScale(characterScale) : character.transform.localScale;
                 // Battle owns visible model size. Resize the hidden source equally
                 // so its authored hips, limb contacts and weapons still fit.
                 transform.localScale = Vector3.Scale(transform.localScale, new Vector3(
@@ -32,6 +33,12 @@ namespace FrankRetarget
             }
             else character.transform.localScale=characterScale;
             pose.character=character;
+            if (!character.transform.Find(hips))
+            {
+                BindHumanoid(character);
+                pose.Initialize();
+                return;
+            }
             pose.targetHips=character.transform.Find(hips);
             for(int i=0;i<targetLimbs.Length;i++)
             {

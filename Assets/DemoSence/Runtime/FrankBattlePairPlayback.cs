@@ -149,6 +149,8 @@ namespace FrankRetarget
             lethalVariant = selectedVariant;
             pair = move.sourcePair;
             Move = move;
+            slapProfile = move.moveName.StartsWith("SlapFace_", StringComparison.Ordinal)
+                ? selectionBank?.FindMove(move) : null;
             attacker = source;
             receiver = target;
             lethal = isLethal;
@@ -270,6 +272,7 @@ namespace FrankRetarget
             ApplyReceiverFloorLift();
             attackActor.ApplySourceWeaponDisplacement(attackActor.Pose.targetHips.position - originalAttackHips);
             attackActor.ApplySourceWeaponEntryGrip(SampleTime);
+            ApplySlapContact();
         }
 
         void ApplyReceiverFloorLift()

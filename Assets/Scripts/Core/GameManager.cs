@@ -100,6 +100,7 @@ public partial class GameManager : MonoBehaviour
             Fault("BattleScene chưa cấu hình đủ hai CharacterCombat hợp lệ; event vẫn được giữ tại WebSocket.");
             return;
         }
+        InitializeCharacterSelection();
         if (positioningController != null)
             positioningController.SetFighters(leftCombat != null ? leftCombat.Animator.transform : null,
                 rightCombat != null ? rightCombat.Animator.transform : null);
@@ -198,6 +199,7 @@ public partial class GameManager : MonoBehaviour
     private void Update()
     {
         if (!IsReadyForBattleEvents || (_loadingScene != null && !_loadingScene.IsBattlePresentationReady)) return;
+        ApplyPendingCharacters();
         SubscribeSocket();
         ReceivePendingBattleMessages();
         // Incoming match events remain queued while the local animation browser owns playback.
@@ -760,8 +762,9 @@ public partial class GameManager : MonoBehaviour
     }
 
     // Temporary UI names; backend IDs and their side mappings remain separate.
-    private static string DisplayNameForSide(PlayerUI.Side side) =>
-        side == PlayerUI.Side.Left ? "Mankey" : "Meme";
+    private string DisplayNameForSide(PlayerUI.Side side) =>
+        CombatFor(side)?.GetComponent<BattleCharacterAppearance>()?.DisplayName ??
+        (side == PlayerUI.Side.Left ? "Mankey" : "Meme");
 
     private string CharacterIdForSide(PlayerUI.Side side)
     {

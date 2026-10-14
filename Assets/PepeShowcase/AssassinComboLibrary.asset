@@ -1,0 +1,510 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ef13dca95a84884c9dc1ac992adcd0d, type: 3}
+  m_Name: AssassinComboLibrary
+  m_EditorClassIdentifier: Assembly-CSharp::ZeroSpace.Showcase.PepeShowcaseLibrary
+  pepePrefab: {fileID: 1221134045731980345, guid: fea5878b7ced08e41a059d381aca4ca0,
+    type: 3}
+  mankeyPrefab: {fileID: 3045007571586123555, guid: f936097d515fc1644b97883e46f42f1c,
+    type: 3}
+  takes:
+  - title: ASSASSIN / LONG COMBO
+    animation: {fileID: 7400000, guid: 925ec25bebb58b845a5d62595b6dcc8b, type: 3}
+    attackTrack: {fileID: 11400000, guid: 4cc7fc14d0a3525479da4b1b6dcb939f, type: 2}
+    pepeDriver: {fileID: 9116350480421428431, guid: a2b012303fe949f43a9ca8e2f853d87c,
+      type: 3}
+    mankeyDriver: {fileID: 5664941482650303579, guid: 2c4c77c26503c544098a3aa43ce306fa,
+      type: 3}
+    grounding: {fileID: 0}
+    animatorName: AssassinLongCombo
+    nativeWeaponEffects: 1
+    cues:
+    - seconds: 0.16666667
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 0
+      effectEnd: 0
+      sounds:
+      - clip: {fileID: 8300000, guid: d06e62ca9e9dd7143ac7a057c7d3cf5c, type: 3}
+        offset: 0.0261678
+        volume: 0.34
+        pitch: 1
+    - seconds: 0.36666667
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 0
+      effectEnd: 0
+      sounds:
+      - clip: {fileID: 8300000, guid: 986bbc0999a025947bb88fe1e27c0902, type: 3}
+        offset: 0.027188208
+        volume: 0.34
+        pitch: 1
+    - seconds: 0.81666666
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 0
+      effectEnd: 0
+      sounds:
+      - clip: {fileID: 8300000, guid: 06b0b421fe39838478c1b1799ced8362, type: 3}
+        offset: 0.014739229
+        volume: 0.34
+        pitch: 1
+    - seconds: 1.3166667
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 0
+      effectEnd: 0
+      sounds:
+      - clip: {fileID: 8300000, guid: d06e62ca9e9dd7143ac7a057c7d3cf5c, type: 3}
+        offset: 0.0261678
+        volume: 0.34
+        pitch: 1
+    - seconds: 1.5
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 0
+      effectEnd: 0
+      sounds:
+      - clip: {fileID: 8300000, guid: 986bbc0999a025947bb88fe1e27c0902, type: 3}
+        offset: 0.027188208
+        volume: 0.34
+        pitch: 1
+    - seconds: 1.7666667
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 0
+      effectEnd: 0
+      sounds:
+      - clip: {fileID: 8300000, guid: 06b0b421fe39838478c1b1799ced8362, type: 3}
+        offset: 0.014739229
+        volume: 0.34
+        pitch: 1
+    - seconds: 2.1066666
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 1.8733332
+      effectEnd: 1.8733332
+      sounds:
+      - clip: {fileID: 8300000, guid: d06e62ca9e9dd7143ac7a057c7d3cf5c, type: 3}
+        offset: 0.0261678
+        volume: 0.34
+        pitch: 1
+    - seconds: 2.34
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 1.8733332
+      effectEnd: 1.8733332
+      sounds:
+      - clip: {fileID: 8300000, guid: 986bbc0999a025947bb88fe1e27c0902, type: 3}
+        offset: 0.027188208
+        volume: 0.34
+        pitch: 1
+    - seconds: 2.54
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 1.8733332
+      effectEnd: 1.8733332
+      sounds:
+      - clip: {fileID: 8300000, guid: 06b0b421fe39838478c1b1799ced8362, type: 3}
+        offset: 0.014739229
+        volume: 0.34
+        pitch: 1
+    - seconds: 2.9066665
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 1.8733332
+      effectEnd: 1.8733332
+      sounds:
+      - clip: {fileID: 8300000, guid: d06e62ca9e9dd7143ac7a057c7d3cf5c, type: 3}
+        offset: 0.0261678
+        volume: 0.34
+        pitch: 1
+    - seconds: 3.1566665
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 1.8733332
+      effectEnd: 1.8733332
+      sounds:
+      - clip: {fileID: 8300000, guid: 986bbc0999a025947bb88fe1e27c0902, type: 3}
+        offset: 0.027188208
+        volume: 0.34
+        pitch: 1
+    - seconds: 3.54
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 1.8733332
+      effectEnd: 1.8733332
+      sounds:
+      - clip: {fileID: 8300000, guid: 06b0b421fe39838478c1b1799ced8362, type: 3}
+        offset: 0.014739229
+        volume: 0.34
+        pitch: 1
+    - seconds: 3.88
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 3.7133334
+      effectEnd: 3.7133334
+      sounds:
+      - clip: {fileID: 8300000, guid: d06e62ca9e9dd7143ac7a057c7d3cf5c, type: 3}
+        offset: 0.0261678
+        volume: 0.34
+        pitch: 1
+    - seconds: 4.08
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 3.7133334
+      effectEnd: 3.7133334
+      sounds:
+      - clip: {fileID: 8300000, guid: 986bbc0999a025947bb88fe1e27c0902, type: 3}
+        offset: 0.027188208
+        volume: 0.34
+        pitch: 1
+    - seconds: 4.53
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 3.7133334
+      effectEnd: 3.7133334
+      sounds:
+      - clip: {fileID: 8300000, guid: 06b0b421fe39838478c1b1799ced8362, type: 3}
+        offset: 0.014739229
+        volume: 0.34
+        pitch: 1
+    - seconds: 5.03
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 3.7133334
+      effectEnd: 3.7133334
+      sounds:
+      - clip: {fileID: 8300000, guid: d06e62ca9e9dd7143ac7a057c7d3cf5c, type: 3}
+        offset: 0.0261678
+        volume: 0.34
+        pitch: 1
+    - seconds: 5.213333
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 3.7133334
+      effectEnd: 3.7133334
+      sounds:
+      - clip: {fileID: 8300000, guid: 986bbc0999a025947bb88fe1e27c0902, type: 3}
+        offset: 0.027188208
+        volume: 0.34
+        pitch: 1
+    - seconds: 5.48
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 3.7133334
+      effectEnd: 3.7133334
+      sounds:
+      - clip: {fileID: 8300000, guid: 06b0b421fe39838478c1b1799ced8362, type: 3}
+        offset: 0.014739229
+        volume: 0.34
+        pitch: 1
+    - seconds: 5.8199997
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 5.5866666
+      effectEnd: 5.5866666
+      sounds:
+      - clip: {fileID: 8300000, guid: d06e62ca9e9dd7143ac7a057c7d3cf5c, type: 3}
+        offset: 0.0261678
+        volume: 0.34
+        pitch: 1
+    - seconds: 6.0533333
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 5.5866666
+      effectEnd: 5.5866666
+      sounds:
+      - clip: {fileID: 8300000, guid: 986bbc0999a025947bb88fe1e27c0902, type: 3}
+        offset: 0.027188208
+        volume: 0.34
+        pitch: 1
+    - seconds: 6.253333
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 5.5866666
+      effectEnd: 5.5866666
+      sounds:
+      - clip: {fileID: 8300000, guid: 06b0b421fe39838478c1b1799ced8362, type: 3}
+        offset: 0.014739229
+        volume: 0.34
+        pitch: 1
+    - seconds: 6.62
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 5.5866666
+      effectEnd: 5.5866666
+      sounds:
+      - clip: {fileID: 8300000, guid: d06e62ca9e9dd7143ac7a057c7d3cf5c, type: 3}
+        offset: 0.0261678
+        volume: 0.34
+        pitch: 1
+    - seconds: 6.87
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 5.5866666
+      effectEnd: 5.5866666
+      sounds:
+      - clip: {fileID: 8300000, guid: 986bbc0999a025947bb88fe1e27c0902, type: 3}
+        offset: 0.027188208
+        volume: 0.34
+        pitch: 1
+    - seconds: 7.253333
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 5.5866666
+      effectEnd: 5.5866666
+      sounds:
+      - clip: {fileID: 8300000, guid: 06b0b421fe39838478c1b1799ced8362, type: 3}
+        offset: 0.014739229
+        volume: 0.34
+        pitch: 1
+    - seconds: 7.5933332
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 6.86
+      effectEnd: 6.86
+      sounds:
+      - clip: {fileID: 8300000, guid: d06e62ca9e9dd7143ac7a057c7d3cf5c, type: 3}
+        offset: 0.0261678
+        volume: 0.34
+        pitch: 1
+    - seconds: 7.7933335
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 6.86
+      effectEnd: 6.86
+      sounds:
+      - clip: {fileID: 8300000, guid: 986bbc0999a025947bb88fe1e27c0902, type: 3}
+        offset: 0.027188208
+        volume: 0.34
+        pitch: 1
+    - seconds: 8.06
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 6.86
+      effectEnd: 6.86
+      sounds:
+      - clip: {fileID: 8300000, guid: 06b0b421fe39838478c1b1799ced8362, type: 3}
+        offset: 0.014739229
+        volume: 0.34
+        pitch: 1
+    - seconds: 8.193334
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 6.86
+      effectEnd: 6.86
+      sounds:
+      - clip: {fileID: 8300000, guid: d06e62ca9e9dd7143ac7a057c7d3cf5c, type: 3}
+        offset: 0.0261678
+        volume: 0.34
+        pitch: 1
+    - seconds: 8.36
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 6.86
+      effectEnd: 6.86
+      sounds:
+      - clip: {fileID: 8300000, guid: 986bbc0999a025947bb88fe1e27c0902, type: 3}
+        offset: 0.027188208
+        volume: 0.34
+        pitch: 1
+    - seconds: 8.61
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 6.86
+      effectEnd: 6.86
+      sounds:
+      - clip: {fileID: 8300000, guid: 06b0b421fe39838478c1b1799ced8362, type: 3}
+        offset: 0.014739229
+        volume: 0.34
+        pitch: 1
+    - seconds: 8.976666
+      group: steel_swing
+      gun: 0
+      swing: 1
+      effectStart: 6.86
+      effectEnd: 6.86
+      sounds:
+      - clip: {fileID: 8300000, guid: d06e62ca9e9dd7143ac7a057c7d3cf5c, type: 3}
+        offset: 0.0261678
+        volume: 0.34
+        pitch: 1
+    slashPrefab: {fileID: 0}
+    slashScale: 1
+    trailColor: {r: 1, g: 0.78, b: 0.5, a: 0.72}
+    trailLifetime: 0.085
+    bladeStart: 0.24
+    yawStart: -12
+    yawEnd: -12
+    cameraDistance: 3.8
+  weaponTrailMaterial: {fileID: 2100000, guid: c2a2e34187896844e9b1552f8880f74e, type: 2}
+  muzzlePrefab: {fileID: 610250729418347942, guid: 0dbfdf4710b45ce41a554f39160e2712,
+    type: 3}
+  bladeGeometry:
+  - mesh: {fileID: -1272481795433867914, guid: d8dd30cce5c56764b847fc7ea75a2ff3, type: 3}
+    bladeBase: {x: 0.08226412, y: 0.13189182, z: -0.0167174}
+    bladeTip: {x: -0.085597865, y: -0.6307515, z: -0.011958685}
+    baseBones:
+    - bone: 5
+      point: {x: -0.016717462, y: 0.13189174, z: -0.08226412}
+      weight: 1
+    tipBones:
+    - bone: 23
+      point: {x: -0.22377057, y: -0.011613956, z: -0.08559784}
+      weight: 1
+  - mesh: {fileID: -6558988271104613897, guid: d8dd30cce5c56764b847fc7ea75a2ff3, type: 3}
+    bladeBase: {x: 0.00000026538854, y: 0.14208625, z: 0.05907829}
+    bladeTip: {x: 0.00000029404214, y: -0.9047675, z: -0.0000003814697}
+    baseBones:
+    - bone: 0
+      point: {x: -0.00000056439285, y: 0.059079062, z: -0.14208615}
+      weight: 1
+    tipBones:
+    - bone: 8
+      point: {x: -0.21750155, y: 0.0000008689211, z: -0.00000036136456}
+      weight: 1
+  - mesh: {fileID: -7822665905410339645, guid: 60816012dd2c96449be704f9ba3e7bdc, type: 3}
+    bladeBase: {x: 0.00000010574111, y: 0.023428118, z: 0.08340893}
+    bladeTip: {x: 0.00000078167074, y: -0.12074976, z: 1.63281}
+    baseBones:
+    - bone: 0
+      point: {x: 0.00000024686895, y: 0.02342825, z: 0.083409}
+      weight: 1
+    tipBones:
+    - bone: 0
+      point: {x: 0.00000088426805, y: -0.12074965, z: 1.6328092}
+      weight: 1
+  - mesh: {fileID: 8142724638417267561, guid: 378caf935aaa27a48a2ce063a9b9f60c, type: 3}
+    bladeBase: {x: 0.5922219, y: 0.19806623, z: 1.0930794}
+    bladeTip: {x: 0.66889906, y: -1.5573279, z: 0.6401363}
+    baseBones:
+    - bone: 0
+      point: {x: 0.0064838883, y: 0.019956185, z: -0.245443}
+      weight: 1
+    tipBones:
+    - bone: 2
+      point: {x: -0.8895859, y: 0.00000080145816, z: 0.000001328423}
+      weight: 1
+  - mesh: {fileID: 6469963104974706124, guid: 23f690a146a2b8e418e1ab3e0aea5064, type: 3}
+    bladeBase: {x: -0.041075725, y: 0.007210151, z: 0.5331046}
+    bladeTip: {x: 0.018077556, y: 0.0019492721, z: -0.38602677}
+    baseBones:
+    - bone: 0
+      point: {x: -0.041075874, y: 0.0072101625, z: 0.5331044}
+      weight: 1
+    tipBones:
+    - bone: 0
+      point: {x: 0.018077562, y: 0.0019494685, z: -0.38602683}
+      weight: 1
+  - mesh: {fileID: -4025173070523901678, guid: 3f4878697c191ea46886ad1a0c45435e, type: 3}
+    bladeBase: {x: 0.000000043551907, y: -0.014403165, z: -0.051559083}
+    bladeTip: {x: 0.000000123726, y: -0.00000022681664, z: 0.53653485}
+    baseBones:
+    - bone: 0
+      point: {x: -0.00000006077696, y: -0.023878971, z: -0.08547994}
+      weight: 1
+    tipBones:
+    - bone: 0
+      point: {x: 0.00000013588472, y: -0.00000021805906, z: 0.88952035}
+      weight: 1
+  - mesh: {fileID: -6558988271104613897, guid: 3f4878697c191ea46886ad1a0c45435e, type: 3}
+    bladeBase: {x: 0.00000026538854, y: 0.14208625, z: 0.05907829}
+    bladeTip: {x: 0.00000029404214, y: -0.9047675, z: -0.0000003814697}
+    baseBones:
+    - bone: 0
+      point: {x: -0.0000005175269, y: 0.05907906, z: -0.14208624}
+      weight: 1
+    tipBones:
+    - bone: 8
+      point: {x: -0.21750149, y: 0.00000077723814, z: -0.0000005385047}
+      weight: 1
+  - mesh: {fileID: -8935808266683310346, guid: 7e2666062ee2d55429beea6899bf89dc, type: 3}
+    bladeBase: {x: -0.4884759, y: 0.5605189, z: 0.38159308}
+    bladeTip: {x: 0.014894562, y: -0.43593603, z: 1.3475429}
+    baseBones:
+    - bone: 0
+      point: {x: -1.0683202, y: -0.0013546519, z: -0.09072973}
+      weight: 1
+    tipBones:
+    - bone: 0
+      point: {x: 0.40472195, y: -0.004236333, z: 0.0067464532}
+      weight: 1
+  - mesh: {fileID: -8745498709488003525, guid: 7e2666062ee2d55429beea6899bf89dc, type: 3}
+    bladeBase: {x: 0.58210504, y: -0.10272227, z: 1.0010974}
+    bladeTip: {x: 0.5899489, y: -0.9625499, z: 0.8115127}
+    baseBones:
+    - bone: 0
+      point: {x: -0.0606242, y: 0.00042985546, z: -0.044235513}
+      weight: 1
+    tipBones:
+    - bone: 1
+      point: {x: -0.8604591, y: -0.0013540293, z: -0.077409916}
+      weight: 1
+  - mesh: {fileID: 4686849319519084627, guid: 2c73e3dd92553e942b71dcb39237c52c, type: 3}
+    bladeBase: {x: 0.5912469, y: 0.13412572, z: 1.0408287}
+    bladeTip: {x: 0.5963388, y: -0.7426327, z: 0.8520157}
+    baseBones:
+    - bone: 0
+      point: {x: 0.0002429985, y: 0.018614175, z: -0.17833704}
+      weight: 1
+    tipBones:
+    - bone: 0
+      point: {x: -0.0005053465, y: 0.057558738, z: 0.7176897}
+      weight: 1
+  - mesh: {fileID: 4300002, guid: 3e685dd57e9c78b49b20bef3e8358ae3, type: 3}
+    bladeBase: {x: -0.037367444, y: 0.0013889992, z: -0.3353859}
+    bladeTip: {x: 0.1354254, y: -0.008273766, z: -2.3919592}
+    baseBones: []
+    tipBones: []
+  - mesh: {fileID: 8456831307905354113, guid: c80ead7ac0634a539b64f1ce6f3a0efc, type: 3}
+    bladeBase: {x: -0.014635601, y: -0.0063570496, z: 0.04324855}
+    bladeTip: {x: -0.074077226, y: -0.000000042915342, z: -0.62632227}
+    baseBones: []
+    tipBones: []
+  excludedBladeMeshes:
+  - {fileID: 4300004, guid: 3e685dd57e9c78b49b20bef3e8358ae3, type: 3}
+  - {fileID: 4300004, guid: b01b411d366a5a344bddf3428a7bc8f7, type: 3}
+  introSeconds: 0.6
+  leadSeconds: 0.18
+  holdSeconds: 0.35
+  outroSeconds: 0.6

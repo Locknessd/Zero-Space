@@ -1630,3 +1630,3345 @@ UnityEngine.UnitySynchronizationContext:ExecuteTasks ()
 2026-10-10T12:31:29.3283884Z Error   graphicsApiMask: 2048 -> 264192
 
 
+2026-10-11T09:09:02.3308106Z Error connection.state_change
+oldState=Connecting newState=Failed error=WebSocketException: Unable to connect to the remote server (after 10 attempts over 3.8s)
+UnityEngine.Debug:LogError (object)
+Unity.AI.Tracing.ConsoleSink:LogToConsole (string,string,System.Exception) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceSinks.cs:307)
+Unity.AI.Tracing.ConsoleSink:Write (Unity.AI.Tracing.TraceEvent) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceSinks.cs:277)
+Unity.AI.Tracing.TraceWriter:WriteEventInternal (string,string,Unity.AI.Tracing.TraceEventOptions,string,System.Nullable`1<int>) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceWriter.cs:373)
+Unity.AI.Tracing.TraceWriter:Event (string,Unity.AI.Tracing.TraceEventOptions) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceWriter.cs:297)
+Unity.AI.Tracing.Trace:Event (string,Unity.AI.Tracing.TraceEventOptions) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/Trace.cs:79)
+Unity.Relay.Editor.RelayService:TransitionTo (Unity.Relay.Editor.RelayStatus,string) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Editor/Assistant/Relay/RelayService.cs:1251)
+Unity.Relay.Editor.RelayService/<ConnectWebSocketAsync>d__103:MoveNext () (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Editor/Assistant/Relay/RelayService.cs:678)
+UnityEngine.UnitySynchronizationContext:ExecuteTasks ()
+
+2026-10-11T09:14:20.7197687Z Error connection.state_change
+oldState=Running newState=Failed error=Process exited unexpectedly. code=0
+UnityEngine.Debug:LogError (object)
+Unity.AI.Tracing.ConsoleSink:LogToConsole (string,string,System.Exception) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceSinks.cs:307)
+Unity.AI.Tracing.ConsoleSink:Write (Unity.AI.Tracing.TraceEvent) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceSinks.cs:277)
+Unity.AI.Tracing.TraceWriter:WriteEventInternal (string,string,Unity.AI.Tracing.TraceEventOptions,string,System.Nullable`1<int>) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceWriter.cs:373)
+Unity.AI.Tracing.TraceWriter:Event (string,Unity.AI.Tracing.TraceEventOptions) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceWriter.cs:297)
+Unity.AI.Tracing.Trace:Event (string,Unity.AI.Tracing.TraceEventOptions) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/Trace.cs:79)
+Unity.Relay.Editor.RelayService:TransitionTo (Unity.Relay.Editor.RelayStatus,string) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Editor/Assistant/Relay/RelayService.cs:1251)
+Unity.Relay.Editor.RelayService/<>c__DisplayClass119_0:<SetupProcessMonitoring>b__1 () (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Editor/Assistant/Relay/RelayService.cs:1185)
+Unity.AI.Toolkit.EditorTask/<>c__DisplayClass21_0:<DelayCall>b__0 () (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Toolkit.Async/EditorTask.cs:375)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-11T09:22:10.4911657Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T09:22:10.5932583Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T09:22:10.6068311Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T09:30:42.7271403Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T09:30:42.7488255Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T09:34:05.5359372Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T09:34:05.5759796Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T09:34:05.5810268Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T09:38:36.3723014Z Error Assets\Editor\BattleSlapPositionReview.cs(68,33): error CS0103: The name 'CheckStableEvaluation' does not exist in the current context
+
+2026-10-11T09:38:36.4491575Z Error Assets\Editor\BattleSlapPositionReview.cs(80,29): error CS0103: The name 'CheckFinalSpacing' does not exist in the current context
+
+2026-10-11T09:38:36.4588889Z Error Assets\Editor\BattleSlapPositionReview.cs(91,17): error CS0103: The name 'ValidatePreservedMotion' does not exist in the current context
+
+2026-10-11T09:39:47.2096040Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T09:39:47.2106017Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T09:39:47.2116272Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T09:39:47.2116272Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T09:40:18.4059160Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T09:40:18.4089057Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T09:40:18.4862664Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T09:40:18.4902542Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T09:40:19.4773642Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T09:40:19.4773642Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T09:40:19.5412323Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T09:40:19.5412323Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T09:40:27.6839827Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T09:40:27.6879716Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T09:40:28.6089582Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T09:40:28.6130066Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T09:41:33.4083384Z Error connection.state_change
+oldState=Connecting newState=Failed error=WebSocketException: Unable to connect to the remote server (after 10 attempts over 3.8s)
+UnityEngine.Debug:LogError (object)
+Unity.AI.Tracing.ConsoleSink:LogToConsole (string,string,System.Exception) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceSinks.cs:307)
+Unity.AI.Tracing.ConsoleSink:Write (Unity.AI.Tracing.TraceEvent) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceSinks.cs:277)
+Unity.AI.Tracing.TraceWriter:WriteEventInternal (string,string,Unity.AI.Tracing.TraceEventOptions,string,System.Nullable`1<int>) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceWriter.cs:373)
+Unity.AI.Tracing.TraceWriter:Event (string,Unity.AI.Tracing.TraceEventOptions) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceWriter.cs:297)
+Unity.AI.Tracing.Trace:Event (string,Unity.AI.Tracing.TraceEventOptions) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/Trace.cs:79)
+Unity.Relay.Editor.RelayService:TransitionTo (Unity.Relay.Editor.RelayStatus,string) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Editor/Assistant/Relay/RelayService.cs:1251)
+Unity.Relay.Editor.RelayService/<ConnectWebSocketAsync>d__103:MoveNext () (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Editor/Assistant/Relay/RelayService.cs:678)
+UnityEngine.UnitySynchronizationContext:ExecuteTasks ()
+
+2026-10-11T09:48:12.6435815Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T09:48:12.6675179Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T09:48:12.6735018Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T10:50:45.0012473Z Error connection.state_change
+oldState=Connecting newState=Failed error=WebSocketException: Unable to connect to the remote server (after 10 attempts over 3.7s)
+UnityEngine.Debug:LogError (object)
+Unity.AI.Tracing.ConsoleSink:LogToConsole (string,string,System.Exception) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceSinks.cs:307)
+Unity.AI.Tracing.ConsoleSink:Write (Unity.AI.Tracing.TraceEvent) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceSinks.cs:277)
+Unity.AI.Tracing.TraceWriter:WriteEventInternal (string,string,Unity.AI.Tracing.TraceEventOptions,string,System.Nullable`1<int>) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceWriter.cs:373)
+Unity.AI.Tracing.TraceWriter:Event (string,Unity.AI.Tracing.TraceEventOptions) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceWriter.cs:297)
+Unity.AI.Tracing.Trace:Event (string,Unity.AI.Tracing.TraceEventOptions) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/Trace.cs:79)
+Unity.Relay.Editor.RelayService:TransitionTo (Unity.Relay.Editor.RelayStatus,string) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Editor/Assistant/Relay/RelayService.cs:1251)
+Unity.Relay.Editor.RelayService/<ConnectWebSocketAsync>d__103:MoveNext () (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Editor/Assistant/Relay/RelayService.cs:678)
+UnityEngine.UnitySynchronizationContext:ExecuteTasks ()
+
+2026-10-11T11:23:15.8506961Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T11:23:15.9074151Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T11:23:16.0243372Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T11:29:24.1708072Z Error Assets\PepeShowcase\Editor\PepeShowcaseSetup.Stage.cs(75,62): error CS0117: 'BlendMode' does not contain a definition for 'SrcAlpha'
+
+2026-10-11T11:29:24.2038611Z Error Assets\PepeShowcase\Editor\PepeShowcaseSetup.Stage.cs(76,62): error CS0117: 'BlendMode' does not contain a definition for 'OneMinusSrcAlpha'
+
+2026-10-11T11:29:31.3496154Z Exception Exception: Unknown job CreatePepeAttackShowcase
+FrankRetarget.Editor.FrankRetargetJobs.Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:43)
+UnityEngine.Debug:LogException(Exception)
+FrankRetarget.Editor.FrankRetargetJobs:Poll() (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:48)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions()
+
+2026-10-11T11:33:49.9411533Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T11:33:50.1499516Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T11:33:50.1547493Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T11:38:35.8967423Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T11:38:35.9007305Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T11:38:35.9057170Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T11:42:04.0513820Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T11:42:04.0523784Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T11:42:04.0533752Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T11:42:04.0543726Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T11:42:23.0944192Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T11:42:23.0984084Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T11:42:23.1499067Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T11:42:23.1528990Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T11:44:15.8000323Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T11:44:15.8000323Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T11:44:15.8109972Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T11:44:15.8119942Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T11:44:35.1162304Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T11:44:35.1212177Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T11:44:35.1456628Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T11:44:35.1486549Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T11:44:47.5175487Z Exception InvalidOperationException: Another loaded scene can enter the recording.
+FrankRetarget.Editor.PepeShowcaseCapture.CheckPose (ZeroSpace.Showcase.PepeAttackShowcase showcase) (at Assets/PepeShowcase/Editor/PepeShowcaseCapture.Validation.cs:110)
+FrankRetarget.Editor.PepeShowcaseCapture.Validate () (at Assets/PepeShowcase/Editor/PepeShowcaseCapture.Validation.cs:42)
+FrankRetarget.Editor.FrankRetargetBuilder.ValidatePepeAttackShowcase () (at Assets/PepeShowcase/Editor/PepeShowcaseSetup.cs:141)
+System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) (at <f713e1c3c5f545ce9b1df47230f4f853>:0)
+Rethrow as TargetInvocationException: Exception has been thrown by the target of an invocation.
+System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) (at <f713e1c3c5f545ce9b1df47230f4f853>:0)
+System.Reflection.MethodBase.Invoke (System.Object obj, System.Object[] parameters) (at <f713e1c3c5f545ce9b1df47230f4f853>:0)
+FrankRetarget.Editor.FrankRetargetJobs.Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEngine.Debug:LogException(Exception)
+FrankRetarget.Editor.FrankRetargetJobs:Poll() (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:48)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions()
+
+2026-10-11T11:47:22.1518785Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T11:47:22.1533825Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T11:47:22.1533825Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T11:47:22.1543800Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T11:47:41.6117341Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T11:47:41.6167200Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T11:47:41.6873916Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T11:47:41.6903834Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T11:51:23.0122683Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T11:51:23.0132658Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T11:51:23.0162579Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T11:51:23.0162579Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T11:51:40.8188616Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T11:51:40.8238475Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T11:51:40.8298332Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T11:54:08.8440382Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T11:54:08.8500214Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T11:54:08.8500214Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T11:54:08.8550085Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T11:54:28.2777339Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T11:54:28.2817227Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T11:54:28.2946879Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T11:54:28.2966847Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T11:59:48.2536546Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T11:59:48.2915513Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T11:59:48.4072877Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T11:59:48.4082852Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:02:19.3576026Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T12:02:19.3728487Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:02:19.3808231Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:04:42.5071589Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T12:04:42.5081562Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:04:42.5181291Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T12:04:42.5181291Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:05:33.5728187Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T12:05:33.5778064Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:05:33.5927652Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T12:05:33.5977519Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:08:36.6868266Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T12:08:36.7033465Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:08:36.7343925Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:09:03.7185172Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T12:09:03.7225070Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:09:03.7294883Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T12:09:03.7324800Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:15:48.8952655Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T12:15:48.9501190Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:15:48.9589044Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:16:16.6249210Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T12:16:16.6299077Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:16:16.6309052Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T12:16:16.6348947Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:30:31.1981673Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T12:30:31.1998452Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T12:30:31.2188839Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:30:31.2198814Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:32:01.7780204Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T12:32:01.7994972Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:32:01.8044846Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:32:26.7415499Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T12:32:26.7465421Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:32:26.7681439Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T12:32:26.7711348Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:34:02.3957955Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T12:34:02.3967940Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:34:02.4209843Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T12:34:02.4209843Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:34:40.3544501Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T12:34:40.3594367Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:34:40.3892016Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T12:34:40.3937862Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:35:16.9263007Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T12:35:16.9339643Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:35:16.9586337Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T12:35:16.9649632Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:40:01.8447700Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T12:40:01.8447700Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:40:01.8684357Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T12:40:01.8684357Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:41:53.9848268Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T12:41:54.1224576Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:41:54.2112652Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T12:41:54.2312282Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:42:55.0459672Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T12:42:55.0509536Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:42:55.0509536Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T12:42:55.0549430Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:45:43.3161175Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T12:45:43.3639892Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:45:43.3719680Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:47:10.5299414Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T12:47:10.5358950Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:47:10.5507108Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T12:47:10.5553264Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:47:22.7072200Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T12:47:22.7140657Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:47:24.3523464Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T12:47:24.3583308Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:56:58.9243418Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T12:56:58.9243418Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T12:57:00.6151769Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T12:57:00.6151769Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T13:01:25.4542425Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T13:01:25.4759015Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T13:01:25.5038868Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T13:01:25.5064535Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T13:05:27.8467900Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T13:05:27.8890072Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T13:05:27.8984922Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T13:05:40.9910291Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T13:05:40.9910291Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T13:05:41.2255752Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T13:05:41.2255752Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T13:05:54.4895685Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T13:05:54.4936179Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T13:05:54.5896300Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T13:05:54.5926228Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T13:08:39.3944345Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T13:08:39.3944345Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T13:08:39.4203638Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T13:08:39.4203638Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T13:09:17.2036544Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T13:09:17.2165324Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T13:09:17.2275026Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T13:09:17.2314921Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T13:10:10.5722295Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T13:10:10.5722295Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T13:10:10.6310802Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T13:10:10.6320773Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T13:10:30.4988884Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T13:10:30.5035787Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T13:10:30.5191879Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T13:10:30.5221761Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T13:12:38.9417946Z Error connection.state_change
+oldState=Connecting newState=Failed error=WebSocketException: Unable to connect to the remote server (after 10 attempts over 3.8s)
+UnityEngine.Debug:LogError (object)
+Unity.AI.Tracing.ConsoleSink:LogToConsole (string,string,System.Exception) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceSinks.cs:307)
+Unity.AI.Tracing.ConsoleSink:Write (Unity.AI.Tracing.TraceEvent) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceSinks.cs:277)
+Unity.AI.Tracing.TraceWriter:WriteEventInternal (string,string,Unity.AI.Tracing.TraceEventOptions,string,System.Nullable`1<int>) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceWriter.cs:373)
+Unity.AI.Tracing.TraceWriter:Event (string,Unity.AI.Tracing.TraceEventOptions) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceWriter.cs:297)
+Unity.AI.Tracing.Trace:Event (string,Unity.AI.Tracing.TraceEventOptions) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/Trace.cs:79)
+Unity.Relay.Editor.RelayService:TransitionTo (Unity.Relay.Editor.RelayStatus,string) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Editor/Assistant/Relay/RelayService.cs:1251)
+Unity.Relay.Editor.RelayService/<ConnectWebSocketAsync>d__103:MoveNext () (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Editor/Assistant/Relay/RelayService.cs:678)
+UnityEngine.UnitySynchronizationContext:ExecuteTasks ()
+
+2026-10-11T13:13:49.4190391Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T13:13:49.4324015Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T13:22:10.1384649Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T13:22:10.1514314Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T13:22:10.1554191Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T13:22:10.1554191Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T13:23:04.3621743Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T13:23:04.3861104Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T13:23:04.4240320Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T13:23:04.4280213Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T13:23:06.4827972Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T13:23:06.4837936Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T13:23:06.4914766Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T13:23:06.4914766Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T13:23:15.0619771Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T13:23:15.0669644Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T13:23:15.0870048Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T13:23:15.0919916Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T13:25:27.6821319Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T13:25:27.7170376Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T13:25:27.8035007Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T13:42:02.6460204Z Error connection.state_change
+oldState=Connecting newState=Failed error=WebSocketException: Unable to connect to the remote server (after 10 attempts over 3.8s)
+UnityEngine.Debug:LogError (object)
+Unity.AI.Tracing.ConsoleSink:LogToConsole (string,string,System.Exception) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceSinks.cs:307)
+Unity.AI.Tracing.ConsoleSink:Write (Unity.AI.Tracing.TraceEvent) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceSinks.cs:277)
+Unity.AI.Tracing.TraceWriter:WriteEventInternal (string,string,Unity.AI.Tracing.TraceEventOptions,string,System.Nullable`1<int>) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceWriter.cs:373)
+Unity.AI.Tracing.TraceWriter:Event (string,Unity.AI.Tracing.TraceEventOptions) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceWriter.cs:297)
+Unity.AI.Tracing.Trace:Event (string,Unity.AI.Tracing.TraceEventOptions) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/Trace.cs:79)
+Unity.Relay.Editor.RelayService:TransitionTo (Unity.Relay.Editor.RelayStatus,string) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Editor/Assistant/Relay/RelayService.cs:1251)
+Unity.Relay.Editor.RelayService/<ConnectWebSocketAsync>d__103:MoveNext () (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Editor/Assistant/Relay/RelayService.cs:678)
+UnityEngine.UnitySynchronizationContext:ExecuteTasks ()
+
+2026-10-11T13:42:42.9320119Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T13:42:42.9409797Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T13:42:42.9459749Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T13:42:42.9625224Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T14:11:50.4967355Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T14:11:50.5733500Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T14:11:50.8288257Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T14:11:50.8288257Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T15:06:49.4910012Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T15:06:49.9198942Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T15:06:50.2903895Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T15:06:50.8112272Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T15:20:51.4047828Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T15:20:51.4207412Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T15:20:51.5578982Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T15:20:51.5898128Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T15:21:32.4087368Z Exception InvalidOperationException: Missing native weapon: Frank_Assassin_Combo04
+FrankRetarget.Editor.PepeShowcaseSetup.ConfigureAttacks (ZeroSpace.Showcase.PepeShowcaseLibrary library, CharacterCombat pepe, CharacterCombat mankey) (at Assets/PepeShowcase/Editor/PepeShowcaseSetup.Assassin.cs:121)
+FrankRetarget.Editor.PepeShowcaseSetup.UpdateAttackList () (at Assets/PepeShowcase/Editor/PepeShowcaseSetup.Assassin.cs:35)
+FrankRetarget.Editor.FrankRetargetBuilder.UpdatePepeShowcaseAssassinAttacks () (at Assets/PepeShowcase/Editor/PepeShowcaseSetup.Assassin.cs:232)
+System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) (at <f713e1c3c5f545ce9b1df47230f4f853>:0)
+Rethrow as TargetInvocationException: Exception has been thrown by the target of an invocation.
+System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) (at <f713e1c3c5f545ce9b1df47230f4f853>:0)
+System.Reflection.MethodBase.Invoke (System.Object obj, System.Object[] parameters) (at <f713e1c3c5f545ce9b1df47230f4f853>:0)
+FrankRetarget.Editor.FrankRetargetJobs.Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEngine.Debug:LogException(Exception)
+FrankRetarget.Editor.FrankRetargetJobs:Poll() (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:48)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions()
+
+2026-10-11T15:22:29.5160607Z Error connection.state_change
+oldState=Connecting newState=Failed error=timeout (500ms) (after 43 attempts over 30.4s)
+UnityEngine.Debug:LogError (object)
+Unity.AI.Tracing.ConsoleSink:LogToConsole (string,string,System.Exception) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceSinks.cs:307)
+Unity.AI.Tracing.ConsoleSink:Write (Unity.AI.Tracing.TraceEvent) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceSinks.cs:277)
+Unity.AI.Tracing.TraceWriter:WriteEventInternal (string,string,Unity.AI.Tracing.TraceEventOptions,string,System.Nullable`1<int>) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceWriter.cs:373)
+Unity.AI.Tracing.TraceWriter:Event (string,Unity.AI.Tracing.TraceEventOptions) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceWriter.cs:297)
+Unity.AI.Tracing.Trace:Event (string,Unity.AI.Tracing.TraceEventOptions) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/Trace.cs:79)
+Unity.Relay.Editor.RelayService:TransitionTo (Unity.Relay.Editor.RelayStatus,string) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Editor/Assistant/Relay/RelayService.cs:1251)
+Unity.Relay.Editor.RelayService/<StartNewRelayWithPortRetry>d__96:MoveNext () (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Editor/Assistant/Relay/RelayService.cs:640)
+UnityEngine.UnitySynchronizationContext:ExecuteTasks ()
+
+2026-10-11T15:24:34.8635538Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T15:24:34.8645516Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T15:24:35.4743107Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T15:24:35.4743107Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T15:25:35.2798779Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T15:25:35.2838676Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T15:25:36.6838918Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T15:25:36.6878813Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T15:31:06.1071259Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T15:31:06.1416698Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-11T15:31:06.6672620Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-11T15:31:06.7151338Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T01:25:28.6341021Z Error connection.state_change
+oldState=Connecting newState=Failed error=WebSocketException: Unable to connect to the remote server (after 10 attempts over 3.8s)
+UnityEngine.Debug:LogError (object)
+Unity.AI.Tracing.ConsoleSink:LogToConsole (string,string,System.Exception) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceSinks.cs:307)
+Unity.AI.Tracing.ConsoleSink:Write (Unity.AI.Tracing.TraceEvent) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceSinks.cs:277)
+Unity.AI.Tracing.TraceWriter:WriteEventInternal (string,string,Unity.AI.Tracing.TraceEventOptions,string,System.Nullable`1<int>) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceWriter.cs:373)
+Unity.AI.Tracing.TraceWriter:Event (string,Unity.AI.Tracing.TraceEventOptions) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceWriter.cs:297)
+Unity.AI.Tracing.Trace:Event (string,Unity.AI.Tracing.TraceEventOptions) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/Trace.cs:79)
+Unity.Relay.Editor.RelayService:TransitionTo (Unity.Relay.Editor.RelayStatus,string) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Editor/Assistant/Relay/RelayService.cs:1251)
+Unity.Relay.Editor.RelayService/<ConnectWebSocketAsync>d__103:MoveNext () (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Editor/Assistant/Relay/RelayService.cs:678)
+UnityEngine.UnitySynchronizationContext:ExecuteTasks ()
+
+2026-10-12T04:28:56.4318012Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T04:28:56.4776450Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T04:28:56.5967000Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T04:28:56.6002807Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T04:33:52.1778940Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T04:33:52.1808868Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T04:33:52.2284676Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T04:33:52.2314609Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T04:35:16.2687878Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T04:35:16.2727751Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T04:35:17.1967598Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T04:35:17.1997245Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T04:37:04.1158514Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T04:37:04.1158514Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T04:37:04.1168504Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T04:37:04.1168504Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T04:37:33.9314128Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T04:37:33.9344046Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T04:37:34.7582848Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T04:37:34.7612776Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T04:37:54.7394665Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T04:37:54.7440071Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T04:37:56.1353897Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T04:37:56.1394031Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T04:52:30.3187766Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T04:52:30.3198022Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T04:52:30.3730707Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T04:52:30.3730707Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T04:53:48.9497000Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T04:53:48.9526913Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T04:53:49.8779694Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T04:53:49.8819589Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T04:53:59.0141091Z Exception InvalidOperationException: Discontinuous rig change: hips=0.0001149299; hand=0.0001682051; camera=0.2231135
+FrankRetarget.Editor.PepeShowcaseCapture.ValidateCompleteCombo () (at Assets/PepeShowcase/Editor/PepeShowcaseCapture.CompleteValidation.cs:84)
+FrankRetarget.Editor.FrankRetargetBuilder.ValidatePepeCompleteCombo () (at Assets/PepeShowcase/Editor/PepeShowcaseSetup.Complete.cs:119)
+System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) (at <f713e1c3c5f545ce9b1df47230f4f853>:0)
+Rethrow as TargetInvocationException: Exception has been thrown by the target of an invocation.
+System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) (at <f713e1c3c5f545ce9b1df47230f4f853>:0)
+System.Reflection.MethodBase.Invoke (System.Object obj, System.Object[] parameters) (at <f713e1c3c5f545ce9b1df47230f4f853>:0)
+FrankRetarget.Editor.FrankRetargetJobs.Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEngine.Debug:LogException(Exception)
+FrankRetarget.Editor.FrankRetargetJobs:Poll() (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:48)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions()
+
+2026-10-12T04:54:56.7432992Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T04:54:56.7442963Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T04:54:56.7632450Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T04:54:56.7642428Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T04:55:12.3251413Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T04:55:12.3281404Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T04:55:13.2210938Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T04:55:13.2240854Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T04:55:49.1726893Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T04:55:49.1766792Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T04:55:50.9826311Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T04:55:50.9866190Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T04:57:44.4732876Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T04:57:44.4732876Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T04:57:44.8006178Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T04:57:44.8016146Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T04:57:59.8177048Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T04:57:59.8216957Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T04:58:00.8267058Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T04:58:00.8297186Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T04:58:03.1151813Z Exception InvalidOperationException: Weapon grip mismatch: COMBO 03 at 0.2333333; gap=0.1424003
+FrankRetarget.Editor.PepeShowcaseCapture.ValidateCompleteEffects (ZeroSpace.Showcase.PepeAttackShowcase showcase, System.Int32 index, System.Boolean saveFrames) (at Assets/PepeShowcase/Editor/PepeShowcaseCapture.CompleteValidation.cs:126)
+FrankRetarget.Editor.PepeShowcaseCapture.ValidateCompleteCombo () (at Assets/PepeShowcase/Editor/PepeShowcaseCapture.CompleteValidation.cs:54)
+FrankRetarget.Editor.FrankRetargetBuilder.ValidatePepeCompleteCombo () (at Assets/PepeShowcase/Editor/PepeShowcaseSetup.Complete.cs:119)
+System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) (at <f713e1c3c5f545ce9b1df47230f4f853>:0)
+Rethrow as TargetInvocationException: Exception has been thrown by the target of an invocation.
+System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) (at <f713e1c3c5f545ce9b1df47230f4f853>:0)
+System.Reflection.MethodBase.Invoke (System.Object obj, System.Object[] parameters) (at <f713e1c3c5f545ce9b1df47230f4f853>:0)
+FrankRetarget.Editor.FrankRetargetJobs.Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEngine.Debug:LogException(Exception)
+FrankRetarget.Editor.FrankRetargetJobs:Poll() (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:48)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions()
+
+2026-10-12T05:00:24.5605594Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T05:00:25.1918417Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T05:00:25.5417648Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T05:00:25.5417648Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T05:00:40.7375321Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T05:00:40.7405253Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T05:00:41.7376335Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T05:00:41.7416105Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T05:01:03.4242165Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T05:01:03.4302012Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T05:01:05.4583996Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T05:01:05.4623888Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T07:10:27.1989264Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T07:10:27.2650106Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T07:10:27.3477340Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T07:14:46.2598074Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T07:14:46.2817490Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T07:14:46.2877331Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T07:15:09.7198754Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T07:15:09.7228670Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T07:15:09.7268588Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T07:16:08.2999119Z Error Not allowed to access vertices on mesh 'WP_Sword' (isReadable is false; Read/Write must be enabled in import settings)
+UnityEngine.Mesh:get_vertices ()
+ZeroSpace.Showcase.PepeShowcasePresentation:BladePoint (ZeroSpace.Showcase.PepeAttackShowcase,UnityEngine.Renderer,UnityEngine.Mesh,UnityEngine.Vector3&) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:149)
+ZeroSpace.Showcase.PepeShowcasePresentation:PrepareMotion (ZeroSpace.Showcase.PepeAttackShowcase) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:103)
+ZeroSpace.Showcase.PepeAttackShowcase:BeginTake (int) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:132)
+ZeroSpace.Showcase.PepeAttackShowcase:PrepareContinuousSequence () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.Continuous.cs:26)
+ZeroSpace.Showcase.PepeAttackShowcase:Initialize () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:49)
+ZeroSpace.Showcase.PepeAttackShowcase:Start () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:37)
+
+2026-10-12T07:16:08.3189965Z Error Not allowed to access vertices on mesh 'WP_Sword' (isReadable is false; Read/Write must be enabled in import settings)
+UnityEngine.Mesh:get_vertices ()
+ZeroSpace.Showcase.PepeShowcasePresentation:BladePoint (ZeroSpace.Showcase.PepeAttackShowcase,UnityEngine.Renderer,UnityEngine.Mesh,UnityEngine.Vector3&) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:149)
+ZeroSpace.Showcase.PepeShowcasePresentation:PrepareMotion (ZeroSpace.Showcase.PepeAttackShowcase) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:103)
+ZeroSpace.Showcase.PepeAttackShowcase:BeginTake (int) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:132)
+ZeroSpace.Showcase.PepeAttackShowcase:PrepareContinuousSequence () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.Continuous.cs:26)
+ZeroSpace.Showcase.PepeAttackShowcase:Initialize () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:49)
+ZeroSpace.Showcase.PepeAttackShowcase:Start () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:37)
+
+2026-10-12T07:16:12.1353503Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T07:16:12.1393606Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T07:16:12.8941130Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T07:16:12.8971383Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T07:16:22.7263350Z Error Not allowed to access vertices on mesh 'WP_Sword' (isReadable is false; Read/Write must be enabled in import settings)
+UnityEngine.Mesh:get_vertices ()
+ZeroSpace.Showcase.PepeShowcasePresentation:BladePoint (ZeroSpace.Showcase.PepeAttackShowcase,UnityEngine.Renderer,UnityEngine.Mesh,UnityEngine.Vector3&) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:149)
+ZeroSpace.Showcase.PepeShowcasePresentation:PrepareMotion (ZeroSpace.Showcase.PepeAttackShowcase) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:103)
+ZeroSpace.Showcase.PepeAttackShowcase:BeginTake (int) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:132)
+ZeroSpace.Showcase.PepeAttackShowcase:Evaluate (single,single,bool) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:85)
+ZeroSpace.Showcase.PepeAttackShowcase:LateUpdate () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:57)
+
+2026-10-12T07:16:22.7273332Z Error Not allowed to access vertices on mesh 'WP_Sword' (isReadable is false; Read/Write must be enabled in import settings)
+UnityEngine.Mesh:get_vertices ()
+ZeroSpace.Showcase.PepeShowcasePresentation:BladePoint (ZeroSpace.Showcase.PepeAttackShowcase,UnityEngine.Renderer,UnityEngine.Mesh,UnityEngine.Vector3&) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:149)
+ZeroSpace.Showcase.PepeShowcasePresentation:PrepareMotion (ZeroSpace.Showcase.PepeAttackShowcase) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:103)
+ZeroSpace.Showcase.PepeAttackShowcase:BeginTake (int) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:132)
+ZeroSpace.Showcase.PepeAttackShowcase:Evaluate (single,single,bool) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:85)
+ZeroSpace.Showcase.PepeAttackShowcase:LateUpdate () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:57)
+
+2026-10-12T07:18:35.5252091Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T07:18:35.5262064Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T07:18:35.5312223Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T07:18:35.5312223Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T07:19:50.0896669Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T07:19:50.0936394Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T07:19:50.1307653Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T07:19:50.1337570Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T07:20:31.1786127Z Error Not allowed to access vertices on mesh 'WP_Sword' (isReadable is false; Read/Write must be enabled in import settings)
+UnityEngine.Mesh:get_vertices ()
+ZeroSpace.Showcase.PepeShowcasePresentation:BladePoint (ZeroSpace.Showcase.PepeAttackShowcase,UnityEngine.Renderer,UnityEngine.Mesh,UnityEngine.Vector3&) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:149)
+ZeroSpace.Showcase.PepeShowcasePresentation:PrepareMotion (ZeroSpace.Showcase.PepeAttackShowcase) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:103)
+ZeroSpace.Showcase.PepeAttackShowcase:BeginTake (int) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:132)
+ZeroSpace.Showcase.PepeAttackShowcase:PrepareContinuousSequence () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.Continuous.cs:25)
+ZeroSpace.Showcase.PepeAttackShowcase:Initialize () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:49)
+ZeroSpace.Showcase.PepeAttackShowcase:Start () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:37)
+
+2026-10-12T07:20:31.1806057Z Error Not allowed to access vertices on mesh 'WP_Sword' (isReadable is false; Read/Write must be enabled in import settings)
+UnityEngine.Mesh:get_vertices ()
+ZeroSpace.Showcase.PepeShowcasePresentation:BladePoint (ZeroSpace.Showcase.PepeAttackShowcase,UnityEngine.Renderer,UnityEngine.Mesh,UnityEngine.Vector3&) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:149)
+ZeroSpace.Showcase.PepeShowcasePresentation:PrepareMotion (ZeroSpace.Showcase.PepeAttackShowcase) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:103)
+ZeroSpace.Showcase.PepeAttackShowcase:BeginTake (int) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:132)
+ZeroSpace.Showcase.PepeAttackShowcase:PrepareContinuousSequence () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.Continuous.cs:25)
+ZeroSpace.Showcase.PepeAttackShowcase:Initialize () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:49)
+ZeroSpace.Showcase.PepeAttackShowcase:Start () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:37)
+
+2026-10-12T07:20:32.2591471Z Error Not allowed to access vertices on mesh 'WP_Sword' (isReadable is false; Read/Write must be enabled in import settings)
+UnityEngine.Mesh:get_vertices ()
+ZeroSpace.Showcase.PepeShowcasePresentation:BladePoint (ZeroSpace.Showcase.PepeAttackShowcase,UnityEngine.Renderer,UnityEngine.Mesh,UnityEngine.Vector3&) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:149)
+ZeroSpace.Showcase.PepeShowcasePresentation:PrepareMotion (ZeroSpace.Showcase.PepeAttackShowcase) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:103)
+ZeroSpace.Showcase.PepeAttackShowcase:BeginTake (int) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:132)
+ZeroSpace.Showcase.PepeAttackShowcase:PrepareContinuousSequence () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.Continuous.cs:44)
+ZeroSpace.Showcase.PepeAttackShowcase:Initialize () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:49)
+ZeroSpace.Showcase.PepeAttackShowcase:Start () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:37)
+
+2026-10-12T07:20:32.2601453Z Error Not allowed to access vertices on mesh 'WP_Sword' (isReadable is false; Read/Write must be enabled in import settings)
+UnityEngine.Mesh:get_vertices ()
+ZeroSpace.Showcase.PepeShowcasePresentation:BladePoint (ZeroSpace.Showcase.PepeAttackShowcase,UnityEngine.Renderer,UnityEngine.Mesh,UnityEngine.Vector3&) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:149)
+ZeroSpace.Showcase.PepeShowcasePresentation:PrepareMotion (ZeroSpace.Showcase.PepeAttackShowcase) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:103)
+ZeroSpace.Showcase.PepeAttackShowcase:BeginTake (int) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:132)
+ZeroSpace.Showcase.PepeAttackShowcase:PrepareContinuousSequence () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.Continuous.cs:44)
+ZeroSpace.Showcase.PepeAttackShowcase:Initialize () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:49)
+ZeroSpace.Showcase.PepeAttackShowcase:Start () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:37)
+
+2026-10-12T07:20:34.9456447Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T07:20:34.9486362Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T07:20:35.9424731Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T07:20:35.9454650Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T07:20:45.3721957Z Error Not allowed to access vertices on mesh 'WP_Sword' (isReadable is false; Read/Write must be enabled in import settings)
+UnityEngine.Mesh:get_vertices ()
+ZeroSpace.Showcase.PepeShowcasePresentation:BladePoint (ZeroSpace.Showcase.PepeAttackShowcase,UnityEngine.Renderer,UnityEngine.Mesh,UnityEngine.Vector3&) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:149)
+ZeroSpace.Showcase.PepeShowcasePresentation:PrepareMotion (ZeroSpace.Showcase.PepeAttackShowcase) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:103)
+ZeroSpace.Showcase.PepeAttackShowcase:BeginTake (int) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:132)
+ZeroSpace.Showcase.PepeAttackShowcase:Evaluate (single,single,bool) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:85)
+ZeroSpace.Showcase.PepeAttackShowcase:LateUpdate () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:57)
+
+2026-10-12T07:20:45.3731936Z Error Not allowed to access vertices on mesh 'WP_Sword' (isReadable is false; Read/Write must be enabled in import settings)
+UnityEngine.Mesh:get_vertices ()
+ZeroSpace.Showcase.PepeShowcasePresentation:BladePoint (ZeroSpace.Showcase.PepeAttackShowcase,UnityEngine.Renderer,UnityEngine.Mesh,UnityEngine.Vector3&) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:149)
+ZeroSpace.Showcase.PepeShowcasePresentation:PrepareMotion (ZeroSpace.Showcase.PepeAttackShowcase) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:103)
+ZeroSpace.Showcase.PepeAttackShowcase:BeginTake (int) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:132)
+ZeroSpace.Showcase.PepeAttackShowcase:Evaluate (single,single,bool) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:85)
+ZeroSpace.Showcase.PepeAttackShowcase:LateUpdate () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:57)
+
+2026-10-12T07:22:28.3012857Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T07:22:28.3022844Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T07:22:28.3731595Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T07:22:28.3741551Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T07:22:55.6580432Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T07:22:55.6620318Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T07:22:56.6953721Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T07:22:56.6983642Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T07:24:00.6425900Z Error Not allowed to access vertices on mesh 'WP_Sword' (isReadable is false; Read/Write must be enabled in import settings)
+UnityEngine.Mesh:get_vertices ()
+ZeroSpace.Showcase.PepeShowcasePresentation:BladePoint (ZeroSpace.Showcase.PepeAttackShowcase,UnityEngine.Renderer,UnityEngine.Mesh,UnityEngine.Vector3&) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:149)
+ZeroSpace.Showcase.PepeShowcasePresentation:PrepareMotion (ZeroSpace.Showcase.PepeAttackShowcase) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:103)
+ZeroSpace.Showcase.PepeAttackShowcase:BeginTake (int) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:132)
+ZeroSpace.Showcase.PepeAttackShowcase:PrepareContinuousSequence () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.Continuous.cs:25)
+ZeroSpace.Showcase.PepeAttackShowcase:Initialize () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:49)
+ZeroSpace.Showcase.PepeAttackShowcase:Start () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:37)
+
+2026-10-12T07:24:00.6445841Z Error Not allowed to access vertices on mesh 'WP_Sword' (isReadable is false; Read/Write must be enabled in import settings)
+UnityEngine.Mesh:get_vertices ()
+ZeroSpace.Showcase.PepeShowcasePresentation:BladePoint (ZeroSpace.Showcase.PepeAttackShowcase,UnityEngine.Renderer,UnityEngine.Mesh,UnityEngine.Vector3&) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:149)
+ZeroSpace.Showcase.PepeShowcasePresentation:PrepareMotion (ZeroSpace.Showcase.PepeAttackShowcase) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:103)
+ZeroSpace.Showcase.PepeAttackShowcase:BeginTake (int) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:132)
+ZeroSpace.Showcase.PepeAttackShowcase:PrepareContinuousSequence () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.Continuous.cs:25)
+ZeroSpace.Showcase.PepeAttackShowcase:Initialize () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:49)
+ZeroSpace.Showcase.PepeAttackShowcase:Start () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:37)
+
+2026-10-12T07:24:01.6719138Z Error Not allowed to access vertices on mesh 'WP_Sword' (isReadable is false; Read/Write must be enabled in import settings)
+UnityEngine.Mesh:get_vertices ()
+ZeroSpace.Showcase.PepeShowcasePresentation:BladePoint (ZeroSpace.Showcase.PepeAttackShowcase,UnityEngine.Renderer,UnityEngine.Mesh,UnityEngine.Vector3&) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:149)
+ZeroSpace.Showcase.PepeShowcasePresentation:PrepareMotion (ZeroSpace.Showcase.PepeAttackShowcase) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:103)
+ZeroSpace.Showcase.PepeAttackShowcase:BeginTake (int) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:132)
+ZeroSpace.Showcase.PepeAttackShowcase:PrepareContinuousSequence () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.Continuous.cs:44)
+ZeroSpace.Showcase.PepeAttackShowcase:Initialize () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:49)
+ZeroSpace.Showcase.PepeAttackShowcase:Start () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:37)
+
+2026-10-12T07:24:01.6729128Z Error Not allowed to access vertices on mesh 'WP_Sword' (isReadable is false; Read/Write must be enabled in import settings)
+UnityEngine.Mesh:get_vertices ()
+ZeroSpace.Showcase.PepeShowcasePresentation:BladePoint (ZeroSpace.Showcase.PepeAttackShowcase,UnityEngine.Renderer,UnityEngine.Mesh,UnityEngine.Vector3&) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:149)
+ZeroSpace.Showcase.PepeShowcasePresentation:PrepareMotion (ZeroSpace.Showcase.PepeAttackShowcase) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:103)
+ZeroSpace.Showcase.PepeAttackShowcase:BeginTake (int) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:132)
+ZeroSpace.Showcase.PepeAttackShowcase:PrepareContinuousSequence () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.Continuous.cs:44)
+ZeroSpace.Showcase.PepeAttackShowcase:Initialize () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:49)
+ZeroSpace.Showcase.PepeAttackShowcase:Start () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:37)
+
+2026-10-12T07:24:04.3729075Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T07:24:04.3758996Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T07:24:05.2598972Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T07:24:05.2628908Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T07:24:14.8998847Z Error Not allowed to access vertices on mesh 'WP_Sword' (isReadable is false; Read/Write must be enabled in import settings)
+UnityEngine.Mesh:get_vertices ()
+ZeroSpace.Showcase.PepeShowcasePresentation:BladePoint (ZeroSpace.Showcase.PepeAttackShowcase,UnityEngine.Renderer,UnityEngine.Mesh,UnityEngine.Vector3&) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:149)
+ZeroSpace.Showcase.PepeShowcasePresentation:PrepareMotion (ZeroSpace.Showcase.PepeAttackShowcase) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:103)
+ZeroSpace.Showcase.PepeAttackShowcase:BeginTake (int) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:132)
+ZeroSpace.Showcase.PepeAttackShowcase:Evaluate (single,single,bool) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:85)
+ZeroSpace.Showcase.PepeAttackShowcase:LateUpdate () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:57)
+
+2026-10-12T07:24:14.9454443Z Error Not allowed to access vertices on mesh 'WP_Sword' (isReadable is false; Read/Write must be enabled in import settings)
+UnityEngine.Mesh:get_vertices ()
+ZeroSpace.Showcase.PepeShowcasePresentation:BladePoint (ZeroSpace.Showcase.PepeAttackShowcase,UnityEngine.Renderer,UnityEngine.Mesh,UnityEngine.Vector3&) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:149)
+ZeroSpace.Showcase.PepeShowcasePresentation:PrepareMotion (ZeroSpace.Showcase.PepeAttackShowcase) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:103)
+ZeroSpace.Showcase.PepeAttackShowcase:BeginTake (int) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:132)
+ZeroSpace.Showcase.PepeAttackShowcase:Evaluate (single,single,bool) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:85)
+ZeroSpace.Showcase.PepeAttackShowcase:LateUpdate () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:57)
+
+2026-10-12T07:29:33.8667374Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T07:29:33.8677426Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T07:29:33.8988301Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T07:29:33.8988301Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T07:30:48.8783477Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T07:30:48.8813397Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T07:30:49.4054650Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T07:30:49.4084564Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T07:31:24.8847072Z Error Not allowed to access vertices on mesh 'WP_Sword' (isReadable is false; Read/Write must be enabled in import settings)
+UnityEngine.Mesh:get_vertices ()
+ZeroSpace.Showcase.PepeShowcasePresentation:BladePoint (ZeroSpace.Showcase.PepeAttackShowcase,UnityEngine.Renderer,UnityEngine.Mesh,UnityEngine.Vector3&) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:149)
+ZeroSpace.Showcase.PepeShowcasePresentation:PrepareMotion (ZeroSpace.Showcase.PepeAttackShowcase) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:103)
+ZeroSpace.Showcase.PepeAttackShowcase:BeginTake (int) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:132)
+ZeroSpace.Showcase.PepeAttackShowcase:PrepareContinuousSequence () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.Continuous.cs:25)
+ZeroSpace.Showcase.PepeAttackShowcase:Initialize () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:49)
+ZeroSpace.Showcase.PepeAttackShowcase:Start () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:37)
+
+2026-10-12T07:31:24.8867227Z Error Not allowed to access vertices on mesh 'WP_Sword' (isReadable is false; Read/Write must be enabled in import settings)
+UnityEngine.Mesh:get_vertices ()
+ZeroSpace.Showcase.PepeShowcasePresentation:BladePoint (ZeroSpace.Showcase.PepeAttackShowcase,UnityEngine.Renderer,UnityEngine.Mesh,UnityEngine.Vector3&) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:149)
+ZeroSpace.Showcase.PepeShowcasePresentation:PrepareMotion (ZeroSpace.Showcase.PepeAttackShowcase) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:103)
+ZeroSpace.Showcase.PepeAttackShowcase:BeginTake (int) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:132)
+ZeroSpace.Showcase.PepeAttackShowcase:PrepareContinuousSequence () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.Continuous.cs:25)
+ZeroSpace.Showcase.PepeAttackShowcase:Initialize () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:49)
+ZeroSpace.Showcase.PepeAttackShowcase:Start () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:37)
+
+2026-10-12T07:31:25.9111914Z Error Not allowed to access vertices on mesh 'WP_Sword' (isReadable is false; Read/Write must be enabled in import settings)
+UnityEngine.Mesh:get_vertices ()
+ZeroSpace.Showcase.PepeShowcasePresentation:BladePoint (ZeroSpace.Showcase.PepeAttackShowcase,UnityEngine.Renderer,UnityEngine.Mesh,UnityEngine.Vector3&) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:149)
+ZeroSpace.Showcase.PepeShowcasePresentation:PrepareMotion (ZeroSpace.Showcase.PepeAttackShowcase) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:103)
+ZeroSpace.Showcase.PepeAttackShowcase:BeginTake (int) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:132)
+ZeroSpace.Showcase.PepeAttackShowcase:PrepareContinuousSequence () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.Continuous.cs:44)
+ZeroSpace.Showcase.PepeAttackShowcase:Initialize () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:49)
+ZeroSpace.Showcase.PepeAttackShowcase:Start () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:37)
+
+2026-10-12T07:31:25.9121890Z Error Not allowed to access vertices on mesh 'WP_Sword' (isReadable is false; Read/Write must be enabled in import settings)
+UnityEngine.Mesh:get_vertices ()
+ZeroSpace.Showcase.PepeShowcasePresentation:BladePoint (ZeroSpace.Showcase.PepeAttackShowcase,UnityEngine.Renderer,UnityEngine.Mesh,UnityEngine.Vector3&) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:149)
+ZeroSpace.Showcase.PepeShowcasePresentation:PrepareMotion (ZeroSpace.Showcase.PepeAttackShowcase) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:103)
+ZeroSpace.Showcase.PepeAttackShowcase:BeginTake (int) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:132)
+ZeroSpace.Showcase.PepeAttackShowcase:PrepareContinuousSequence () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.Continuous.cs:44)
+ZeroSpace.Showcase.PepeAttackShowcase:Initialize () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:49)
+ZeroSpace.Showcase.PepeAttackShowcase:Start () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:37)
+
+2026-10-12T07:31:28.5961484Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T07:31:28.5991396Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T07:31:29.6764600Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T07:31:29.6794335Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T07:31:41.0962658Z Error Not allowed to access vertices on mesh 'WP_Sword' (isReadable is false; Read/Write must be enabled in import settings)
+UnityEngine.Mesh:get_vertices ()
+ZeroSpace.Showcase.PepeShowcasePresentation:BladePoint (ZeroSpace.Showcase.PepeAttackShowcase,UnityEngine.Renderer,UnityEngine.Mesh,UnityEngine.Vector3&) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:149)
+ZeroSpace.Showcase.PepeShowcasePresentation:PrepareMotion (ZeroSpace.Showcase.PepeAttackShowcase) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:103)
+ZeroSpace.Showcase.PepeAttackShowcase:BeginTake (int) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:132)
+ZeroSpace.Showcase.PepeAttackShowcase:Evaluate (single,single,bool) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:85)
+ZeroSpace.Showcase.PepeAttackShowcase:LateUpdate () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:57)
+
+2026-10-12T07:31:41.0972634Z Error Not allowed to access vertices on mesh 'WP_Sword' (isReadable is false; Read/Write must be enabled in import settings)
+UnityEngine.Mesh:get_vertices ()
+ZeroSpace.Showcase.PepeShowcasePresentation:BladePoint (ZeroSpace.Showcase.PepeAttackShowcase,UnityEngine.Renderer,UnityEngine.Mesh,UnityEngine.Vector3&) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:149)
+ZeroSpace.Showcase.PepeShowcasePresentation:PrepareMotion (ZeroSpace.Showcase.PepeAttackShowcase) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:103)
+ZeroSpace.Showcase.PepeAttackShowcase:BeginTake (int) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:132)
+ZeroSpace.Showcase.PepeAttackShowcase:Evaluate (single,single,bool) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:85)
+ZeroSpace.Showcase.PepeAttackShowcase:LateUpdate () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:57)
+
+2026-10-12T15:41:15.2736054Z Error connection.state_change
+oldState=Connecting newState=Failed error=WebSocketException: Unable to connect to the remote server (after 10 attempts over 3.9s)
+UnityEngine.Debug:LogError (object)
+Unity.AI.Tracing.ConsoleSink:LogToConsole (string,string,System.Exception) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceSinks.cs:307)
+Unity.AI.Tracing.ConsoleSink:Write (Unity.AI.Tracing.TraceEvent) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceSinks.cs:277)
+Unity.AI.Tracing.TraceWriter:WriteEventInternal (string,string,Unity.AI.Tracing.TraceEventOptions,string,System.Nullable`1<int>) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceWriter.cs:373)
+Unity.AI.Tracing.TraceWriter:Event (string,Unity.AI.Tracing.TraceEventOptions) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceWriter.cs:297)
+Unity.AI.Tracing.Trace:Event (string,Unity.AI.Tracing.TraceEventOptions) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/Trace.cs:79)
+Unity.Relay.Editor.RelayService:TransitionTo (Unity.Relay.Editor.RelayStatus,string) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Editor/Assistant/Relay/RelayService.cs:1251)
+Unity.Relay.Editor.RelayService/<ConnectWebSocketAsync>d__103:MoveNext () (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Editor/Assistant/Relay/RelayService.cs:678)
+UnityEngine.UnitySynchronizationContext:ExecuteTasks ()
+
+2026-10-12T15:48:15.2990508Z Error connection.state_change
+oldState=Running newState=Failed error=Process exited unexpectedly. code=0
+UnityEngine.Debug:LogError (object)
+Unity.AI.Tracing.ConsoleSink:LogToConsole (string,string,System.Exception) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceSinks.cs:307)
+Unity.AI.Tracing.ConsoleSink:Write (Unity.AI.Tracing.TraceEvent) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceSinks.cs:277)
+Unity.AI.Tracing.TraceWriter:WriteEventInternal (string,string,Unity.AI.Tracing.TraceEventOptions,string,System.Nullable`1<int>) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceWriter.cs:373)
+Unity.AI.Tracing.TraceWriter:Event (string,Unity.AI.Tracing.TraceEventOptions) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceWriter.cs:297)
+Unity.AI.Tracing.Trace:Event (string,Unity.AI.Tracing.TraceEventOptions) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/Trace.cs:79)
+Unity.Relay.Editor.RelayService:TransitionTo (Unity.Relay.Editor.RelayStatus,string) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Editor/Assistant/Relay/RelayService.cs:1251)
+Unity.Relay.Editor.RelayService/<>c__DisplayClass119_0:<SetupProcessMonitoring>b__1 () (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Editor/Assistant/Relay/RelayService.cs:1185)
+Unity.AI.Toolkit.EditorTask/<>c__DisplayClass21_0:<DelayCall>b__0 () (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Toolkit.Async/EditorTask.cs:375)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-12T16:22:15.5661831Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T16:22:15.6156392Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T16:22:15.8874212Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T16:28:03.7672043Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T16:28:03.7781532Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T16:28:03.7831683Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T16:28:57.3597468Z Exception NullReferenceException: Object reference not set to an instance of an object
+ZeroSpace.Showcase.BomTrailerIntro.End () (at Assets/PepeShowcase/Runtime/BomTrailerIntro.cs:78)
+ZeroSpace.Showcase.PepeAttackShowcase.EndTrailerIntro () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.Trailer.cs:33)
+ZeroSpace.Showcase.PepeAttackShowcase.PrepareContinuousSequence () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.Continuous.cs:19)
+ZeroSpace.Showcase.PepeAttackShowcase.Restart () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:166)
+FrankRetarget.Editor.PepeShowcaseCapture.ValidateBomIntro (ZeroSpace.Showcase.PepeAttackShowcase showcase, System.Text.StringBuilder report) (at Assets/PepeShowcase/Editor/PepeShowcaseCapture.BomValidation.cs:17)
+FrankRetarget.Editor.PepeShowcaseCapture.ValidateCompilation (System.String scenePath, System.String reportPath) (at Assets/PepeShowcase/Editor/PepeShowcaseCapture.CompleteValidation.cs:24)
+FrankRetarget.Editor.PepeShowcaseCapture.ValidateBomTrailer () (at Assets/PepeShowcase/Editor/PepeShowcaseCapture.Bom.cs:19)
+FrankRetarget.Editor.FrankRetargetBuilder.ValidateBomPepeTrailer () (at Assets/PepeShowcase/Editor/PepeShowcaseSetup.Bom.cs:90)
+System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) (at <f713e1c3c5f545ce9b1df47230f4f853>:0)
+Rethrow as TargetInvocationException: Exception has been thrown by the target of an invocation.
+System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) (at <f713e1c3c5f545ce9b1df47230f4f853>:0)
+System.Reflection.MethodBase.Invoke (System.Object obj, System.Object[] parameters) (at <f713e1c3c5f545ce9b1df47230f4f853>:0)
+FrankRetarget.Editor.FrankRetargetJobs.Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEngine.Debug:LogException(Exception)
+FrankRetarget.Editor.FrankRetargetJobs:Poll() (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:48)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions()
+
+2026-10-12T16:29:47.3476718Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T16:29:47.3476718Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T16:29:47.3865685Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T16:29:47.3865685Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T16:30:34.8866040Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T16:30:34.8895965Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T16:30:34.8935854Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T16:30:34.8965772Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T16:31:33.2434695Z Error Not allowed to access vertices on mesh 'WP_Sword' (isReadable is false; Read/Write must be enabled in import settings)
+UnityEngine.Mesh:get_vertices ()
+ZeroSpace.Showcase.PepeShowcasePresentation:BladePoint (ZeroSpace.Showcase.PepeAttackShowcase,UnityEngine.Renderer,UnityEngine.Mesh,UnityEngine.Vector3&) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:149)
+ZeroSpace.Showcase.PepeShowcasePresentation:PrepareMotion (ZeroSpace.Showcase.PepeAttackShowcase) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:103)
+ZeroSpace.Showcase.PepeAttackShowcase:BeginTake (int) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:133)
+ZeroSpace.Showcase.PepeAttackShowcase:PrepareContinuousSequence () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.Continuous.cs:26)
+ZeroSpace.Showcase.PepeAttackShowcase:Initialize () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:49)
+ZeroSpace.Showcase.PepeAttackShowcase:Start () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:37)
+
+2026-10-12T16:31:33.2454645Z Error Not allowed to access vertices on mesh 'WP_Sword' (isReadable is false; Read/Write must be enabled in import settings)
+UnityEngine.Mesh:get_vertices ()
+ZeroSpace.Showcase.PepeShowcasePresentation:BladePoint (ZeroSpace.Showcase.PepeAttackShowcase,UnityEngine.Renderer,UnityEngine.Mesh,UnityEngine.Vector3&) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:149)
+ZeroSpace.Showcase.PepeShowcasePresentation:PrepareMotion (ZeroSpace.Showcase.PepeAttackShowcase) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:103)
+ZeroSpace.Showcase.PepeAttackShowcase:BeginTake (int) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:133)
+ZeroSpace.Showcase.PepeAttackShowcase:PrepareContinuousSequence () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.Continuous.cs:26)
+ZeroSpace.Showcase.PepeAttackShowcase:Initialize () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:49)
+ZeroSpace.Showcase.PepeAttackShowcase:Start () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:37)
+
+2026-10-12T16:31:34.8122720Z Error Not allowed to access vertices on mesh 'WP_Sword' (isReadable is false; Read/Write must be enabled in import settings)
+UnityEngine.Mesh:get_vertices ()
+ZeroSpace.Showcase.PepeShowcasePresentation:BladePoint (ZeroSpace.Showcase.PepeAttackShowcase,UnityEngine.Renderer,UnityEngine.Mesh,UnityEngine.Vector3&) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:149)
+ZeroSpace.Showcase.PepeShowcasePresentation:PrepareMotion (ZeroSpace.Showcase.PepeAttackShowcase) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:103)
+ZeroSpace.Showcase.PepeAttackShowcase:BeginTake (int) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:133)
+ZeroSpace.Showcase.PepeAttackShowcase:PrepareContinuousSequence () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.Continuous.cs:45)
+ZeroSpace.Showcase.PepeAttackShowcase:Initialize () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:49)
+ZeroSpace.Showcase.PepeAttackShowcase:Start () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:37)
+
+2026-10-12T16:31:34.8132695Z Error Not allowed to access vertices on mesh 'WP_Sword' (isReadable is false; Read/Write must be enabled in import settings)
+UnityEngine.Mesh:get_vertices ()
+ZeroSpace.Showcase.PepeShowcasePresentation:BladePoint (ZeroSpace.Showcase.PepeAttackShowcase,UnityEngine.Renderer,UnityEngine.Mesh,UnityEngine.Vector3&) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:149)
+ZeroSpace.Showcase.PepeShowcasePresentation:PrepareMotion (ZeroSpace.Showcase.PepeAttackShowcase) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:103)
+ZeroSpace.Showcase.PepeAttackShowcase:BeginTake (int) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:133)
+ZeroSpace.Showcase.PepeAttackShowcase:PrepareContinuousSequence () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.Continuous.cs:45)
+ZeroSpace.Showcase.PepeAttackShowcase:Initialize () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:49)
+ZeroSpace.Showcase.PepeAttackShowcase:Start () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:37)
+
+2026-10-12T16:31:36.0837151Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T16:31:36.0877053Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T16:31:36.1216143Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T16:31:36.1246055Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T16:31:55.5393364Z Error connection.state_change
+oldState=Connecting newState=Failed error=WebSocketException: Unable to connect to the remote server (after 10 attempts over 3.8s)
+UnityEngine.Debug:LogError (object)
+Unity.AI.Tracing.ConsoleSink:LogToConsole (string,string,System.Exception) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceSinks.cs:307)
+Unity.AI.Tracing.ConsoleSink:Write (Unity.AI.Tracing.TraceEvent) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceSinks.cs:277)
+Unity.AI.Tracing.TraceWriter:WriteEventInternal (string,string,Unity.AI.Tracing.TraceEventOptions,string,System.Nullable`1<int>) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceWriter.cs:373)
+Unity.AI.Tracing.TraceWriter:Event (string,Unity.AI.Tracing.TraceEventOptions) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceWriter.cs:297)
+Unity.AI.Tracing.Trace:Event (string,Unity.AI.Tracing.TraceEventOptions) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/Trace.cs:79)
+Unity.Relay.Editor.RelayService:TransitionTo (Unity.Relay.Editor.RelayStatus,string) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Editor/Assistant/Relay/RelayService.cs:1251)
+Unity.Relay.Editor.RelayService/<ConnectWebSocketAsync>d__103:MoveNext () (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Editor/Assistant/Relay/RelayService.cs:678)
+UnityEngine.UnitySynchronizationContext:ExecuteTasks ()
+
+2026-10-12T16:32:25.6272735Z Error Not allowed to access vertices on mesh 'WP_Sword' (isReadable is false; Read/Write must be enabled in import settings)
+UnityEngine.Mesh:get_vertices ()
+ZeroSpace.Showcase.PepeShowcasePresentation:BladePoint (ZeroSpace.Showcase.PepeAttackShowcase,UnityEngine.Renderer,UnityEngine.Mesh,UnityEngine.Vector3&) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:149)
+ZeroSpace.Showcase.PepeShowcasePresentation:PrepareMotion (ZeroSpace.Showcase.PepeAttackShowcase) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:103)
+ZeroSpace.Showcase.PepeAttackShowcase:BeginTake (int) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:133)
+ZeroSpace.Showcase.PepeAttackShowcase:Evaluate (single,single,bool) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:86)
+ZeroSpace.Showcase.PepeAttackShowcase:LateUpdate () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:57)
+
+2026-10-12T16:32:25.6272735Z Error Not allowed to access vertices on mesh 'WP_Sword' (isReadable is false; Read/Write must be enabled in import settings)
+UnityEngine.Mesh:get_vertices ()
+ZeroSpace.Showcase.PepeShowcasePresentation:BladePoint (ZeroSpace.Showcase.PepeAttackShowcase,UnityEngine.Renderer,UnityEngine.Mesh,UnityEngine.Vector3&) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:149)
+ZeroSpace.Showcase.PepeShowcasePresentation:PrepareMotion (ZeroSpace.Showcase.PepeAttackShowcase) (at Assets/PepeShowcase/Runtime/PepeShowcasePresentation.Motion.cs:103)
+ZeroSpace.Showcase.PepeAttackShowcase:BeginTake (int) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:133)
+ZeroSpace.Showcase.PepeAttackShowcase:Evaluate (single,single,bool) (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:86)
+ZeroSpace.Showcase.PepeAttackShowcase:LateUpdate () (at Assets/PepeShowcase/Runtime/PepeAttackShowcase.cs:57)
+
+2026-10-12T16:35:46.7930448Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T16:35:46.7930448Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T16:35:46.8157723Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T16:35:46.8157723Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T16:36:18.1122916Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T16:36:18.1152835Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T16:36:18.1192724Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T16:37:00.0048831Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T16:37:00.0048831Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T16:37:00.0278186Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T16:37:00.0278186Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T16:37:17.1003234Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T16:37:17.1033136Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T16:37:17.1518203Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T16:37:17.1548119Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T16:38:46.5998056Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T16:38:46.6027963Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-12T16:38:46.6103763Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-12T16:38:46.6123885Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T10:50:15.1183379Z Error connection.state_change
+oldState=Connecting newState=Failed error=WebSocketException: Unable to connect to the remote server (after 10 attempts over 3.9s)
+UnityEngine.Debug:LogError (object)
+Unity.AI.Tracing.ConsoleSink:LogToConsole (string,string,System.Exception) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceSinks.cs:307)
+Unity.AI.Tracing.ConsoleSink:Write (Unity.AI.Tracing.TraceEvent) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceSinks.cs:277)
+Unity.AI.Tracing.TraceWriter:WriteEventInternal (string,string,Unity.AI.Tracing.TraceEventOptions,string,System.Nullable`1<int>) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceWriter.cs:373)
+Unity.AI.Tracing.TraceWriter:Event (string,Unity.AI.Tracing.TraceEventOptions) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceWriter.cs:297)
+Unity.AI.Tracing.Trace:Event (string,Unity.AI.Tracing.TraceEventOptions) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/Trace.cs:79)
+Unity.Relay.Editor.RelayService:TransitionTo (Unity.Relay.Editor.RelayStatus,string) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Editor/Assistant/Relay/RelayService.cs:1251)
+Unity.Relay.Editor.RelayService/<ConnectWebSocketAsync>d__103:MoveNext () (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Editor/Assistant/Relay/RelayService.cs:678)
+UnityEngine.UnitySynchronizationContext:ExecuteTasks ()
+
+2026-10-13T11:28:23.8022310Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T11:28:24.0698975Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T11:28:24.2430711Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T11:30:35.2565579Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T11:30:35.2595214Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T11:30:35.2595214Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T11:30:35.2624601Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T11:31:16.8345553Z Exception InvalidOperationException: The BOM camera did not move closer than the prior shot.
+FrankRetarget.Editor.PepeShowcaseCapture.ValidateCompilation (System.String scenePath, System.String reportPath) (at Assets/PepeShowcase/Editor/PepeShowcaseCapture.CompleteValidation.cs:68)
+FrankRetarget.Editor.PepeShowcaseCapture.ValidateBomTrailer () (at Assets/PepeShowcase/Editor/PepeShowcaseCapture.Bom.cs:19)
+FrankRetarget.Editor.FrankRetargetBuilder.ValidateBomPepeTrailer () (at Assets/PepeShowcase/Editor/PepeShowcaseSetup.Bom.cs:94)
+System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) (at <f713e1c3c5f545ce9b1df47230f4f853>:0)
+Rethrow as TargetInvocationException: Exception has been thrown by the target of an invocation.
+System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) (at <f713e1c3c5f545ce9b1df47230f4f853>:0)
+System.Reflection.MethodBase.Invoke (System.Object obj, System.Object[] parameters) (at <f713e1c3c5f545ce9b1df47230f4f853>:0)
+FrankRetarget.Editor.FrankRetargetJobs.Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEngine.Debug:LogException(Exception)
+FrankRetarget.Editor.FrankRetargetJobs:Poll() (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:48)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions()
+
+2026-10-13T11:33:18.0351466Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T11:33:18.0351466Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T11:33:18.0760375Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T11:33:18.0760375Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T11:34:19.8375612Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T11:34:19.8405526Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T11:34:20.0970843Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T11:34:20.1010734Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T11:35:43.7619390Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T11:35:43.7774078Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T11:35:43.8228196Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T11:35:43.8238168Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T11:36:05.4549919Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T11:36:05.4579836Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T11:36:06.4734904Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T11:36:06.4764823Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T11:37:13.2171333Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T11:37:13.2211236Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T11:37:14.1602091Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T11:37:14.1622027Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T11:40:10.9372631Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T11:40:10.9422495Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T11:40:10.9822478Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T11:40:10.9832447Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T11:40:26.2764502Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T11:40:26.2805244Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T11:40:27.1789918Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T11:40:27.1809863Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T12:06:57.6942882Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T12:06:57.6942882Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T12:06:57.7012683Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T12:06:57.7012683Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T12:08:03.1225537Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T12:08:03.1255454Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T12:08:04.0881379Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T12:08:04.0911304Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T12:09:09.7507243Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T12:09:09.7507243Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T12:09:09.7592565Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T12:09:09.7592565Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T12:09:24.1756018Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T12:09:24.1785932Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T12:09:25.1470214Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T12:09:25.1510494Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T12:10:31.9873519Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T12:10:31.9913427Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T12:10:32.8511636Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T12:10:32.8541853Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T12:56:52.0105541Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T12:56:52.0470969Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T12:56:52.0520326Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T12:58:48.3356726Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T12:58:48.3941014Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T12:58:48.3990834Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T13:02:04.3140049Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T13:02:04.3308834Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T13:02:04.3318246Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T13:04:28.7818708Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T13:04:28.7848683Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T13:04:28.8018333Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T13:04:28.8048305Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T13:07:01.0403629Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T13:07:01.0491288Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T13:07:01.0724937Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T13:07:01.0724937Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T13:07:37.7106889Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T13:07:37.7127115Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T13:07:37.8594873Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T13:07:37.8625046Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T13:51:03.7588613Z Error connection.state_change
+oldState=Connecting newState=Failed error=WebSocketException: Unable to connect to the remote server (after 10 attempts over 3.8s)
+UnityEngine.Debug:LogError (object)
+Unity.AI.Tracing.ConsoleSink:LogToConsole (string,string,System.Exception) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceSinks.cs:307)
+Unity.AI.Tracing.ConsoleSink:Write (Unity.AI.Tracing.TraceEvent) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceSinks.cs:277)
+Unity.AI.Tracing.TraceWriter:WriteEventInternal (string,string,Unity.AI.Tracing.TraceEventOptions,string,System.Nullable`1<int>) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceWriter.cs:373)
+Unity.AI.Tracing.TraceWriter:Event (string,Unity.AI.Tracing.TraceEventOptions) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceWriter.cs:297)
+Unity.AI.Tracing.Trace:Event (string,Unity.AI.Tracing.TraceEventOptions) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/Trace.cs:79)
+Unity.Relay.Editor.RelayService:TransitionTo (Unity.Relay.Editor.RelayStatus,string) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Editor/Assistant/Relay/RelayService.cs:1251)
+Unity.Relay.Editor.RelayService/<ConnectWebSocketAsync>d__103:MoveNext () (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Editor/Assistant/Relay/RelayService.cs:678)
+UnityEngine.UnitySynchronizationContext:ExecuteTasks ()
+
+2026-10-13T13:51:50.5060446Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T13:51:50.5060446Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T13:51:50.5080392Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T13:51:50.5080392Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T13:53:22.5997685Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T13:53:22.6047380Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T13:53:22.6703600Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T13:53:22.6743785Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T13:55:07.5690869Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T13:55:07.5720793Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T13:55:08.5861334Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T13:55:08.5911209Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T13:57:01.6496241Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T13:57:01.6532116Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T13:57:02.5217636Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T13:57:02.5247550Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T13:58:50.4912874Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T13:58:50.4912874Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T13:58:50.5556259Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T13:58:50.5750827Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T13:59:13.1060801Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T13:59:13.1100670Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T13:59:13.9995136Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T13:59:14.0015085Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T14:01:45.4402034Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T14:01:45.4438046Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T14:01:46.2762881Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T14:01:46.2792805Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T14:13:45.4164445Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T14:13:45.5125507Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T14:13:45.6480837Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T14:13:45.6490805Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T14:15:21.3619450Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T14:15:21.3648421Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T14:15:21.3678646Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T14:16:08.7341330Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T14:16:08.7376943Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T14:16:09.8631319Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T14:16:09.8661480Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T14:49:12.5301814Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T14:49:12.5301814Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T14:49:12.5642165Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T14:49:12.5642165Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T14:50:47.8152399Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T14:50:47.8182039Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T14:50:47.8750801Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T14:50:47.8780498Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T14:53:01.8863631Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T14:53:01.8873603Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T14:53:01.8913495Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T14:53:01.8913495Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T14:53:17.9218180Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T14:53:17.9248098Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T14:53:18.8802671Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T14:53:18.8842565Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T14:56:56.6492610Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T14:56:56.6492610Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T14:56:56.7130120Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T14:56:56.7140100Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T14:57:10.8246438Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T14:57:10.8286348Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T14:57:11.7761092Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T14:57:11.7791213Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T15:00:18.3720307Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T15:00:18.3730279Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T15:00:18.4107781Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T15:00:18.4107781Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T15:00:32.0373614Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T15:00:32.0403522Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T15:00:32.9919392Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T15:00:32.9949293Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T15:03:50.5727226Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T15:03:50.5757146Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-13T15:03:51.7425770Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-13T15:03:51.7455821Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T12:25:56.7784057Z Error connection.state_change
+oldState=Connecting newState=Failed error=WebSocketException: Unable to connect to the remote server (after 10 attempts over 3.6s)
+UnityEngine.Debug:LogError (object)
+Unity.AI.Tracing.ConsoleSink:LogToConsole (string,string,System.Exception) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceSinks.cs:307)
+Unity.AI.Tracing.ConsoleSink:Write (Unity.AI.Tracing.TraceEvent) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceSinks.cs:277)
+Unity.AI.Tracing.TraceWriter:WriteEventInternal (string,string,Unity.AI.Tracing.TraceEventOptions,string,System.Nullable`1<int>) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceWriter.cs:373)
+Unity.AI.Tracing.TraceWriter:Event (string,Unity.AI.Tracing.TraceEventOptions) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceWriter.cs:297)
+Unity.AI.Tracing.Trace:Event (string,Unity.AI.Tracing.TraceEventOptions) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/Trace.cs:79)
+Unity.Relay.Editor.RelayService:TransitionTo (Unity.Relay.Editor.RelayStatus,string) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Editor/Assistant/Relay/RelayService.cs:1251)
+Unity.Relay.Editor.RelayService/<ConnectWebSocketAsync>d__103:MoveNext () (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Editor/Assistant/Relay/RelayService.cs:678)
+UnityEngine.UnitySynchronizationContext:ExecuteTasks ()
+
+2026-10-14T12:29:32.3446098Z Error connection.state_change
+oldState=Running newState=Failed error=Process exited unexpectedly. code=0
+UnityEngine.Debug:LogError (object)
+Unity.AI.Tracing.ConsoleSink:LogToConsole (string,string,System.Exception) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceSinks.cs:307)
+Unity.AI.Tracing.ConsoleSink:Write (Unity.AI.Tracing.TraceEvent) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceSinks.cs:277)
+Unity.AI.Tracing.TraceWriter:WriteEventInternal (string,string,Unity.AI.Tracing.TraceEventOptions,string,System.Nullable`1<int>) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceWriter.cs:373)
+Unity.AI.Tracing.TraceWriter:Event (string,Unity.AI.Tracing.TraceEventOptions) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceWriter.cs:297)
+Unity.AI.Tracing.Trace:Event (string,Unity.AI.Tracing.TraceEventOptions) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/Trace.cs:79)
+Unity.Relay.Editor.RelayService:TransitionTo (Unity.Relay.Editor.RelayStatus,string) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Editor/Assistant/Relay/RelayService.cs:1251)
+Unity.Relay.Editor.RelayService/<>c__DisplayClass119_0:<SetupProcessMonitoring>b__1 () (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Editor/Assistant/Relay/RelayService.cs:1185)
+Unity.AI.Toolkit.EditorTask/<>c__DisplayClass21_0:<DelayCall>b__0 () (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Toolkit.Async/EditorTask.cs:375)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T12:42:34.2085178Z Error connection.state_change
+oldState=Connecting newState=Failed error=WebSocketException: Unable to connect to the remote server (after 10 attempts over 3.9s)
+UnityEngine.Debug:LogError (object)
+Unity.AI.Tracing.ConsoleSink:LogToConsole (string,string,System.Exception) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceSinks.cs:307)
+Unity.AI.Tracing.ConsoleSink:Write (Unity.AI.Tracing.TraceEvent) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceSinks.cs:277)
+Unity.AI.Tracing.TraceWriter:WriteEventInternal (string,string,Unity.AI.Tracing.TraceEventOptions,string,System.Nullable`1<int>) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceWriter.cs:373)
+Unity.AI.Tracing.TraceWriter:Event (string,Unity.AI.Tracing.TraceEventOptions) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceWriter.cs:297)
+Unity.AI.Tracing.Trace:Event (string,Unity.AI.Tracing.TraceEventOptions) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/Trace.cs:79)
+Unity.Relay.Editor.RelayService:TransitionTo (Unity.Relay.Editor.RelayStatus,string) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Editor/Assistant/Relay/RelayService.cs:1251)
+Unity.Relay.Editor.RelayService/<ConnectWebSocketAsync>d__103:MoveNext () (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Editor/Assistant/Relay/RelayService.cs:678)
+UnityEngine.UnitySynchronizationContext:ExecuteTasks ()
+
+2026-10-14T13:03:43.2098003Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T13:03:43.2812190Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T13:03:43.5145675Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T13:06:49.1507424Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T13:06:49.1537338Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T13:06:49.1557284Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T13:06:49.1587477Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T13:09:53.4022058Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T13:09:53.4022058Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T13:09:53.4071928Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T13:09:53.4071928Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T13:10:20.9396117Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T13:10:20.9426055Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T13:10:20.9609558Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T13:10:20.9649449Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T13:11:25.3496825Z Exception Exception: Unknown job ConvertBattleModelsToHumanoid
+FrankRetarget.Editor.FrankRetargetJobs.Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:43)
+UnityEngine.Debug:LogException(Exception)
+FrankRetarget.Editor.FrankRetargetJobs:Poll() (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:48)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions()
+
+2026-10-14T13:11:41.0187723Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T13:11:41.0187723Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T13:11:41.0387196Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T13:11:41.0387196Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T13:14:21.4717481Z Exception Exception: Unknown job ConvertBattleModelsToHumanoid
+FrankRetarget.Editor.FrankRetargetJobs.Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:43)
+UnityEngine.Debug:LogException(Exception)
+FrankRetarget.Editor.FrankRetargetJobs:Poll() (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:48)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions()
+
+2026-10-14T13:14:46.9601480Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T13:14:46.9641379Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T13:14:46.9631408Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T13:14:46.9671289Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T13:15:46.7200084Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T13:15:46.7200084Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T13:15:46.7289851Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T13:15:46.7299816Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T13:17:19.1293524Z Error Assets\Editor\BattleRosterSetup.Bones.cs(54,17): error CS0117: 'HumanDescription' does not contain a definition for 'armTwist'
+
+2026-10-14T13:17:19.1293524Z Error Assets\Editor\BattleRosterSetup.Bones.cs(55,17): error CS0117: 'HumanDescription' does not contain a definition for 'foreArmTwist'
+
+2026-10-14T13:17:19.1293524Z Error Assets\Editor\BattleRosterSetup.Bones.cs(57,17): error CS0117: 'HumanDescription' does not contain a definition for 'legTwist'
+
+2026-10-14T13:19:02.5483072Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T13:19:02.5483072Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T13:19:02.6020950Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T13:19:02.6020950Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T13:19:10.6293039Z Error Assets\Editor\BattleRosterSetup.Bones.cs(56,17): error CS0117: 'HumanDescription' does not contain a definition for 'armTwist'
+
+2026-10-14T13:19:10.6293039Z Error Assets\Editor\BattleRosterSetup.Bones.cs(57,17): error CS0117: 'HumanDescription' does not contain a definition for 'foreArmTwist'
+
+2026-10-14T13:19:10.6302743Z Error Assets\Editor\BattleRosterSetup.Bones.cs(59,17): error CS0117: 'HumanDescription' does not contain a definition for 'legTwist'
+
+2026-10-14T13:20:31.0360284Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T13:20:31.0370259Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T13:20:31.0610243Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T13:20:31.0620210Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T13:20:52.1481799Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T13:20:52.1512008Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T13:20:52.1940578Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T13:20:52.2010388Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T13:21:25.3453482Z Exception InvalidOperationException: Cash_Monkey: root axis conversion was not baked.
+BattleRosterSetup.NewEntry (System.String modelId) (at Assets/Editor/BattleRosterSetup.Install.cs:123)
+BattleRosterSetup.Install () (at Assets/Editor/BattleRosterSetup.Install.cs:43)
+FrankRetarget.Editor.FrankRetargetBuilder.InstallBattleRoster () (at Assets/Editor/BattleRosterSetup.Install.cs:191)
+System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) (at <f713e1c3c5f545ce9b1df47230f4f853>:0)
+Rethrow as TargetInvocationException: Exception has been thrown by the target of an invocation.
+System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) (at <f713e1c3c5f545ce9b1df47230f4f853>:0)
+System.Reflection.MethodBase.Invoke (System.Object obj, System.Object[] parameters) (at <f713e1c3c5f545ce9b1df47230f4f853>:0)
+FrankRetarget.Editor.FrankRetargetJobs.Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEngine.Debug:LogException(Exception)
+FrankRetarget.Editor.FrankRetargetJobs:Poll() (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:48)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions()
+
+2026-10-14T13:22:41.9807050Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T13:22:41.9816980Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T13:22:42.0066392Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T13:22:42.0066392Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T13:23:14.1313064Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T13:23:14.1342946Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T13:23:14.1610691Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T13:23:14.1640427Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T13:23:29.8264803Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T13:23:29.8264803Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T13:23:29.8355326Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T13:23:29.8355326Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T13:23:52.6455838Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T13:23:52.6485743Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T13:23:52.6990900Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T13:23:52.7020533Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T13:24:00.5888888Z Exception KeyNotFoundException: The given key 'LeftIndexProximal' was not present in the dictionary.
+System.Collections.Generic.Dictionary`2[TKey,TValue].get_Item (TKey key) (at <f713e1c3c5f545ce9b1df47230f4f853>:0)
+FrankRetarget.FrankTestDriver+Reference.Bone (System.String name) (at Assets/DemoSence/Runtime/FrankTestDriver.Humanoid.cs:70)
+FrankRetarget.FrankTestDriver.BindHumanoid (UnityEngine.Animator character) (at Assets/DemoSence/Runtime/FrankTestDriver.Humanoid.cs:39)
+FrankRetarget.FrankTestDriver.Bind (UnityEngine.Animator character, System.Boolean preserveCharacterScale) (at Assets/DemoSence/Runtime/FrankTestDriver.cs:38)
+FrankRetarget.FrankTestActor.ConfigureClip (FrankRetarget.FrankTestDriver driver, UnityEngine.AnimationClip animation, System.Boolean attacking, System.Boolean weapons, System.Boolean preserveCharacterScale) (at Assets/DemoSence/Runtime/FrankTestActor.cs:124)
+FrankRetarget.FrankTestActor.ConfigureSource (FrankRetarget.FrankTestDriver driver, UnityEngine.AnimationClip animation, System.Boolean attacking, System.Boolean weapons, System.Boolean unarmed, System.Boolean preserveCharacterScale) (at Assets/DemoSence/Runtime/FrankTestActor.cs:113)
+FrankRetarget.FrankBattlePairPlayback.Actor (CharacterCombat combat, FrankRetarget.FrankTestDriver driver, UnityEngine.AnimationClip clip, System.Boolean attacking, System.Boolean weapons, System.Boolean unarmed, System.Single entryBlend, UnityEngine.GameObject weaponPrefab, System.String weaponSocket) (at Assets/DemoSence/Runtime/FrankBattlePairPlayback.cs:245)
+FrankRetarget.FrankBattlePairPlayback.Begin (CharacterCombat source, CharacterCombat target, CombatTripletData move, System.Boolean isLethal) (at Assets/DemoSence/Runtime/FrankBattlePairPlayback.cs:224)
+CharacterCombat.ExecuteAttack (CombatTripletData move, CharacterCombat targetCombat, System.Boolean lethal) (at Assets/Scripts/Animation/CharacterCombat.cs:285)
+BattleRosterSetup.Validate () (at Assets/Editor/BattleRosterSetup.Validation.cs:110)
+FrankRetarget.Editor.FrankRetargetBuilder.ValidateBattleRoster () (at Assets/Editor/BattleRosterSetup.Validation.cs:124)
+System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) (at <f713e1c3c5f545ce9b1df47230f4f853>:0)
+Rethrow as TargetInvocationException: Exception has been thrown by the target of an invocation.
+System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) (at <f713e1c3c5f545ce9b1df47230f4f853>:0)
+System.Reflection.MethodBase.Invoke (System.Object obj, System.Object[] parameters) (at <f713e1c3c5f545ce9b1df47230f4f853>:0)
+FrankRetarget.Editor.FrankRetargetJobs.Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEngine.Debug:LogException(Exception)
+FrankRetarget.Editor.FrankRetargetJobs:Poll() (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:48)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions()
+
+2026-10-14T13:24:42.9480129Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T13:24:42.9480129Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T13:24:42.9599730Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T13:24:42.9609697Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T13:24:58.3387746Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T13:24:58.3437609Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T13:24:58.4878565Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T13:24:58.4908470Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T13:28:26.4385736Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T13:28:26.4385736Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T13:28:26.4788271Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T13:28:26.4798240Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T13:29:23.3395724Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T13:29:23.3425641Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T13:29:23.4133748Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T13:29:23.4163669Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T14:08:20.2049560Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T14:08:20.3695158Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T14:09:01.2274681Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T14:09:01.3566114Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T14:14:01.1271493Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T14:14:01.1301395Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T14:14:03.1417963Z Error connection.state_change
+oldState=Connecting newState=Failed error=WebSocketException: Unable to connect to the remote server (after 10 attempts over 3.8s)
+UnityEngine.Debug:LogError (object)
+Unity.AI.Tracing.ConsoleSink:LogToConsole (string,string,System.Exception) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceSinks.cs:307)
+Unity.AI.Tracing.ConsoleSink:Write (Unity.AI.Tracing.TraceEvent) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceSinks.cs:277)
+Unity.AI.Tracing.TraceWriter:WriteEventInternal (string,string,Unity.AI.Tracing.TraceEventOptions,string,System.Nullable`1<int>) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceWriter.cs:373)
+Unity.AI.Tracing.TraceWriter:Event (string,Unity.AI.Tracing.TraceEventOptions) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/TraceWriter.cs:297)
+Unity.AI.Tracing.Trace:Event (string,Unity.AI.Tracing.TraceEventOptions) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Tracing/Trace.cs:79)
+Unity.Relay.Editor.RelayService:TransitionTo (Unity.Relay.Editor.RelayStatus,string) (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Editor/Assistant/Relay/RelayService.cs:1251)
+Unity.Relay.Editor.RelayService/<ConnectWebSocketAsync>d__103:MoveNext () (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Editor/Assistant/Relay/RelayService.cs:678)
+UnityEngine.UnitySynchronizationContext:ExecuteTasks ()
+
+2026-10-14T14:14:03.1724689Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T14:14:03.1794818Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T14:14:45.2912237Z Exception Exception: mankey/Samurai_Execution01 weapon grip gap=0.0437026
+BattleRosterSetup.Validate () (at Assets/Editor/BattleRosterSetup.Validation.cs:112)
+FrankRetarget.Editor.FrankRetargetBuilder.ValidateBattleRoster () (at Assets/Editor/BattleRosterSetup.Validation.cs:126)
+System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) (at <f713e1c3c5f545ce9b1df47230f4f853>:0)
+Rethrow as TargetInvocationException: Exception has been thrown by the target of an invocation.
+System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) (at <f713e1c3c5f545ce9b1df47230f4f853>:0)
+System.Reflection.MethodBase.Invoke (System.Object obj, System.Object[] parameters) (at <f713e1c3c5f545ce9b1df47230f4f853>:0)
+FrankRetarget.Editor.FrankRetargetJobs.Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEngine.Debug:LogException(Exception)
+FrankRetarget.Editor.FrankRetargetJobs:Poll() (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:48)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions()
+
+2026-10-14T14:16:57.1497013Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T14:16:57.1886165Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T14:16:57.2175408Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T14:16:57.2175408Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T14:17:27.9438605Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T14:17:27.9468524Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T14:17:28.1893395Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T14:17:28.1923293Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T14:34:57.5326351Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T14:34:57.5336319Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T14:34:57.5485614Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T14:34:57.5485614Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T14:36:43.3883245Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T14:36:43.3923137Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T14:36:43.6825140Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T14:36:43.6854974Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T14:37:01.4343998Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.4661870Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.5048199Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.5205958Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.5331847Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.5419033Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.5478875Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.5538770Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.5596252Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.5626176Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.5666070Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.5694890Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.5714840Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.5744759Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.5774681Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.5818042Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.5837990Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.5857937Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.5892332Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.5922253Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.5967558Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.5987492Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.6018465Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.6038414Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.6075212Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.6115107Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.6135051Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.6164971Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.6194946Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.6224839Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.6254760Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.6288174Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.6312030Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.6341947Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.6371869Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.6407269Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.6427217Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.6457137Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.6487056Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:01.6514842Z Error Please use Editor.AnimationUtility to add persistent animation events to an animation clip
+UnityEngine.AnimationClip:set_events (UnityEngine.AnimationEvent[])
+BattleRosterSetup:ValidateClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:37)
+FrankRetarget.Editor.FrankRetargetBuilder:ValidateBattleRosterClips () (at Assets/Editor/BattleRosterSetup.Clips.cs:97)
+System.Reflection.MethodBase:Invoke (object,object[])
+FrankRetarget.Editor.FrankRetargetJobs:Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()
+
+2026-10-14T14:37:28.2048485Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T14:37:28.2078688Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T14:37:28.9633308Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T14:37:28.9663227Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T14:40:35.1350431Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T14:40:35.1350431Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T14:40:35.1829126Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T14:40:35.1829126Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T14:40:52.5033380Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T14:40:52.5053324Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T14:40:52.6380121Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T14:40:52.6410236Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T14:53:27.5849147Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T14:53:27.5849147Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T14:53:27.6379936Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T14:53:27.6379936Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T14:53:49.2108181Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T14:53:49.2138173Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T14:53:49.2178369Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T14:54:34.6217674Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T14:54:34.6267545Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T14:54:34.6298273Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T14:54:34.6328127Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T14:56:00.4679788Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T14:56:00.4679788Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T14:56:00.4929129Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T14:56:00.4929129Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T14:56:18.0083102Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T14:56:18.0113023Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T14:56:18.5372089Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T14:56:18.5402007Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T14:57:51.0640173Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T14:57:51.0640173Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T14:57:51.9313941Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T14:57:51.9573239Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T14:58:04.7881716Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T14:58:04.7911638Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T14:58:04.8289576Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T14:58:04.8319499Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:02:45.9709381Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:02:45.9759259Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:02:46.1875782Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:02:46.1920760Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:12:39.2165620Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:12:39.2205518Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:12:39.4755329Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:12:39.4800800Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:19:35.7414774Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:19:35.7414774Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:19:35.7660180Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:19:35.7660180Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:20:09.5580392Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:20:09.5640225Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:20:09.6119090Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:20:09.6158989Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:20:52.7320110Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:20:52.7320110Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:20:52.7828751Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:20:52.7828751Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:21:07.3803948Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:21:07.3833852Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:21:07.4823916Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:21:07.4853839Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:23:02.4029697Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:23:02.4129490Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:23:02.4903465Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:23:02.4913037Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:23:18.1030807Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:23:18.1050750Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:23:18.2499075Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:23:18.2528949Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:24:01.1788645Z Exception Exception: cash_monkey/Frank_GreatSword_Attack_Execution1 weapon grip gap=0.05018951
+BattleRosterSetup.Validate () (at Assets/Editor/BattleRosterSetup.Validation.cs:112)
+FrankRetarget.Editor.FrankRetargetBuilder.ValidateBattleRoster () (at Assets/Editor/BattleRosterSetup.Validation.cs:126)
+System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) (at <f713e1c3c5f545ce9b1df47230f4f853>:0)
+Rethrow as TargetInvocationException: Exception has been thrown by the target of an invocation.
+System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) (at <f713e1c3c5f545ce9b1df47230f4f853>:0)
+System.Reflection.MethodBase.Invoke (System.Object obj, System.Object[] parameters) (at <f713e1c3c5f545ce9b1df47230f4f853>:0)
+FrankRetarget.Editor.FrankRetargetJobs.Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEngine.Debug:LogException(Exception)
+FrankRetarget.Editor.FrankRetargetJobs:Poll() (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:48)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions()
+
+2026-10-14T15:25:04.4915323Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:25:04.4915323Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:25:04.5533680Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:25:04.5533680Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:25:24.3165072Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:25:24.3195302Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:25:24.3709606Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:25:24.3739237Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:26:05.6201497Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:26:05.6211461Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:26:05.6519775Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:26:05.6519775Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:26:19.4781247Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:26:19.4811214Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:26:19.4991291Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:26:19.5020945Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:27:01.2534988Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:27:01.2534988Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:27:01.2664899Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:27:01.2664899Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:27:14.9541576Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:27:14.9571489Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:27:14.9988453Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:27:15.0018372Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:29:18.6938028Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:29:18.6947998Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:29:18.7259197Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:29:18.7259197Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:29:40.4689201Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:29:40.4719122Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:29:40.5187889Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:29:40.5367397Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:30:42.4887845Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:30:42.4887845Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:30:42.5783742Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:30:42.5793701Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:30:56.7274813Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:30:56.7324695Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:30:56.7384521Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:30:56.7404465Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:32:46.7595510Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:32:46.7602934Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:32:46.8440672Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:32:46.8450642Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:33:06.7714377Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:33:06.7753048Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:33:06.7862750Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:33:06.7892951Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:35:03.6507871Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:35:03.6527817Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:35:03.7913687Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:35:03.7923656Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:35:09.5491043Z Error Failed to create domain‐reload token.
+UnityEngine.Debug:LogError (object)
+Unity.AI.Generators.UI.Utilities.DomainReloadUtilities:CreateToken () (at ./Library/PackageCache/com.unity.ai.assistant@e3dc0eb7062e/Modules/Unity.AI.Generators.UI/Utilities/DomainReloadUtilities.cs:50)
+UnityEditor.AssemblyReloadEvents:OnBeforeAssemblyReload ()
+
+2026-10-14T15:35:14.4703495Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:35:14.4732856Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:35:14.5720357Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:35:14.5750281Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:36:27.5684867Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:36:27.5684867Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:36:27.6442400Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:36:27.6452372Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:36:42.6650038Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:36:42.6679958Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:36:43.5209739Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:36:43.5239653Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:38:41.9252481Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:38:41.9252481Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:38:41.9501806Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:38:41.9501806Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:38:56.1254745Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:38:56.1294958Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:38:56.2242083Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:38:56.2269644Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:47:49.1674867Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:47:49.1684832Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:47:49.1694823Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:47:49.1694823Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:48:03.4034921Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:48:03.4064847Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:48:03.4613374Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:48:03.4643293Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:50:56.7352559Z Exception Exception: mankey/SlapFace_Sequence1 floor=-0.04526639m at 1.236364s, role=1
+BattleRosterSetup.Validate () (at Assets/Editor/BattleRosterSetup.Validation.cs:126)
+FrankRetarget.Editor.FrankRetargetBuilder.ValidateBattleRoster () (at Assets/Editor/BattleRosterSetup.Validation.cs:140)
+System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) (at <f713e1c3c5f545ce9b1df47230f4f853>:0)
+Rethrow as TargetInvocationException: Exception has been thrown by the target of an invocation.
+System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) (at <f713e1c3c5f545ce9b1df47230f4f853>:0)
+System.Reflection.MethodBase.Invoke (System.Object obj, System.Object[] parameters) (at <f713e1c3c5f545ce9b1df47230f4f853>:0)
+FrankRetarget.Editor.FrankRetargetJobs.Poll () (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:44)
+UnityEngine.Debug:LogException(Exception)
+FrankRetarget.Editor.FrankRetargetJobs:Poll() (at Assets/DemoSence/Editor/FrankRetargetJobs.cs:48)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions()
+
+2026-10-14T15:52:28.3952623Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:52:28.3952623Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:52:28.4109083Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:52:28.4109083Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:52:44.5754880Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:52:44.5784801Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T15:52:44.6529392Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T15:52:44.6569280Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T20:18:43.8401980Z Error EnvironmentDependencyValues requested are different than current active one (requested -> active):
+
+
+2026-10-14T20:18:43.8617172Z Error   graphicsApiMask: 2048 -> 264192
+
+
+2026-10-14T20:18:44.1000984Z Error   graphicsApiMask: 2048 -> 264192
+
+

@@ -1,0 +1,10 @@
+System.Reflection.TargetInvocationException: Exception has been thrown by the target of an invocation. ---> System.InvalidOperationException: Missing native weapon: Frank_Assassin_Combo04
+  at FrankRetarget.Editor.PepeShowcaseSetup.ConfigureAttacks (ZeroSpace.Showcase.PepeShowcaseLibrary library, CharacterCombat pepe, CharacterCombat mankey) [0x0043c] in D:\Unity\ZeroSpace\Assets\PepeShowcase\Editor\PepeShowcaseSetup.Assassin.cs:121 
+  at FrankRetarget.Editor.PepeShowcaseSetup.UpdateAttackList () [0x0005a] in D:\Unity\ZeroSpace\Assets\PepeShowcase\Editor\PepeShowcaseSetup.Assassin.cs:35 
+  at FrankRetarget.Editor.FrankRetargetBuilder.UpdatePepeShowcaseAssassinAttacks () [0x00000] in D:\Unity\ZeroSpace\Assets\PepeShowcase\Editor\PepeShowcaseSetup.Assassin.cs:232 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <f713e1c3c5f545ce9b1df47230f4f853>:0 
+   --- End of inner exception stack trace ---
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x00083] in <f713e1c3c5f545ce9b1df47230f4f853>:0 
+  at System.Reflection.MethodBase.Invoke (System.Object obj, System.Object[] parameters) [0x00000] in <f713e1c3c5f545ce9b1df47230f4f853>:0 
+  at FrankRetarget.Editor.FrankRetargetJobs.Poll () [0x00180] in D:\Unity\ZeroSpace\Assets\DemoSence\Editor\FrankRetargetJobs.cs:44 

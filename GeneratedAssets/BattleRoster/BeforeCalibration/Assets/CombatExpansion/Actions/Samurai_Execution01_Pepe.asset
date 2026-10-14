@@ -1,0 +1,158 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dcfa8577ab5249259fa110adbb5792e, type: 3}
+  m_Name: Samurai_Execution01_Pepe
+  m_EditorClassIdentifier: Assembly-CSharp::CombatActionDefinition
+  actionId: Samurai_Execution01
+  displayName: Samurai Execution 01
+  gameplayTrigger: Explicit heavy action via EnqueueCombatAction(side, Samurai_Execution01),
+    exact server animationId Samurai_Execution01 or the existing animation browser.
+    requiresExplicitSelection excludes random pools. Normal server outcome rules
+    own accepted damage; no extra local damage, armor or instant kill.
+  entryAndInterruption: Approach measured 1.7m; native PlayerA armed Katana, renderer/collider-free
+    unarmed PlayerB, native receiver yaw 180, entry blend 0.12s, alignment error
+    0.15m, receiver finger transfer enabled. Unscaled source motion, no additional
+    depth constraint. Existing owned equipment suppression and pair cancellation
+    restore both roles and clean up feedback. Intermediate stagger continues the
+    native receiver timeline.
+  recovery: Preserve complete native 3.1666667s source pair and authored terminal
+    knockdown. Final geometric torso front normal dot up is approximately -0.976
+    (prone). Existing ProneRecovery 157da7dff6b3b3148a29246060747ce5:1827226128182048838
+    uses measured recovery grounding with 0.12s blend. Actual getup transition and
+    lethal/nonlethal paths require Play Mode validation.
+  presentation: 'Explicit per-attacker timeline, existing shared sound/VFX feedback,
+    measured stab_hit then heavy_hit, native weapon trails and contact feedback.
+    Restrained existing thrust_swing at 0.27s and blade_swing at 1.9s are provisional
+    pending gameplay listening. Non-damaging final body_fall is anchored to the measured
+    supporting skin vertex, including 0.01m grounding cushion. Active strike windows
+    are measured time +/-1/240s. Evidence GeneratedAssets/CombatExpansion/SamuraiStudy/BladeContacts/ContactAuthoring/Report.json;
+    exact native identities validated. All triangle-pair ties within 0.00001m remain
+    in the report; unsigned zero-gap minima do not distinguish touching from intersection.
+    Opening contact is AxialTorso; second contact: Mixed AxialTorso/LeftArm zero-gap
+    ties; UpperChest representative anchor on Mankey. Representative selection never
+    erases mixed anatomical ties.'
+  presentationProfile:
+    rid: 3912399012286431747
+  authoredAttackSources: []
+  contacts:
+  - strikeId: Samurai_Execution01/01
+    attack: {fileID: 7400002, guid: 3e685dd57e9c78b49b20bef3e8358ae3, type: 3}
+    reaction: {fileID: 7400002, guid: b01b411d366a5a344bddf3428a7bc8f7, type: 3}
+    seconds: 0.3875
+    activeWindowSeconds: {x: 0.38333333, y: 0.39166665}
+    strikingLimb: 18
+    targetRegion: AxialTorso; UpperChest representative anchor on Mankey
+    directionInVictimSpace: {x: 0.0022651544, y: 0.21583098, z: -0.97642815}
+    reactionPolicy: 0
+    result: 1
+    presentationGroup: stab_hit
+    nonDamagingInteraction: 0
+    continuation: Native paired receiver continues without flinch restart. Direction
+      is normalized corrected relativeBladeVelocityVictimMps, not raw blade velocity.
+      Server outcome alone owns damage. Unsigned triangle minimum preserves anatomical
+      ties described above; no added stun or armor.
+  - strikeId: Samurai_Execution01/02
+    attack: {fileID: 7400002, guid: 3e685dd57e9c78b49b20bef3e8358ae3, type: 3}
+    reaction: {fileID: 7400002, guid: b01b411d366a5a344bddf3428a7bc8f7, type: 3}
+    seconds: 2.0291667
+    activeWindowSeconds: {x: 2.025, y: 2.0333333}
+    strikingLimb: 18
+    targetRegion: Mixed AxialTorso/LeftArm zero-gap ties; UpperChest representative
+      anchor on Mankey
+    directionInVictimSpace: {x: 0.8962543, y: -0.39964533, z: -0.19238482}
+    reactionPolicy: 0
+    result: 2
+    presentationGroup: heavy_hit
+    nonDamagingInteraction: 0
+    continuation: Native paired receiver continues without flinch restart. Direction
+      is normalized corrected relativeBladeVelocityVictimMps, not raw blade velocity.
+      Server outcome alone owns damage. Unsigned triangle minimum preserves anatomical
+      ties described above; no added stun or armor.
+  - strikeId: Samurai_Execution01/03
+    attack: {fileID: 7400002, guid: 3e685dd57e9c78b49b20bef3e8358ae3, type: 3}
+    reaction: {fileID: 7400002, guid: b01b411d366a5a344bddf3428a7bc8f7, type: 3}
+    seconds: 2.7125
+    activeWindowSeconds: {x: 2.7083335, y: 2.7166667}
+    strikingLimb: 10
+    targetRegion: Mankey Head supporting skin vertex
+    directionInVictimSpace: {x: 0, y: -1, z: 0}
+    reactionPolicy: 0
+    result: 2
+    presentationGroup: body_fall
+    nonDamagingInteraction: 1
+    continuation: Final non-damaging ground support; authored prone continuation
+      and existing grounded getup. damageOnLanding false, finalLanding true; no third
+      damage tick or independent reaction.
+  references:
+    version: 2
+    RefIds:
+    - rid: 3912399012286431747
+      type: {class: BattleSfxBank/Move, ns: , asm: Assembly-CSharp}
+      data:
+        label: Samurai_Execution01
+        attack: {fileID: 7400002, guid: 3e685dd57e9c78b49b20bef3e8358ae3, type: 3}
+        reaction: {fileID: 7400002, guid: b01b411d366a5a344bddf3428a7bc8f7, type: 3}
+        cues:
+        - seconds: 0.27
+          group: thrust_swing
+          finalLanding: 0
+          hasContactPoint: 0
+          contactBone: 8
+          contactOffset: {x: 0, y: 0, z: 0}
+          contactSource:
+          avatarContacts: []
+          damageOnLanding: 0
+        - seconds: 0.3875
+          group: stab_hit
+          finalLanding: 0
+          hasContactPoint: 1
+          contactBone: 54
+          contactOffset: {x: -0.052857846, y: 0.20075849, z: 0.2287793}
+          contactSource: Weapon
+          avatarContacts:
+          - avatar: {fileID: 9000000, guid: 59dc3f26824c72872aa4cf6baeec671e, type: 3}
+            bone: 54
+            offset: {x: -0.052857846, y: 0.20075849, z: 0.2287793}
+          damageOnLanding: 0
+        - seconds: 1.9
+          group: blade_swing
+          finalLanding: 0
+          hasContactPoint: 0
+          contactBone: 8
+          contactOffset: {x: 0, y: 0, z: 0}
+          contactSource:
+          avatarContacts: []
+          damageOnLanding: 0
+        - seconds: 2.0291667
+          group: heavy_hit
+          finalLanding: 0
+          hasContactPoint: 1
+          contactBone: 54
+          contactOffset: {x: -0.08493292, y: 0.0039118165, z: 0.32418728}
+          contactSource: Weapon
+          avatarContacts:
+          - avatar: {fileID: 9000000, guid: 59dc3f26824c72872aa4cf6baeec671e, type: 3}
+            bone: 54
+            offset: {x: -0.08493292, y: 0.0039118165, z: 0.32418728}
+          damageOnLanding: 0
+        - seconds: 2.7125
+          group: body_fall
+          finalLanding: 1
+          hasContactPoint: 1
+          contactBone: 10
+          contactOffset: {x: -0.114054605, y: -0.069224976, z: 0.41796014}
+          contactSource: Body
+          avatarContacts:
+          - avatar: {fileID: 9000000, guid: 59dc3f26824c72872aa4cf6baeec671e, type: 3}
+            bone: 10
+            offset: {x: -0.114054605, y: -0.069224976, z: 0.41796014}
+          damageOnLanding: 0
