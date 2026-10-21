@@ -13,6 +13,7 @@ namespace FrankRetarget
             public bool receiver;
             public float duration;
             public float[] lift = Array.Empty<float>();
+            public bool replacesReceiverFloorLift;
 
             public float At(float seconds)
             {
@@ -25,6 +26,16 @@ namespace FrankRetarget
         }
 
         public Track[] tracks = Array.Empty<Track>();
+
+        public bool ReplacesReceiverFloorLift(Avatar avatar)
+        {
+            if (!avatar || tracks == null) return false;
+            foreach (var track in tracks)
+                if (track != null && track.avatar == avatar && track.receiver &&
+                    track.replacesReceiverFloorLift && track.duration > 0 && track.lift != null && track.lift.Length > 1)
+                    return true;
+            return false;
+        }
 
         public void Apply(float seconds, Animator attacker, Animator receiver, FrankTestActor attackerSource = null)
         {

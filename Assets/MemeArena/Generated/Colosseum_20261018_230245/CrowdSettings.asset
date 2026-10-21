@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4f44db149ce75148bbf91ca49e4b8b2, type: 3}
+  m_Name: CrowdSettings
+  m_EditorClassIdentifier: Assembly-CSharp::MemeArena.MemeCrowdSettings
+  spectators:
+  - name: Pepe
+    sprite: {fileID: 21300000, guid: 57a2d3dce7d738044bc097af6aa110e6, type: 3}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Doge
+    sprite: {fileID: 21300000, guid: 742a5ab70917bed4f8c1152446634f67, type: 3}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Wojak
+    sprite: {fileID: 21300000, guid: 03ed9975616f82a43b0d637b408db7ed, type: 3}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Popcat
+    sprite: {fileID: 21300000, guid: 17fc26e43db9a6c4ea11911e47c071fb, type: 3}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Ape
+    sprite: {fileID: 21300000, guid: b250a3e8131e5a449abe7778b1d93a6b, type: 3}
+    prefab: {fileID: 0}
+    weight: 1
+  animationRate: 30
+  animatedDistance: 45
+  spectatorHeight: 1.2
+  idleBounce: 0.045
+  reactionBounce: 0.3
+  reactionStagger: 0.22

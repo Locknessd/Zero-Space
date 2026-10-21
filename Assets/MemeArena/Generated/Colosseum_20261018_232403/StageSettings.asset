@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a69c15fd5b7647247a4641f3bb3e9ffd, type: 3}
+  m_Name: StageSettings
+  m_EditorClassIdentifier: Assembly-CSharp::MemeArena.MemeArenaSettings
+  arenaWidth: 36
+  arenaDepth: 28
+  includeVisualFloor: 1
+  colosseumRadius: 19
+  seatingTiers: 6
+  arcSegments: 48
+  arcDegrees: 210
+  cameraOnPositiveZ: 1
+  stoneMaterial: {fileID: 2100000, guid: 7b0956cdf4109174cb7e9629883c381b, type: 2}
+  floorMaterial: {fileID: 2100000, guid: c55887d5d16870f44a74a6257d1f48d3, type: 2}
+  goldMaterial: {fileID: 2100000, guid: 79c3c1ac09d9c7547a3004aac7e4d7d4, type: 2}
+  bannerMaterial: {fileID: 2100000, guid: 2b2c1b8ca0cc76b47b31c738cb88d198, type: 2}
+  skyTexture: {fileID: 2800000, guid: 5dcc0b190549d474bb2ea5ba1fdd35c4, type: 3}
+  distantCrowdTexture: {fileID: 2800000, guid: 0ca5f02d7b7d88949be8833c02b3d246, type: 3}
+  statuePrefab: {fileID: 0}
+  bannerPrefab: {fileID: 0}
+  quality: 1
+  crowdSettings: {fileID: 11400000, guid: c7c7432e179f4e64fb6e44375b489e24, type: 2}
+  crowdDensity: 0.85
+  animatedCrowdCount: 48
+  reactionIntensity: 1
+  lighting: 0
+  includeLighting: 1
+  enableOutlines: 1
+  outlineWidth: 0.025
+  enableVfx: 1
+  enableConfetti: 1
+  torchLights: 2
+  seed: 16018

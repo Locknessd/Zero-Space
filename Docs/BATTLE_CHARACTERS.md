@@ -57,6 +57,13 @@ value; Unity `SendMessage` does not return that value to JavaScript.
 - Retargeting resolves anatomical bones for other avatars while preserving the original reviewed bindings.
 - Contact anchors are stored per avatar. Existing contact timestamps and damage ownership stay unchanged.
 - Floor correction curves are owned by each fighter/move pair; the left and right calibrations are separate.
+- JPBOM, SIHO and GSWING use avatar-specific floor curves sampled at 240 Hz. Their receiver tracks replace
+  the original throw's floor lift, avoiding a second upward offset when a different model lands.
+- Run `RepairBattleRosterFalls` through the local Editor job bridge after changing these throw models.
+  It backs up the current assets, rebakes ground contacts and checks floor clearance at 480 Hz.
+- Controller get-up curves in `RecoveryGrounding` include each move's terminal pose and entry blend.
+  Rebuild them with `RepairBattleRosterRecoveryFloors` after changing a character or recovery animation.
+  The isolated-clip extras baker preserves these curves. Corrections may lower as well as raise the pelvis.
 - After replacing a roster prefab, run **Normalize character heights**, then recalibrate the roster and recovery
   grounding. Rebuild the height measurements, floor tracks and contact anchors together before building the game.
 

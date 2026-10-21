@@ -10,7 +10,11 @@ using Object = UnityEngine.Object;
 public static partial class BattleRosterSetup
 {
     [MenuItem("Tools/Battle/Characters/Validate all characters and moves")]
-    public static void Validate()
+    public static void Validate() => ValidateRoster(false);
+
+    public static void RefineFloors() => ValidateRoster(true);
+
+    static void ValidateRoster(bool repairFloors)
     {
         Directory.CreateDirectory(Review);
         var report = new StringBuilder();
@@ -85,6 +89,23 @@ public static partial class BattleRosterSetup
                                     for (int role = 0; role < fighters.Length; role++)
                                     {
                                         float floor = floorProbes[role].Minimum() - fighters[role].transform.position.y;
+                                        if (repairFloors && floor < .004f)
+                                        {
+                                            var track = move.grounding.tracks.First(t =>
+                                                t.avatar == fighters[role].Animator.avatar &&
+                                                t.receiver == (fighters[role] != source));
+                                            float frame = time / track.duration * (track.lift.Length - 1);
+                                            int center = Mathf.FloorToInt(frame);
+                                            float lift = track.At(time) + .008f - floor;
+                                            for (int key = Mathf.Max(0, center - 1);
+                                                key <= Mathf.Min(track.lift.Length - 1, center + 2); key++)
+                                                track.lift[key] = Mathf.Max(track.lift[key], lift);
+                                            EditorUtility.SetDirty(move.grounding);
+                                            report.AppendLine("Refined floor " + entry.id + "/" + source.name +
+                                                "/" + move.moveName + " at " + time + ", role=" + role);
+                                            pair.EvaluateAt(time);
+                                            floor = floorProbes[role].Minimum() - fighters[role].transform.position.y;
+                                        }
                                         minimumFloor = Mathf.Min(minimumFloor, floor);
                                         if (floor < -.015f)
                                             throw new Exception(entry.id + "/" + move.moveName +
@@ -119,6 +140,8 @@ public static partial class BattleRosterSetup
             report.Insert(0, "PASS: avatars, materials, all current light/heavy pairs in both roles.\n" +
                 "Sequences=" + sequences + "; poses=" + poses + "; maximum grip gap=" + maxGrip +
                 "m; minimum skin height above floor=" + minimumFloor + "m.\n");
+            if (repairFloors)
+                AssetDatabase.SaveAssets();
         }
         catch (Exception error)
         {
@@ -128,7 +151,7 @@ public static partial class BattleRosterSetup
         finally
         {
             EditorSceneManager.ClosePreviewScene(scene);
-            File.WriteAllText(Review + "/Validation.txt", report.ToString());
+            File.WriteAllText(Review + (repairFloors ? "/FloorRefinement.txt" : "/Validation.txt"), report.ToString());
         }
     }
 }
@@ -138,5 +161,6 @@ namespace FrankRetarget.Editor
     public static partial class FrankRetargetBuilder
     {
         public static void ValidateBattleRoster() => BattleRosterSetup.Validate();
+        public static void RefineBattleRosterFloors() => BattleRosterSetup.RefineFloors();
     }
 }

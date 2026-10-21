@@ -1,0 +1,42 @@
+Scene under test: Assets/Scenes/BattleScene.unity
+PASS all 159 meme spectator types use the same atlas: Assets/MemeArena/Generated/WorkbookRoster_20261020_004132/SpectatorAtlas.png
+PASS pooled floor destruction subscribed before animation playback; slots=4
+Available move: Heavy_5; contact cues=7
+Available move: Heavy_6; contact cues=4
+Available move: Heavy_7; contact cues=8
+Available move: Heavy_2; contact cues=4
+Available move: Heavy_8; contact cues=9
+Available move: Heavy_Katana; contact cues=2
+Available move: Heavy_Assassin; contact cues=8
+Available move: Frank_GreatSword_Attack_Ambush; contact cues=1
+Available move: Frank_GreatSword_Attack_Execution1; contact cues=1
+Available move: Frank_GreatSword_Attack_Execution2; contact cues=1
+Available move: Frank_GreatSword_Attack_Execution3; contact cues=3
+Available move: Samurai_Execution01; contact cues=2
+Available move: Samurai_Execution10; contact cues=1
+Available move: combo_01; contact cues=3
+Available move: combo_02; contact cues=7
+Available move: combo_03; contact cues=5
+Available move: Light_1; contact cues=0
+Available move: Light_3; contact cues=1
+Available move: Vol10_CmnAtemi; contact cues=1
+Available move: Vol10_CmnAtemi2; contact cues=1
+Available move: Vol10_CmnAtemi3; contact cues=1
+Available move: Light_JPBOM; contact cues=0
+Available move: Light_SIHO; contact cues=0
+Available move: Light_GSWING; contact cues=0
+Available move: SlapFace_Sequence1; contact cues=1
+Available move: SlapFace_Sequence2; contact cues=1
+PASS original GameManager, camera and two fighters initialized; adapter subscribed.
+PASS actual combo: Heavy_8; contacts=11; combo reactions=1.
+PASS floor destruction on exact contact frame and landing position; ground contacts=2; fracture bursts=2; pool=4
+PASS low-health slider subscription; losing supporters react independently.
+Final supporter reactions: Neutral=Victory, FighterA=Victory, FighterB=Defeat
+PASS actual lethal animation: one KO, supporters victory/defeat, pooled edge confetti.
+PASS floor destruction on exact contact frame and landing position; ground contacts=4; fracture bursts=4; pool=4
+PASS floor scars fade away and pool becomes inactive after the configured lifetime.
+EDITOR profiling only, 1280x720, real camera and fighters; samples=2102
+Mean frame=10.55ms; p95=14.83ms.
+Profiler counters available=False; peak batches=0; peak triangles=223822; peak GC/frame=1489272
+These Editor timings do not verify 60 FPS in a WebGL or standalone build.
+PASS no stage exceptions, null references or queue errors in the tested path.

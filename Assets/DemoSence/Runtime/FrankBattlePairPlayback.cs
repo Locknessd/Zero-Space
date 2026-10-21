@@ -277,6 +277,9 @@ namespace FrankRetarget
 
         void ApplyReceiverFloorLift()
         {
+            // A measured avatar curve owns the whole correction. The legacy throw
+            // offsets were authored for the original receiver and must not stack.
+            if (ActiveGrounding && ActiveGrounding.ReplacesReceiverFloorLift(receiver.Animator.avatar)) return;
             var liftSamples = pair.receiverFloorLift;
             if (liftSamples == null || liftSamples.Length == 0 || !hitActor || !hitActor.Pose) return;
             float frame = Mathf.Min(SampleTime * FrankBattlePair.ReceiverFloorSamplesPerSecond, liftSamples.Length - 1);

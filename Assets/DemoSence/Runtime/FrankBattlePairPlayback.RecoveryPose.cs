@@ -229,7 +229,7 @@ namespace FrankRetarget
                         track.lift != null && Mathf.Abs(track.duration - clip.length) < .001f)
                     {
                         float lift = track.At(seconds);
-                        return float.IsFinite(lift) ? Mathf.Max(0, lift) : 0;
+                        return float.IsFinite(lift) ? lift : 0;
                     }
                 return 0;
             }

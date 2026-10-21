@@ -1,0 +1,249 @@
+using System;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.Rendering;
+using MemeArena;
+
+namespace MemeArenaEditor
+{
+    public sealed class MemeColosseumGenerator : EditorWindow
+    {
+        private int tiers = 5;
+        private int fans = 24;
+        private int segments = 26;
+        private float radius = 12f;
+        private bool visualFloor = true;
+        private GameObject mostRecent;
+        private const string BasePath = "Assets/MemeArena";
+
+        [MenuItem("Tools/Meme Arena/Generate Test Arena")]
+        private static void Open() => GetWindow<MemeColosseumGenerator>("Meme Colosseum");
+
+        private void OnGUI()
+        {
+            EditorGUILayout.LabelField("MEME COLOSSEUM — UNITY 6 / URP", EditorStyles.boldLabel);
+            EditorGUILayout.HelpBox("Generates a NEW standalone stage prefab. No camera, combat script, existing scene or player prefab is modified during generation.", MessageType.Info);
+            tiers = EditorGUILayout.IntSlider("Grandstand tiers", tiers, 2, 10);
+            segments = EditorGUILayout.IntSlider("Seats per tier", segments, 12, 48);
+            fans = EditorGUILayout.IntSlider("Animated meme fans", fans, 0, 60);
+            radius = EditorGUILayout.Slider("Grandstand radius", radius, 9f, 20f);
+            visualFloor = EditorGUILayout.Toggle("Include visual floor (no collider)", visualFloor);
+            EditorGUILayout.Space(12);
+            using (new EditorGUI.DisabledScope(EditorApplication.isPlayingOrWillChangePlaymode))
+            {
+                if (GUILayout.Button("GENERATE NEW STAGE PREFAB", GUILayout.Height(40)))
+                {
+                    try
+                    {
+                        mostRecent = Generate();
+                        Selection.activeObject = mostRecent;
+                        EditorGUIUtility.PingObject(mostRecent);
+                        EditorUtility.DisplayDialog("Meme Arena", "A NEW prefab was created under Assets/MemeArena/Generated. It has not been added to your gameplay scene.", "OK");
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogException(ex);
+                        EditorUtility.DisplayDialog("Generation error", ex.Message, "OK");
+                    }
+                }
+            }
+            using (new EditorGUI.DisabledScope(mostRecent == null || EditorApplication.isPlayingOrWillChangePlaymode))
+            {
+                if (GUILayout.Button("PLACE LAST PREFAB IN CURRENT SCENE (UNDOABLE)", GUILayout.Height(31)))
+                {
+                    if (EditorUtility.DisplayDialog("Add stage?", "Add the generated stage at world origin? It will NOT delete or move existing objects.", "Add stage", "Cancel"))
+                    {
+                        var instance = (GameObject)PrefabUtility.InstantiatePrefab(mostRecent);
+                        Undo.RegisterCreatedObjectUndo(instance, "Add Meme Colosseum");
+                        Selection.activeGameObject = instance;
+                    }
+                }
+            }
+        }
+
+        private GameObject Generate()
+        {
+            var shader = Shader.Find("Universal Render Pipeline/Lit");
+            var unlit = Shader.Find("Universal Render Pipeline/Unlit");
+            if (shader == null || unlit == null)
+                throw new InvalidOperationException("URP Lit/Unlit shaders missing. Check Unity 6 URP is configured.");
+
+            EnsureFolder(BasePath + "/Generated");
+            var stamp = DateTime.Now.ToString("yyyyMMdd_HHmmss_fff");
+            string folder = BasePath + "/Generated/Build_" + stamp;
+            EnsureFolder(folder);
+            EnsureFolder(folder + "/Materials");
+            var stone = MakeMaterial(folder, "Stone", shader, new Color(.69f, .54f, .38f), "Stone.png");
+            var sand = MakeMaterial(folder, "Sand", shader, new Color(.95f, .75f, .48f), "Sand.png");
+            var gold = MakeMaterial(folder, "Gold", shader, new Color(.94f, .68f, .20f), null);
+            var red = MakeMaterial(folder, "RedBanner", shader, new Color(.65f, .10f, .18f), null);
+            var skyMaterial = MakeMaterial(folder, "SkyUnlit", unlit, Color.white, "Sky.png");
+
+            GameObject root = new GameObject("MemeColosseum_Stage");
+            try
+            {
+                var floorGroup = Group(root.transform, "Arena_3D");
+                var standsGroup = Group(root.transform, "Grandstands_3D");
+                var architecture = Group(root.transform, "Roman_Architecture_3D");
+                var crowdGroup = Group(root.transform, "MemeCrowd");
+                var backdropGroup = Group(root.transform, "FarBackground_2D");
+                var sockets = Group(root.transform, "ArtReplacementSockets");
+
+                if (visualFloor)
+                {
+                    var floor = Cube(floorGroup, "BattleFloor_VISUAL_NoCollider", new Vector3(0f, -.30f, 0f), new Vector3(24, .5f, 15), sand);
+                    floor.isStatic = true;
+                }
+                // Stepped rear amphitheater: X = fighter axis; Y = up; camera typically looks toward +Z from -Z.
+                for (int tier = 0; tier < tiers; tier++)
+                {
+                    float r = radius + tier * 1.22f;
+                    float y = .25f + tier * .78f;
+                    for (int s = 0; s < segments; s++)
+                    {
+                        float angle = Mathf.Lerp(-106f, 106f, (s + .5f) / segments) * Mathf.Deg2Rad;
+                        float arcWidth = r * (212f * Mathf.Deg2Rad / segments) * .98f;
+                        Vector3 pos = new Vector3(r * Mathf.Sin(angle), y, 2f + r * Mathf.Cos(angle));
+                        var seat = Cube(standsGroup, "StoneSeat_" + tier + "_" + s, pos, new Vector3(arcWidth, .65f, 1.35f), tier % 2 == 0 ? stone : sand);
+                        seat.transform.rotation = Quaternion.Euler(0, angle * Mathf.Rad2Deg, 0);
+                        seat.isStatic = true;
+                    }
+                }
+                // Roman arcade wall, framing the stage without intruding into the fighters' play space.
+                for (int i = -4; i <= 4; i++)
+                {
+                    float x = i * 3.2f;
+                    float z = 21f;
+                    Cube(architecture, "PillarLeft_" + i, new Vector3(x-1.24f, 5.4f, z), new Vector3(.48f, 3.5f, .75f), stone);
+                    Cube(architecture, "PillarRight_" + i, new Vector3(x+1.24f, 5.4f, z), new Vector3(.48f, 3.5f, .75f), stone);
+                    // Segmented stone arch approximates a semicircular voussoir ring (open below).
+                    for (int k=0; k<12; k++)
+                    {
+                        float a = Mathf.PI * (k+.5f) / 12f;
+                        var pos = new Vector3(x + 1.24f*Mathf.Cos(a), 7.16f + 1.24f*Mathf.Sin(a), z);
+                        var stonePiece = Cube(architecture, "Arch_"+i+"_"+k, pos, new Vector3(.40f, .39f, .8f), stone);
+                        stonePiece.transform.rotation = Quaternion.Euler(0f, 0f, a * Mathf.Rad2Deg - 90f);
+                    }
+                    Cube(architecture, "ArchCap_" + i, new Vector3(x, 8.65f, z), new Vector3(3f, .25f, .9f), gold);
+                }
+                var statue = Group(sockets, "Emperor_Doge_Statue_Socket_REPLACE_MODEL");
+                statue.localPosition = new Vector3(0, 9.5f, 20.5f);
+                Cube(statue, "Pedestal", new Vector3(0, -.25f, 0), new Vector3(3.5f, .65f, 2.3f), stone);
+                Sphere(statue, "Gold_Doge_Head_Placeholder", new Vector3(0, 1.1f, 0), new Vector3(2.35f, 2.0f, 1.5f), gold);
+                for (int d = -1; d <= 1; d += 2)
+                {
+                    var ear = Cube(statue, "Ear_"+d, new Vector3(.77f*d, 2.14f, 0), new Vector3(.48f, .78f, .43f), gold);
+                    ear.transform.rotation = Quaternion.Euler(0f, 0f, -d * 25f);
+                }
+                var sky = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                sky.name = "Sky_Background_PNG_ReplaceMe";
+                sky.transform.SetParent(backdropGroup, false);
+                sky.transform.localPosition = new Vector3(0, 12f, 36f);
+                sky.transform.localScale = new Vector3(92, 44, 1);
+                sky.GetComponent<Renderer>().sharedMaterial = skyMaterial;
+                sky.GetComponent<Renderer>().shadowCastingMode = ShadowCastingMode.Off;
+                DestroyImmediate(sky.GetComponent<Collider>());
+
+                var manager = crowdGroup.gameObject.AddComponent<MemeCrowdReactions>();
+                for (int i=0; i<fans; i++)
+                {
+                    string[] names = {"Pepe", "Doge", "Wojak", "Popcat", "Ape"};
+                    string asset = BasePath+"/Art/"+names[i%names.Length]+".png";
+                    EnsureSprite(asset);
+                    Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(asset);
+                    if (sprite == null) throw new InvalidOperationException("Missing sprite: " + asset);
+                    int row = i % Math.Min(2, tiers);
+                    float a = Mathf.Lerp(-91f, 91f, (i+0.5f)/Mathf.Max(fans,1)) * Mathf.Deg2Rad;
+                    float r = radius + row*1.22f;
+                    var fan = new GameObject("MemeFan_" + names[i%names.Length] + "_" + i);
+                    fan.transform.SetParent(crowdGroup, false);
+                    fan.transform.localPosition = new Vector3(r*Mathf.Sin(a), 1.1f+row*.78f, 2f+r*Mathf.Cos(a)-.24f);
+                    fan.transform.localScale = Vector3.one * (1.6f / Mathf.Max(sprite.bounds.size.y,.01f));
+                    var renderer = fan.AddComponent<SpriteRenderer>();
+                    renderer.sprite = sprite;
+                    renderer.shadowCastingMode = ShadowCastingMode.Off;
+                    fan.AddComponent<MemeCrowdFan>();
+                }
+                // Static distant crowd: use a single transparency texture rather than hundreds of Update scripts.
+                EnsureSprite(BasePath + "/Art/DistantCrowd.png");
+                var distant = AssetDatabase.LoadAssetAtPath<Sprite>(BasePath + "/Art/DistantCrowd.png");
+                if (distant != null)
+                {
+                    var card = new GameObject("DistantCrowd_OneSprite");
+                    card.transform.SetParent(backdropGroup, false);
+                    card.transform.localPosition = new Vector3(0, 8f, 24f);
+                    card.transform.localScale = new Vector3(30f/Mathf.Max(distant.bounds.size.x,.001f), 6f/Mathf.Max(distant.bounds.size.y,.001f),1f);
+                    card.AddComponent<SpriteRenderer>().sprite = distant;
+                }
+                for (int side = -1; side <= 1; side += 2)
+                {
+                    Cube(sockets, "RedBanner_" + side, new Vector3(5.1f*side, 8.55f, 19.5f), new Vector3(2.1f, 3.2f, .10f), red);
+                }
+                string path = folder + "/MemeColosseum_Stage.prefab";
+                bool success;
+                GameObject prefab = PrefabUtility.SaveAsPrefabAsset(root, path, out success);
+                if (!success || prefab == null) throw new Exception("Unity could not save prefab at " + path);
+                AssetDatabase.SaveAssets();
+                Debug.Log("[Meme Arena] Stage created: " + path + ". Reaction component: " + manager.name);
+                return prefab;
+            }
+            finally { DestroyImmediate(root); }
+        }
+
+        private static Transform Group(Transform parent, string name)
+        {
+            var go = new GameObject(name);
+            go.transform.SetParent(parent, false);
+            return go.transform;
+        }
+        private static GameObject Cube(Transform parent, string name, Vector3 pos, Vector3 scale, Material mat)
+        {
+            return Primitive(parent, name, PrimitiveType.Cube, pos, scale, mat);
+        }
+        private static GameObject Sphere(Transform parent, string name, Vector3 pos, Vector3 scale, Material mat)
+        {
+            return Primitive(parent, name, PrimitiveType.Sphere, pos, scale, mat);
+        }
+        private static GameObject Primitive(Transform parent, string name, PrimitiveType type, Vector3 pos, Vector3 scale, Material mat)
+        {
+            var go = GameObject.CreatePrimitive(type);
+            go.name = name;
+            go.transform.SetParent(parent, false);
+            go.transform.localPosition = pos;
+            go.transform.localScale = scale;
+            go.GetComponent<Renderer>().sharedMaterial = mat;
+            DestroyImmediate(go.GetComponent<Collider>()); // Visual-only: never affects combat collisions.
+            return go;
+        }
+        private static Material MakeMaterial(string folder, string name, Shader shader, Color color, string texture)
+        {
+            var m = new Material(shader) { name = name };
+            m.SetColor("_BaseColor", color);
+            if (texture != null)
+            {
+                var t = AssetDatabase.LoadAssetAtPath<Texture2D>(BasePath + "/Art/" + texture);
+                if (t != null) m.SetTexture("_BaseMap", t);
+            }
+            AssetDatabase.CreateAsset(m, folder + "/Materials/" + name + ".mat");
+            return m;
+        }
+        private static void EnsureSprite(string path)
+        {
+            var importer = AssetImporter.GetAtPath(path) as TextureImporter;
+            if (importer == null) throw new Exception("Missing texture: " + path);
+            if (importer.textureType == TextureImporterType.Sprite) return;
+            importer.textureType = TextureImporterType.Sprite;
+            importer.alphaIsTransparency = true;
+            importer.mipmapEnabled = false;
+            importer.spritePixelsPerUnit = 256;
+            importer.SaveAndReimport();
+        }
+        private static void EnsureFolder(string path)
+        {
+            if (AssetDatabase.IsValidFolder(path)) return;
+            string parent = path.Substring(0,path.LastIndexOf('/'));
+            if (!AssetDatabase.IsValidFolder(parent)) EnsureFolder(parent);
+            AssetDatabase.CreateFolder(parent,path.Substring(path.LastIndexOf('/')+1));
+        }
+    }
+}

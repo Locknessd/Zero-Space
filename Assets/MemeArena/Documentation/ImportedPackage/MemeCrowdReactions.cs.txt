@@ -1,0 +1,25 @@
+using UnityEngine;
+
+namespace MemeArena
+{
+    public sealed class MemeCrowdReactions : MonoBehaviour
+    {
+        private MemeCrowdFan[] fans;
+        private void Awake() => fans = GetComponentsInChildren<MemeCrowdFan>(true);
+
+        public void Cheer(float intensity, float duration)
+        {
+            if (fans == null) fans = GetComponentsInChildren<MemeCrowdFan>(true);
+            foreach (var fan in fans)
+                if (fan != null && fan.gameObject.activeInHierarchy) fan.Cheer(intensity, duration);
+        }
+
+        public void OnHit() => Cheer(1.5f, 0.5f);
+        public void OnCombo() => Cheer(2.2f, 1.4f);
+        public void OnLowHealth() => Cheer(1.7f, 1.8f);
+        public void OnKO() => Cheer(3f, 3f);
+
+        [ContextMenu("Test Crowd Cheer")]
+        private void TestCrowdCheer() => OnCombo();
+    }
+}

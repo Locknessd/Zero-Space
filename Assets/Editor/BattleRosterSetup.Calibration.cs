@@ -161,9 +161,27 @@ public static partial class BattleRosterSetup
     static void BakeRosterFloor(FrankBattlePairPlayback pair, CharacterCombat[] fighters,
         CharacterCombat source, FrankPairGrounding grounding)
     {
-        int intervals = Mathf.Max(1, Mathf.CeilToInt(pair.Duration * 60));
+        bool replaceLegacy = pair.Move.sourcePair.receiverFloorLift?.Length > 0;
+        int sampleRate = replaceLegacy ? 240 : 60;
+        int intervals = Mathf.Max(1, Mathf.CeilToInt(pair.Duration * sampleRate));
         var lifts = new[] { new float[intervals + 1], new float[intervals + 1] };
         var probes = fighters.Select(f => new BattleRosterFloorProbe(f)).ToArray();
+        foreach (var fighter in fighters)
+        {
+            bool receiver = fighter != source;
+            grounding.tracks = grounding.tracks.Where(t =>
+                t.avatar != fighter.Animator.avatar || t.receiver != receiver).Concat(new[]
+            {
+                new FrankPairGrounding.Track
+                {
+                    avatar = fighter.Animator.avatar,
+                    receiver = receiver,
+                    duration = pair.Duration,
+                    lift = new float[2],
+                    replacesReceiverFloorLift = receiver && replaceLegacy
+                }
+            }).ToArray();
+        }
         for (int i = 0; i <= intervals; i++)
         {
             pair.EvaluateAt(pair.Duration * i / intervals);
@@ -182,16 +200,21 @@ public static partial class BattleRosterSetup
         for (int role = 0; role < 2; role++)
         {
             var raw = lifts[role];
-            var envelope = new float[raw.Length];
-            for (int i = 0; i < raw.Length; i++)
-                for (int j = Mathf.Max(0, i - 1); j <= Mathf.Min(i + 1, raw.Length - 1); j++)
-                    envelope[i] = Mathf.Max(envelope[i], raw[j]);
+            var envelope = raw;
+            if (!replaceLegacy)
+            {
+                envelope = new float[raw.Length];
+                for (int i = 0; i < raw.Length; i++)
+                    for (int j = Mathf.Max(0, i - 1); j <= Mathf.Min(i + 1, raw.Length - 1); j++)
+                        envelope[i] = Mathf.Max(envelope[i], raw[j]);
+            }
             var track = new FrankPairGrounding.Track
             {
                 avatar = fighters[role].Animator.avatar,
                 receiver = fighters[role] != source,
                 duration = pair.Duration,
-                lift = envelope
+                lift = envelope,
+                replacesReceiverFloorLift = fighters[role] != source && replaceLegacy
             };
             grounding.tracks = grounding.tracks.Where(t => t.avatar != track.avatar || t.receiver != track.receiver)
                 .Concat(new[] { track }).ToArray();

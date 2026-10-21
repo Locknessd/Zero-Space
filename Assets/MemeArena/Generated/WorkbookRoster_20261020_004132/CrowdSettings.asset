@@ -1,0 +1,659 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4f44db149ce75148bbf91ca49e4b8b2, type: 3}
+  m_Name: CrowdSettings
+  m_EditorClassIdentifier: Assembly-CSharp::MemeArena.MemeCrowdSettings
+  spectators:
+  - name: Pepe
+    sprite: {fileID: 21300000, guid: 299dfe1750a90c54b89ed6b2e91ce989, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Doge
+    sprite: {fileID: 21300000, guid: 03b73276ca569164588a74e1b8fdac4a, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Cheems
+    sprite: {fileID: 21300000, guid: 8cf1e2119f324b94483d927bf927fc0a, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Popcat
+    sprite: {fileID: 21300000, guid: 7156e56c8798209469fc6260e43c5287, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Chill Guy
+    sprite: {fileID: 21300000, guid: c9e45db676df2f34e84187cb0a45ced1, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Capybara
+    sprite: {fileID: 21300000, guid: 77c69abd664287c44ad87baa82785307, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Pibble
+    sprite: {fileID: 21300000, guid: d7cfb0db5d98bd04cbf1d5553ee2b12e, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Maxwell
+    sprite: {fileID: 21300000, guid: 30362ebda7cb75245bb5d9b92ce4fc5f, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Tung Tung Tung Sahur
+    sprite: {fileID: 21300000, guid: 20e7e17279072b846b0995e54d87396b, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Tralalero Tralala
+    sprite: {fileID: 21300000, guid: d5af6defa5a68ae4fb1a71a6066a1fc3, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Ballerina Cappuccina
+    sprite: {fileID: 21300000, guid: 2e52bd7e0bb619f43969490760380dd6, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Bombardiro Crocodilo
+    sprite: {fileID: 21300000, guid: 60a25f8acc5490e488901e5859abb7c7, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Chimpanzini Bananini
+    sprite: {fileID: 21300000, guid: 5b3248a6a4f46c14b98fe89e64d8ca22, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Wojak
+    sprite: {fileID: 21300000, guid: fb7c0d924954a4545b49ed3d5f53037a, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Smurf Cat
+    sprite: {fileID: 21300000, guid: 7f6a06e3fb0c42648a08e3257523e4bc, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Big Floppa
+    sprite: {fileID: 21300000, guid: 61f284a6feb16484d811fd19ac1857b2, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Little John
+    sprite: {fileID: 21300000, guid: 41f11b0a2a0481c45bdc50ab8372ecf9, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Artificial Inu
+    sprite: {fileID: 21300000, guid: 1606317831965e44ebfc577e4fbc9601, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Boomer
+    sprite: {fileID: 21300000, guid: 13c3fe2ae797f4e448c76c37d114d85c, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Cash Cat
+    sprite: {fileID: 21300000, guid: e4d1a2b518b753c40897c7f48cb198f4, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Doge Pepe
+    sprite: {fileID: 21300000, guid: 615453d603d63404a8a96b931d8214a3, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Hood Sword Inu
+    sprite: {fileID: 21300000, guid: d2939cd61e7cc9242bfc9f712dc06f34, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Degen
+    sprite: {fileID: 21300000, guid: f87c703763759dd4aa1d47fea17abd0e, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: BabyCashCat
+    sprite: {fileID: 21300000, guid: 99df3ad60d2b3dc409c99ecf9b353594, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: pipedog
+    sprite: {fileID: 21300000, guid: 647f5212571a50c4a94e0818442de66b, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Bundle Cat
+    sprite: {fileID: 21300000, guid: 85bf97a4fd5f2e4478b3f4748115c217, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Thinking Cat
+    sprite: {fileID: 21300000, guid: c46ddf50fb47c554db25c896eabcdce7, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Memory cow Moo
+    sprite: {fileID: 21300000, guid: 6d5245d61aeae6646b5f7250009d1856, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: The Juggernaut
+    sprite: {fileID: 21300000, guid: dff03cdf7c5dbf247b9b3b5aeb1b3dd2, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: microduck
+    sprite: {fileID: 21300000, guid: c52d3b775f1ce5c43931e0f9839457ef, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Commander Vrax
+    sprite: {fileID: 21300000, guid: 7f924691780d1e94282565bbb71cce19, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: astronaut
+    sprite: {fileID: 21300000, guid: 359e16fbbe986ca4bbb2c86b4ec1c405, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Giga Tenev
+    sprite: {fileID: 21300000, guid: cb7df109ca06a884e93c8d580e7026ab, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: frong
+    sprite: {fileID: 21300000, guid: 8d166be995bbf424d802feaa4f6d1bcc, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Robin the Frog
+    sprite: {fileID: 21300000, guid: f5476b3d0c080b74fbfb8f9bd3c68deb, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: ROBINCAT
+    sprite: {fileID: 21300000, guid: d420112dbc35b62419042647be55d4db, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: VOLT INU
+    sprite: {fileID: 21300000, guid: 144a78a63e00337418b93d6308c03b69, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Prophet The Dog
+    sprite: {fileID: 21300000, guid: cc9c32fc3855b1e45839d16db7b86229, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Wolverinu
+    sprite: {fileID: 21300000, guid: ef19ac97aced7f74cbf4912364b3db0a, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Pussy Cat Club
+    sprite: {fileID: 21300000, guid: 91de38e91340c3140bbabc2fe169a0a6, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: The Dogestar
+    sprite: {fileID: 21300000, guid: b3872cc50f2c94c42bb17913f5048a59, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Troll in Hood
+    sprite: {fileID: 21300000, guid: 7f0a62040756afa41a2169481a442362, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Golden Kitty
+    sprite: {fileID: 21300000, guid: 8b0bf86e9168ba54aa911bd1937203cd, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Golden Goose
+    sprite: {fileID: 21300000, guid: dc5932cb90d0fcf488c15e9b82eb8cca, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: mooncat
+    sprite: {fileID: 21300000, guid: e290e9058d0506e4391897fce40189ac, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Wrestler
+    sprite: {fileID: 21300000, guid: 278937ca7c107984a9c2618102bb1188, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: PONGO
+    sprite: {fileID: 21300000, guid: b7fa463c0f6acaa4e96dcf2b0052f550, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Robin Hood
+    sprite: {fileID: 21300000, guid: 65b05aeb961a28748a1602ecbd891587, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Gasoline Inu
+    sprite: {fileID: 21300000, guid: 6c09c33c31220f4438c176b694daafea, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Shibinhood
+    sprite: {fileID: 21300000, guid: 1370f0b7279b9a14c9b709963c39e2c9, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: SANTAHOOD
+    sprite: {fileID: 21300000, guid: aff1449694d098840a9acc706b9dd037, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Frog In Hood
+    sprite: {fileID: 21300000, guid: 99ebbd27eb9ad39468c791da825e0c36, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Cat Processing Unit
+    sprite: {fileID: 21300000, guid: 0d98bf00b10c7984c84309f48cf94645, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: The Bull
+    sprite: {fileID: 21300000, guid: b89962a09ba4219479b06999bf04d633, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Pepons
+    sprite: {fileID: 21300000, guid: 9769127e5d0a99449920c65208f634b1, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: LongCat
+    sprite: {fileID: 21300000, guid: 45b096230f08fea498616f72672c9490, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Kitsu
+    sprite: {fileID: 21300000, guid: 4d3402c5b6d21bc47846ea14267ad814, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: NinjaCat
+    sprite: {fileID: 21300000, guid: 2f270afb3fdcbf54ea3e8f7c5341e7c6, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: CATGPT
+    sprite: {fileID: 21300000, guid: 0b6a9cb3bd512404f9d86a1103d627d3, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: wagie wojaks
+    sprite: {fileID: 21300000, guid: 59a03af11c886c449ba4b4cb6e17d223, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: HoodPork
+    sprite: {fileID: 21300000, guid: ed723d661fc8ede4c9e64ee9d9d2944d, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: The Lighter Liger
+    sprite: {fileID: 21300000, guid: 3e440f7c6d467d245b457156a769902b, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Farting Unicorn
+    sprite: {fileID: 21300000, guid: 5fe2055521b5e934fad3a8c963089bde, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: CHICKEN
+    sprite: {fileID: 21300000, guid: 016fd44f6f9d9c749b414c4204029871, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Baby Cash Cat
+    sprite: {fileID: 21300000, guid: 06a7e628a1ca4fd41897c6eb68a76d1b, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: DogBull
+    sprite: {fileID: 21300000, guid: 0cf30ad617d921a43824cd70d55c9d20, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Froge
+    sprite: {fileID: 21300000, guid: 702f5aa969056c5469888a87fc19f0a0, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: The Office Dog
+    sprite: {fileID: 21300000, guid: c58516d1ae56c6940a070407edfe71dc, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Goose Token
+    sprite: {fileID: 21300000, guid: c9e5b628a83163f4fad2eb11730534a9, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Anthropig
+    sprite: {fileID: 21300000, guid: 11fa80a343408f84dafd02e2d36af3a3, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Shiba Inu (SHIB Mascot)
+    sprite: {fileID: 21300000, guid: c74394f3bec0a7c48899e618cfa28054, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Floki
+    sprite: {fileID: 21300000, guid: 109198580a0d4b346b397a779008bf7f, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Wif (Dogwifhat)
+    sprite: {fileID: 21300000, guid: c36fd2020231c8d4d98535f0c4ecbb08, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Bonk Dog
+    sprite: {fileID: 21300000, guid: 11d5679c30a72af48bec37c29eb45b1a, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Neiro
+    sprite: {fileID: 21300000, guid: b77a61f52dbdcd847a43304fb2d0c445, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Baby Doge
+    sprite: {fileID: 21300000, guid: ba123768d5e46074c8157990890dc6d6, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Myro
+    sprite: {fileID: 21300000, guid: 659bdfcfccc6aca4988ca0c2a30d17e4, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Coq Inu (The Rooster)
+    sprite: {fileID: 21300000, guid: aa0ff59ebffd8e4408addc3b06fe2286, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Snoop Dogg (Doggy)
+    sprite: {fileID: 21300000, guid: 53df8124fda1d584db827060463c9f84, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Kishu Inu
+    sprite: {fileID: 21300000, guid: 09bdc9e4f85dbfe4e9795bb11690d078, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Akita Inu
+    sprite: {fileID: 21300000, guid: 720258d4c49848a4ba49addd474aa3d1, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Samoyedcoin (SAMO)
+    sprite: {fileID: 21300000, guid: 1efa49cf924b611478645c45543e480c, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Shiba Predator
+    sprite: {fileID: 21300000, guid: 96498988e5733b54c85bd3c05f0b80b2, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Doge Gay Son
+    sprite: {fileID: 21300000, guid: 2d282e70e93e5ff4ea83c8b48ee63552, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Mafia Doge
+    sprite: {fileID: 21300000, guid: 5b65711feff7d514b845644db7453d98, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Tamadoge
+    sprite: {fileID: 21300000, guid: fae865d38d7c7af439c1f35893a5de90, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Marvin inu
+    sprite: {fileID: 21300000, guid: b56bef4bc0c39a74f9d8ee4a3a3dc6ed, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Jindo Inu
+    sprite: {fileID: 21300000, guid: c43c25bb3fd7dde419200e2d17205d88, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Brett
+    sprite: {fileID: 21300000, guid: 31e59bf9cb1ffdb4495281104138b2bb, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Andy
+    sprite: {fileID: 21300000, guid: ca3bcf8f7284a124e86d3590af244a75, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Wolf
+    sprite: {fileID: 21300000, guid: c59cf99fb0793c441a91490c5eb39783, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Apu Apustaja
+    sprite: {fileID: 21300000, guid: d4156cbdf940bf1428a577db07e7b25b, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Pepecoin (Old Pepe)
+    sprite: {fileID: 21300000, guid: f51dc57aa3b354c4ab1f992972885bc0, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Peep
+    sprite: {fileID: 21300000, guid: d77a621c1e52e914eae0e4cd86e789f0, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Kek (Cult of Kek)
+    sprite: {fileID: 21300000, guid: 235c2fc3c1119254598fb9f36bcd933d, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Groyper
+    sprite: {fileID: 21300000, guid: 3631ff25851a2924c88a6a56f0b8fea3, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Sad Pepe
+    sprite: {fileID: 21300000, guid: ff9b42f87d950844fb3d21c103f8afd9, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Smug Pepe
+    sprite: {fileID: 21300000, guid: 3deb627c24422fc47834cd0b4cbd5ee8, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Rare Pepe
+    sprite: {fileID: 21300000, guid: 0e498270fd6619543a0ccc71f335233d, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Fartcoin
+    sprite: {fileID: 21300000, guid: e5e66bcf212a6004baf5fe652f16a19b, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Froggy
+    sprite: {fileID: 21300000, guid: 3de4fbe93c054904282d090a1ddcd0d2, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Turbo Toad
+    sprite: {fileID: 21300000, guid: d5b55a2f350b51b42b2959c5a099925d, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: MEW (Cat in a Dogs World)
+    sprite: {fileID: 21300000, guid: 5a440cca353b09d4ebddc322711df6e9, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Mog Cat (Joycat)
+    sprite: {fileID: 21300000, guid: 87dbdc86d3f51b544be71663b8469c8c, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Toshi
+    sprite: {fileID: 21300000, guid: 73c6c4769a8ac854296125ea4af14db6, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Wen Cat
+    sprite: {fileID: 21300000, guid: 443946f3065fa3f45b0e421ebfac56fa, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Maneki
+    sprite: {fileID: 21300000, guid: ebc16a8b8958a2049a5f6603b146eccf, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Chipi Chipi Cat
+    sprite: {fileID: 21300000, guid: 8dfa37197b1333948a6fc4ca27398d30, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Keycat
+    sprite: {fileID: 21300000, guid: 2a7931c807ebb614d9ff66f636aa07b4, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Boba Cat
+    sprite: {fileID: 21300000, guid: 8ef266e410651354c8b69ffdf6b4774d, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Harry Potter Obama Sonic Inu (Mascot)
+    sprite: {fileID: 21300000, guid: e05745fe89f77d449868566c396fb3fa, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Nyan Cat
+    sprite: {fileID: 21300000, guid: c4a75a6699377274489549adc5f32ffe, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Gato
+    sprite: {fileID: 21300000, guid: 1d0c7c93a86e9c34d867ed5e9e7a8314, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Momo
+    sprite: {fileID: 21300000, guid: 0a6c0998628d72547bf8a4a7e2e75f4f, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Shark Cat
+    sprite: {fileID: 21300000, guid: 123c34d164487a649b4d3cbffec72fee, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Moo Deng
+    sprite: {fileID: 21300000, guid: b4f815a693cdbcc4489e6a3345ace8b0, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: PNUT (Peanut the Squirrel)
+    sprite: {fileID: 21300000, guid: 1c3ee33086ae6424c93c9fbe95250450, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Pudgy Penguin
+    sprite: {fileID: 21300000, guid: 32e234013b3f5ee4e948f838de718886, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Snek
+    sprite: {fileID: 21300000, guid: 10aa1ac2e4d99774d953c403a9ab51c5, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Harambe
+    sprite: {fileID: 21300000, guid: ecd3481a8804cf246a4ea9612c2589f0, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Apeing Monkey
+    sprite: {fileID: 21300000, guid: 91140310df6a8cc4dae0ca4bb4c2e68b, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Bored Ape (BAYC Mascot)
+    sprite: {fileID: 21300000, guid: bb1793c8ca650fc44bee1bb66bf6eb93, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: SpongeBob SquarePants
+    sprite: {fileID: 21300000, guid: dbf8e1f1840165b4aa7d8d8694345e58, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Chudjak
+    sprite: {fileID: 21300000, guid: 38de8cf95b1a31549942a6f47f7a216c, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Sminem
+    sprite: {fileID: 21300000, guid: ba9370e35cbd0f24db42541a67531746, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: GigaChad
+    sprite: {fileID: 21300000, guid: 7a87900add359b849bf42733581b5a32, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Satoshi Nakamoto
+    sprite: {fileID: 21300000, guid: 9908c6800638ae74fba7b99e359661b7, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Bitcoin Sign Guy
+    sprite: {fileID: 21300000, guid: f0c3a4336437c434eab4efe7fa2fbe66, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: "Michael Saylor (McDonald\u2019s Clerk)"
+    sprite: {fileID: 21300000, guid: 440dd3e82aea7914db2cd19abac80e62, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Vitalik Buterin (The Clapping/Dancing Wizard)
+    sprite: {fileID: 21300000, guid: edc8d5c5bd937354bbe0000b303acf71, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Carlos Matos
+    sprite: {fileID: 21300000, guid: e9f88cee2b5f1c347acb383b56f4b312, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: The Bogdanoff Twins (Igor & Grichka)
+    sprite: {fileID: 21300000, guid: d08bf64ab1a9c5a4a856fb0c88892bd0, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: "Sam Bankman-Fried (SBF trong b\u1ED9 qu\u1EA7n \xE1o t\xF9)"
+    sprite: {fileID: 21300000, guid: 2d8493c61b715594289eb71acc80dfd0, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Changpeng Zhao (CZ "Funds are SAFU")
+    sprite: {fileID: 21300000, guid: b2c8e2220bee5ff47bd208e6e35aa75a, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Elon Musk (The Dogefather)
+    sprite: {fileID: 21300000, guid: f1cd2127b15bad04e94ebd081861cfb8, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Donald Trump (DJT Meme)
+    sprite: {fileID: 21300000, guid: f63fa5f265ae7174eb889e98512ba675, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Melania Trump
+    sprite: {fileID: 21300000, guid: d6b2650c88aa2ba44853a9a02d11ff8f, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: "Gary Gensler (Ch\u1EE7 t\u1ECBch SEC)"
+    sprite: {fileID: 21300000, guid: 18d54ea00d49c734b99b0c5758853b5c, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Craig Wright (Faketoshi)
+    sprite: {fileID: 21300000, guid: 4f6ff1912298115498fa92bd9a0a2a75, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: BitBoy Crypto
+    sprite: {fileID: 21300000, guid: a16d79eda5e3d264a9f24e0b5791b29a, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Justin Sun
+    sprite: {fileID: 21300000, guid: f1b92449e376818418891a5e58c68d8d, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Do Kwon
+    sprite: {fileID: 21300000, guid: 557a92d4b689ab544811a80bfa1bbd75, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Arthur Hayes
+    sprite: {fileID: 21300000, guid: 206b094fda3a0ab4eaa798255c9954f8, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: John McAfee
+    sprite: {fileID: 21300000, guid: 4c5161566954b824fad8212f5eff56ef, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Saylor Moon
+    sprite: {fileID: 21300000, guid: 3871816ec8c816b4fb8bd46d3e6466a1, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Brad Garlinghouse (CEO Ripple)
+    sprite: {fileID: 21300000, guid: 2c6bc17185c1c01449433cbce0347e87, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: The Bagholder
+    sprite: {fileID: 21300000, guid: cb35a1462e1267442bf061c441b6a39b, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: The No-Coiner
+    sprite: {fileID: 21300000, guid: f652f727ebf133b42b116334f51f2dcc, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: The Moonboi
+    sprite: {fileID: 21300000, guid: add891ba4337c754f96ef682c8af21fe, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: The Panic Seller
+    sprite: {fileID: 21300000, guid: b1a6f007d432ea04a9190b7490f08ea3, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: "The Whale (C\xE1 voi)"
+    sprite: {fileID: 21300000, guid: 9e15b3a6ec9abfe48befa2f308e0666f, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: "The Shrimp (C\xE1 t\xE9p/T\xF4m)"
+    sprite: {fileID: 21300000, guid: 0e920b5c1dafe7541af31bc001c5971d, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Hide the Pain Harold
+    sprite: {fileID: 21300000, guid: 6c2a0b1a3fac84542b94701e6d53a72f, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Chad Maxie (Bitcoin Maximalist)
+    sprite: {fileID: 21300000, guid: 23304861f2b554c43aa772d95e400692, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Pink Wojak
+    sprite: {fileID: 21300000, guid: 10bad0f4827fd8442b9044f430c66e18, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: John Wick vs John Weak
+    sprite: {fileID: 21300000, guid: b83811465137c6f49b379cf009c4b91c, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: "The Bear (G\u1EA5u)"
+    sprite: {fileID: 21300000, guid: 7f288330e4ae57647beeb7aaecea29c9, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: The Rug Pull Monster
+    sprite: {fileID: 21300000, guid: 77c488d5eab398f4a8ab145ff26e782c, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  - name: Non-Playable Coin (NPC)
+    sprite: {fileID: 21300000, guid: a15622590af392b42a58bf3f5ec3a2fe, type: 2}
+    prefab: {fileID: 0}
+    weight: 1
+  rosterId: robinhood-2026-10-20
+  importedSourceRows: 154
+  animationRate: 30
+  animatedDistance: 45
+  spectatorHeight: 1.2
+  idleBounce: 0.045
+  reactionBounce: 0.3
+  reactionStagger: 0.22

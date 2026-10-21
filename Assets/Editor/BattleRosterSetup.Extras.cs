@@ -131,6 +131,10 @@ public static partial class BattleRosterSetup
     {
         if (!clip)
             return;
+        // These curves include the move's terminal pose and controller entry blend.
+        // Sampling an isolated clip would overwrite that calibration.
+        if (AssetDatabase.GetAssetPath(grounding).StartsWith(Root + "/RecoveryGrounding/", StringComparison.Ordinal))
+            return;
         var animator = fighter.Animator;
         string key = AssetDatabase.GetAssetPath(grounding) + animator.avatar.GetInstanceID() + receiver;
         if (!recovered.Add(key))
